@@ -1,0 +1,74 @@
+<Project>
+  <!-- Project information -->
+  <PropertyGroup>
+    <Product>Quibble</Product>
+    <Authors>Alex Noddings</Authors>
+    <Company>Alex Noddings</Company>
+  </PropertyGroup>
+
+  <!-- Default values -->
+  <PropertyGroup>
+    <LangVersion>8.0</LangVersion>
+
+    <StrongNameKeyId>AlexNoddingsQuibble</StrongNameKeyId>
+    
+    <RepoRoot>$(MSBuildThisFileDirectory)</RepoRoot>
+    <RepositoryUrl>https://github.com/alexnoddings/quibble</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <!-- The SPDX name for the source license. See https://spdx.org/licenses/. -->
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+    <!-- Enables Strict mode for Roslyn compiler -->
+    <Features>strict</Features>
+  </PropertyGroup>
+
+  <!-- Default package versions -->
+  <PropertyGroup>
+    <!-- Targets -->
+    <DefaultNetCoreTargetFramework>netcoreapp3.1</DefaultNetCoreTargetFramework>
+    <DefaultNetStandardTargetFramework>netstandard2.1</DefaultNetStandardTargetFramework>
+    <!-- Asp Net Core -->
+    <AspNetCoreVersion>3.1.4</AspNetCoreVersion>
+    <AspNetCoreWasmVersion>3.2.0</AspNetCoreWasmVersion>
+    <EntityFrameworkVersion>3.1.4</EntityFrameworkVersion>
+  </PropertyGroup>
+
+  <!-- Project conventions -->
+  <PropertyGroup>
+    <RepoRelativeProjectDir>$([MSBuild]::MakeRelative($(RepoRoot), $(MSBuildProjectDirectory)))</RepoRelativeProjectDir>
+
+    <IsReferenceAssemblyProject>false</IsReferenceAssemblyProject>
+
+    <IsUnitTestProject>false</IsUnitTestProject>
+    <IsUnitTestProject Condition="$(MSBuildProjectName.EndsWith('Tests'))">true</IsUnitTestProject>
+
+    <IsStableBuild>false</IsStableBuild>
+    <IsStableBuild Condition=" '$(Configuration)' == 'Release' ">true</IsStableBuild>
+
+    <IncludeSymbols>true</IncludeSymbols>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <!-- Warnings and errors -->
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- Set which warnings to still surface but not treat as errors -->
+    <WarningsNotAsErrors>
+      $(WarningsNotAsErrors);
+      <!-- Don't make missing XML docs a fatal build error. -->
+      CS1591;
+      <!-- Don't make marking a method as async without performing an await a fatal build error as it makes some methods more consistent and easier to read. -->
+      CS1998;
+    </WarningsNotAsErrors>
+  </PropertyGroup>
+
+  <!-- Targets -->
+  <PropertyGroup>
+    <TargetOsName Condition=" '$(TargetOsName)' == '' AND $([MSBuild]::IsOSPlatform('Windows'))">win</TargetOsName>
+    <TargetOsName Condition=" '$(TargetOsName)' == '' AND $([MSBuild]::IsOSPlatform('OSX'))">osx</TargetOsName>
+    <TargetOsName Condition=" '$(TargetOsName)' == '' AND $([MSBuild]::IsOSPlatform('Linux'))">linux</TargetOsName>
+    <TargetArchitecture Condition="'$(TargetArchitecture)' == ''">x64</TargetArchitecture>
+    <TargetRuntimeIdentifier Condition="'$(TargetRuntimeIdentifier)' == ''">$(TargetOsName)-$(TargetArchitecture)</TargetRuntimeIdentifier>
+  </PropertyGroup>
+</Project>
