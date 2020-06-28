@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Quibble.Client
 {
-    public class Program
+    public static class Program
     {
         public static async Task Main(string[] args)
         {
@@ -26,7 +26,7 @@ namespace Quibble.Client
 
             builder.Services.AddApiAuthorization();
 
-            await builder.Build().RunAsync();
+            await builder.Build().RunAsync().ConfigureAwait(false);
         }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Quibble.Server.Data.Migrations
 {
+    [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "Not needed for a migration")]
     public partial class CreateIdentitySchema : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
