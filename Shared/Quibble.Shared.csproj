@@ -1,7 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>$(DefaultNetStandardTargetFramework)</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Version="$(FxCopAnalyzersVersion)" Include="Microsoft.CodeAnalysis.FxCopAnalyzers" />
+  </ItemGroup>
 
 </Project>
