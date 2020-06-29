@@ -1,9 +1,9 @@
-﻿namespace Quibble.Shared.Paths
+﻿namespace Quibble.Common.Paths
 {
     /// <summary>
     /// Provides a central location to co-ordinate SignalR hub paths.
     /// </summary>
-    public static class SignalR
+    public static class SignalRPaths
     {
         /// <summary>
         /// The base path for hubs.

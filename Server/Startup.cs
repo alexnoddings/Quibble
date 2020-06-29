@@ -7,10 +7,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Linq;
+using Quibble.Common.Paths;
 using Quibble.Server.Data;
 using Quibble.Server.Extensions.ServiceConfiguration;
 using Quibble.Server.Models;
-using Paths = Quibble.Shared.Paths;
 
 namespace Quibble.Server
 {
@@ -47,7 +47,7 @@ namespace Quibble.Server
                 .AddIdentityServerJwt();
 
             services.AddSignalR()
-                .AddJwtBearerAuthentication(Paths.SignalR.HubsBase);
+                .AddJwtBearerAuthentication(SignalRPaths.HubsBase);
 
             services.AddControllersWithViews();
             services.AddRazorPages();

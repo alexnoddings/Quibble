@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Shared\Quibble.Shared.csproj" />
+    <ProjectReference Include="..\Common\Quibble.Common.csproj" />
   </ItemGroup>
 
 </Project>

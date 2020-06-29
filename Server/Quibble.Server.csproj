@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Client\Quibble.Client.csproj" />
-    <ProjectReference Include="..\Shared\Quibble.Shared.csproj" />
+    <ProjectReference Include="..\Common\Quibble.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>
