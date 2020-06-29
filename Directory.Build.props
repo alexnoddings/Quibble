@@ -54,8 +54,14 @@
   <!-- Warnings and errors -->
   <PropertyGroup>
     <Nullable>enable</Nullable>
+    <!-- Warnings to ignore and not surface. -->
+    <NoWarn>
+      $(NoWarn);
+      <!-- Web server exceptions do not need to be localised. -->
+      CA1303;
+    </NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <!-- Set which warnings to still surface but not treat as errors -->
+    <!-- Warnings to not treat as errors but still surface. -->
     <WarningsNotAsErrors>
       $(WarningsNotAsErrors);
       <!-- Don't make missing XML docs a fatal build error. -->
