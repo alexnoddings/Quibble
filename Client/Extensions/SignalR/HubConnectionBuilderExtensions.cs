@@ -47,6 +47,7 @@ namespace Quibble.Client.Extensions.SignalR
         /// <param name="accessTokenProvider">A service which provides an <see cref="AccessToken"/>.</param>
         /// <param name="configureHttpConnection">The delegate that configures the <see cref="HttpConnection"/>.</param>
         /// <returns>The same instance of the <see cref="IHubConnectionBuilder"/> for chaining.</returns>
+        /// <remarks>See <see cref="HubConnectionBuilderHttpExtensions.WithUrl(IHubConnectionBuilder, Uri, Action{HttpConnectionOptions})"/></remarks>
         private static IHubConnectionBuilder WithAuthenticatedUrlCore(this IHubConnectionBuilder hubConnectionBuilder, Uri url, IAccessTokenProvider accessTokenProvider, Action<HttpConnectionOptions>? configureHttpConnection)
         {
             if (hubConnectionBuilder == null) throw new ArgumentNullException(nameof(hubConnectionBuilder));
