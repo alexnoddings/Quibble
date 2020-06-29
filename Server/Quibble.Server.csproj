@@ -18,6 +18,8 @@
     <PackageReference Version="$(AspNetCoreWasmVersion)" Include="Microsoft.AspNetCore.Components.WebAssembly.Server" />
     <PackageReference Version="$(EntityFrameworkVersion)" Include="Microsoft.EntityFrameworkCore.SqlServer" />
     <PackageReference Version="$(EntityFrameworkVersion)" Include="Microsoft.EntityFrameworkCore.Tools" />
+    <PackageReference Version="$(GrpcVersion)" Include="Grpc.AspNetCore" />
+    <PackageReference Version="$(GrpcVersion)" Include="Grpc.AspNetCore.Web" />
     <PackageReference Version="$(FxCopAnalyzersVersion)" Include="Microsoft.CodeAnalysis.FxCopAnalyzers" />
   </ItemGroup>
 
