@@ -1,0 +1,6 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "Quibble.Common.Protos";
+
+message EmptyMessage {
+}
