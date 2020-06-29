@@ -47,7 +47,7 @@ namespace Quibble.Server
                 .AddIdentityServerJwt();
 
             services.AddSignalR()
-                .AddJwtBearerAuthentication(SignalRPaths.HubsBase);
+                .AddJwtBearerAuthentication(SignalR.HubsBase);
 
             services.AddControllersWithViews();
             services.AddRazorPages();
