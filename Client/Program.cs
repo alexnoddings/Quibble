@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Quibble.Client.Extensions.ServiceConfiguration;
 
 namespace Quibble.Client
 {
@@ -29,6 +30,8 @@ namespace Quibble.Client
             services.AddTransient(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("Quibble.ServerAPI"));
 
             services.AddApiAuthorization();
+
+            services.AddGrpcWebChannel();
         }
     }
 }

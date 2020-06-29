@@ -33,6 +33,7 @@
     <EntityFrameworkVersion>3.1.4</EntityFrameworkVersion>
     <!-- Misc -->
     <FxCopAnalyzersVersion>3.0.0</FxCopAnalyzersVersion>
+    <GrpcVersion>2.29.0</GrpcVersion>
   </PropertyGroup>
 
   <!-- Project conventions -->
