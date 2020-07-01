@@ -9,7 +9,8 @@ using Microsoft.Extensions.Hosting;
 using System.Linq;
 using Quibble.Common.Paths;
 using Quibble.Server.Data;
-using Quibble.Server.Extensions.ServiceConfiguration;
+using Quibble.Server.Extensions.ServiceConfiguration.Email;
+using Quibble.Server.Extensions.ServiceConfiguration.SignalR;
 using Quibble.Server.Models.Users;
 
 namespace Quibble.Server
@@ -27,9 +28,9 @@ namespace Quibble.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddResponseCompression(opts =>
+            services.AddResponseCompression(options =>
             {
-                opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+                options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
                     new[] { "application/octet-stream" });
             });
 
@@ -48,6 +49,14 @@ namespace Quibble.Server
 
             services.AddSignalR()
                 .AddJwtBearerAuthentication(SignalR.HubsBase);
+
+            services.AddSendGridEmail(options =>
+            {
+                options.ApiKey = Configuration["Email:Key"];
+                options.Domain = Configuration["Email:Domain"];
+                options.DefaultFromUserName = Configuration["Email:DefaultFromUserName"];
+                options.DefaultFromDisplayName = Configuration["Email:DefaultFromDisplayName"];
+            });
 
             services.AddControllersWithViews();
             services.AddRazorPages();
