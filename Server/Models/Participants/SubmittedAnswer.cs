@@ -1,7 +1,6 @@
 ﻿using System;
-using Quibble.Server.Models.Questions;
 
-namespace Quibble.Server.Models.Users
+namespace Quibble.Server.Models.Participants
 {
     public class SubmittedAnswer : IEntity<Guid>
     {
