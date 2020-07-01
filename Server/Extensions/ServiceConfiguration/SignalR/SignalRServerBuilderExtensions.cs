@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Primitives;
 
-namespace Quibble.Server.Extensions.ServiceConfiguration
+namespace Quibble.Server.Extensions.ServiceConfiguration.SignalR
 {
     /// <summary>
     /// Extension methods for setting up SignalR services in an <see cref="ISignalRServerBuilder" />.
