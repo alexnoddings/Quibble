@@ -10,7 +10,7 @@ using System.Linq;
 using Quibble.Common.Paths;
 using Quibble.Server.Data;
 using Quibble.Server.Extensions.ServiceConfiguration;
-using Quibble.Server.Models;
+using Quibble.Server.Models.Users;
 
 namespace Quibble.Server
 {
