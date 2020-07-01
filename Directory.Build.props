@@ -28,9 +28,9 @@
     <DefaultNetCoreTargetFramework>netcoreapp3.1</DefaultNetCoreTargetFramework>
     <DefaultNetStandardTargetFramework>netstandard2.1</DefaultNetStandardTargetFramework>
     <!-- Asp Net Core -->
-    <AspNetCoreVersion>3.1.4</AspNetCoreVersion>
     <AspNetCoreWasmVersion>3.2.0</AspNetCoreWasmVersion>
-    <EntityFrameworkVersion>3.1.4</EntityFrameworkVersion>
+    <AspNetCoreVersion>3.1.5</AspNetCoreVersion>
+    <EntityFrameworkVersion>3.1.5</EntityFrameworkVersion>
     <!-- Misc -->
     <FxCopAnalyzersVersion>3.0.0</FxCopAnalyzersVersion>
   </PropertyGroup>
