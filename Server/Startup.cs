@@ -15,17 +15,29 @@ using Quibble.Server.Models.Users;
 
 namespace Quibble.Server
 {
+    /// <summary>
+    /// Handles the startup for the program.
+    /// </summary>
     public class Startup
     {
+        /// <summary>
+        /// Initializes a new instance of <see cref="Startup"/>.
+        /// </summary>
+        /// <param name="configuration">The system configuration.</param>
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
+        /// <summary>
+        /// The system configuration.
+        /// </summary>
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+        /// <summary>
+        /// Configures the services added to the system's container.
+        /// </summary>
+        /// <param name="services">The <see cref="IServiceCollection"/> to configure.</param>
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddResponseCompression(options =>
@@ -62,7 +74,11 @@ namespace Quibble.Server
             services.AddRazorPages();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// <summary>
+        /// Configures the system's request pipeline.
+        /// </summary>
+        /// <param name="app">The system's <see cref="IApplicationBuilder"/>.</param>
+        /// <param name="env">The <see cref="IWebHostEnvironment"/>.</param>
         public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

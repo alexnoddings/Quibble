@@ -47,7 +47,6 @@ namespace Quibble.Server.Data
         /// </summary>
         public DbSet<UserSettings> UserSettings { get; set; } = default!;
 
-
         /// <summary>
         /// Initializes a new instance of <see cref="ApplicationDbContext"/>.
         /// </summary>
