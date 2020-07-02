@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using Quibble.Server.Models.Rounds;
-using Quibble.Server.Models.Users;
 
 namespace Quibble.Server.Models.Quizzes
 {
