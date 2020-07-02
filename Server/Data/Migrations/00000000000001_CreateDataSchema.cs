@@ -3,29 +3,14 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Quibble.Server.Data.Migrations
 {
+    /// <summary>
+    /// Constructs the schema used for quiz-based data.
+    /// </summary>
     public partial class CreateDataSchema : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "AspNetUserSettings",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    UserId = table.Column<string>(nullable: false),
-                    UseNightMode = table.Column<bool>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserSettings", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetUserSettings_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Quizzes",
                 columns: table => new
@@ -53,7 +38,7 @@ namespace Quibble.Server.Data.Migrations
                     Id = table.Column<Guid>(nullable: false),
                     UserId = table.Column<string>(nullable: true),
                     QuizId = table.Column<Guid>(nullable: false),
-                    Name = table.Column<string>(nullable: false)
+                    NickName = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -141,11 +126,6 @@ namespace Quibble.Server.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserSettings_UserId",
-                table: "AspNetUserSettings",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_QuizParticipants_QuizId",
                 table: "QuizParticipants",
                 column: "QuizId");
@@ -181,11 +161,9 @@ namespace Quibble.Server.Data.Migrations
                 column: "OwnerId");
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "AspNetUserSettings");
-
             migrationBuilder.DropTable(
                 name: "QuizSubmittedAnswers");
 

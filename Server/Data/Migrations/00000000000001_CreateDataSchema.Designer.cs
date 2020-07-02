@@ -10,7 +10,7 @@ using Quibble.Server.Data;
 namespace Quibble.Server.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200702104127_CreateDataSchema")]
+    [Migration("00000000000001_CreateDataSchema")]
     partial class CreateDataSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -244,7 +244,7 @@ namespace Quibble.Server.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("NickName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

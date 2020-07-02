@@ -3,8 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Quibble.Server.Data.Migrations
 {
+    /// <summary>
+    /// Creates the schema used by Identity Server.
+    /// </summary>
     public partial class CreateIdentitySchema : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -167,6 +171,25 @@ namespace Quibble.Server.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AspNetUserSettings",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    UserId = table.Column<string>(nullable: false),
+                    UseNightMode = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserSettings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUserSettings_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
@@ -226,6 +249,11 @@ namespace Quibble.Server.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUserSettings_UserId",
+                table: "AspNetUserSettings",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DeviceCodes_DeviceCode",
                 table: "DeviceCodes",
                 column: "DeviceCode",
@@ -247,6 +275,7 @@ namespace Quibble.Server.Data.Migrations
                 columns: new[] { "SubjectId", "ClientId", "Type" });
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
@@ -260,6 +289,9 @@ namespace Quibble.Server.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserRoles");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUserSettings");
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
