@@ -81,7 +81,7 @@ namespace Quibble.Server.Services.SendGrid
                 HtmlContent = content,
             };
             message.AddTo(to);
-            message.SetClickTracking(false, false);
+            message.SetClickTracking(true, true);
 
             return client.SendEmailAsync(message);
         }
