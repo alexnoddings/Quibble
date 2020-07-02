@@ -138,7 +138,8 @@ namespace Quibble.Server.Data
                     .HasOne<ApplicationUser>()
                     .WithMany()
                     .HasForeignKey(participant => participant.UserId)
-                    .IsRequired();
+                    .IsRequired(false)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
 
                 entityBuilder
                     .HasOne<Quiz>()
@@ -150,7 +151,8 @@ namespace Quibble.Server.Data
                     .HasMany<SubmittedAnswer>()
                     .WithOne()
                     .HasForeignKey(submittedAnswer => submittedAnswer.ParticipantId)
-                    .IsRequired();
+                    .IsRequired(false)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
 
                 entityBuilder.ToTable("QuizParticipants");
             });
