@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Quibble.Server.Data;
 using Quibble.Server.Models.Users;
 using Quibble.Server.Services.SendGrid;
 
@@ -47,17 +48,20 @@ namespace Quibble.Server.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IAdvancedEmailSender _emailSender;
+        private readonly ApplicationDbContext _dbContext;
 
         public RegisterModel(
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             ILogger<RegisterModel> logger,
-            IAdvancedEmailSender emailSender)
+            IAdvancedEmailSender emailSender,
+            ApplicationDbContext dbContext)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _dbContext = dbContext;
         }
 
         [BindProperty]
@@ -84,6 +88,10 @@ namespace Quibble.Server.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
+                    var userSettings = new UserSettings {UserId = user.Id};
+                    _dbContext.UserSettings.Add(userSettings);
+                    await _dbContext.SaveChangesAsync().ConfigureAwait(false);
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user).ConfigureAwait(false);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
