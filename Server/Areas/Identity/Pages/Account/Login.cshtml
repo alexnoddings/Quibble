@@ -53,7 +53,7 @@
             <h4>Use another service to log in.</h4>
             <hr />
             @{
-                if ((Model.ExternalLogins?.Count ?? 0) == 0)
+                if (Model.ExternalLogins == null || Model.ExternalLogins.Count == 0)
                 {
                     <div>
                         <p>
