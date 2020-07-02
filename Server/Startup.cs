@@ -70,6 +70,8 @@ namespace Quibble.Server
                 options.DefaultFromDisplayName = Configuration["Email:DefaultFromDisplayName"];
             });
 
+            services.AddGrpc();
+
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
@@ -99,6 +101,9 @@ namespace Quibble.Server
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            // Use HTTP calls as a fallback if GRPC is not natively supported by the client.
+            app.UseGrpcWeb(new GrpcWebOptions { DefaultEnabled = false });
 
             app.UseIdentityServer();
             app.UseAuthentication();

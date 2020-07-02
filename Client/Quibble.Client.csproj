@@ -11,6 +11,8 @@
     <PackageReference Version="$(AspNetCoreWasmVersion)" Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" PrivateAssets="all" />
     <PackageReference Version="$(AspNetCoreWasmVersion)" Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" />
     <PackageReference Version="$(AspNetCoreVersion)" Include="Microsoft.AspNetCore.SignalR.Client" />
+    <PackageReference Version="$(GrpcVersion)" Include="Grpc.Net.Client.Web" />
+    <PackageReference Version="$(GrpcVersion)" Include="Grpc.Net.ClientFactory" />
     <PackageReference Version="3.1.5" Include="Microsoft.Extensions.Http" />
     <PackageReference Version="3.2.1" Include="System.Net.Http.Json" />
     <PackageReference Version="$(FxCopAnalyzersVersion)" Include="Microsoft.CodeAnalysis.FxCopAnalyzers" />
