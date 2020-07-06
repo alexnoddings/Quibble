@@ -1,0 +1,12 @@
+﻿@page "/quiz/create"
+@inject NavigationManager NavigationManager
+@inject QuizService.QuizServiceClient QuizClient
+
+<input type="text" @bind="NewQuizTitle" placeholder="Quiz Title"/>
+
+<button @onclick="CreateQuizAsync">Create</button>
+
+@if (ErrorDetail != null)
+{
+    <p>Error while creating quiz. @ErrorDetail</p>
+}
