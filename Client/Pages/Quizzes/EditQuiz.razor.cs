@@ -6,7 +6,7 @@ using Quibble.Common.Protos;
 using Quibble.Client.Extensions.Grpc;
 using Quibble.Client.Extensions.SignalR;
 using Quibble.Client.Grpc;
-using Quibble.Common.SignalR;
+using Quibble.Client.Hubs;
 
 namespace Quibble.Client.Pages.Quizzes
 {
@@ -19,7 +19,7 @@ namespace Quibble.Client.Pages.Quizzes
 
         private string? ErrorDetail { get; set; }
 
-        private HubConnection? HubConnection { get; set; }
+        private QuizHubConnection? HubConnection { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -33,11 +33,14 @@ namespace Quibble.Client.Pages.Quizzes
 
             HubConnection = new HubConnectionBuilder()
                 .WithAuthenticatedRelativeUrl(NavigationManager, "/hubs/quiz", AccessTokenProvider)
-                .Build();
+                .Build()
+                .AsQuizHubConnection();
 
-            HubConnection.On<string>(nameof(IQuizHub.OnQuizTitleUpdated), OnQuizTitleUpdatedAsync);
+            HubConnection.OnQuizTitleUpdated(OnQuizTitleUpdatedAsync);
 
             await HubConnection.StartAsync().ConfigureAwait(false);
+
+            await HubConnection.RegisterToQuizUpdatesAsync(Id).ConfigureAwait(false);
         }
 
         private async Task UpdateQuizTitleAsync()
