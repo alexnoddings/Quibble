@@ -115,6 +115,7 @@ namespace Quibble.Server
             {
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
+                endpoints.MapGrpcService<QuizService>().EnableGrpcWeb();
                 endpoints.MapHub<QuizHub>(SignalRPaths.QuizHub);
                 endpoints.MapFallbackToFile("index.html");
             });
