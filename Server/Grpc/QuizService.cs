@@ -22,14 +22,14 @@ namespace Quibble.Server.Grpc
     public class QuizService : Common.Protos.QuizService.QuizServiceBase
     {
         private ApplicationDbContext DbContext { get; }
-        private IHubContext<QuizHub, IQuizHub> QuizHubContext { get; }
+        private IHubContext<QuizHub, IQuizHubClient> QuizHubContext { get; }
 
         /// <summary>
         /// Initialises a new instance of <see cref="QuizService"/>.
         /// </summary>
         /// <param name="dbContext">A <see cref="ApplicationDbContext"/>.</param>
-        /// <param name="quizHubContext">A <see cref="IHubContext{QuizHub, IQuizHub}"/>.</param>
-        public QuizService(ApplicationDbContext dbContext, IHubContext<QuizHub, IQuizHub> quizHubContext)
+        /// <param name="quizHubContext">A <see cref="IHubContext{QuizHub, IQuizHubClient}"/>.</param>
+        public QuizService(ApplicationDbContext dbContext, IHubContext<QuizHub, IQuizHubClient> quizHubContext)
         {
             DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             QuizHubContext = quizHubContext ?? throw new ArgumentNullException(nameof(quizHubContext));
@@ -40,11 +40,7 @@ namespace Quibble.Server.Grpc
         /// </summary>
         /// <param name="request">The <see cref="CreateQuizRequest"/>.</param>
         /// <param name="context">The <see cref="ServerCallContext"/>.</param>
-        /// <returns>A <see cref="QuizInfo"/></returns>
-        /// <returns>
-        /// A task that represents the asynchronous creation operation.
-        /// The task result represents a created quiz's <see cref="QuizInfo"/>.
-        /// </returns>
+        /// <returns>A <see cref="Task"/> that represents the asynchronous creation operation. The task result represents the created quiz's <see cref="QuizInfo"/>.</returns>
         public override async Task<QuizInfo> Create(CreateQuizRequest request, ServerCallContext context)
         {
             string title = request.Title;
@@ -65,10 +61,7 @@ namespace Quibble.Server.Grpc
         /// </summary>
         /// <param name="request">The <see cref="GetQuizRequest"/>.</param>
         /// <param name="context">The <see cref="ServerCallContext"/>.</param>
-        /// <returns>
-        /// A task that represents the asynchronous creation operation.
-        /// The task result represents a found quiz's <see cref="QuizInfo"/>.
-        /// </returns>
+        /// <returns>A <see cref="Task"/> that represents the asynchronous creation operation. The task result represents the found quiz's <see cref="QuizInfo"/>.</returns>
         public override async Task<QuizInfo> Get(GetQuizRequest request, ServerCallContext context)
         {
             string idStr = request.Id;
@@ -95,10 +88,7 @@ namespace Quibble.Server.Grpc
         /// </summary>
         /// <param name="request">The <see cref="EmptyMessage"/>.</param>
         /// <param name="context">The <see cref="ServerCallContext"/>.</param>
-        /// <returns>
-        /// A task that represents the asynchronous creation operation.
-        /// The task result represents the found quizzes' <see cref="QuizInfo"/>.
-        /// </returns>
+        /// <returns>A <see cref="Task"/> that represents the asynchronous creation operation. The task result represents the found quizzes' <see cref="QuizInfo"/>.</returns>
         public override async Task<GetOwnedQuizzesReply> GetOwned(EmptyMessage request, ServerCallContext context)
         {
             string userId = context.GetHttpContext().User.GetUserId();
@@ -114,10 +104,7 @@ namespace Quibble.Server.Grpc
         /// </summary>
         /// <param name="request">The <see cref="UpdateQuizTitleRequest"/>.</param>
         /// <param name="context">The <see cref="ServerCallContext"/>.</param>
-        /// <returns>
-        /// A task that represents the asynchronous creation operation.
-        /// The task result represents the updating of a <see cref="QuizInfo"/>.
-        /// </returns>
+        /// <returns>A <see cref="Task"/> that represents the asynchronous creation operation. The task result represents the updating of a <see cref="QuizInfo"/>.</returns>
         public override async Task<EmptyMessage> UpdateTitle(UpdateQuizTitleRequest request, ServerCallContext context)
         {
             string idStr = request.Id;
@@ -143,7 +130,7 @@ namespace Quibble.Server.Grpc
             quiz.Title = newTitle;
             await DbContext.SaveChangesAsync().ConfigureAwait(false);
 
-            await QuizHubContext.Clients.All//.Group(quiz.Id.ToString())
+            await QuizHubContext.Clients.Group(quiz.Id.ToString())
                 .OnQuizTitleUpdated(newTitle)
                 .ConfigureAwait(false);
 
