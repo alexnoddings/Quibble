@@ -15,7 +15,7 @@ namespace Quibble.Server.Extensions.ServiceConfiguration.Email
         /// </summary>
         /// <param name="serviceCollection">The <see cref="IServiceCollection"/>.</param>
         /// <param name="configureOptions">A delegate to configure the <see cref="SendGridEmailOptions"/>.</param>
-        /// <returns></returns>
+        /// <returns>The same instance of the <see cref="IServiceCollection"/> for chaining.</returns>
         public static IServiceCollection AddSendGridEmail(this IServiceCollection serviceCollection, Action<SendGridEmailOptions> configureOptions)
         {
             if (serviceCollection == null) throw new ArgumentNullException(nameof(serviceCollection));

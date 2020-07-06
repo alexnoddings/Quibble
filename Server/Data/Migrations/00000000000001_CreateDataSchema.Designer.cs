@@ -13,6 +13,7 @@ namespace Quibble.Server.Data.Migrations
     [Migration("00000000000001_CreateDataSchema")]
     partial class CreateDataSchema
     {
+        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
