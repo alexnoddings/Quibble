@@ -1,0 +1,22 @@
+﻿syntax = "proto3";
+
+package quibble.core;
+
+option csharp_namespace = "Quibble.Common.Protos";
+
+message EmptyMessage {
+}
+
+enum QuizState {
+	InDevelopment = 0;
+	WaitingForPlayers = 1;
+	InProgress = 2;
+	Closed = 3;
+}
+
+message QuizInfo {
+	string id = 1;
+	string ownerId = 2;
+	string title = 3;
+	QuizState state = 4;
+}
