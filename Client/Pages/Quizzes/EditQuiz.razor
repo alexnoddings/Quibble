@@ -1,0 +1,38 @@
+﻿@page "/quiz/{id}/edit"
+@inject NavigationManager NavigationManager
+@inject QuizService.QuizServiceClient QuizClient
+@inject IAccessTokenProvider AccessTokenProvider
+
+@if (ErrorDetail != null)
+{
+    <p>Error while performing action. @ErrorDetail</p>
+}
+
+@if (QuizInfo != null)
+{
+    <div class="mx-auto col-12 mb-5">
+        <div class="card">
+            <div class="card-body">
+                <div class="form-group">
+                    <div class="form-row">
+                        <div class="col-2 d-flex align-items-center">
+                            <button class="btn btn-block btn-info">
+                                <span class="oi oi-share-boxed"></span>
+                                <span>Publish</span>
+                            </button>
+                        </div>
+                        <div class="col-8">
+                            <UpdateEventInput @bind-Value="QuizInfo.Title" OnValueChanged="UpdateQuizTitleAsync" FireOnInput="true" FireOnBlur="false" />
+                        </div>
+                        <div class="col-2 d-flex align-items-center">
+                            <button class="btn btn-block btn-info">
+                                <span class="oi oi-trash mx-2"></span>
+                                <span>Delete</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
