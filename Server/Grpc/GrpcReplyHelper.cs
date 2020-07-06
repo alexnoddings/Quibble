@@ -8,11 +8,11 @@ namespace Quibble.Server.Grpc
 {
     internal static class GrpcReplyHelper
     {
-        private const string DefaultInvalidArgumentDetail = "One or more arguments were invalid";
+        private const string DefaultInvalidArgumentDetail = "One or more values were invalid";
         private const string DefaultNotFoundDetail = "Resource was not found";
-        private const string DefaultPermissionDeniedDetail = "You are not authorised to access this resource";
-        private const string DefaultUnimplementedDetail = "This operation is not implemented";
-        private const string DefaultUnauthenticatedDetail = "You must be authenticated to access this resource";
+        private const string DefaultPermissionDeniedDetail = "You are not allowed to perform this action";
+        private const string DefaultUnimplementedDetail = "This action is not implemented yet";
+        private const string DefaultUnauthenticatedDetail = "You must be logged in to perform this action";
 
         /// <summary>
         /// Sets the context status as <see cref="StatusCode.InvalidArgument"/> and creates an empty <typeparamref name="TReply"/>.
