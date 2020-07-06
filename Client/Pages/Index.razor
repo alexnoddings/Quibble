@@ -1,5 +1,10 @@
 ﻿@page "/"
+@inject QuizService.QuizServiceClient QuizClient
 
-<h1>Hello, world!</h1>
+<p><a href="/quiz/create">create quiz</a></p>
 
-Welcome to your new app.
+<AuthorizeView>
+    <Authorized>
+        <OwnedQuizzesList />
+    </Authorized>
+</AuthorizeView>
