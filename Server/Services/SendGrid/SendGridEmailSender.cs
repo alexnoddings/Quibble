@@ -17,7 +17,7 @@ namespace Quibble.Server.Services.SendGrid
         private readonly string _defaultFromDisplayName;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="SendGridEmailSender"/>.
+        /// Initialises a new instance of <see cref="SendGridEmailSender"/>.
         /// </summary>
         /// <param name="options">The <see cref="IOptions{SendGridEmailOptions}"/>.</param>
         public SendGridEmailSender(IOptions<SendGridEmailOptions> options)

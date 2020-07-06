@@ -23,7 +23,7 @@ namespace Quibble.Server.Services.SendGrid
         /// <param name="fromDisplayName">The display name of the sender.</param>
         /// <param name="subject">The subject of the email.</param>
         /// <param name="content">The content of the email.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <returns>A <see cref="Task"/> that represents the asynchronous send operation.</returns>
         Task SendEmailAsync(string toAddress, string toName, string fromUserName, string fromDisplayName, string subject, string content);
     }
 }
