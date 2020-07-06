@@ -14,7 +14,7 @@ namespace Quibble.Client.Pages
             await base.OnInitializedAsync().ConfigureAwait(false);
 
             var quizzesReply = await QuizClient.GetOwnedAsync().ConfigureAwait(false);
-            if (quizzesReply.OK)
+            if (quizzesReply.Ok)
             {
                 foreach (var quiz in quizzesReply.Value.QuizInfos)
                 {

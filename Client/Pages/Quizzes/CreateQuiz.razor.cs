@@ -15,7 +15,7 @@ namespace Quibble.Client.Pages.Quizzes
                 .CreateAsync(NewQuizTitle)
                 .ConfigureAwait(false);
 
-            if (reply.OK)
+            if (reply.Ok)
             {
                 NavigationManager.NavigateTo($"/quiz/{reply.Value.Id}");
                 return;

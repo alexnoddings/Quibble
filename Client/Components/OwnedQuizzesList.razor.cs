@@ -17,7 +17,7 @@ namespace Quibble.Client.Components
 
             var ownedQuizzesReply = await QuizClient.GetOwnedAsync().ConfigureAwait(false);
 
-            if (ownedQuizzesReply.OK)
+            if (ownedQuizzesReply.Ok)
             {
                 Quizzes.Clear();
                 var infos = ownedQuizzesReply.Value.QuizInfos;

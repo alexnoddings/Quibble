@@ -26,7 +26,7 @@ namespace Quibble.Client.Pages.Quizzes
             await base.OnInitializedAsync().ConfigureAwait(false);
 
             GrpcReply<QuizInfo> quizInfoReply = await QuizClient.GetAsync(Id).ConfigureAwait(false);
-            if (quizInfoReply.OK)
+            if (quizInfoReply.Ok)
                 QuizInfo = quizInfoReply.Value;
             else
                 ErrorDetail = quizInfoReply.StatusDetail;
@@ -48,7 +48,7 @@ namespace Quibble.Client.Pages.Quizzes
             if (newTitle.Length < 3) return;
 
             var reply = await QuizClient.UpdateTitleAsync(Id, newTitle).ConfigureAwait(false);
-            if (!reply.OK)
+            if (!reply.Ok)
                 ErrorDetail = reply.StatusDetail;
         }
 
