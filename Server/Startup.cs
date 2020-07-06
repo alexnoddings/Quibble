@@ -7,10 +7,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Linq;
-using Quibble.Common.Paths;
+using Quibble.Common.SignalR;
 using Quibble.Server.Data;
 using Quibble.Server.Extensions.ServiceConfiguration.Email;
 using Quibble.Server.Extensions.ServiceConfiguration.SignalR;
+using Quibble.Server.Grpc;
+using Quibble.Server.Hubs;
 using Quibble.Server.Models.Users;
 
 namespace Quibble.Server
@@ -21,7 +23,7 @@ namespace Quibble.Server
     public class Startup
     {
         /// <summary>
-        /// Initializes a new instance of <see cref="Startup"/>.
+        /// Initialises a new instance of <see cref="Startup"/>.
         /// </summary>
         /// <param name="configuration">The system configuration.</param>
         public Startup(IConfiguration configuration)
@@ -60,7 +62,7 @@ namespace Quibble.Server
                 .AddIdentityServerJwt();
 
             services.AddSignalR()
-                .AddJwtBearerAuthentication(SignalR.HubsBase);
+                .AddJwtBearerAuthentication(SignalRPaths.HubsBase);
 
             services.AddSendGridEmail(options =>
             {
@@ -113,6 +115,7 @@ namespace Quibble.Server
             {
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
+                endpoints.MapHub<QuizHub>(SignalRPaths.QuizHub);
                 endpoints.MapFallbackToFile("index.html");
             });
         }
