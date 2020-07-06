@@ -10,13 +10,25 @@ using Quibble.Common.Protos;
 
 namespace Quibble.Client
 {
+    /// <summary>
+    /// Entry point for the program.
+    /// </summary>
     public static class Program
     {
         internal const string ServerApiHttpClientName = "Quibble.ServerAPI";
 
+        /// <summary>
+        /// Entry point for the program.
+        /// </summary>
+        /// <param name="args">Command-line arguments.</param>
         public static async Task Main(string[] args) =>
             await CreateHostBuilder(args).Build().RunAsync().ConfigureAwait(false);
 
+        /// <summary>
+        /// Creates a host builder to run the program.
+        /// </summary>
+        /// <param name="args">Command-line arguments.</param>
+        /// <returns>The <see cref="WebAssemblyHostBuilder"/> for the program.</returns>
         public static WebAssemblyHostBuilder CreateHostBuilder(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -25,6 +37,11 @@ namespace Quibble.Client
             return builder;
         }
 
+        /// <summary>
+        /// Configures the services added to the system's container.
+        /// </summary>
+        /// <param name="services">The <see cref="IServiceCollection"/> to configure.</param>
+        /// <param name="env">The <see cref="IWebAssemblyHostEnvironment"/> for the executing environment.</param>
         public static void ConfigureServices(IServiceCollection services, IWebAssemblyHostEnvironment env)
         {
             services.AddHttpClient(ServerApiHttpClientName, client => client.BaseAddress = new Uri(env.BaseAddress))

@@ -15,18 +15,36 @@ using Quibble.Server.Models.Quizzes;
 
 namespace Quibble.Server.Grpc
 {
+    /// <summary>
+    /// Implements quiz operations.
+    /// </summary>
     [Authorize]
     public class QuizService : Common.Protos.QuizService.QuizServiceBase
     {
         private ApplicationDbContext DbContext { get; }
         private IHubContext<QuizHub, IQuizHub> QuizHubContext { get; }
 
+        /// <summary>
+        /// Initialises a new instance of <see cref="QuizService"/>.
+        /// </summary>
+        /// <param name="dbContext">A <see cref="ApplicationDbContext"/>.</param>
+        /// <param name="quizHubContext">A <see cref="IHubContext{QuizHub, IQuizHub}"/>.</param>
         public QuizService(ApplicationDbContext dbContext, IHubContext<QuizHub, IQuizHub> quizHubContext)
         {
             DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             QuizHubContext = quizHubContext ?? throw new ArgumentNullException(nameof(quizHubContext));
         }
 
+        /// <summary>
+        /// Creates a new <see cref="QuizInfo"/>.
+        /// </summary>
+        /// <param name="request">The <see cref="CreateQuizRequest"/>.</param>
+        /// <param name="context">The <see cref="ServerCallContext"/>.</param>
+        /// <returns>A <see cref="QuizInfo"/></returns>
+        /// <returns>
+        /// A task that represents the asynchronous creation operation.
+        /// The task result represents a created quiz's <see cref="QuizInfo"/>.
+        /// </returns>
         public override async Task<QuizInfo> Create(CreateQuizRequest request, ServerCallContext context)
         {
             string title = request.Title;
@@ -42,6 +60,15 @@ namespace Quibble.Server.Grpc
             return ToQuizInfo(newQuiz);
         }
 
+        /// <summary>
+        /// Gets a <see cref="QuizInfo"/>.
+        /// </summary>
+        /// <param name="request">The <see cref="GetQuizRequest"/>.</param>
+        /// <param name="context">The <see cref="ServerCallContext"/>.</param>
+        /// <returns>
+        /// A task that represents the asynchronous creation operation.
+        /// The task result represents a found quiz's <see cref="QuizInfo"/>.
+        /// </returns>
         public override async Task<QuizInfo> Get(GetQuizRequest request, ServerCallContext context)
         {
             string idStr = request.Id;
@@ -63,6 +90,15 @@ namespace Quibble.Server.Grpc
             return ToQuizInfo(quiz);
         }
 
+        /// <summary>
+        /// Gets the <see cref="QuizInfo"/>s owned by the calling user.
+        /// </summary>
+        /// <param name="request">The <see cref="EmptyMessage"/>.</param>
+        /// <param name="context">The <see cref="ServerCallContext"/>.</param>
+        /// <returns>
+        /// A task that represents the asynchronous creation operation.
+        /// The task result represents the found quizzes' <see cref="QuizInfo"/>.
+        /// </returns>
         public override async Task<GetOwnedQuizzesReply> GetOwned(EmptyMessage request, ServerCallContext context)
         {
             string userId = context.GetHttpContext().User.GetUserId();
@@ -73,6 +109,15 @@ namespace Quibble.Server.Grpc
             return reply;
         }
 
+        /// <summary>
+        /// Updates the title of a <see cref="QuizInfo"/>.
+        /// </summary>
+        /// <param name="request">The <see cref="UpdateQuizTitleRequest"/>.</param>
+        /// <param name="context">The <see cref="ServerCallContext"/>.</param>
+        /// <returns>
+        /// A task that represents the asynchronous creation operation.
+        /// The task result represents the updating of a <see cref="QuizInfo"/>.
+        /// </returns>
         public override async Task<EmptyMessage> UpdateTitle(UpdateQuizTitleRequest request, ServerCallContext context)
         {
             string idStr = request.Id;
@@ -105,6 +150,11 @@ namespace Quibble.Server.Grpc
             return GrpcReplyHelper.EmptyMessage;
         }
 
+        /// <summary>
+        /// Converts a <see cref="Quiz"/> to a <see cref="QuizInfo"/>.
+        /// </summary>
+        /// <param name="quiz">The <see cref="Quiz"/> to convert.</param>
+        /// <returns>The converted <see cref="QuizInfo"/>.</returns>
         private static QuizInfo ToQuizInfo(Quiz quiz) =>
             new QuizInfo
             {
