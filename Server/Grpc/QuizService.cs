@@ -59,10 +59,10 @@ namespace Quibble.Server.Grpc
         /// <summary>
         /// Gets a <see cref="QuizInfo"/>.
         /// </summary>
-        /// <param name="request">The <see cref="GetQuizRequest"/>.</param>
+        /// <param name="request">The <see cref="GetEntityRequest"/>.</param>
         /// <param name="context">The <see cref="ServerCallContext"/>.</param>
-        /// <returns>A <see cref="Task"/> that represents the asynchronous creation operation. The task result represents the found quiz's <see cref="QuizInfo"/>.</returns>
-        public override async Task<QuizInfo> Get(GetQuizRequest request, ServerCallContext context)
+        /// <returns>A <see cref="Task"/> that represents the asynchronous get operation. The task result represents the found quiz's <see cref="QuizInfo"/>.</returns>
+        public override async Task<QuizInfo> GetInfo(GetEntityRequest request, ServerCallContext context)
         {
             string idStr = request.Id;
             if (string.IsNullOrWhiteSpace(idStr))
@@ -84,17 +84,58 @@ namespace Quibble.Server.Grpc
         }
 
         /// <summary>
+        /// Gets a <see cref="QuizFull"/>.
+        /// </summary>
+        /// <param name="request">The <see cref="GetEntityRequest"/>.</param>
+        /// <param name="context">The <see cref="ServerCallContext"/>.</param>
+        /// <returns>A <see cref="Task"/> that represents the asynchronous get operation. The task result represents the found quiz's <see cref="QuizInfo"/>.</returns>
+        public override async Task<QuizFull> GetFull(GetEntityRequest request, ServerCallContext context)
+        {
+            string idStr = request.Id;
+            if (string.IsNullOrWhiteSpace(idStr))
+                return GrpcReplyHelper.InvalidArgument<QuizFull>(context, $"{nameof(request.Id)} cannot be empty");
+
+            if (!Guid.TryParse(idStr, out Guid id))
+                return GrpcReplyHelper.InvalidArgument<QuizFull>(context, $"{nameof(request.Id)} was not valid");
+
+            string userId = context.GetHttpContext().User.GetUserId();
+            Quiz quiz = await DbContext.Quizzes.FindAsync(id).ConfigureAwait(false);
+
+            if (quiz == null)
+                return GrpcReplyHelper.NotFound<QuizFull>(context, "No quiz found for given Id");
+
+            if (quiz.OwnerId != userId)
+                return GrpcReplyHelper.PermissionDenied<QuizFull>(context, "You do not own this quiz");
+
+            var quizFull = new QuizFull {Info = ToQuizInfo(quiz)};
+
+            await foreach (var round in DbContext.Rounds.Where(r => r.QuizId == quiz.Id).AsAsyncEnumerable())
+            {
+                var roundInfo = RoundService.ToRoundInfo(round);
+                var roundFull = new RoundFull {Info = roundInfo};
+                await foreach (var question in DbContext.Questions.Where(q => q.RoundId == round.Id).AsAsyncEnumerable())
+                {
+                    var questionInfo = QuestionService.ToQuestionInfo(question);
+                    roundFull.Questions.Add(questionInfo);
+                }
+                quizFull.Rounds.Add(roundFull);
+            }
+
+            return quizFull;
+        }
+
+        /// <summary>
         /// Gets the <see cref="QuizInfo"/>s owned by the calling user.
         /// </summary>
         /// <param name="request">The <see cref="EmptyMessage"/>.</param>
         /// <param name="context">The <see cref="ServerCallContext"/>.</param>
-        /// <returns>A <see cref="Task"/> that represents the asynchronous creation operation. The task result represents the found quizzes' <see cref="QuizInfo"/>.</returns>
-        public override async Task<GetOwnedQuizzesReply> GetOwned(EmptyMessage request, ServerCallContext context)
+        /// <returns>A <see cref="Task"/> that represents the asynchronous get operation. The task result represents the found quizzes' <see cref="QuizInfo"/>.</returns>
+        public override async Task<GetOwnedInfosReply> GetOwnedInfos(EmptyMessage request, ServerCallContext context)
         {
             string userId = context.GetHttpContext().User.GetUserId();
             var quizzes = await DbContext.Quizzes.Where(q => q.OwnerId == userId).ToListAsync().ConfigureAwait(false);
 
-            var reply = new GetOwnedQuizzesReply();
+            var reply = new GetOwnedInfosReply();
             reply.QuizInfos.AddRange(quizzes.Select(ToQuizInfo));
             return reply;
         }
@@ -104,7 +145,7 @@ namespace Quibble.Server.Grpc
         /// </summary>
         /// <param name="request">The <see cref="UpdateQuizTitleRequest"/>.</param>
         /// <param name="context">The <see cref="ServerCallContext"/>.</param>
-        /// <returns>A <see cref="Task"/> that represents the asynchronous creation operation. The task result represents the updating of a <see cref="QuizInfo"/>.</returns>
+        /// <returns>A <see cref="Task"/> that represents the asynchronous update operation. The task result represents the updating of a <see cref="QuizInfo"/>.</returns>
         public override async Task<EmptyMessage> UpdateTitle(UpdateQuizTitleRequest request, ServerCallContext context)
         {
             string idStr = request.Id;
@@ -142,7 +183,7 @@ namespace Quibble.Server.Grpc
         /// </summary>
         /// <param name="quiz">The <see cref="Quiz"/> to convert.</param>
         /// <returns>The converted <see cref="QuizInfo"/>.</returns>
-        private static QuizInfo ToQuizInfo(Quiz quiz) =>
+        internal static QuizInfo ToQuizInfo(Quiz quiz) =>
             new QuizInfo
             {
                 Id = quiz.Id.ToString(), 
