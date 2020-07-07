@@ -171,8 +171,8 @@ namespace Quibble.Server.Grpc
             quiz.Title = newTitle;
             await DbContext.SaveChangesAsync().ConfigureAwait(false);
 
-            await QuizHubContext.Clients.Group(quiz.Id.ToString())
-                .OnQuizTitleUpdated(newTitle)
+            await QuizHubContext.Clients.Group(QuizHub.GetQuizGroupName(quiz))
+                .OnQuizUpdated(newTitle)
                 .ConfigureAwait(false);
 
             return GrpcReplyHelper.EmptyMessage;
