@@ -46,7 +46,17 @@ namespace Quibble.Server.Hubs
             if (quiz.OwnerId != userId)
                 throw new HubException("You do not have permission to this quiz");
 
-            await Groups.AddToGroupAsync(Context.ConnectionId, quiz.Id.ToString()).ConfigureAwait(false);
+            await Groups.AddToGroupAsync(Context.ConnectionId, GetQuizGroupName(quiz)).ConfigureAwait(false);
         }
+
+        public static string GetQuizGroupName(Quiz quiz)
+        {
+            if (quiz == null) throw new ArgumentNullException(nameof(quiz));
+            return GetQuizGroupName(quiz.Id);
+        }
+
+        public static string GetQuizGroupName(Guid quizId) => GetGroupName("quiz", quizId);
+
+        private static string GetGroupName(string entityType, Guid entityId) => $"{entityType}::{entityId}";
     }
 }
