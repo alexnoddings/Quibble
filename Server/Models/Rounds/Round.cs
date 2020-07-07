@@ -10,12 +10,12 @@ namespace Quibble.Server.Models.Rounds
     public class Round : IEntity<Guid>
     {
         /// <inheritdoc />
-        public Guid Id { get; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// The identifier of the parent <see cref="Quiz"/>.
         /// </summary>
-        public Guid QuizId { get; }
+        public Guid QuizId { get; set; }
 
         /// <summary>
         /// The title.
