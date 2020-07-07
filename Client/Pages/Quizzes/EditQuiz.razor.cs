@@ -15,7 +15,7 @@ namespace Quibble.Client.Pages.Quizzes
         [Parameter]
         public string Id { get; set; } = string.Empty;
 
-        private QuizInfo? QuizInfo { get; set; }
+        private QuizFull? QuizFull { get; set; }
 
         private string? ErrorDetail { get; set; }
 
@@ -25,11 +25,11 @@ namespace Quibble.Client.Pages.Quizzes
         {
             await base.OnInitializedAsync().ConfigureAwait(false);
 
-            GrpcReply<QuizInfo> quizInfoReply = await QuizClient.GetAsync(Id).ConfigureAwait(false);
-            if (quizInfoReply.Ok)
-                QuizInfo = quizInfoReply.Value;
+            GrpcReply<QuizFull> quizFullReply = await QuizClient.GetFullAsync(Id).ConfigureAwait(false);
+            if (quizFullReply.Ok)
+                QuizFull = quizFullReply.Value;
             else
-                ErrorDetail = quizInfoReply.StatusDetail;
+                ErrorDetail = quizFullReply.StatusDetail;
 
             HubConnection = new HubConnectionBuilder()
                 .WithAuthenticatedRelativeUrl(NavigationManager, "/hubs/quiz", AccessTokenProvider)
@@ -45,9 +45,9 @@ namespace Quibble.Client.Pages.Quizzes
 
         private async Task UpdateQuizTitleAsync()
         {
-            if (QuizInfo == null) return;
+            if (QuizFull == null) return;
 
-            var newTitle = QuizInfo.Title;
+            var newTitle = QuizFull.Info.Title;
             if (newTitle.Length < 3) return;
 
             var reply = await QuizClient.UpdateTitleAsync(Id, newTitle).ConfigureAwait(false);
@@ -57,8 +57,8 @@ namespace Quibble.Client.Pages.Quizzes
 
         private Task OnQuizTitleUpdatedAsync(string newTitle)
         {
-            if (QuizInfo != null)
-                QuizInfo.Title = newTitle;
+            if (QuizFull != null)
+                QuizFull.Info.Title = newTitle;
 
             return InvokeAsync(StateHasChanged);
         }
