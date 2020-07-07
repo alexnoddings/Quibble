@@ -98,6 +98,8 @@ namespace Quibble.Client
 
             services.AddGrpcWebChannel();
             services.AddAuthorisedGrpcClient<QuizService.QuizServiceClient>();
+            services.AddAuthorisedGrpcClient<RoundService.RoundServiceClient>();
+            services.AddAuthorisedGrpcClient<QuestionService.QuestionServiceClient>();
         }
     }
 }
