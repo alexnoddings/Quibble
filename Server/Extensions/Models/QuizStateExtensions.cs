@@ -17,10 +17,10 @@ namespace Quibble.Server.Extensions.Models
         public static ProtosQuizState ToProtoEnum(this ModelsQuizState state) =>
             state switch
             {
-                ModelsQuizState.Closed => ProtosQuizState.Closed,
-                ModelsQuizState.InDevelopment => ProtosQuizState.InDevelopment,
-                ModelsQuizState.InProgress => ProtosQuizState.InProgress,
-                ModelsQuizState.WaitingForPlayers => ProtosQuizState.WaitingForPlayers,
+                ModelsQuizState.Closed => ProtosQuizState.QuizClosed,
+                ModelsQuizState.InDevelopment => ProtosQuizState.QuizInDevelopment,
+                ModelsQuizState.InProgress => ProtosQuizState.QuizInProgress,
+                ModelsQuizState.WaitingForPlayers => ProtosQuizState.QuizWaitingForPlayers,
                 _ => throw new ArgumentOutOfRangeException(nameof(state))
             };
 
@@ -32,10 +32,10 @@ namespace Quibble.Server.Extensions.Models
         public static ModelsQuizState ToModelEnum(this ProtosQuizState state) =>
             state switch
             {
-                ProtosQuizState.Closed => ModelsQuizState.Closed,
-                ProtosQuizState.InDevelopment => ModelsQuizState.InDevelopment,
-                ProtosQuizState.InProgress => ModelsQuizState.InProgress,
-                ProtosQuizState.WaitingForPlayers => ModelsQuizState.WaitingForPlayers,
+                ProtosQuizState.QuizClosed => ModelsQuizState.Closed,
+                ProtosQuizState.QuizInDevelopment => ModelsQuizState.InDevelopment,
+                ProtosQuizState.QuizInProgress => ModelsQuizState.InProgress,
+                ProtosQuizState.QuizWaitingForPlayers => ModelsQuizState.WaitingForPlayers,
                 _ => throw new ArgumentOutOfRangeException(nameof(state))
             };
     }
