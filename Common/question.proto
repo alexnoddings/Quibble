@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package quibble.question;
+
+import "core.proto";
+
+option csharp_namespace = "Quibble.Common.Protos";
+
+service QuestionService {
+}
