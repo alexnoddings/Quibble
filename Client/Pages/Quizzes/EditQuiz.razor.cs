@@ -36,7 +36,7 @@ namespace Quibble.Client.Pages.Quizzes
                 .Build()
                 .AsQuizHubConnection();
 
-            HubConnection.OnQuizTitleUpdated(OnQuizTitleUpdatedAsync);
+            HubConnection.OnQuizUpdated(OnQuizUpdatedAsync);
 
             await HubConnection.StartAsync().ConfigureAwait(false);
 
@@ -55,7 +55,7 @@ namespace Quibble.Client.Pages.Quizzes
                 ErrorDetail = reply.StatusDetail;
         }
 
-        private Task OnQuizTitleUpdatedAsync(string newTitle)
+        private Task OnQuizUpdatedAsync(string newTitle)
         {
             if (QuizFull != null)
                 QuizFull.Info.Title = newTitle;
