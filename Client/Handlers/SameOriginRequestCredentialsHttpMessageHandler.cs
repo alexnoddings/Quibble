@@ -21,7 +21,7 @@ namespace Quibble.Client.Handlers
         /// </summary>
         /// <param name="request">The HTTP request message being sent.</param>
         /// <param name="cancellationToken">A cancellation token to cancel operation.</param>
-        /// <returns>The task object representing the asynchronous operation.</returns>
+        /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             request.SetBrowserRequestCredentials(BrowserRequestCredentials.SameOrigin);

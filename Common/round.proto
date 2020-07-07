@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package quibble.round;
+
+import "core.proto";
+
+option csharp_namespace = "Quibble.Common.Protos";
+
+service RoundService {
+	rpc Create (CreateRoundRequest) returns (.quibble.core.RoundInfo);
+
+	rpc GetInfo (.quibble.core.GetEntityRequest) returns (.quibble.core.RoundInfo);
+	rpc GetFull (.quibble.core.GetEntityRequest) returns (.quibble.core.RoundFull);
+
+	rpc UpdateTitle (UpdateRoundTitleRequest) returns (.quibble.core.EmptyMessage);
+	rpc UpdateState (UpdateRoundStateRequest) returns (.quibble.core.EmptyMessage);
+}
+
+message CreateRoundRequest {
+	string quizId = 1;
+	string title = 2;
+}
+
+message UpdateRoundTitleRequest {
+	string id = 1;
+	string newTitle = 2;
+}
+
+message UpdateRoundStateRequest {
+	string id = 1;
+	.quibble.core.RoundState newState = 2;
+}

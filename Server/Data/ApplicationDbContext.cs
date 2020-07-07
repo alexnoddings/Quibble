@@ -21,22 +21,22 @@ namespace Quibble.Server.Data
         /// Gets or sets the <see cref="DbSet{Quiz}"/>.
         /// </summary>
         public DbSet<Quiz> Quizzes { get; set; } = default!;
-
+        
         /// <summary>
         /// Gets or sets the <see cref="DbSet{Round}"/>.
         /// </summary>
         public DbSet<Round> Rounds { get; set; } = default!;
-
+        
         /// <summary>
         /// Gets or sets the <see cref="DbSet{Question}"/>.
         /// </summary>
         public DbSet<Question> Questions { get; set; } = default!;
-
+        
         /// <summary>
         /// Gets or sets the <see cref="DbSet{Participant}"/>.
         /// </summary>
         public DbSet<Participant> Participants { get; set; } = default!;
-
+        
         /// <summary>
         /// Gets or sets the <see cref="DbSet{SubmittedAnswer}"/>.
         /// </summary>
@@ -138,7 +138,8 @@ namespace Quibble.Server.Data
                     .HasOne<ApplicationUser>()
                     .WithMany()
                     .HasForeignKey(participant => participant.UserId)
-                    .IsRequired();
+                    .IsRequired(false)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
 
                 entityBuilder
                     .HasOne<Quiz>()
@@ -150,7 +151,8 @@ namespace Quibble.Server.Data
                     .HasMany<SubmittedAnswer>()
                     .WithOne()
                     .HasForeignKey(submittedAnswer => submittedAnswer.ParticipantId)
-                    .IsRequired();
+                    .IsRequired(false)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
 
                 entityBuilder.ToTable("QuizParticipants");
             });

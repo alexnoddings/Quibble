@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package quibble.quiz;
+
+import "core.proto";
+
+option csharp_namespace = "Quibble.Common.Protos";
+
+service QuizService {
+	rpc Create (CreateQuizRequest) returns (.quibble.core.QuizInfo);
+
+	rpc GetInfo (.quibble.core.GetEntityRequest) returns (.quibble.core.QuizInfo);
+	rpc GetOwnedInfos (.quibble.core.EmptyMessage) returns (GetOwnedInfosReply);
+	rpc GetFull (.quibble.core.GetEntityRequest) returns (.quibble.core.QuizFull);
+
+	rpc UpdateTitle (UpdateQuizTitleRequest) returns (.quibble.core.EmptyMessage);
+}
+
+message CreateQuizRequest {
+	string title = 1;
+}
+
+message GetOwnedInfosReply {
+	repeated quibble.core.QuizInfo QuizInfos = 1;
+}
+
+message UpdateQuizTitleRequest {
+	string id = 1;
+	string newTitle = 2;
+}

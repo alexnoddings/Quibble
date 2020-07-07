@@ -1,0 +1,13 @@
+﻿@inject QuizService.QuizServiceClient QuizClient
+
+@if (Error != null)
+{
+    <p>@Error</p>
+}
+else
+{
+    @foreach (var quiz in Quizzes)
+    {
+        <p><a href="/quiz/@quiz.Id/edit">@quiz.Title</a></p>
+    }
+}

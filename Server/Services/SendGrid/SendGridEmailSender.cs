@@ -17,7 +17,7 @@ namespace Quibble.Server.Services.SendGrid
         private readonly string _defaultFromDisplayName;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="SendGridEmailSender"/>.
+        /// Initialises a new instance of <see cref="SendGridEmailSender"/>.
         /// </summary>
         /// <param name="options">The <see cref="IOptions{SendGridEmailOptions}"/>.</param>
         public SendGridEmailSender(IOptions<SendGridEmailOptions> options)
@@ -81,7 +81,7 @@ namespace Quibble.Server.Services.SendGrid
                 HtmlContent = content,
             };
             message.AddTo(to);
-            message.SetClickTracking(false, false);
+            message.SetClickTracking(true, true);
 
             return client.SendEmailAsync(message);
         }

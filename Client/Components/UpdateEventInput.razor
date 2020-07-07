@@ -1,0 +1,10 @@
+﻿@using Microsoft.Extensions.Logging
+@inject ILogger<UpdateEventInput> Logger
+
+@if (!string.IsNullOrWhiteSpace(Label))
+{
+    <label>@Label</label>
+}
+
+<input type="text" class="form-control @Class" value="@Value" @oninput="OnInput" @onblur="OnBlur" @attributes="Attributes"/>
+
