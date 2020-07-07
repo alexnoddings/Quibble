@@ -15,7 +15,7 @@ namespace Quibble.Client.Components
         {
             await base.OnInitializedAsync().ConfigureAwait(false);
 
-            var ownedQuizzesReply = await QuizClient.GetOwnedAsync().ConfigureAwait(false);
+            var ownedQuizzesReply = await QuizClient.GetOwnedInfosAsync().ConfigureAwait(false);
 
             if (ownedQuizzesReply.Ok)
             {
