@@ -1,19 +1,22 @@
 ﻿@page "/quiz/{id}/edit"
+@using System.Globalization
 @inject NavigationManager NavigationManager
 @inject QuizService.QuizServiceClient QuizClient
+@inject RoundService.RoundServiceClient RoundClient
+@inject QuestionService.QuestionServiceClient QuestionClient
 @inject IAccessTokenProvider AccessTokenProvider
 
 @if (ErrorDetail != null)
 {
-    <p>Error while performing action. @ErrorDetail</p>
+    <p>@DateTime.Now.ToString("HH:mm:ss", CultureInfo.CurrentUICulture) Error while performing action. @ErrorDetail&period;</p>
 }
 
 @if (QuizFull != null)
 {
     <div class="mx-auto col-12 mb-5">
-        <div class="card">
+        <div class="card my-2">
             <div class="card-body">
-                <div class="form-group">
+                <div class="form-group my-0">
                     <div class="form-row">
                         <div class="col-2 d-flex align-items-center">
                             <button class="btn btn-block btn-info">
@@ -22,14 +25,91 @@
                             </button>
                         </div>
                         <div class="col-8">
-                            <UpdateEventInput @bind-Value="QuizFull.Info.Title" OnValueChanged="UpdateQuizTitleAsync" FireOnInput="true" FireOnBlur="false" />
+                            <UpdateEventInput Placeholder="Quiz Title" @bind-Value="QuizFull.Info.Title" OnValueChanged="UpdateQuizTitleAsync" FireOnInput="false" FireOnBlur="true" />
                         </div>
                         <div class="col-2 d-flex align-items-center">
-                            <button class="btn btn-block btn-info">
+                            <button class="btn btn-block btn-danger" @onclick="async () => await DeleteQuizAsync()">
                                 <span class="oi oi-trash mx-2"></span>
-                                <span>Delete</span>
+                                <span>Delete Quiz</span>
                             </button>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @{
+            int roundCount = 0;
+            foreach (var round in QuizFull.Rounds)
+            {
+                roundCount++;
+                <div class="card my-2">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <div class="form-row">
+                                <div class="col-1">
+                                    @roundCount
+                                </div>
+                                <div class="col-9">
+                                    <UpdateEventInput Placeholder="Round Title" @bind-Value="round.Info.Title" OnValueChanged="async () => await UpdateRoundTitleAsync(round)" FireOnInput="false" FireOnBlur="true"/>
+                                </div>
+                                <div class="col-2 d-flex align-items-center">
+                                    <button class="btn btn-block btn-danger" @onclick="async () => await DeleteRoundAsync(round)">
+                                        <span class="oi oi-trash mx-2"></span>
+                                        <span>Delete Round</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @{
+                                int questionCount = 0;
+                                foreach (var question in round.Questions)
+                                {
+                                    questionCount++;
+                                    <div class="form-row">
+                                        <div class="col-1">
+                                            @roundCount&period;@questionCount
+                                        </div>
+                                        <div class="col-6">
+                                            <UpdateEventInput Placeholder="Question Body" @bind-Value="question.Body" OnValueChanged="async () => await UpdateQuestionBodyAsync(question)" FireOnInput="false" FireOnBlur="true"/>
+                                        </div>
+                                        <div class="col-3">
+                                            <UpdateEventInput Placeholder="Question Answer" @bind-Value="question.Answer" OnValueChanged="async () => await UpdateQuestionAnswerAsync(question)" FireOnInput="false" FireOnBlur="true"/>
+                                        </div>
+                                        <div class="col-2">
+                                            <button class="btn btn-block btn-danger" @onclick="async () => await DeleteQuestionAsync(question)">
+                                                <span class="oi oi-trash"></span>
+                                                <span>Delete Question</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                        <div class="row">
+                            <div class="offset-4 col-4">
+                                <div class="row">
+                                    <div class="col">
+                                        <button class="btn btn-block btn-info mt-2" @onclick="async () => await CreateQuestionAsync(round, 1)">Add question x1</button>
+                                    </div>
+                                    <div class="col">
+                                        <button class="btn btn-block btn-info mt-2" @onclick="async () => await CreateQuestionAsync(round, 5)">Add question x5</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        <div class="row mt-2 mb-5">
+            <div class="offset-4 col-4">
+                <div class="row">
+                    <div class="col">
+                        <button class="btn btn-block btn-info" @onclick="async () => await CreateRoundAsync(1)">Add round x1</button>
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-block btn-info" @onclick="async () => await CreateRoundAsync(5)">Add round x5</button>
                     </div>
                 </div>
             </div>
