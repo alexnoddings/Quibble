@@ -44,7 +44,7 @@ namespace Quibble.Server.Grpc
         public override async Task<QuizInfo> Create(CreateQuizRequest request, ServerCallContext context)
         {
             string title = request.Title;
-            if (string.IsNullOrWhiteSpace(title))
+            if (title == null)
                 return GrpcReplyHelper.InvalidArgument<QuizInfo>(context, $"{nameof(request.Title)} cannot be empty");
 
             string userId = context.GetHttpContext().User.GetUserId();
@@ -59,10 +59,10 @@ namespace Quibble.Server.Grpc
         /// <summary>
         /// Gets a <see cref="QuizInfo"/>.
         /// </summary>
-        /// <param name="request">The <see cref="GetEntityRequest"/>.</param>
+        /// <param name="request">The <see cref="EntityRequest"/>.</param>
         /// <param name="context">The <see cref="ServerCallContext"/>.</param>
         /// <returns>A <see cref="Task"/> that represents the asynchronous get operation. The task result represents the found quiz's <see cref="QuizInfo"/>.</returns>
-        public override async Task<QuizInfo> GetInfo(GetEntityRequest request, ServerCallContext context)
+        public override async Task<QuizInfo> GetInfo(EntityRequest request, ServerCallContext context)
         {
             string idStr = request.Id;
             if (string.IsNullOrWhiteSpace(idStr))
@@ -86,10 +86,10 @@ namespace Quibble.Server.Grpc
         /// <summary>
         /// Gets a <see cref="QuizFull"/>.
         /// </summary>
-        /// <param name="request">The <see cref="GetEntityRequest"/>.</param>
+        /// <param name="request">The <see cref="EntityRequest"/>.</param>
         /// <param name="context">The <see cref="ServerCallContext"/>.</param>
         /// <returns>A <see cref="Task"/> that represents the asynchronous get operation. The task result represents the found quiz's <see cref="QuizInfo"/>.</returns>
-        public override async Task<QuizFull> GetFull(GetEntityRequest request, ServerCallContext context)
+        public override async Task<QuizFull> GetFull(EntityRequest request, ServerCallContext context)
         {
             string idStr = request.Id;
             if (string.IsNullOrWhiteSpace(idStr))
@@ -109,11 +109,14 @@ namespace Quibble.Server.Grpc
 
             var quizFull = new QuizFull {Info = ToQuizInfo(quiz)};
 
-            await foreach (var round in DbContext.Rounds.Where(r => r.QuizId == quiz.Id).AsAsyncEnumerable())
+            var rounds = await DbContext.Rounds.Where(r => r.QuizId == quiz.Id).ToListAsync().ConfigureAwait(false);
+            foreach (var round in rounds)
             {
                 var roundInfo = RoundService.ToRoundInfo(round);
                 var roundFull = new RoundFull {Info = roundInfo};
-                await foreach (var question in DbContext.Questions.Where(q => q.RoundId == round.Id).AsAsyncEnumerable())
+
+                var questions = await DbContext.Questions.Where(q => q.RoundId == round.Id).ToListAsync().ConfigureAwait(false);
+                foreach (var question in questions)
                 {
                     var questionInfo = QuestionService.ToQuestionInfo(question);
                     roundFull.Questions.Add(questionInfo);
@@ -155,9 +158,9 @@ namespace Quibble.Server.Grpc
             if (!Guid.TryParse(idStr, out Guid id))
                 return GrpcReplyHelper.InvalidArgument(context, $"{nameof(request.Id)} was not valid");
 
-            string? newTitle = request.NewTitle?.Trim();
-            if (newTitle == null || newTitle.Length < 3)
-                return GrpcReplyHelper.InvalidArgument(context, $"{nameof(request.NewTitle)} must be at least 3 letters long excluding spaces");
+            string? newTitle = request.NewTitle;
+            if (newTitle == null)
+                return GrpcReplyHelper.InvalidArgument(context, $"{nameof(request.NewTitle)} cannot be null");
 
             string userId = context.GetHttpContext().User.GetUserId();
             Quiz quiz = await DbContext.Quizzes.FindAsync(id).ConfigureAwait(false);
@@ -172,7 +175,36 @@ namespace Quibble.Server.Grpc
             await DbContext.SaveChangesAsync().ConfigureAwait(false);
 
             await QuizHubContext.Clients.Group(QuizHub.GetQuizGroupName(quiz))
-                .OnQuizUpdated(newTitle)
+                .OnQuizUpdated(ToQuizInfo(quiz))
+                .ConfigureAwait(false);
+
+            return GrpcReplyHelper.EmptyMessage;
+        }
+
+        public override async Task<EmptyMessage> Delete(EntityRequest request, ServerCallContext context)
+        {
+            string idStr = request.Id;
+            if (string.IsNullOrWhiteSpace(idStr))
+                return GrpcReplyHelper.InvalidArgument(context, $"{nameof(request.Id)} cannot be empty");
+
+            if (!Guid.TryParse(idStr, out Guid id))
+                return GrpcReplyHelper.InvalidArgument(context, $"{nameof(request.Id)} was not valid");
+
+            string userId = context.GetHttpContext().User.GetUserId();
+            Quiz quiz = await DbContext.Quizzes.FindAsync(id).ConfigureAwait(false);
+
+            if (quiz == null)
+                return GrpcReplyHelper.NotFound(context, "No quiz found for given Id");
+
+            if (quiz.OwnerId != userId)
+                return GrpcReplyHelper.PermissionDenied(context, "You do not own this quiz");
+
+            string quizIdStr = quiz.Id.ToString();
+            DbContext.Remove(quiz);
+            await DbContext.SaveChangesAsync().ConfigureAwait(false);
+
+            await QuizHubContext.Clients.Group(QuizHub.GetQuizGroupName(quiz))
+                .OnQuizDeleted(quizIdStr)
                 .ConfigureAwait(false);
 
             return GrpcReplyHelper.EmptyMessage;
