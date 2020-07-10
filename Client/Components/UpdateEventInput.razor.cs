@@ -21,6 +21,9 @@ namespace Quibble.Client.Components
         public string? Value { get; set; }
 
         [Parameter]
+        public string? Placeholder { get; set; }
+
+        [Parameter]
         public EventCallback<string> ValueChanged { get; set; }
 
         [Parameter]
