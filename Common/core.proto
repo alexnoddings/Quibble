@@ -60,6 +60,6 @@ message QuestionInfo {
 	QuestionState state = 5;
 }
 
-message GetEntityRequest {
+message EntityRequest {
 	string id = 1;
 }

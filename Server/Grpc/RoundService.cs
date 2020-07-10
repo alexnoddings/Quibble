@@ -5,6 +5,7 @@ using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Quibble.Common.Protos;
 using Quibble.Common.SignalR;
 using Quibble.Server.Data;
@@ -52,33 +53,34 @@ namespace Quibble.Server.Grpc
             if (!Guid.TryParse(quizIdStr, out Guid quizId))
                 return GrpcReplyHelper.InvalidArgument<RoundInfo>(context, $"{nameof(request.QuizId)} was not valid");
 
-            string title = request.Title;
-            if (string.IsNullOrWhiteSpace(title))
-                return GrpcReplyHelper.InvalidArgument<RoundInfo>(context, $"{nameof(request.Title)} cannot be empty");
-
             string userId = context.GetHttpContext().User.GetUserId();
-            Quiz quiz = await DbContext.Quizzes.FindAsync(quizId).ConfigureAwait(false);
+            Quiz parentQuiz = await DbContext.Quizzes.FindAsync(quizId).ConfigureAwait(false);
 
-            if (quiz == null)
+            if (parentQuiz == null)
                 return GrpcReplyHelper.NotFound<RoundInfo>(context, "No quiz found for given Id");
 
-            if (quiz.OwnerId != userId)
+            if (parentQuiz.OwnerId != userId)
                 return GrpcReplyHelper.PermissionDenied<RoundInfo>(context, "You do not own this quiz");
 
-            var newRound = new Round {QuizId = quizId, Title = title};
+            var newRound = new Round {QuizId = quizId, Title = string.Empty};
             DbContext.Rounds.Add(newRound);
             await DbContext.SaveChangesAsync().ConfigureAwait(false);
 
-            return ToRoundInfo(newRound);
+            var roundInfo = ToRoundInfo(newRound);
+            await QuizHubContext.Clients.Group(QuizHub.GetQuizGroupName(parentQuiz.Id))
+                .OnRoundCreated(roundInfo)
+                .ConfigureAwait(false);
+
+            return roundInfo;
         }
 
         /// <summary>
         /// Gets a <see cref="RoundInfo"/>.
         /// </summary>
-        /// <param name="request">The <see cref="GetEntityRequest"/>.</param>
+        /// <param name="request">The <see cref="EntityRequest"/>.</param>
         /// <param name="context">The <see cref="ServerCallContext"/>.</param>
         /// <returns>A <see cref="Task"/> that represents the asynchronous get operation. The task result represents the found round's <see cref="RoundInfo"/>.</returns>
-        public override async Task<RoundInfo> GetInfo(GetEntityRequest request, ServerCallContext context)
+        public override async Task<RoundInfo> GetInfo(EntityRequest request, ServerCallContext context)
         {
             string idStr = request.Id;
             if (string.IsNullOrWhiteSpace(idStr))
@@ -103,10 +105,10 @@ namespace Quibble.Server.Grpc
         /// <summary>
         /// Gets a <see cref="RoundFull"/>.
         /// </summary>
-        /// <param name="request">The <see cref="GetEntityRequest"/>.</param>
+        /// <param name="request">The <see cref="EntityRequest"/>.</param>
         /// <param name="context">The <see cref="ServerCallContext"/>.</param>
         /// <returns>A <see cref="Task"/> that represents the asynchronous get operation. The task result represents the found round's <see cref="RoundFull"/>.</returns>
-        public override async Task<RoundFull> GetFull(GetEntityRequest request, ServerCallContext context)
+        public override async Task<RoundFull> GetFull(EntityRequest request, ServerCallContext context)
         {
             string idStr = request.Id;
             if (string.IsNullOrWhiteSpace(idStr))
@@ -151,9 +153,9 @@ namespace Quibble.Server.Grpc
             if (!Guid.TryParse(idStr, out Guid id))
                 return GrpcReplyHelper.InvalidArgument(context, $"{nameof(request.Id)} was not valid");
 
-            string? newTitle = request.NewTitle?.Trim();
-            if (newTitle == null || newTitle.Length < 3)
-                return GrpcReplyHelper.InvalidArgument(context, $"{nameof(request.NewTitle)} must be at least 3 letters long excluding spaces");
+            string? newTitle = request.NewTitle;
+            if (newTitle == null)
+                return GrpcReplyHelper.InvalidArgument(context, $"{nameof(request.NewTitle)} cannot be empty");
 
             string userId = context.GetHttpContext().User.GetUserId();
             Round round = await DbContext.Rounds.FindAsync(id).ConfigureAwait(false);
@@ -169,7 +171,7 @@ namespace Quibble.Server.Grpc
             await DbContext.SaveChangesAsync().ConfigureAwait(false);
 
             await QuizHubContext.Clients.Group(QuizHub.GetQuizGroupName(parentQuiz))
-                .OnRoundUpdated(round.Title, round.State.ToProtoEnum())
+                .OnRoundUpdated(ToRoundInfo(round))
                 .ConfigureAwait(false);
 
             return GrpcReplyHelper.EmptyMessage;
@@ -206,7 +208,37 @@ namespace Quibble.Server.Grpc
             await DbContext.SaveChangesAsync().ConfigureAwait(false);
 
             await QuizHubContext.Clients.Group(QuizHub.GetQuizGroupName(parentQuiz))
-                .OnRoundUpdated(round.Title, round.State.ToProtoEnum())
+                .OnRoundUpdated(ToRoundInfo(round))
+                .ConfigureAwait(false);
+
+            return GrpcReplyHelper.EmptyMessage;
+        }
+
+        public override async Task<EmptyMessage> Delete(EntityRequest request, ServerCallContext context)
+        {
+            string idStr = request.Id;
+            if (string.IsNullOrWhiteSpace(idStr))
+                return GrpcReplyHelper.InvalidArgument(context, $"{nameof(request.Id)} cannot be empty");
+
+            if (!Guid.TryParse(idStr, out Guid id))
+                return GrpcReplyHelper.InvalidArgument(context, $"{nameof(request.Id)} was not valid");
+
+            string userId = context.GetHttpContext().User.GetUserId();
+            Round round = await DbContext.Rounds.FindAsync(id).ConfigureAwait(false);
+
+            if (round == null)
+                return GrpcReplyHelper.NotFound(context, "No round found for given Id");
+
+            Quiz parentQuiz = await DbContext.Quizzes.FindAsync(round.QuizId).ConfigureAwait(false);
+            if (parentQuiz.OwnerId != userId)
+                return GrpcReplyHelper.PermissionDenied(context, "You do not own this round");
+
+            string roundIdStr = round.Id.ToString();
+            DbContext.Rounds.Remove(round);
+            await DbContext.SaveChangesAsync().ConfigureAwait(false);
+
+            await QuizHubContext.Clients.Group(QuizHub.GetQuizGroupName(parentQuiz))
+                .OnRoundDeleted(roundIdStr)
                 .ConfigureAwait(false);
 
             return GrpcReplyHelper.EmptyMessage;
