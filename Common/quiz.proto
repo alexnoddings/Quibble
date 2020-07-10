@@ -9,11 +9,13 @@ option csharp_namespace = "Quibble.Common.Protos";
 service QuizService {
 	rpc Create (CreateQuizRequest) returns (.quibble.core.QuizInfo);
 
-	rpc GetInfo (.quibble.core.GetEntityRequest) returns (.quibble.core.QuizInfo);
+	rpc GetInfo (.quibble.core.EntityRequest) returns (.quibble.core.QuizInfo);
 	rpc GetOwnedInfos (.quibble.core.EmptyMessage) returns (GetOwnedInfosReply);
-	rpc GetFull (.quibble.core.GetEntityRequest) returns (.quibble.core.QuizFull);
+	rpc GetFull (.quibble.core.EntityRequest) returns (.quibble.core.QuizFull);
 
 	rpc UpdateTitle (UpdateQuizTitleRequest) returns (.quibble.core.EmptyMessage);
+
+	rpc Delete (.quibble.core.EntityRequest) returns (.quibble.core.EmptyMessage);
 }
 
 message CreateQuizRequest {

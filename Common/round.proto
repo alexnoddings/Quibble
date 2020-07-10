@@ -9,16 +9,17 @@ option csharp_namespace = "Quibble.Common.Protos";
 service RoundService {
 	rpc Create (CreateRoundRequest) returns (.quibble.core.RoundInfo);
 
-	rpc GetInfo (.quibble.core.GetEntityRequest) returns (.quibble.core.RoundInfo);
-	rpc GetFull (.quibble.core.GetEntityRequest) returns (.quibble.core.RoundFull);
+	rpc GetInfo (.quibble.core.EntityRequest) returns (.quibble.core.RoundInfo);
+	rpc GetFull (.quibble.core.EntityRequest) returns (.quibble.core.RoundFull);
 
 	rpc UpdateTitle (UpdateRoundTitleRequest) returns (.quibble.core.EmptyMessage);
 	rpc UpdateState (UpdateRoundStateRequest) returns (.quibble.core.EmptyMessage);
+
+	rpc Delete (.quibble.core.EntityRequest) returns (.quibble.core.EmptyMessage);
 }
 
 message CreateRoundRequest {
 	string quizId = 1;
-	string title = 2;
 }
 
 message UpdateRoundTitleRequest {
