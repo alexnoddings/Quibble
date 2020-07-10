@@ -15,16 +15,16 @@ namespace Quibble.Client.Extensions.Grpc
         /// Creates a round.
         /// </summary>
         /// <param name="client">The <see cref="RoundService.RoundServiceClient"/>.</param>
-        /// <param name="title">The title of the round.</param>
+        /// <param name="quizId">The identifier for the round's parent quiz.</param>
         /// <returns>A <see cref="Task"/> that represents the asynchronous creation operation. The task result <see cref="GrpcReply"/> represents the created round's <see cref="RoundInfo"/>.</returns>
         /// <seealso cref="RoundService.RoundServiceClient.CreateAsync(CreateRoundRequest,CallOptions)"/>
-        public static Task<GrpcReply<RoundInfo>> CreateAsync(this RoundService.RoundServiceClient client, string title)
+        public static Task<GrpcReply<RoundInfo>> CreateAsync(this RoundService.RoundServiceClient client, string quizId)
         {
             if (client == null) throw new ArgumentNullException(nameof(client));
-            if (title == null) throw new ArgumentNullException(nameof(title));
+            if (quizId == null) throw new ArgumentNullException(nameof(quizId));
 
-            var request = new CreateRoundRequest { Title = title };
-            return GrpcClientExtensionHelpers.RunAsync(async () => await client.CreateAsync(request));
+            var request = new CreateRoundRequest { QuizId = quizId };
+            return GrpcClientExtensionHelpers.RunAsync(client.CreateAsync, request);
         }
 
         /// <summary>
@@ -38,8 +38,8 @@ namespace Quibble.Client.Extensions.Grpc
             if (client == null) throw new ArgumentNullException(nameof(client));
             if (id == null) throw new ArgumentNullException(nameof(id));
 
-            var request = new GetEntityRequest { Id = id };
-            return GrpcClientExtensionHelpers.RunAsync(async () => await client.GetInfoAsync(request));
+            var request = new EntityRequest { Id = id };
+            return GrpcClientExtensionHelpers.RunAsync(client.GetInfoAsync, request);
         }
 
         /// <summary>
@@ -53,8 +53,8 @@ namespace Quibble.Client.Extensions.Grpc
             if (client == null) throw new ArgumentNullException(nameof(client));
             if (id == null) throw new ArgumentNullException(nameof(id));
 
-            var request = new GetEntityRequest { Id = id };
-            return GrpcClientExtensionHelpers.RunAsync(async () => await client.GetFullAsync(request));
+            var request = new EntityRequest { Id = id };
+            return GrpcClientExtensionHelpers.RunAsync(client.GetFullAsync, request);
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Quibble.Client.Extensions.Grpc
             if (newTitle == null) throw new ArgumentNullException(nameof(newTitle));
 
             var request = new UpdateRoundTitleRequest { Id = id, NewTitle = newTitle };
-            return GrpcClientExtensionHelpers.RunAsync(async () => await client.UpdateTitleAsync(request));
+            return GrpcClientExtensionHelpers.RunAsync(client.UpdateTitleAsync, request);
         }
 
         /// <summary>
@@ -87,7 +87,22 @@ namespace Quibble.Client.Extensions.Grpc
             if (id == null) throw new ArgumentNullException(nameof(id));
 
             var request = new UpdateRoundStateRequest { Id = id, NewState = newState };
-            return GrpcClientExtensionHelpers.RunAsync(async () => await client.UpdateStateAsync(request));
+            return GrpcClientExtensionHelpers.RunAsync(client.UpdateStateAsync, request);
+        }
+
+        /// <summary>
+        /// Deletes a round.
+        /// </summary>
+        /// <param name="client">The <see cref="RoundService.RoundServiceClient"/>.</param>
+        /// <param name="id">The identifier for the round.</param>
+        /// <returns>A <see cref="Task"/> that represents the asynchronous delete operation. The task result <see cref="GrpcReply"/> represents the delete round's status.</returns>
+        public static Task<GrpcReply> DeleteAsync(this RoundService.RoundServiceClient client, string id)
+        {
+            if (client == null) throw new ArgumentNullException(nameof(client));
+            if (id == null) throw new ArgumentNullException(nameof(id));
+
+            var request = new EntityRequest { Id = id };
+            return GrpcClientExtensionHelpers.RunAsync(client.DeleteAsync, request);
         }
     }
 }

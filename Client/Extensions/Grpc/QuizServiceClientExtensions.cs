@@ -24,7 +24,7 @@ namespace Quibble.Client.Extensions.Grpc
             if (title == null) throw new ArgumentNullException(nameof(title));
 
             var request = new CreateQuizRequest { Title = title };
-            return GrpcClientExtensionHelpers.RunAsync(async () => await client.CreateAsync(request));
+            return GrpcClientExtensionHelpers.RunAsync(client.CreateAsync, request);
         }
 
         /// <summary>
@@ -38,8 +38,8 @@ namespace Quibble.Client.Extensions.Grpc
             if (client == null) throw new ArgumentNullException(nameof(client));
             if (id == null) throw new ArgumentNullException(nameof(id));
 
-            var request = new GetEntityRequest { Id = id };
-            return GrpcClientExtensionHelpers.RunAsync(async () => await client.GetInfoAsync(request));
+            var request = new EntityRequest { Id = id };
+            return GrpcClientExtensionHelpers.RunAsync(client.GetInfoAsync, request);
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Quibble.Client.Extensions.Grpc
         {
             if (client == null) throw new ArgumentNullException(nameof(client));
 
-            return GrpcClientExtensionHelpers.RunAsync(async () => await client.GetOwnedInfosAsync(GrpcClientExtensionHelpers.EmptyMessage));
+            return GrpcClientExtensionHelpers.RunAsync(client.GetOwnedInfosAsync);
         }
 
         /// <summary>
@@ -65,8 +65,8 @@ namespace Quibble.Client.Extensions.Grpc
             if (client == null) throw new ArgumentNullException(nameof(client));
             if (id == null) throw new ArgumentNullException(nameof(id));
 
-            var request = new GetEntityRequest { Id = id };
-            return GrpcClientExtensionHelpers.RunAsync(async () => await client.GetFullAsync(request));
+            var request = new EntityRequest { Id = id };
+            return GrpcClientExtensionHelpers.RunAsync(client.GetFullAsync, request);
         }
 
         /// <summary>
@@ -83,7 +83,22 @@ namespace Quibble.Client.Extensions.Grpc
             if (newTitle == null) throw new ArgumentNullException(nameof(newTitle));
 
             var request = new UpdateQuizTitleRequest {Id = id, NewTitle = newTitle};
-            return GrpcClientExtensionHelpers.RunAsync(async () => await client.UpdateTitleAsync(request));
+            return GrpcClientExtensionHelpers.RunAsync(client.UpdateTitleAsync, request);
+        }
+
+        /// <summary>
+        /// Deletes a quiz.
+        /// </summary>
+        /// <param name="client">The <see cref="QuizService.QuizServiceClient"/>.</param>
+        /// <param name="id">The identifier for the quiz.</param>
+        /// <returns>A <see cref="Task"/> that represents the asynchronous delete operation. The task result <see cref="GrpcReply"/> represents the delete quiz's status.</returns>
+        public static Task<GrpcReply> DeleteAsync(this QuizService.QuizServiceClient client, string id)
+        {
+            if (client == null) throw new ArgumentNullException(nameof(client));
+            if (id == null) throw new ArgumentNullException(nameof(id));
+
+            var request = new EntityRequest { Id = id };
+            return GrpcClientExtensionHelpers.RunAsync(client.DeleteAsync, request);
         }
     }
 }
