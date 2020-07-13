@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Claims;
 
-namespace Quibble.Server.Extensions.Identity
+namespace Quibble.Client.Extensions.Identity
 {
     /// <summary>
     /// Extension methods for <see cref="ClaimsPrincipal"/>s.
@@ -17,7 +17,8 @@ namespace Quibble.Server.Extensions.Identity
         {
             if (claimsPrincipal == null) throw new ArgumentNullException(nameof(claimsPrincipal));
 
-            return claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
+            // IdentityServer seems to store the Id in a Claim type "sub" instead of ClaimTypes.NameIdentifier
+            return claimsPrincipal.FindFirst("sub")?.Value ?? string.Empty;
         }
     }
 }
