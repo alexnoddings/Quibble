@@ -13,7 +13,7 @@ namespace Quibble.Client.Extensions.Identity
         /// </summary>
         /// <param name="claimsPrincipal">The <see cref="ClaimsPrincipal"/>.</param>
         /// <returns>The user's identifier.</returns>
-        public static string GetUserId(this ClaimsPrincipal claimsPrincipal)
+        internal static string GetUserId(this ClaimsPrincipal claimsPrincipal)
         {
             if (claimsPrincipal == null) throw new ArgumentNullException(nameof(claimsPrincipal));
 
