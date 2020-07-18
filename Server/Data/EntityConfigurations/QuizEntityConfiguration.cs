@@ -1,10 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Quibble.Server.Models.Participants;
-using Quibble.Server.Models.Quizzes;
-using Quibble.Server.Models.Rounds;
-using Quibble.Server.Models.Users;
+using Quibble.Common.Participants;
+using Quibble.Common.Quizzes;
+using Quibble.Common.Rounds;
 
 namespace Quibble.Server.Data.EntityConfigurations
 {
