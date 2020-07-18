@@ -1,4 +1,4 @@
-﻿namespace Quibble.Common.SignalR
+﻿namespace Quibble.Common
 {
     /// <summary>
     /// Provides a central location to co-ordinate SignalR hub paths.
