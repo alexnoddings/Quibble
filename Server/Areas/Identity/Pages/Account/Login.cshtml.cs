@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using Quibble.Server.Models.Users;
+using Quibble.Server.Data;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace Quibble.Server.Areas.Identity.Pages.Account
