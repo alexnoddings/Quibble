@@ -1,12 +1,15 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Quibble.Client.Extensions.ServiceConfiguration;
-using Quibble.Common.Protos;
+using Quibble.Client.Extensions.SignalR;
+using Quibble.Client.Hubs;
+using Quibble.Common;
 
 namespace Quibble.Client
 {
@@ -92,14 +95,12 @@ namespace Quibble.Client
             });
 
             // Supply HttpClient instances that include access tokens when making requests to the server project
-            services.AddTransient<HttpClient>(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient(ServerApiHttpClientName));
+            services.AddTransient<HttpClient>(serviceProvider => 
+                serviceProvider.GetRequiredService<IHttpClientFactory>().CreateClient(ServerApiHttpClientName));
+
+            services.AddHubConnection<QuizHubConnection>(SignalRPaths.QuizHub, innerHubConnection => new QuizHubConnection(innerHubConnection));
 
             services.AddApiAuthorization();
-
-            services.AddGrpcWebChannel();
-            services.AddAuthorisedGrpcClient<QuizService.QuizServiceClient>();
-            services.AddAuthorisedGrpcClient<RoundService.RoundServiceClient>();
-            services.AddAuthorisedGrpcClient<QuestionService.QuestionServiceClient>();
         }
     }
 }
