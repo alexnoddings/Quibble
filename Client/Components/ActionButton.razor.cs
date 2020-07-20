@@ -10,6 +10,9 @@ namespace Quibble.Client.Components
         public Func<Task>? Action { get; set; }
 
         [Parameter]
+        public RenderFragment? ChildContent { get; set; }
+
+        [Parameter]
         public RenderFragment? Enabled { get; set; }
 
         [Parameter]
@@ -23,6 +26,8 @@ namespace Quibble.Client.Components
         protected override void OnInitialized()
         {
             base.OnInitialized();
+
+            Enabled ??= ChildContent;
 
             if (Enabled == null) throw new InvalidOperationException(nameof(Enabled));
 
