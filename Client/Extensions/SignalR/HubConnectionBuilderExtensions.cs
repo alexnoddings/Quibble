@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Http.Connections.Client;
@@ -10,7 +11,7 @@ namespace Quibble.Client.Extensions.SignalR
     /// <summary>
     /// Extension methods for <see cref="IHubConnectionBuilder"/>.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1054:Uri parameters should not be strings", Justification = "Uri parameters are exposed as strings for ease of use. They are all converted into Uris before use.")]
+    [SuppressMessage("Design", "CA1054:Uri parameters should not be strings", Justification = SuppressionJustifications.CA1054)]
     public static class HubConnectionBuilderExtensions
     {
         /// <summary>
