@@ -98,7 +98,11 @@ namespace Quibble.Client
             services.AddTransient<HttpClient>(serviceProvider => 
                 serviceProvider.GetRequiredService<IHttpClientFactory>().CreateClient(ServerApiHttpClientName));
 
-            services.AddHubConnection<QuizHubConnection>(SignalRPaths.QuizHub, innerHubConnection => new QuizHubConnection(innerHubConnection));
+            // These are transient instead of scoped to avoid them being recycled between pages.
+            // Using transient removes the need for pages to properly store and dispose of it's hub subscriptions.
+            services.AddTransient<QuizHubConnection>();
+            services.AddTransient<RoundHubConnection>();
+            services.AddTransient<QuestionHubConnection>();
 
             services.AddApiAuthorization();
         }
