@@ -8,3 +8,5 @@
 [assembly: SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Empty members are useful for some Identity pages.", Scope = "namespaceanddescendants", Target = "Quibble.Server.Areas.Identity")]
 
 [assembly: SuppressMessage("Usage", "CA2227:Collection properties should be read only", Justification = "This check generates multiple false-positives for Identity pages.", Scope = "namespaceanddescendants", Target = "Quibble.Server.Areas.Identity")]
+
+[assembly: SuppressMessage("Style", "VSTHRD200:Use \"Async\" suffix for async methods", Justification = "It is standard for Identity pages to use \"OnPost\" and \"OnGet\".", Scope = "namespaceanddescendants", Target = "Quibble.Server.Areas.Identity")]
