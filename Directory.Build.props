@@ -33,6 +33,7 @@
     <EntityFrameworkVersion>3.1.5</EntityFrameworkVersion>
     <!-- Misc -->
     <FxCopAnalyzersVersion>3.0.0</FxCopAnalyzersVersion>
+    <ThreadingAnalyzersVersion>16.6.13</ThreadingAnalyzersVersion>
   </PropertyGroup>
 
   <!-- Project conventions -->

@@ -19,6 +19,7 @@
     <PackageReference Version="$(EntityFrameworkVersion)" Include="Microsoft.EntityFrameworkCore.SqlServer" />
     <PackageReference Version="$(EntityFrameworkVersion)" Include="Microsoft.EntityFrameworkCore.Tools" />
     <PackageReference Version="$(FxCopAnalyzersVersion)" Include="Microsoft.CodeAnalysis.FxCopAnalyzers" />
+    <PackageReference Version="$(ThreadingAnalyzersVersion)" Include="Microsoft.VisualStudio.Threading.Analyzers" />
     <PackageReference Version="9.17.0" Include="SendGrid" />
   </ItemGroup>
 
