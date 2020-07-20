@@ -2,263 +2,229 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.SignalR.Client;
-using Quibble.Common.Protos;
-using Quibble.Client.Extensions.Grpc;
-using Quibble.Client.Extensions.SignalR;
-using Quibble.Client.Grpc;
-using Quibble.Client.Hubs;
+using Quibble.Common.Questions;
+using Quibble.Common.Quizzes;
+using Quibble.Common.Rounds;
 
 namespace Quibble.Client.Pages.Quizzes
 {
     public partial class EditQuiz : IAsyncDisposable
     {
         [Parameter]
-        public string Id { get; set; } = string.Empty;
+        public Guid Id { get; set; }
 
-        private QuizFull? QuizFull { get; set; }
-
-        private string? ErrorDetail { get; set; }
-
-        private QuizHubConnection? HubConnection { get; set; }
+        private QuizFull? Quiz { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync().ConfigureAwait(false);
 
-            GrpcReply<QuizFull> quizFullReply = await QuizClient.GetFullAsync(Id).ConfigureAwait(false);
-            if (quizFullReply.Ok)
-                QuizFull = quizFullReply.Value;
-            else
-                ErrorDetail = quizFullReply.StatusDetail;
+            QuizHubConnection.OnQuizUpdated(OnQuizUpdatedAsync);
+            QuizHubConnection.OnQuizDeleted(OnQuizDeletedAsync);
 
-            HubConnection = new HubConnectionBuilder()
-                .WithAuthenticatedRelativeUrl(NavigationManager, "/hubs/quiz", AccessTokenProvider)
-                .Build()
-                .AsQuizHubConnection();
+            RoundHubConnection.OnRoundCreated(OnRoundCreatedAsync);
+            RoundHubConnection.OnRoundUpdated(OnRoundUpdatedAsync);
+            RoundHubConnection.OnRoundDeleted(OnRoundDeletedAsync);
 
-            HubConnection.OnQuizUpdated(OnQuizUpdatedAsync);
-            HubConnection.OnQuizDeleted(OnQuizDeletedAsync);
+            QuestionHubConnection.OnQuestionCreated(OnQuestionCreatedAsync);
+            QuestionHubConnection.OnQuestionUpdated(OnQuestionUpdatedAsync);
+            QuestionHubConnection.OnQuestionDeleted(OnQuestionDeletedAsync);
 
-            HubConnection.OnRoundCreated(OnRoundCreatedAsync);
-            HubConnection.OnRoundUpdated(OnRoundUpdatedAsync);
-            HubConnection.OnRoundDeleted(OnRoundDeletedAsync);
+            await QuizHubConnection.StartAsync().ConfigureAwait(false);
+            await RoundHubConnection.StartAsync().ConfigureAwait(false);
+            await QuestionHubConnection.StartAsync().ConfigureAwait(false);
 
-            HubConnection.OnQuestionCreated(OnQuestionCreatedAsync);
-            HubConnection.OnQuestionUpdated(OnQuestionUpdatedAsync);
-            HubConnection.OnQuestionDeleted(OnQuestionDeletedAsync);
+            Quiz = await QuizHubConnection.GetFullAsync(Id).ConfigureAwait(false);
 
-            await HubConnection.StartAsync().ConfigureAwait(false);
+            if (Quiz == null) throw new InvalidOperationException();
 
-            await HubConnection.RegisterToQuizUpdatesAsync(Id).ConfigureAwait(false);
+            await QuizHubConnection.RegisterForUpdatesAsync(Id).ConfigureAwait(false);
+            await RoundHubConnection.RegisterForUpdatesAsync(Id).ConfigureAwait(false);
+            await QuestionHubConnection.RegisterForUpdatesAsync(Id).ConfigureAwait(false);
         }
 
-        #region Actions
-        private async Task UpdateQuizTitleAsync()
+        private Task OnQuizUpdatedAsync(Quiz quiz)
         {
-            if (QuizFull == null) return;
+            if (quiz == null || Quiz == null) return Task.CompletedTask;
 
-            var newTitle = QuizFull.Info.Title;
+            Quiz.Title = quiz.Title;
+            Quiz.State = quiz.State;
 
-            var reply = await QuizClient.UpdateTitleAsync(Id, newTitle).ConfigureAwait(false);
-            if (!reply.Ok)
-                ErrorDetail = reply.StatusDetail;
+            return StateHasChangedAsync();
+        }
+
+        private Task OnQuizDeletedAsync(Guid id)
+        {
+            NavigationManager.NavigateTo("");
+
+            return Task.CompletedTask;
+        }
+
+        private Task OnRoundCreatedAsync(Round round)
+        {
+            if (round == null || Quiz == null) return Task.CompletedTask;
+
+            Quiz.Rounds.Add(new RoundFull(round));
+
+            return StateHasChangedAsync();
+        }
+
+        private Task OnRoundUpdatedAsync(Round round)
+        {
+            if (round == null || Quiz == null) return Task.CompletedTask;
+
+            var currentRound = Quiz.Rounds.FirstOrDefault(r => r.Id == round.Id);
+            if (currentRound == null) return Task.CompletedTask;
+
+            currentRound.Title = round.Title;
+            currentRound.State = round.State;
+
+            return StateHasChangedAsync();
+        }
+
+        private Task OnRoundDeletedAsync(Guid id)
+        {
+            if (Quiz == null) return Task.CompletedTask;
+
+            var currentRound = Quiz.Rounds.FirstOrDefault(r => r.Id == id);
+            if (currentRound == null) return Task.CompletedTask;
+            Quiz.Rounds.Remove(currentRound);
+
+            return StateHasChangedAsync();
+        }
+
+        private Task OnQuestionCreatedAsync(Question question)
+        {
+            if (question == null || Quiz == null) return Task.CompletedTask;
+
+            var parentRound = Quiz.Rounds.FirstOrDefault(r => r.Id == question.RoundId);
+            if (parentRound == null) return Task.CompletedTask;
+            
+            parentRound.Questions.Add(question);
+
+            return StateHasChangedAsync();
+        }
+
+        private Task OnQuestionUpdatedAsync(Question question)
+        {
+            if (question == null || Quiz == null) return Task.CompletedTask;
+
+            var parentRound = Quiz.Rounds.FirstOrDefault(r => r.Id == question.RoundId);
+            if (parentRound == null) return Task.CompletedTask;
+
+            var currentQuestion = parentRound.Questions.FirstOrDefault(q => q.Id == question.Id);
+            if (currentQuestion == null) return Task.CompletedTask;
+
+            currentQuestion.Body = question.Body;
+            currentQuestion.Answer = question.Answer;
+            currentQuestion.State = question.State;
+
+            return StateHasChangedAsync();
+        }
+
+        private Task OnQuestionDeletedAsync(Guid id)
+        {
+            if (Quiz == null) return Task.CompletedTask;
+            
+            var currentQuestion = Quiz.Rounds.SelectMany(r => r.Questions).FirstOrDefault(q => q.Id == id);
+            if (currentQuestion == null) return Task.CompletedTask;
+
+            var parentRound = Quiz.Rounds.FirstOrDefault(r => r.Id == currentQuestion.RoundId);
+            if (parentRound == null) return Task.CompletedTask;
+
+            parentRound.Questions.Remove(currentQuestion);
+
+            return StateHasChangedAsync();
+        }
+
+        private async Task PublishQuizAsync()
+        {
+            if (Quiz == null) return;
+
+            Quiz.State = QuizState.InProgress;
+            var updated = await QuizHubConnection.UpdateAsync(Quiz).ConfigureAwait(false);
+
+            NavigationManager.NavigateTo($"/quiz/{updated.Id}/host");
+        }
+
+        private async Task UpdateQuizAsync()
+        {
+            if (Quiz == null) return;
+
+            await QuizHubConnection.UpdateAsync(Quiz).ConfigureAwait(false);
         }
 
         private async Task DeleteQuizAsync()
         {
-            if (QuizFull == null) return;
+            if (Quiz == null) return;
 
-            var reply = await QuizClient.DeleteAsync(QuizFull.Info.Id).ConfigureAwait(false);
-            if (!reply.Ok)
-                ErrorDetail = reply.StatusDetail;
+            await QuizHubConnection.DeleteAsync(Quiz.Id).ConfigureAwait(false);
+            NavigationManager.NavigateTo("");
         }
 
-        private async Task CreateRoundAsync(int count)
+        private async Task CreateRoundAsync()
         {
-            if (QuizFull == null) return;
-            if (count <= 0) return;
+            if (Quiz == null) return;
 
-            for (var i = 0; i < count; i++)
+            var round = new Round
             {
-                var reply = await RoundClient.CreateAsync(QuizFull.Info.Id).ConfigureAwait(false);
-                if (reply.Ok) continue;
-                
-                ErrorDetail = reply.StatusDetail;
-                break;
-            }
+                QuizId = Quiz.Id
+            };
+
+            var created = await RoundHubConnection.CreateAsync(round).ConfigureAwait(false);
+            Quiz.Rounds.Add(new RoundFull(created));
+
+            await StateHasChangedAsync().ConfigureAwait(false);
         }
 
-        private async Task UpdateRoundTitleAsync(RoundFull round)
-        {
-            if (QuizFull == null) return;
-
-            var newTitle = round.Info.Title;
-            var reply = await RoundClient.UpdateTitleAsync(round.Info.Id, newTitle).ConfigureAwait(false);
-            if (!reply.Ok)
-                ErrorDetail = reply.StatusDetail;
-        }
+        private Task UpdateRoundAsync(Round round) =>
+            RoundHubConnection.UpdateAsync(round);
 
         private async Task DeleteRoundAsync(RoundFull round)
         {
-            if (QuizFull == null) return;
+            if (Quiz == null || round == null) return;
 
-            var reply = await RoundClient.DeleteAsync(round.Info.Id).ConfigureAwait(false);
-            if (!reply.Ok)
-                ErrorDetail = reply.StatusDetail;
+            await RoundHubConnection.DeleteAsync(round.Id).ConfigureAwait(false);
+            Quiz.Rounds.Remove(round);
+
+            await StateHasChangedAsync().ConfigureAwait(false);
         }
 
-        private async Task CreateQuestionAsync(RoundFull round, int count)
+        private async Task CreateQuestionAsync(RoundFull parentRound)
         {
-            if (QuizFull == null) return;
-            if (count <= 0) return;
+            if (Quiz == null) return;
 
-            for (var i = 0; i < count; i++)
+            var question = new Question
             {
-                var reply = await QuestionClient.CreateAsync(round.Info.Id).ConfigureAwait(false);
-                if (reply.Ok) continue;
-                
-                ErrorDetail = reply.StatusDetail;
-                break;
-            }
+                RoundId = parentRound.Id
+            };
+
+            var created = await QuestionHubConnection.CreateAsync(question).ConfigureAwait(false);
+            parentRound.Questions.Add(created);
+
+            await StateHasChangedAsync().ConfigureAwait(false);
         }
 
-        private Task UpdateQuestionBodyAsync(QuestionInfo question) => UpdateQuestionAsync(question);
+        private Task UpdateQuestionAsync(Question question) =>
+            QuestionHubConnection.UpdateAsync(question);
 
-        private Task UpdateQuestionAnswerAsync(QuestionInfo question) => UpdateQuestionAsync(question);
-
-        private async Task UpdateQuestionAsync(QuestionInfo question)
+        private async Task DeleteQuestionAsync(RoundFull parentRound, Question question)
         {
-            if (QuizFull == null) return;
+            if (Quiz == null || question == null) return;
 
-            var reply = await QuestionClient.UpdateAsync(question.Id, question.Body, question.Answer).ConfigureAwait(false);
-            if (!reply.Ok)
-                ErrorDetail = reply.StatusDetail;
+            await QuestionHubConnection.DeleteAsync(question.Id).ConfigureAwait(false);
+            parentRound.Questions.Remove(question);
+
+            await StateHasChangedAsync().ConfigureAwait(false);
         }
-
-        private async Task DeleteQuestionAsync(QuestionInfo question)
-        {
-            if (QuizFull == null) return;
-
-            var reply = await QuestionClient.DeleteAsync(question.Id).ConfigureAwait(false);
-            if (!reply.Ok)
-                ErrorDetail = reply.StatusDetail;
-        }
-        #endregion
-
-        #region Events
-        private Task OnQuizUpdatedAsync(QuizInfo quizInfo)
-        {
-            if (QuizFull == null) return Task.CompletedTask;
-
-            QuizFull.Info = quizInfo;
-
-            return InvokeAsync(StateHasChanged);
-        }
-
-        private Task OnQuizDeletedAsync(string quizId)
-        {
-            if (QuizFull == null) return Task.CompletedTask;
-
-            NavigationManager.NavigateTo("/");
-
-            return InvokeAsync(StateHasChanged);
-        }
-
-        private Task OnRoundCreatedAsync(RoundInfo roundInfo)
-        {
-            if (QuizFull == null) return Task.CompletedTask;
-
-            var roundFull = new RoundFull {Info = roundInfo};
-            QuizFull.Rounds.Add(roundFull);
-
-            return StateHasChangedAsync();
-        }
-
-        private Task OnRoundUpdatedAsync(RoundInfo roundInfo)
-        {
-            if (QuizFull == null) return Task.CompletedTask;
-
-            var roundFull = QuizFull.Rounds.FirstOrDefault(r => r.Info.Id == roundInfo.Id);
-            if (roundFull == null)
-            {
-                roundFull = new RoundFull {Info = roundInfo};
-                QuizFull.Rounds.Add(roundFull);
-            }
-            else
-            {
-                roundFull.Info = roundInfo;
-            }
-
-            return StateHasChangedAsync();
-        }
-
-        private Task OnRoundDeletedAsync(string roundId)
-        {
-            if (QuizFull == null) return Task.CompletedTask;
-
-            var roundFull = QuizFull.Rounds.FirstOrDefault(r => r.Info.Id == roundId);
-            if (roundFull != null)
-                QuizFull.Rounds.Remove(roundFull);
-
-            return StateHasChangedAsync();
-        }
-
-        private Task OnQuestionCreatedAsync(QuestionInfo questionInfo)
-        {
-            if (QuizFull == null) return Task.CompletedTask;
-
-            var roundFull = QuizFull.Rounds.FirstOrDefault(r => r.Info.Id == questionInfo.RoundId);
-            if (roundFull == null) return Task.CompletedTask;
-
-            roundFull.Questions.Add(questionInfo);
-
-            return StateHasChangedAsync();
-        }
-
-        private Task OnQuestionUpdatedAsync(QuestionInfo questionInfo)
-        {
-            if (QuizFull == null) return Task.CompletedTask;
-
-            var roundFull = QuizFull.Rounds.FirstOrDefault(r => r.Info.Id == questionInfo.RoundId);
-            if (roundFull == null) return Task.CompletedTask;
-
-            var existing = roundFull.Questions.FirstOrDefault(q => q.Id == questionInfo.Id);
-            int index = roundFull.Questions.IndexOf(existing);
-            roundFull.Questions.RemoveAt(index);
-            roundFull.Questions.Insert(index, questionInfo);
-
-            Console.WriteLine(string.Join("", Enumerable.Range(0, 10).Select(_ => $"here{_}\n")));
-
-            Console.WriteLine($"indexof: {index}");
-            Console.WriteLine($"len: {roundFull.Questions.Count}");
-
-            Console.WriteLine(string.Join("", Enumerable.Range(0, 10).Select(_ => $"here{_}\n")));
-
-            return StateHasChangedAsync();
-        }
-
-        private Task OnQuestionDeletedAsync(string roundId, string questionId)
-        {
-            if (QuizFull == null) return Task.CompletedTask;
-
-            var roundFull = QuizFull.Rounds.FirstOrDefault(r => r.Info.Id == roundId);
-            if (roundFull == null) return Task.CompletedTask;
-
-            var existing = roundFull.Questions.FirstOrDefault(q => q.Id == questionId);
-            roundFull.Questions.Remove(existing);
-
-            return StateHasChangedAsync();
-        }
-        #endregion
 
         private Task StateHasChangedAsync() => InvokeAsync(StateHasChanged);
 
         /// <inheritdoc />
         public async ValueTask DisposeAsync()
         {
-            if (HubConnection != null)
-                await HubConnection.DisposeAsync().ConfigureAwait(false);
+            if (QuizHubConnection != null)
+                await QuizHubConnection.DisposeAsync().ConfigureAwait(false);
         }
     }
 }
