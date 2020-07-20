@@ -9,10 +9,12 @@ namespace Quibble.Common.Quizzes
 
         public Task<Quiz> GetAsync(Guid id);
 
+        public Task<QuizFull> GetFullAsync(Guid id);
+
         public Task<Quiz> UpdateAsync(Quiz quiz);
 
         public Task DeleteAsync(Guid id);
 
-        public Task RegisterForUpdatesAsync(Guid id);
+        public Task RegisterForUpdatesAsync(Guid quizId);
     }
 }

@@ -9,8 +9,12 @@ namespace Quibble.Common.Rounds
 
         public Task<Round> GetAsync(Guid id);
 
+        public Task<RoundFull> GetFullAsync(Guid id);
+
         public Task<Round> UpdateAsync(Round round);
 
         public Task DeleteAsync(Guid id);
+
+        public Task RegisterForUpdatesAsync(Guid quizId);
     }
 }
