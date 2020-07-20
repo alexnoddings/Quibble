@@ -109,6 +109,8 @@ namespace Quibble.Server
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
                 endpoints.MapHub<QuizHub>(SignalRPaths.QuizHub);
+                endpoints.MapHub<RoundHub>(SignalRPaths.RoundHub);
+                endpoints.MapHub<QuestionHub>(SignalRPaths.QuestionHub);
                 endpoints.MapFallbackToFile("index.html");
             });
         }
