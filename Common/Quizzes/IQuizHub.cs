@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Quibble.Common.Quizzes
@@ -8,6 +9,8 @@ namespace Quibble.Common.Quizzes
         public Task<Quiz> CreateAsync(Quiz quiz);
 
         public Task<Quiz> GetAsync(Guid id);
+
+        public Task<List<Quiz>> GetOwnedAsync();
 
         public Task<QuizFull> GetFullAsync(Guid id);
 

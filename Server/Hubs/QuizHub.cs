@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -61,6 +62,13 @@ namespace Quibble.Server.Hubs
             }
 
             return quiz;
+        }
+
+        public async Task<List<Quiz>> GetOwnedAsync()
+        {
+            string userId = User.GetUserId();
+            List<Quiz> quizzes = await DbContext.Quizzes.Where(q => q.OwnerId == userId).ToListAsync().ConfigureAwait(false);
+            return quizzes;
         }
 
         public async Task<QuizFull> GetFullAsync(Guid id)
