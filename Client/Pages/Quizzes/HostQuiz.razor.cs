@@ -8,7 +8,7 @@ using Quibble.Common.Rounds;
 
 namespace Quibble.Client.Pages.Quizzes
 {
-    public partial class EditQuiz : IAsyncDisposable
+    public partial class HostQuiz : IAsyncDisposable
     {
         [Parameter]
         public QuizFull? Quiz { get; set; }
@@ -140,7 +140,7 @@ namespace Quibble.Client.Pages.Quizzes
             Quiz.State = QuizState.InProgress;
             var updated = await QuizHubConnection.UpdateAsync(Quiz).ConfigureAwait(false);
 
-            NavigationManager.NavigateTo($"/quiz/{updated.Id}");
+            NavigationManager.NavigateTo($"/quiz/{updated.Id}/host");
         }
 
         private async Task UpdateQuizAsync()
@@ -221,12 +221,6 @@ namespace Quibble.Client.Pages.Quizzes
         {
             if (QuizHubConnection != null)
                 await QuizHubConnection.DisposeAsync().ConfigureAwait(false);
-
-            if (RoundHubConnection != null)
-                await RoundHubConnection.DisposeAsync().ConfigureAwait(false);
-
-            if (QuestionHubConnection != null)
-                await QuestionHubConnection.DisposeAsync().ConfigureAwait(false);
         }
     }
 }

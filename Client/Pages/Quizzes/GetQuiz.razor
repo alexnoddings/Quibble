@@ -1,0 +1,33 @@
+﻿@page "/quiz/{Id:guid}"
+@using Quibble.Common.Quizzes
+@inject NavigationManager NavigationManager
+@inject IAccessTokenProvider AccessTokenProvider
+@inject QuizHubConnection QuizHubConnection
+
+@if (WasDeleted)
+{
+    <p>Quiz deleted</p>
+}
+else if (Quiz == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    if (Quiz.State == QuizState.WorkInProgress)
+    {
+        <EditQuiz Quiz="Quiz" />
+    }
+    else if (Quiz.State == QuizState.InProgress)
+    {
+        <HostQuiz Quiz="Quiz" />
+    }
+    else if (Quiz.State == QuizState.Closed)
+    {
+        <p>Quiz closed</p>
+    }
+    else
+    {
+        <p>Unknown state</p>
+    }
+}
