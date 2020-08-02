@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Quibble.Server.Data;
-using Quibble.Server.Models.Users;
 using Quibble.Server.Services.SendGrid;
 
 namespace Quibble.Server.Areas.Identity.Pages.Account
@@ -89,8 +88,6 @@ namespace Quibble.Server.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
-                    var userSettings = new UserSettings {UserId = user.Id};
-                    _dbContext.UserSettings.Add(userSettings);
                     await _dbContext.SaveChangesAsync().ConfigureAwait(false);
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user).ConfigureAwait(false);

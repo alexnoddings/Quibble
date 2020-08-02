@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System;
+using System.Security.Claims;
 
 namespace Quibble.Server.Extensions.Identity
 {
@@ -12,7 +13,11 @@ namespace Quibble.Server.Extensions.Identity
         /// </summary>
         /// <param name="claimsPrincipal">The <see cref="ClaimsPrincipal"/>.</param>
         /// <returns>The user's identifier.</returns>
-        public static string GetUserId(this ClaimsPrincipal claimsPrincipal) =>
-            claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
+        public static string GetUserId(this ClaimsPrincipal claimsPrincipal)
+        {
+            if (claimsPrincipal == null) throw new ArgumentNullException(nameof(claimsPrincipal));
+
+            return claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
+        }
     }
 }

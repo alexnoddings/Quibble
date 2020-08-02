@@ -1,0 +1,13 @@
+﻿
+@if (IsDisabled)
+{
+    <button class="disabled @Class" disabled>
+        @Disabled
+    </button>
+}
+else
+{
+    <button class="@Class" @onclick="RunAsync">
+        @Enabled
+    </button>
+}

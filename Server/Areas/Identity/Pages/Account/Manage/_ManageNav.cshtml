@@ -1,4 +1,5 @@
-﻿@inject SignInManager<ApplicationUser> SignInManager
+﻿@using Quibble.Server.Data
+@inject SignInManager<ApplicationUser> SignInManager
 @{
     var externalLogins = await SignInManager.GetExternalAuthenticationSchemesAsync().ConfigureAwait(false);
 }

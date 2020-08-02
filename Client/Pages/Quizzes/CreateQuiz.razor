@@ -1,10 +1,18 @@
 ﻿@page "/quiz/create"
+@using Quibble.Client.Hubs
 @inject NavigationManager NavigationManager
-@inject QuizService.QuizServiceClient QuizClient
+@inject QuizHubConnection QuizHubConnection
 
-<input type="text" @bind="NewQuizTitle" placeholder="Quiz Title"/>
+<input type="text" @bind="NewQuizTitle" placeholder="Quiz Title" />
 
-<button @onclick="CreateQuizAsync">Create</button>
+<ActionButton Action="CreateQuizAsync">
+    <Enabled>
+        Create
+    </Enabled>
+    <Disabled>
+        Creating
+    </Disabled>
+</ActionButton>
 
 @if (ErrorDetail != null)
 {

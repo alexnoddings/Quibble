@@ -3,12 +3,11 @@ using IdentityServer4.EntityFramework.Options;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Quibble.Server.Data.EntityConfigurations;
-using Quibble.Server.Models.Participants;
-using Quibble.Server.Models.Questions;
-using Quibble.Server.Models.Quizzes;
-using Quibble.Server.Models.Rounds;
-using Quibble.Server.Models.Users;
+using Quibble.Common.Participants;
+using Quibble.Common.Questions;
+using Quibble.Common.Quizzes;
+using Quibble.Common.Rounds;
+using Quibble.Common.SubmittedAnswers;
 
 namespace Quibble.Server.Data
 {
@@ -44,12 +43,7 @@ namespace Quibble.Server.Data
         public DbSet<SubmittedAnswer> SubmittedAnswers { get; set; } = default!;
 
         /// <summary>
-        /// Gets or sets the <see cref="DbSet{UserSettings}"/>.
-        /// </summary>
-        public DbSet<UserSettings> UserSettings { get; set; } = default!;
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="ApplicationDbContext"/>.
+        /// Initialises a new instance of <see cref="ApplicationDbContext"/>.
         /// </summary>
         /// <param name="options">The <see cref="DbContextOptions"/>.</param>
         /// <param name="operationalStoreOptions">The <see cref="IOptions{OperationalStoreOptions}"/>.</param>

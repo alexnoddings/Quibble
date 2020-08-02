@@ -7,13 +7,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Linq;
-using Quibble.Common.SignalR;
+using Quibble.Common;
 using Quibble.Server.Data;
 using Quibble.Server.Extensions.ServiceConfiguration.Email;
 using Quibble.Server.Extensions.ServiceConfiguration.SignalR;
-using Quibble.Server.Grpc;
 using Quibble.Server.Hubs;
-using Quibble.Server.Models.Users;
 
 namespace Quibble.Server
 {
@@ -72,8 +70,6 @@ namespace Quibble.Server
                 options.DefaultFromDisplayName = Configuration["Email:DefaultFromDisplayName"];
             });
 
-            services.AddGrpc();
-
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
@@ -104,9 +100,6 @@ namespace Quibble.Server
 
             app.UseRouting();
 
-            // Use HTTP calls as a fallback if GRPC is not natively supported by the client.
-            app.UseGrpcWeb(new GrpcWebOptions { DefaultEnabled = false });
-
             app.UseIdentityServer();
             app.UseAuthentication();
             app.UseAuthorization();
@@ -115,10 +108,9 @@ namespace Quibble.Server
             {
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
-                endpoints.MapGrpcService<QuizService>().EnableGrpcWeb();
-                endpoints.MapGrpcService<RoundService>().EnableGrpcWeb();
-                endpoints.MapGrpcService<QuestionService>().EnableGrpcWeb();
                 endpoints.MapHub<QuizHub>(SignalRPaths.QuizHub);
+                endpoints.MapHub<RoundHub>(SignalRPaths.RoundHub);
+                endpoints.MapHub<QuestionHub>(SignalRPaths.QuestionHub);
                 endpoints.MapFallbackToFile("index.html");
             });
         }

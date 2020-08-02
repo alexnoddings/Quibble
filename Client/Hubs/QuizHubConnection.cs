@@ -1,115 +1,46 @@
 ﻿using System;
-using System.Threading;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.SignalR.Client;
-using Quibble.Common.Protos;
-using Quibble.Common.SignalR;
+using Quibble.Common;
+using Quibble.Common.Quizzes;
 
 namespace Quibble.Client.Hubs
 {
-    /// <summary>
-    /// A <see cref="HubConnection"/> for quizzes.
-    /// </summary>
-    public class QuizHubConnection : IAsyncDisposable, IInvokableQuizHub
+    public class QuizHubConnection : BaseSecureHubConnection, IQuizHub
     {
-        private readonly HubConnection _hubConnection;
-
-        /// <summary>
-        /// Initialises a new instance of <see cref="QuizHubConnection"/>.
-        /// </summary>
-        /// <param name="hubConnectionInner">The inner <seealso cref="HubConnection"/> to use.</param>
-        public QuizHubConnection(HubConnection hubConnectionInner)
+        public QuizHubConnection(NavigationManager navigationManager, IAccessTokenProvider accessTokenProvider) 
+            : base(navigationManager, accessTokenProvider, SignalRPaths.QuizHub)
         {
-            _hubConnection = hubConnectionInner ?? throw new ArgumentNullException(nameof(hubConnectionInner));
         }
 
-        /// <inheritdoc cref="IInvokableQuizHub.RegisterToQuizUpdatesAsync"/>
-        public Task RegisterToQuizUpdatesAsync(string id) =>
-            _hubConnection.InvokeAsync(nameof(IInvokableQuizHub.RegisterToQuizUpdatesAsync), id);
+        public Task<Quiz> CreateAsync(Quiz quiz) =>
+            HubConnection.InvokeAsync<Quiz>(nameof(IQuizHub.CreateAsync), quiz);
 
-        /// <inheritdoc cref="HubConnection.StartAsync"/>
-        public Task StartAsync(CancellationToken cancellationToken = default) =>
-            _hubConnection.StartAsync(cancellationToken);
+        public Task<Quiz> GetAsync(Guid id) =>
+            HubConnection.InvokeAsync<Quiz>(nameof(IQuizHub.GetAsync), id);
 
-        /// <summary>
-        /// Registers a handler to be invoked when a Quiz is updated.
-        /// </summary>
-        /// <param name="handler">The handler.</param>
-        /// <returns>A subscription that can be disposed to unsubscribe from the hub method.</returns>
-        /// <seealso cref="IQuizHubClient.OnQuizUpdated"/>
-        public IDisposable OnQuizUpdated(Func<QuizInfo, Task> handler) =>
-            _hubConnection.On(nameof(IQuizHubClient.OnQuizUpdated), handler);
+        public Task<List<Quiz>> GetOwnedAsync() =>
+            HubConnection.InvokeAsync<List<Quiz>>(nameof(IQuizHub.GetOwnedAsync));
 
-        /// <summary>
-        /// Registers a handler to be invoked when a Quiz is deleted.
-        /// </summary>
-        /// <param name="handler">The handler.</param>
-        /// <returns>A subscription that can be disposed to unsubscribe from the hub method.</returns>
-        /// <seealso cref="IQuizHubClient.OnQuizDeleted"/>
-        public IDisposable OnQuizDeleted(Func<string, Task> handler) =>
-            _hubConnection.On(nameof(IQuizHubClient.OnQuizDeleted), handler);
+        public Task<QuizFull> GetFullAsync(Guid id) =>
+            HubConnection.InvokeAsync<QuizFull>(nameof(IQuizHub.GetFullAsync), id);
 
-        /// <summary>
-        /// Registers a handler to be invoked when a Round is created.
-        /// </summary>
-        /// <param name="handler">The handler.</param>
-        /// <returns>A subscription that can be disposed to unsubscribe from the hub method.</returns>
-        /// <seealso cref="IQuizHubClient.OnRoundCreated"/>
-        public IDisposable OnRoundCreated(Func<RoundInfo, Task> handler) =>
-            _hubConnection.On(nameof(IQuizHubClient.OnRoundCreated), handler);
+        public Task<Quiz> UpdateAsync(Quiz quiz) =>
+            HubConnection.InvokeAsync<Quiz>(nameof(IQuizHub.UpdateAsync), quiz);
 
-        /// <summary>
-        /// Registers a handler to be invoked when a Round is updated.
-        /// </summary>
-        /// <param name="handler">The handler.</param>
-        /// <returns>A subscription that can be disposed to unsubscribe from the hub method.</returns>
-        /// <seealso cref="IQuizHubClient.OnRoundUpdated"/>
-        public IDisposable OnRoundUpdated(Func<RoundInfo, Task> handler) =>
-            _hubConnection.On(nameof(IQuizHubClient.OnRoundUpdated), handler);
+        public Task DeleteAsync(Guid id) =>
+            HubConnection.InvokeAsync(nameof(IQuizHub.DeleteAsync), id);
 
-        /// <summary>
-        /// Registers a handler to be invoked when a Round is deleted.
-        /// </summary>
-        /// <param name="handler">The handler.</param>
-        /// <returns>A subscription that can be disposed to unsubscribe from the hub method.</returns>
-        /// <seealso cref="IQuizHubClient.OnRoundDeleted"/>
-        public IDisposable OnRoundDeleted(Func<string, Task> handler) =>
-            _hubConnection.On(nameof(IQuizHubClient.OnRoundDeleted), handler);
+        public Task RegisterForUpdatesAsync(Guid quizId) =>
+            HubConnection.InvokeAsync(nameof(IQuizHub.RegisterForUpdatesAsync), quizId);
 
-        /// <summary>
-        /// Registers a handler to be invoked when a Question is created.
-        /// </summary>
-        /// <param name="handler">The handler.</param>
-        /// <returns>A subscription that can be disposed to unsubscribe from the hub method.</returns>
-        /// <seealso cref="IQuizHubClient.OnQuestionCreated"/>
-        public IDisposable OnQuestionCreated(Func<QuestionInfo, Task> handler) =>
-            _hubConnection.On(nameof(IQuizHubClient.OnQuestionCreated), handler);
+        public IDisposable OnQuizUpdated(Func<Quiz, Task> handler) =>
+            HubConnection.On(nameof(IQuizHubClient.OnQuizUpdated), handler);
 
-        /// <summary>
-        /// Registers a handler to be invoked when a Question is updated.
-        /// </summary>
-        /// <param name="handler">The handler.</param>
-        /// <returns>A subscription that can be disposed to unsubscribe from the hub method.</returns>
-        /// <seealso cref="IQuizHubClient.OnQuestionUpdated"/>
-        public IDisposable OnQuestionUpdated(Func<QuestionInfo, Task> handler) =>
-            _hubConnection.On(nameof(IQuizHubClient.OnQuestionUpdated), handler);
-
-        /// <summary>
-        /// Registers a handler to be invoked when a Question is deleted.
-        /// </summary>
-        /// <param name="handler">The handler.</param>
-        /// <returns>A subscription that can be disposed to unsubscribe from the hub method.</returns>
-        /// <seealso cref="IQuizHubClient.OnQuestionDeleted"/>
-        public IDisposable OnQuestionDeleted(Func<string, string, Task> handler) =>
-            _hubConnection.On(nameof(IQuizHubClient.OnQuestionDeleted), handler);
-
-        /// <summary>
-        /// Disposes the <see cref="QuizHubConnection"/>.
-        /// </summary>
-        /// <returns>A <see cref="ValueTask"/> that represents the asynchronous disposal operation.</returns>
-        public async ValueTask DisposeAsync()
-        {
-            await _hubConnection.DisposeAsync().ConfigureAwait(false);
-        }
+        public IDisposable OnQuizDeleted(Func<Guid, Task> handler) =>
+            HubConnection.On(nameof(IQuizHubClient.OnQuizDeleted), handler);
     }
 }

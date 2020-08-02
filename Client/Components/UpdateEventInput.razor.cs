@@ -30,31 +30,31 @@ namespace Quibble.Client.Components
         public EventCallback<string> OnValueChanged { get; set; }
 
         [Parameter] 
-        public bool FireOnInput { get; set; } = false;
+        public UpdateEvent FireEvent { get; set; } = UpdateEvent.OnBlur;
 
-        [Parameter]
-        public bool FireOnBlur { get; set; } = true;
+        private bool ShouldUpdateOnBlur => FireEvent.HasFlag(UpdateEvent.OnBlur);
+        private bool ShouldUpdateOnInput => FireEvent.HasFlag(UpdateEvent.OnInput);
 
         protected override void OnInitialized()
         {
-            if (!FireOnInput && !FireOnBlur)
-                Logger.LogDebug($"Neither {nameof(FireOnInput)} nor {nameof(FireOnBlur)} are set. Parent component initialisation should be above this message.");
+            if (!ShouldUpdateOnBlur && !ShouldUpdateOnInput)
+                Logger.LogDebug($"Neither {nameof(UpdateEvent.OnBlur)} nor {nameof(UpdateEvent.OnInput)} are set. Parent component initialisation should be above this message.");
         }
 
-        private async Task OnInput(ChangeEventArgs e)
+        private async Task OnInputAsync(ChangeEventArgs e)
         {
             Value = e.Value.ToString();
             await ValueChanged.InvokeAsync(Value ?? string.Empty).ConfigureAwait(false);
 
-            if (!FireOnInput)
+            if (!ShouldUpdateOnInput)
                 return;
 
             await OnValueChanged.InvokeAsync(Value ?? string.Empty).ConfigureAwait(false);
         }
 
-        private async Task OnBlur(FocusEventArgs _)
+        private async Task OnBlurAsync(FocusEventArgs _)
         {
-            if (!FireOnBlur)
+            if (!ShouldUpdateOnBlur)
                 return;
 
             await OnValueChanged.InvokeAsync(Value ?? string.Empty).ConfigureAwait(false);
