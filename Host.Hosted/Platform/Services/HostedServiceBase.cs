@@ -42,7 +42,7 @@ namespace Quibble.Host.Hosted.Platform.Services
 
         protected Task<Guid> GetOwnerIdAsync(IRound round)
         {
-            if (DbContext == null) throw ThrowHelper.IsNull(nameof(DbContext));
+            if (DbContext == null) throw ThrowHelper.NullArgument(nameof(DbContext));
 
             var query =
                 from quiz in DbContext.Quizzes
@@ -53,7 +53,7 @@ namespace Quibble.Host.Hosted.Platform.Services
 
         protected Task<Guid> GetOwnerIdAsync(IQuestion question)
         {
-            if (DbContext == null) throw ThrowHelper.IsNull(nameof(DbContext));
+            if (DbContext == null) throw ThrowHelper.NullArgument(nameof(DbContext));
 
             var query =
                 from round in DbContext.Rounds

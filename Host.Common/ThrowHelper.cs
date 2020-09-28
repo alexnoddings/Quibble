@@ -7,10 +7,8 @@ namespace Quibble.Host.Common
     [Pure]
     public static class ThrowHelper
     {
-        public static ArgumentNullException IsNull(string paramName, string? message = null) =>
-            message != null
-                ? new ArgumentNullException(paramName)
-                : new ArgumentNullException(paramName, message);
+        public static ArgumentNullException NullArgument(string paramName, string? message = null) =>
+            new ArgumentNullException(paramName, message);
 
         public static NotFoundException NotFound(string? typeName = null, string? id = null, string? message = null, Exception? innerException = null) =>
             new NotFoundException(typeName ?? "Entity", id, message, innerException);
