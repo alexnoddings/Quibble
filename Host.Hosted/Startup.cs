@@ -10,9 +10,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Quibble.Host.Common;
 using Quibble.Host.Common.Data;
 using Quibble.Host.Common.Data.Entities;
+using Quibble.Host.Common.Extensions;
 using Quibble.Host.Hosted.Areas.Identity;
 using Quibble.Host.Hosted.Data;
 using Quibble.Host.Hosted.Platform;
@@ -106,7 +106,9 @@ namespace Quibble.Host.Hosted
               .UseBootstrapProviders()
               .UseFontAwesomeIcons();
 
-            var rewriteOptions = ContentRewriteOptions.Create();
+            app.UseQuibbleContentRewriter();
+
+            var rewriteOptions = new RewriteOptions();
             rewriteOptions.AddRedirect("^css/styles.css", "_content/Quibble.Host.Hosted/_framework/scoped.styles.css");
             app.UseRewriter(rewriteOptions);
 

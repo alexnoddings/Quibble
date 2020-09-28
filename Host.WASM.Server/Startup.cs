@@ -7,8 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Quibble.Host.Common;
 using Quibble.Host.Common.Data.Entities;
+using Quibble.Host.Common.Extensions;
 using Quibble.Host.WASM.Server.Data;
 
 namespace Quibble.Host.WASM.Server
@@ -72,7 +72,9 @@ namespace Quibble.Host.WASM.Server
             app.UseAuthentication();
             app.UseAuthorization();
 
-            var rewriteOptions = ContentRewriteOptions.Create();
+            app.UseQuibbleContentRewriter();
+
+            var rewriteOptions = new RewriteOptions();
             rewriteOptions.AddRedirect("^css/styles.css", "_framework/scoped.styles.css");
             app.UseRewriter(rewriteOptions);
 

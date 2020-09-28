@@ -1,14 +1,15 @@
-﻿using Microsoft.AspNetCore.Rewrite;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Rewrite;
 
-namespace Quibble.Host.Common
+namespace Quibble.Host.Common.Extensions
 {
-    public static class ContentRewriteOptions
+    public static class ApplicationBuilderExtensions
     {
-        public static RewriteOptions Create()
+        public static IApplicationBuilder UseQuibbleContentRewriter(this IApplicationBuilder app)
         {
             var rwo = new RewriteOptions();
 
-            string? thisNameSpace = typeof(ContentRewriteOptions).Assembly.GetName().Name;
+            string? thisNameSpace = typeof(ApplicationBuilderExtensions).Assembly.GetName().Name;
             rwo.AddRedirect("^favicon.ico", $"_content/{thisNameSpace}/favicon.ico");
             rwo.AddRedirect("^css/site.css", $"_content/{thisNameSpace}/css/site.css");
             rwo.AddRedirect("^img/bg.png", $"_content/{thisNameSpace}/img/bg.png");
@@ -19,7 +20,9 @@ namespace Quibble.Host.Common
             rwo.AddRedirect("^css/blazorise.bootstrap.css", "_content/Blazorise.Bootstrap/blazorise.bootstrap.css");
             rwo.AddRedirect("^js/blazorise.bootstrap.js", "_content/Blazorise.Bootstrap/blazorise.bootstrap.js");
 
-            return rwo;
+            app.UseRewriter(rwo);
+
+            return app;
         }
     }
 }
