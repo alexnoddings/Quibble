@@ -10,6 +10,9 @@ namespace Quibble.Host.Common
         public static ArgumentNullException NullArgument(string paramName, string? message = null) =>
             new ArgumentNullException(paramName, message);
 
+        public static ArgumentException BadArgument(string paramName, string? message = null, Exception? innerException = null) =>
+            new ArgumentException(message, paramName, innerException);
+
         public static NotFoundException NotFound(string? typeName = null, string? id = null, string? message = null, Exception? innerException = null) =>
             new NotFoundException(typeName ?? "Entity", id, message, innerException);
 
