@@ -1,0 +1,26 @@
+﻿<Container Padding="Padding.Is0">
+    <Row Margin="Margin.Is2">
+        <Column ColumnSize="ColumnSize.Is8" Padding="Padding.Is1">
+            <DelayedTextEdit @bind-Text="Quiz.Title" DelayedTextChanged="Quiz.SaveTitleAsync"></DelayedTextEdit>
+        </Column>
+        <Column ColumnSize="ColumnSize.Is2" Padding="Padding.Is1">
+            <ActionButton Outline="true" Block="true" Color="Color.Info" Clicked="Quiz.PublishAsync">Publish</ActionButton>
+        </Column>
+        <Column ColumnSize="ColumnSize.Is2" Padding="Padding.Is1">
+            <ActionButton Outline="true" Block="true" Color="Color.Danger" Clicked="Quiz.DeleteAsync">Delete</ActionButton>
+        </Column>
+    </Row>
+    
+    @foreach (var round in Quiz.Rounds)
+    {
+        <EditRound Round="round"></EditRound>
+    }
+    
+    <Row Margin="Margin.Is2">
+        <Column ColumnSize="ColumnSize.Is4">
+        </Column>
+        <Column ColumnSize="ColumnSize.Is4">
+            <ActionButton Outline="true" Block="true" Color="Color.Info" Clicked="Quiz.AddRoundAsync">New Round</ActionButton>
+        </Column>
+    </Row>
+</Container>

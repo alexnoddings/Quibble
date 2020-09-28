@@ -1,22 +1,52 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-VisualStudioVersion = 16.0.30204.135
+VisualStudioVersion = 16.0.30428.66
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quibble.Server", "Server\Quibble.Server.csproj", "{D6CD7A7E-1D77-4CE4-88EF-968F6491BD14}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quibble.Client", "Client\Quibble.Client.csproj", "{93A15DD2-2C70-4A8A-A428-2773A78BCCA1}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quibble.Common", "Common\Quibble.Common.csproj", "{EE766545-40A0-42C4-A74B-21FF8D6419A3}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Solution Items", ".Solution Items", "{2DB034A0-F6A2-443A-AA64-87360F560BCF}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Solution Items", ".Solution Items", "{CAFB5BB8-D1E9-4189-A56E-75B376BCB95B}"
 	ProjectSection(SolutionItems) = preProject
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		Directory.Build.props = Directory.Build.props
-		.github\workflows\dotnet-core.yml = .github\workflows\dotnet-core.yml
 		LICENSE.txt = LICENSE.txt
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{5BB07AB1-6CBD-45F8-B918-B78D2B0F6104}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quibble.UI.Core", "UI.Core\Quibble.UI.Core.csproj", "{3F2682BB-79E9-46A2-8D70-F9FB5E3AC1C9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quibble.UI.Identity", "UI.Identity\Quibble.UI.Identity.csproj", "{1E13721E-D30A-4DE1-A533-1ACEE8F9E899}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3F2682BB-79E9-46A2-8D70-F9FB5E3AC1C9} = {3F2682BB-79E9-46A2-8D70-F9FB5E3AC1C9}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quibble.UI", "UI\Quibble.UI.csproj", "{6799DD82-8CDE-4045-88BC-6CADE954E71A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3F2682BB-79E9-46A2-8D70-F9FB5E3AC1C9} = {3F2682BB-79E9-46A2-8D70-F9FB5E3AC1C9}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Host", "Host", "{3DCB8EC1-BF6E-4363-B632-1AB118593A4E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quibble.Host.Common", "Host.Common\Quibble.Host.Common.csproj", "{5CB3664E-4DDD-4958-A89C-D0A0363E86F8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quibble.Host.Hosted", "Host.Hosted\Quibble.Host.Hosted.csproj", "{B66DE740-4228-47F0-935F-E9224B185B95}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1E13721E-D30A-4DE1-A533-1ACEE8F9E899} = {1E13721E-D30A-4DE1-A533-1ACEE8F9E899}
+		{6799DD82-8CDE-4045-88BC-6CADE954E71A} = {6799DD82-8CDE-4045-88BC-6CADE954E71A}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quibble.Host.WASM.Server", "Host.WASM.Server\Quibble.Host.WASM.Server.csproj", "{6CA9AF6E-31D2-4E75-B045-5A8CD6D246DE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1E13721E-D30A-4DE1-A533-1ACEE8F9E899} = {1E13721E-D30A-4DE1-A533-1ACEE8F9E899}
+		{DF221355-78A4-4C8B-A819-C61E77A820FD} = {DF221355-78A4-4C8B-A819-C61E77A820FD}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quibble.Host.WASM.Client", "Host.WASM.Client\Quibble.Host.WASM.Client.csproj", "{DF221355-78A4-4C8B-A819-C61E77A820FD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6799DD82-8CDE-4045-88BC-6CADE954E71A} = {6799DD82-8CDE-4045-88BC-6CADE954E71A}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quibble.Core", "Core\Quibble.Core.csproj", "{DD1C2652-3BD5-46B0-9C2E-36EE6FAF0D50}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,23 +54,52 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D6CD7A7E-1D77-4CE4-88EF-968F6491BD14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D6CD7A7E-1D77-4CE4-88EF-968F6491BD14}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D6CD7A7E-1D77-4CE4-88EF-968F6491BD14}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D6CD7A7E-1D77-4CE4-88EF-968F6491BD14}.Release|Any CPU.Build.0 = Release|Any CPU
-		{93A15DD2-2C70-4A8A-A428-2773A78BCCA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{93A15DD2-2C70-4A8A-A428-2773A78BCCA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{93A15DD2-2C70-4A8A-A428-2773A78BCCA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{93A15DD2-2C70-4A8A-A428-2773A78BCCA1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EE766545-40A0-42C4-A74B-21FF8D6419A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EE766545-40A0-42C4-A74B-21FF8D6419A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EE766545-40A0-42C4-A74B-21FF8D6419A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EE766545-40A0-42C4-A74B-21FF8D6419A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F2682BB-79E9-46A2-8D70-F9FB5E3AC1C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F2682BB-79E9-46A2-8D70-F9FB5E3AC1C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F2682BB-79E9-46A2-8D70-F9FB5E3AC1C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F2682BB-79E9-46A2-8D70-F9FB5E3AC1C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E13721E-D30A-4DE1-A533-1ACEE8F9E899}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E13721E-D30A-4DE1-A533-1ACEE8F9E899}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E13721E-D30A-4DE1-A533-1ACEE8F9E899}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E13721E-D30A-4DE1-A533-1ACEE8F9E899}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6799DD82-8CDE-4045-88BC-6CADE954E71A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6799DD82-8CDE-4045-88BC-6CADE954E71A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6799DD82-8CDE-4045-88BC-6CADE954E71A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6799DD82-8CDE-4045-88BC-6CADE954E71A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CB3664E-4DDD-4958-A89C-D0A0363E86F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CB3664E-4DDD-4958-A89C-D0A0363E86F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CB3664E-4DDD-4958-A89C-D0A0363E86F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CB3664E-4DDD-4958-A89C-D0A0363E86F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B66DE740-4228-47F0-935F-E9224B185B95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B66DE740-4228-47F0-935F-E9224B185B95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B66DE740-4228-47F0-935F-E9224B185B95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B66DE740-4228-47F0-935F-E9224B185B95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CA9AF6E-31D2-4E75-B045-5A8CD6D246DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CA9AF6E-31D2-4E75-B045-5A8CD6D246DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CA9AF6E-31D2-4E75-B045-5A8CD6D246DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CA9AF6E-31D2-4E75-B045-5A8CD6D246DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF221355-78A4-4C8B-A819-C61E77A820FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF221355-78A4-4C8B-A819-C61E77A820FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF221355-78A4-4C8B-A819-C61E77A820FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF221355-78A4-4C8B-A819-C61E77A820FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD1C2652-3BD5-46B0-9C2E-36EE6FAF0D50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD1C2652-3BD5-46B0-9C2E-36EE6FAF0D50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD1C2652-3BD5-46B0-9C2E-36EE6FAF0D50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD1C2652-3BD5-46B0-9C2E-36EE6FAF0D50}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3F2682BB-79E9-46A2-8D70-F9FB5E3AC1C9} = {5BB07AB1-6CBD-45F8-B918-B78D2B0F6104}
+		{1E13721E-D30A-4DE1-A533-1ACEE8F9E899} = {5BB07AB1-6CBD-45F8-B918-B78D2B0F6104}
+		{6799DD82-8CDE-4045-88BC-6CADE954E71A} = {5BB07AB1-6CBD-45F8-B918-B78D2B0F6104}
+		{5CB3664E-4DDD-4958-A89C-D0A0363E86F8} = {3DCB8EC1-BF6E-4363-B632-1AB118593A4E}
+		{B66DE740-4228-47F0-935F-E9224B185B95} = {3DCB8EC1-BF6E-4363-B632-1AB118593A4E}
+		{6CA9AF6E-31D2-4E75-B045-5A8CD6D246DE} = {3DCB8EC1-BF6E-4363-B632-1AB118593A4E}
+		{DF221355-78A4-4C8B-A819-C61E77A820FD} = {3DCB8EC1-BF6E-4363-B632-1AB118593A4E}
+	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {A240FAB0-D45D-488A-BC3C-264AC98E3BB4}
+		SolutionGuid = {9AE04BC9-F683-4D5E-80A3-BC6DECAF5F19}
 	EndGlobalSection
 EndGlobal

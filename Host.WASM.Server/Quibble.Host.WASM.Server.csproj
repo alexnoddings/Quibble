@@ -1,0 +1,55 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>$(DefaultTargetFramework)</TargetFramework>
+    <UserSecretsId>Quibble.Host.WASM.Server</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Version="$(AspNetCoreWebAssemblyVersion)" Include="Microsoft.AspNetCore.Components.WebAssembly.Server" />
+    <PackageReference Version="$(AspNetCoreVersion)" Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" />
+    <PackageReference Version="$(AspNetCoreVersion)" Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
+    <PackageReference Version="$(AspNetCoreVersion)" Include="Microsoft.AspNetCore.Identity.UI" />
+    <PackageReference Version="$(AspNetCoreVersion)" Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" />
+    <PackageReference Version="$(EntityFrameworkCoreVersion)" Include="Microsoft.EntityFrameworkCore.SqlServer" />
+    <PackageReference Version="$(EntityFrameworkCoreVersion)" Include="Microsoft.EntityFrameworkCore.Tools" />
+  </ItemGroup>
+
+  <!-- Analysers -->
+  <ItemGroup>
+    <PackageReference Version="$(FxCopAnalyzers)" Include="Microsoft.CodeAnalysis.FxCopAnalyzers">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Version="$(ThreadingAnalyzersVersion)" Include="Microsoft.VisualStudio.Threading.Analyzers">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Version="$(SonarAnalyzersVersion)" Include="SonarAnalyzer.CSharp">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Version="$(EntityFrameworkCoreVersion)" Include="Microsoft.EntityFrameworkCore.Analyzers">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Quibble.Core.csproj" />
+    <ProjectReference Include="..\Host.Common\Quibble.Host.Common.csproj" />
+    <ProjectReference Include="..\Host.WASM.Client\Quibble.Host.WASM.Client.csproj" />
+    <ProjectReference Include="..\UI.Identity\Quibble.UI.Identity.csproj" />
+  </ItemGroup>
+
+  <!-- Disables Identity CSS/JS assets being published -->
+  <PropertyGroup>
+    <ResolveStaticWebAssetsInputsDependsOn>RemoveIdentityAssets</ResolveStaticWebAssetsInputsDependsOn>
+  </PropertyGroup>
+  <Target Name="RemoveIdentityAssets">
+    <ItemGroup>
+      <StaticWebAsset Remove="@(StaticWebAsset)" Condition="%(SourceId) == 'Microsoft.AspNetCore.Identity.UI'" />
+    </ItemGroup>
+  </Target>
+
+</Project>
