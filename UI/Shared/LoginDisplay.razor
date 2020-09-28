@@ -1,0 +1,33 @@
+﻿@using System.Security.Principal
+@using Quibble.UI.Core.Services
+@inject ILoginHandler LoginHandler
+@inject NavigationManager NavigationManager
+
+<AuthorizeView>
+    <Authorized>
+        <a href="@LoginHandler.ProfileUrl">@GetGreeting(context.User.Identity)</a>
+        <button class="nav-link btn btn-link" @onclick="BeginSignOutAsync">Log out</button>
+    </Authorized>
+    <NotAuthorized>
+        <a href="@LoginHandler.RegisterUrl">Register</a>
+        <a href="@LoginHandler.LoginUrl">Log in</a>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        NavigationManager.LocationChanged += NavigationManager_LocationChanged;
+    }
+
+    private string GetGreeting(IIdentity? identity)
+    {
+        return identity?.Name == null ? "Profile" : $"Hey {identity.Name}";
+    }
+
+    private Task BeginSignOutAsync(MouseEventArgs _) => LoginHandler.BeginSignOutAsync();
+
+    private void NavigationManager_LocationChanged(object? _, LocationChangedEventArgs __) => StateHasChanged();
+}

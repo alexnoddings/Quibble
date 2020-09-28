@@ -1,0 +1,27 @@
+﻿<Card>
+    <CardHeader>
+        <CardTitle>
+            <Row Margin="Margin.Is2">
+                <Column ColumnSize="ColumnSize.Is10">
+                    <DelayedTextEdit @bind-Text="Round.Title" DelayedTextChanged="Round.SaveTitleAsync"></DelayedTextEdit>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is2">
+                    <ActionButton Outline="true" Block="true" Color="Color.Danger" Clicked="Round.DeleteAsync">Delete</ActionButton>
+                </Column>
+            </Row>
+        </CardTitle>
+    </CardHeader>
+    <CardBody>
+        @foreach (var question in Round.Questions)
+        {
+            <EditQuestion Question="question"></EditQuestion>
+        }
+        <Row Margin="Margin.Is2">
+            <Column ColumnSize="ColumnSize.Is4">
+            </Column>
+            <Column ColumnSize="ColumnSize.Is4">
+                <ActionButton Outline="true" Block="true" Color="Color.Info" Clicked="Round.AddQuestionAsync">New Question</ActionButton>
+            </Column>
+        </Row>
+    </CardBody>
+</Card>

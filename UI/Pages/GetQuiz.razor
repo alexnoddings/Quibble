@@ -1,0 +1,36 @@
+﻿@using Quibble.UI.Operations
+@switch (QuizUiOperation.Status)
+{
+    case UiOperationStatus.Uninitialised:
+    case UiOperationStatus.Loading:
+        <Paragraph>Loading...</Paragraph>
+        break;
+    case UiOperationStatus.NotFound:
+        <Paragraph>Not found</Paragraph>
+        break;
+    case UiOperationStatus.Loaded:
+        var quiz = QuizUiOperation.Result;
+        if (quiz.PublishedAt != null)
+        {
+            if (quiz.OwnerId == UserId)
+            {
+                <HostQuiz Quiz="quiz"></HostQuiz>
+            }
+            else
+            {
+                <Paragraph>Take Quiz</Paragraph>
+            }
+        }
+        else
+        {
+            if (quiz.OwnerId == UserId)
+            {
+                <EditQuiz Quiz="quiz"></EditQuiz>
+            }
+            else
+            {
+                <Paragraph>Not found</Paragraph>
+            }
+        }
+        break;
+}

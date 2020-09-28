@@ -8,10 +8,10 @@
 
   <!-- Default values -->
   <PropertyGroup>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>9.0</LangVersion>
 
     <StrongNameKeyId>AlexNoddingsQuibble</StrongNameKeyId>
-    
+
     <RepoRoot>$(MSBuildThisFileDirectory)</RepoRoot>
     <RepositoryUrl>https://github.com/alexnoddings/quibble</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -25,15 +25,18 @@
   <!-- Default package versions -->
   <PropertyGroup>
     <!-- Targets -->
-    <DefaultNetCoreTargetFramework>netcoreapp3.1</DefaultNetCoreTargetFramework>
-    <DefaultNetStandardTargetFramework>netstandard2.1</DefaultNetStandardTargetFramework>
-    <!-- Asp Net Core -->
-    <AspNetCoreWasmVersion>3.2.0</AspNetCoreWasmVersion>
-    <AspNetCoreVersion>3.1.5</AspNetCoreVersion>
-    <EntityFrameworkVersion>3.1.5</EntityFrameworkVersion>
+    <DefaultTargetFramework>net5.0</DefaultTargetFramework>
     <!-- Misc -->
-    <FxCopAnalyzersVersion>3.0.0</FxCopAnalyzersVersion>
-    <ThreadingAnalyzersVersion>16.6.13</ThreadingAnalyzersVersion>
+    <AspNetCoreVersion>5.0.0-rc.1.20451.17</AspNetCoreVersion>
+    <AspNetCoreWebAssemblyVersion>5.0.0-rc.1.20451.17</AspNetCoreWebAssemblyVersion>
+    <BlazoriseVersion>0.9.1.2</BlazoriseVersion>
+    <EntityFrameworkCoreVersion>5.0.0-rc.1.20451.13</EntityFrameworkCoreVersion>
+    <HttpExtensionsVersion>5.0.0-rc.1.20451.14</HttpExtensionsVersion>
+    <HttpJsonVersion>5.0.0-rc.1.20451.14</HttpJsonVersion>
+    <!-- Analysers -->
+    <FxCopAnalyzers>3.3.0</FxCopAnalyzers>
+    <ThreadingAnalyzersVersion>16.7.56</ThreadingAnalyzersVersion>
+    <SonarAnalyzersVersion>8.13.0.21683</SonarAnalyzersVersion>
   </PropertyGroup>
 
   <!-- Project conventions -->
@@ -55,13 +58,26 @@
   <!-- Warnings and errors -->
   <PropertyGroup>
     <Nullable>enable</Nullable>
+
     <!-- Warnings to ignore and not surface. -->
     <NoWarn>
       $(NoWarn);
       <!-- Web server exceptions do not need to be localised. -->
       CA1303;
+      <!-- ConfigureAwait is not useful on ASP.NET Core -->
+      CA2007; RCS1090;
+      <!-- Explicit initialisation with a default value can improve readability -->
+      CA1805;
+    </NoWarn>
+
+    <!-- Warnings to ignore and not surface during development. -->
+    <NoWarn Condition=" '$(Configuration)' == 'Debug' ">
+      $(NoWarn);
+      <!-- Missing XML docs can hide up meaningful warnings during development -->
+      CS1591;
     </NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
     <!-- Warnings to not treat as errors but still surface. -->
     <WarningsNotAsErrors>
       $(WarningsNotAsErrors);
@@ -69,6 +85,19 @@
       CS1591;
       <!-- Don't make marking a method as async without performing an await a fatal build error as it makes some methods more consistent and easier to read. -->
       CS1998;
+      <!-- Don't make explicit initialisation to a default value an error; it can improve readability of code. -->
+      CA1805;
+    </WarningsNotAsErrors>
+
+    <!-- Warnings to not treat as errors but still surface during development. -->
+    <WarningsNotAsErrors Condition=" '$(Configuration)' == 'Debug' ">
+      $(WarningsNotAsErrors);
+      <!-- Commenting out code while developing shouldn't cause an error. -->
+      S125;
+      <!-- Having to clean up using directives can be a drag while testing. -->
+      S1128;
+      <!-- Unused local variables can be useful when debugging. -->
+      S1481;
     </WarningsNotAsErrors>
   </PropertyGroup>
 
@@ -80,4 +109,18 @@
     <TargetArchitecture Condition="'$(TargetArchitecture)' == ''">x64</TargetArchitecture>
     <TargetRuntimeIdentifier Condition="'$(TargetRuntimeIdentifier)' == ''">$(TargetOsName)-$(TargetArchitecture)</TargetRuntimeIdentifier>
   </PropertyGroup>
+
+  <!--
+      Identity scaffolding does not work on net5 as of writing.
+      temporarily reverting back major versions should allow for the scaffolder to run through to completion
+    -->
+  <!--
+  <PropertyGroup>
+    <DefaultTargetFramework>netcoreapp3.1</DefaultTargetFramework>
+    <AspNetCoreVersion>3.1.7</AspNetCoreVersion>
+    <AspNetCoreWebAssemblyVersion>3.2.0</AspNetCoreWebAssemblyVersion>
+    <EntityFrameworkCoreVersion>3.1.7</EntityFrameworkCoreVersion>
+  </PropertyGroup>
+    -->
+
 </Project>

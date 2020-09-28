@@ -1,0 +1,19 @@
+﻿@inherits Button
+
+@if (!HasCustomRegistration)
+{
+    <button @ref="@ElementRef" id="@ElementId" type="@Type.ToButtonTypeString()" class="@ClassNames" style="@StyleNames" disabled="@Disabled" aria-pressed="@Active" @onclick="@OnClickAsync" @attributes="@Attributes">
+        @if (Disabled)
+        {
+            @DisabledContent
+        }
+        else
+        {
+            @EnabledContent
+        }
+    </button>
+}
+else
+{
+    @RenderCustomComponent()
+}

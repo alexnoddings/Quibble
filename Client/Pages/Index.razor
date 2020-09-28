@@ -1,9 +1,0 @@
-﻿@page "/"
-@inject QuizHubConnection QuizHubConnection
-
-@foreach (var quiz in OwnedQuizzes)
-{
-    <p><a href="/quiz/@quiz.Id">@quiz.Title (@quiz.State)</a></p>
-}
-
-<p><a href="/quiz/create">create quiz</a></p>
