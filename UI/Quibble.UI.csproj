@@ -28,7 +28,7 @@
 
   <!-- Analysers -->
   <ItemGroup>
-    <PackageReference Version="$(FxCopAnalyzers)" Include="Microsoft.CodeAnalysis.FxCopAnalyzers">
+    <PackageReference Version="$(FxCopAnalyzersVersion)" Include="Microsoft.CodeAnalysis.FxCopAnalyzers">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

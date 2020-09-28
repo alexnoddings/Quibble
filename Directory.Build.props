@@ -34,7 +34,7 @@
     <HttpExtensionsVersion>5.0.0-rc.1.20451.14</HttpExtensionsVersion>
     <HttpJsonVersion>5.0.0-rc.1.20451.14</HttpJsonVersion>
     <!-- Analysers -->
-    <FxCopAnalyzers>3.3.0</FxCopAnalyzers>
+    <FxCopAnalyzersVersion>3.3.0</FxCopAnalyzersVersion>
     <ThreadingAnalyzersVersion>16.7.56</ThreadingAnalyzersVersion>
     <SonarAnalyzersVersion>8.13.0.21683</SonarAnalyzersVersion>
   </PropertyGroup>
