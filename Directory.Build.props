@@ -37,6 +37,11 @@
     <FxCopAnalyzersVersion>3.3.0</FxCopAnalyzersVersion>
     <ThreadingAnalyzersVersion>16.7.56</ThreadingAnalyzersVersion>
     <SonarAnalyzersVersion>8.13.0.21683</SonarAnalyzersVersion>
+    <!-- Testing -->
+    <TestSdkVersion>16.8.0-preview-20200921-01</TestSdkVersion>
+    <xUnitVersion>2.4.1</xUnitVersion>
+    <xUnitRunnerVersion>2.4.3</xUnitRunnerVersion>
+    <CoverletCollectorVersion>1.3.0</CoverletCollectorVersion>
   </PropertyGroup>
 
   <!-- Project conventions -->

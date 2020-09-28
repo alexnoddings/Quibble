@@ -48,6 +48,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quibble.Host.WASM.Client", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quibble.Core", "Core\Quibble.Core.csproj", "{DD1C2652-3BD5-46B0-9C2E-36EE6FAF0D50}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{900A7BCA-86C4-4AFE-972D-655B526BD1AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quibble.Tests.Host.Common", "Tests.Host.Common\Quibble.Tests.Host.Common.csproj", "{7BFB6F60-915C-43B3-93F9-A819E248474A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -86,6 +90,10 @@ Global
 		{DD1C2652-3BD5-46B0-9C2E-36EE6FAF0D50}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD1C2652-3BD5-46B0-9C2E-36EE6FAF0D50}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD1C2652-3BD5-46B0-9C2E-36EE6FAF0D50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BFB6F60-915C-43B3-93F9-A819E248474A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BFB6F60-915C-43B3-93F9-A819E248474A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BFB6F60-915C-43B3-93F9-A819E248474A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BFB6F60-915C-43B3-93F9-A819E248474A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -98,6 +106,7 @@ Global
 		{B66DE740-4228-47F0-935F-E9224B185B95} = {3DCB8EC1-BF6E-4363-B632-1AB118593A4E}
 		{6CA9AF6E-31D2-4E75-B045-5A8CD6D246DE} = {3DCB8EC1-BF6E-4363-B632-1AB118593A4E}
 		{DF221355-78A4-4C8B-A819-C61E77A820FD} = {3DCB8EC1-BF6E-4363-B632-1AB118593A4E}
+		{7BFB6F60-915C-43B3-93F9-A819E248474A} = {900A7BCA-86C4-4AFE-972D-655B526BD1AF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9AE04BC9-F683-4D5E-80A3-BC6DECAF5F19}
