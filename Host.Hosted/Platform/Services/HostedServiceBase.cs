@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Quibble.Core.Entities;
 using Quibble.Core.Extensions;
+using Quibble.Host.Common;
 using Quibble.Host.Common.Data;
 using Quibble.Host.Common.Data.Entities;
 

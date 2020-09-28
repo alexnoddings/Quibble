@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Quibble.Host.Common;
 using Quibble.Host.Common.Data.Entities;
 using Quibble.Host.Hosted.Platform.Events;
 using Quibble.UI.Core.Entities;

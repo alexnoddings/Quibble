@@ -2,10 +2,10 @@
 using System.Diagnostics.Contracts;
 using Quibble.Core.Exceptions;
 
-namespace Quibble.Host.Hosted.Platform
+namespace Quibble.Host.Common
 {
     [Pure]
-    internal static class ThrowHelper
+    public static class ThrowHelper
     {
         public static ArgumentNullException IsNull(string paramName, string? message = null) =>
             message != null
