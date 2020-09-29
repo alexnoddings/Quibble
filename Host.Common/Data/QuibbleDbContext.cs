@@ -6,7 +6,7 @@ using Quibble.Host.Common.Data.Identity;
 
 namespace Quibble.Host.Common.Data
 {
-    public class QuibbleDbContext : IdentityDbContext<DbQuibbleUser, QuibbleIdentityRole, Guid>
+    public class QuibbleDbContext : IdentityDbContext<DbQuibbleUser, QuibbleIdentityRole, Guid>, IQuibbleDbContext
     {
         public DbSet<DbParticipant> Participants { get; set; } = default!;
         public DbSet<DbQuiz> Quizzes { get; set; } = default!;
