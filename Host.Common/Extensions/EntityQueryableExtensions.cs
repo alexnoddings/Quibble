@@ -6,7 +6,7 @@ using Quibble.Core;
 
 namespace Quibble.Host.Common.Extensions
 {
-    internal static class EntityQueryableExtensions
+    public static class EntityQueryableExtensions
     {
         public static Task<bool> ExistsAsync<TEntity>(this IQueryable<TEntity> source, Guid id)
             where TEntity : IEntity<Guid> =>
