@@ -57,23 +57,27 @@ namespace Quibble.Host.Hosted
                 .AddFontAwesomeIcons();
 
             services.AddScoped<ISynchronisedQuizFactory, SynchronisedQuizFactory>();
+            services.AddUserContextAccessor();
+            services.AddQuibbleEntityFrameworkRepositories();
+            services.AddScoped<IQuibbleDbContext, QuibbleServerSideDbContext>();
 
-            // Platform-specific services
-            services.AddScoped<QuibbleDbContext, QuibbleServerSideDbContext>();
+            AddPlatformServices(services);
+        }
 
+        private static void AddPlatformServices(IServiceCollection services)
+        {
             services.AddScoped<ILoginHandler, HostedLoginHandler>();
             services.AddScoped<IAppMetadata, HostedAppMetadata>();
 
             services.AddScoped<IQuizService, HostedQuizService>();
-            services.AddScoped<IRoundService, HostedRoundService>();
-            services.AddScoped<IQuestionService, HostedQuestionService>();
-
             services.AddScoped<IQuizEvents, StaticQuizEvents>();
             services.AddScoped<IQuizEventsInvoker, StaticQuizEvents>();
 
+            services.AddScoped<IRoundService, HostedRoundService>();
             services.AddScoped<IRoundEvents, StaticRoundEvents>();
             services.AddScoped<IRoundEventsInvoker, StaticRoundEvents>();
 
+            services.AddScoped<IQuestionService, HostedQuestionService>();
             services.AddScoped<IQuestionEvents, StaticQuestionEvents>();
             services.AddScoped<IQuestionEventsInvoker, StaticQuestionEvents>();
         }

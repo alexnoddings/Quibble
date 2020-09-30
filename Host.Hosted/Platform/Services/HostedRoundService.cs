@@ -2,67 +2,75 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using Quibble.Host.Common;
 using Quibble.Host.Common.Data.Entities;
+using Quibble.Host.Common.Extensions;
+using Quibble.Host.Common.Repositories;
+using Quibble.Host.Common.Services;
 using Quibble.Host.Hosted.Platform.Events;
 using Quibble.UI.Core.Entities;
 using Quibble.UI.Core.Services;
 
 namespace Quibble.Host.Hosted.Platform.Services
 {
-    public class HostedRoundService : HostedServiceBase, IRoundService
+    [Authorize]
+    public class HostedRoundService : IRoundService
     {
+        private IQuizRepository QuizRepository { get; }
+        private IRoundRepository RoundRepository { get; }
         private IRoundEventsInvoker RoundEvents { get; }
+        private IUserContextAccessor UserContextAccessor { get; }
 
-        public HostedRoundService(IServiceProvider serviceProvider, IRoundEventsInvoker roundEventsInvoker)
-            : base(serviceProvider)
+        public HostedRoundService(IQuizRepository quizRepository, IRoundRepository roundRepository, IRoundEventsInvoker roundEvents, IUserContextAccessor userContextAccessor)
         {
-            RoundEvents = roundEventsInvoker;
+            QuizRepository = quizRepository;
+            RoundRepository = roundRepository;
+            RoundEvents = roundEvents;
+            UserContextAccessor = userContextAccessor;
         }
 
         public async Task CreateAsync(Guid parentQuizId)
         {
-            DbQuiz? quiz = await DbContext.Quizzes.FindAsync(parentQuizId);
-            if (quiz == null)
-                throw ThrowHelper.NotFound("Quiz", parentQuizId);
+            DbQuiz quiz = await QuizRepository.GetAsync(parentQuizId);
+            DbQuibbleUser user = await UserContextAccessor.EnsureCurrentUserAsync();
 
-            DbQuibbleUser user = await GetCurrentUserAsync();
             if (user.Id != quiz.OwnerId)
-                throw ThrowHelper.Unauthorised("You are not the quiz owner.");
+                throw ThrowHelper.Unauthorised(ExceptionMessages.NotQuizOwner);
+
+            if (quiz.PublishedAt != null)
+                throw ThrowHelper.InvalidOperation(ExceptionMessages.CannotEditPublishedQuiz);
 
             var round = new DbRound {QuizId = quiz.Id};
-            DbContext.Rounds.Add(round);
-            await DbContext.SaveChangesAsync();
+            await RoundRepository.CreateAsync(round);
             await RoundEvents.InvokeRoundAddedAsync(round);
         }
 
         public async Task<List<DtoRound>> GetForQuizAsync(Guid quizId)
         {
-            DbQuiz? quiz = await DbContext.Quizzes.FindAsync(quizId);
-            if (quiz == null)
+            DbQuiz quiz = await QuizRepository.GetAsync(quizId);
+            DbQuibbleUser user = await UserContextAccessor.EnsureCurrentUserAsync();
+
+            if (quiz.PublishedAt == null && user.Id != quiz.OwnerId)
                 throw ThrowHelper.NotFound("Quiz", quizId);
 
-            var rounds =
-                from round in DbContext.Rounds
-                where round.QuizId == quizId
-                select new DtoRound(round);
-            return await rounds.ToListAsync();
+            var rounds = await RoundRepository.GetForQuizAsync(quizId);
+            return rounds.Select(r => new DtoRound(r)).ToList();
         }
 
         public async Task DeleteAsync(Guid id)
         {
-            DbRound? round = await DbContext.Rounds.FindAsync(id);
-            if (round == null)
-                throw ThrowHelper.NotFound("Round", id);
+            DbRound round = await RoundRepository.GetAsync(id);
+            DbQuiz quiz = await QuizRepository.GetAsync(round.QuizId);
+            DbQuibbleUser user = await UserContextAccessor.EnsureCurrentUserAsync();
 
-            Guid quizOwnerId = await DbContext.Quizzes.Where(q => q.Id == round.QuizId).Select(q => q.OwnerId).FirstAsync();
-            DbQuibbleUser user = await GetCurrentUserAsync();
-            if (user.Id != quizOwnerId)
-                throw ThrowHelper.Unauthorised("You are not the quiz owner.");
+            if (quiz.OwnerId != user.Id)
+                throw ThrowHelper.Unauthorised(ExceptionMessages.NotQuizOwner);
 
-            DbContext.Rounds.Remove(round);
-            await DbContext.SaveChangesAsync();
+            if (quiz.PublishedAt != null)
+                throw ThrowHelper.InvalidOperation(ExceptionMessages.CannotEditPublishedQuiz);
+
+            await RoundRepository.DeleteAsync(id);
             await RoundEvents.InvokeRoundDeletedAsync(id);
         }
 
@@ -70,19 +78,17 @@ namespace Quibble.Host.Hosted.Platform.Services
         {
             newTitle ??= string.Empty;
 
-            DbRound? round = await DbContext.Rounds.FindAsync(id);
-            if (round == null)
-                throw ThrowHelper.NotFound("Round", id);
+            DbRound round = await RoundRepository.GetAsync(id);
+            DbQuiz quiz = await QuizRepository.GetAsync(round.QuizId);
+            DbQuibbleUser user = await UserContextAccessor.EnsureCurrentUserAsync();
 
-            DbQuiz quiz = await DbContext.Quizzes.FindAsync(round.QuizId);
-            DbQuibbleUser user = await GetCurrentUserAsync();
-            if (user.Id != quiz.OwnerId)
-                throw ThrowHelper.Unauthorised("You are not the quiz owner.");
-            if (quiz.IsPublished)
-                throw ThrowHelper.InvalidOperation("Cannot edit a published quiz.");
+            if (quiz.OwnerId != user.Id)
+                throw ThrowHelper.Unauthorised(ExceptionMessages.NotQuizOwner);
 
-            round.Title = newTitle;
-            await DbContext.SaveChangesAsync();
+            if (quiz.PublishedAt != null)
+                throw ThrowHelper.InvalidOperation(ExceptionMessages.CannotEditPublishedQuiz);
+
+            await RoundRepository.UpdateTitleAsync(id, newTitle);
             await RoundEvents.InvokeTitleUpdatedAsync(id, newTitle);
         }
     }
