@@ -12,6 +12,7 @@ namespace Quibble.Host.Common.Data
         public DbSet<DbRound> Rounds { get; set; }
         public DbSet<DbQuestion> Questions { get; set; }
         public DbSet<DbParticipantAnswer> ParticipantAnswers { get; set; }
+        public DbSet<DbQuibbleUser> Users { get; set; }
 
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
