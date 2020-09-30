@@ -27,7 +27,7 @@ namespace Quibble.Host.Common.Repositories.EntityFramework
         public async Task<Guid> CreateAsync(DbQuestion question)
         {
             Ensure.NotNullOrDefault(question, nameof(question));
-            if (question.Id == default)
+            if (question.Id != default)
                 throw ThrowHelper.BadArgument(nameof(question), $"{nameof(question.Id)} must not be set prior to creation.");
             Ensure.NotNullOrDefault(question.RoundId, nameof(question.RoundId), $"{nameof(question.RoundId)} is not set.");
 
