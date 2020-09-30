@@ -62,11 +62,13 @@ namespace Quibble.Host.Common.Repositories.EntityFramework
             await DbContext.SaveChangesAsync();
         }
 
-        public async Task PublishAsync(Guid id)
+        public async Task<DateTime> PublishAsync(Guid id)
         {
             var quiz = await GetWithoutIncludesAsync(id);
-            quiz.PublishedAt = DateTime.UtcNow;
+            DateTime now = DateTime.UtcNow;
+            quiz.PublishedAt = now;
             await DbContext.SaveChangesAsync();
+            return now;
         }
 
         public async Task UpdateTitleAsync(Guid id, string newTitle)

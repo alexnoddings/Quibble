@@ -6,7 +6,7 @@ namespace Quibble.Host.Common.Repositories
 {
     public interface IQuizRepository : IEntityRepository<Guid, DbQuiz>
     {
-        public Task PublishAsync(Guid id);
+        public Task<DateTime> PublishAsync(Guid id);
         public Task UpdateTitleAsync(Guid id, string newTitle);
     }
 }
