@@ -19,6 +19,9 @@ namespace Quibble.UI.Core.Entities
         private readonly List<SyncedRound> _rounds = new();
         public IReadOnlyList<SyncedRound> Rounds => _rounds;
 
+        private readonly List<SyncedParticipant> _participants = new();
+        public IReadOnlyList<SyncedParticipant> Participants => _participants;
+
         private readonly AsyncEvent _updated = new();
         public event Func<Task> Updated
         {
@@ -42,7 +45,7 @@ namespace Quibble.UI.Core.Entities
 
         private readonly SyncServices _services;
 
-        internal SyncedQuiz(IQuiz dtoQuiz, IEnumerable<SyncedRound> rounds, SyncServices services)
+        internal SyncedQuiz(IQuiz dtoQuiz, IEnumerable<SyncedRound> rounds, IEnumerable<SyncedParticipant> participants, SyncServices services)
         {
             _services = services;
 
@@ -51,18 +54,22 @@ namespace Quibble.UI.Core.Entities
             Title = dtoQuiz.Title;
             PublishedAt = dtoQuiz.PublishedAt;
             _rounds.AddRange(rounds);
+            _participants.AddRange(participants);
 
             _services.QuizEvents.TitleUpdated += OnTitleUpdatedAsync;
             _services.QuizEvents.Published += OnPublishedAsync;
             _services.QuizEvents.Deleted += OnDeletedAsync;
+
             _services.RoundEvents.RoundAdded += OnRoundAddedAsync;
             _services.RoundEvents.RoundDeleted += OnRoundDeletedAsync;
+
+            _services.ParticipantEvents.ParticipantJoined += OnParticipantJoinedAsync;
+            _services.ParticipantEvents.ParticipantLeft += OnParticipantLeftAsync;
         }
 
         internal SyncedQuiz(IQuiz dtoQuiz, SyncServices services)
-            : this(dtoQuiz, Enumerable.Empty<SyncedRound>(), services)
+            : this(dtoQuiz, Enumerable.Empty<SyncedRound>(), Enumerable.Empty<SyncedParticipant>(), services)
         {
-
         }
 
         public Task SaveTitleAsync() => _services.QuizService.UpdateTitleAsync(Id, Title);
@@ -116,13 +123,37 @@ namespace Quibble.UI.Core.Entities
             _rounds.Remove(round);
             return _updated.InvokeAsync();
         }
+
+        private Task OnParticipantJoinedAsync(IParticipant participant)
+        {
+            if (participant.QuizId != Id) return Task.CompletedTask;
+
+            var syncedParticipant = new SyncedParticipant(participant, _services);
+            _participants.Add(syncedParticipant);
+            return _updated.InvokeAsync();
+        }
+
+        private Task OnParticipantLeftAsync(Guid participantId)
+        {
+            SyncedParticipant? participant = _participants.FirstOrDefault(p => p.Id == participantId);
+            if (participant == null)
+                return Task.CompletedTask;
+
+            _participants.Remove(participant);
+            return _updated.InvokeAsync();
+        }
+
         public void Dispose()
         {
             _services.QuizEvents.TitleUpdated -= OnTitleUpdatedAsync;
             _services.QuizEvents.Published -= OnPublishedAsync;
             _services.QuizEvents.Deleted -= OnDeletedAsync;
+
             _services.RoundEvents.RoundAdded -= OnRoundAddedAsync;
             _services.RoundEvents.RoundDeleted -= OnRoundDeletedAsync;
+
+            _services.ParticipantEvents.ParticipantJoined -= OnParticipantJoinedAsync;
+            _services.ParticipantEvents.ParticipantLeft -= OnParticipantLeftAsync;
 
             foreach (var round in _rounds)
                 round.Dispose();
