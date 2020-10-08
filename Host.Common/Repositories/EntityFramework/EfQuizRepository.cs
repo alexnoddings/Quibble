@@ -65,8 +65,18 @@ namespace Quibble.Host.Common.Repositories.EntityFramework
         public async Task<DateTime> PublishAsync(Guid id)
         {
             var quiz = await GetWithoutIncludesAsync(id);
+
             DateTime now = DateTime.UtcNow;
             quiz.PublishedAt = now;
+
+            // Empty rounds are deleted when publishing
+            IQueryable<DbRound> emptyRounds =
+                from r in DbContext.Rounds
+                where r.QuizId == id
+                where r.Questions.Count == 0
+                select r;
+            DbContext.Rounds.RemoveRange(emptyRounds);
+
             await DbContext.SaveChangesAsync();
             return now;
         }
