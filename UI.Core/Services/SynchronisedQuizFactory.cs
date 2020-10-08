@@ -13,20 +13,24 @@ namespace Quibble.UI.Core.Services
         private IQuizService QuizService { get; }
         private IRoundService RoundService { get; }
         private IQuestionService QuestionService { get; }
+        private IParticipantService ParticipantService { get; }
 
         private IQuizEvents QuizEvents { get; }
         private IRoundEvents RoundEvents { get; }
         private IQuestionEvents QuestionEvents { get; }
+        private IParticipantEvents ParticipantEvents { get; }
 
         public SynchronisedQuizFactory(IServiceProvider serviceProvider)
         {
             QuizService = serviceProvider.GetRequiredService<IQuizService>();
             RoundService = serviceProvider.GetRequiredService<IRoundService>();
             QuestionService = serviceProvider.GetRequiredService<IQuestionService>();
+            ParticipantService = serviceProvider.GetRequiredService<IParticipantService>();
 
             QuizEvents = serviceProvider.GetRequiredService<IQuizEvents>();
             RoundEvents = serviceProvider.GetRequiredService<IRoundEvents>();
             QuestionEvents = serviceProvider.GetRequiredService<IQuestionEvents>();
+            ParticipantEvents = serviceProvider.GetRequiredService<IParticipantEvents>();
         }
 
         public async Task<SyncedQuiz> GetAsync(Guid quizId)
@@ -41,10 +45,15 @@ namespace Quibble.UI.Core.Services
             List<DtoRound> rounds = await RoundService.GetForQuizAsync(quizId);
             var syncedRounds = rounds.Select(r => new SyncedRound(r, syncedQuestions.Where(q => q.RoundId == r.Id), services)).ToList();
 
-            return new SyncedQuiz(quiz, syncedRounds, services);
+            List<DtoParticipant> participants = await ParticipantService.GetForQuizAsync(quizId);
+            var syncedParticipant = participants.Select(p => new SyncedParticipant(p, services));
+
+            return new SyncedQuiz(quiz, syncedRounds, syncedParticipant, services);
         }
 
         private SyncServices CreateSyncServices() =>
-            new SyncServices(QuizService, RoundService, QuestionService, QuizEvents, RoundEvents, QuestionEvents);
+            new SyncServices(
+                QuizService, RoundService, QuestionService, ParticipantService, 
+                QuizEvents, RoundEvents, QuestionEvents, ParticipantEvents);
     }
 }
