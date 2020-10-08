@@ -12,6 +12,8 @@ namespace Quibble.Host.Common.Extensions
             services.AddScoped<IQuizRepository, EfQuizRepository>();
             services.AddScoped<IRoundRepository, EfRoundRepository>();
             services.AddScoped<IQuestionRepository, EfQuestionRepository>();
+            services.AddScoped<IParticipantRepository, EfParticipantRepository>();
+            services.AddScoped<IUserRepository, EfUserRepository>();
 
             return services;
         }
