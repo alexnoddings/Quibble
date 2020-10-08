@@ -7,5 +7,7 @@ namespace Quibble.Core.Entities
         public Guid UserId { get; }
 
         public Guid QuizId { get; }
+
+        public string UserName { get; }
     }
 }

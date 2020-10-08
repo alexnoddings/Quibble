@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Quibble.Host.Hosted.Data;
 
 namespace Quibble.Host.Hosted.Data.Migrations
 {
     [DbContext(typeof(QuibbleServerSideDbContext))]
-    partial class QuibbleServerSideDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201006113451_ParticipantUserName")]
+    partial class ParticipantUserName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

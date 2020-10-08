@@ -19,6 +19,8 @@ namespace Quibble.Host.Common.Data.Entities
         [ForeignKey(nameof(Quiz))]
         public Guid QuizId { get; set; }
 
+        public string UserName { get; set; } = string.Empty;
+
         public DbQuiz Quiz { get; set; } = default!;
 
         public List<DbParticipantAnswer> Answers { get; set; } = new List<DbParticipantAnswer>();
