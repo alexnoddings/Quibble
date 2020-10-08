@@ -1,8 +1,4 @@
 
-:root {
-    --col-primary: rgba(255, 92, 232, 1);
-}
-
 .body {
     position: relative;
     min-height: 100vh;
@@ -17,6 +13,7 @@
     right: 0;
     bottom: 0;
     left: 0;
+    z-index: -1;
 }
 
 #app {
@@ -43,3 +40,9 @@
         right: 0.75rem;
         top: 0.5rem;
     }
+
+/* Blazorise embeds a card-body in collapses, but the card-body doesn't inherit the padding of the collapse */
+.collapse.p-0 > .card-body
+{
+    padding: 0;
+}
