@@ -5,5 +5,7 @@
         public const string NotQuizOwner = "You must be the quiz owner to perform this action.";
 
         public const string CannotEditPublishedQuiz = "Cannot edit a published quiz.";
+
+        public const string NotJoinedQuiz = "You have not joined this quiz.";
     }
 }

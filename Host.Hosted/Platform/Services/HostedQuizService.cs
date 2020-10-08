@@ -17,12 +17,14 @@ namespace Quibble.Host.Hosted.Platform.Services
     {
         private IQuizRepository QuizRepository { get; }
         private IQuizEventsInvoker QuizEvents { get; }
+        private IParticipantRepository ParticipantRepository { get; }
         private IUserContextAccessor UserContextAccessor { get; }
 
-        public HostedQuizService(IQuizRepository quizRepository, IQuizEventsInvoker quizEvents, IUserContextAccessor userContextAccessor)
+        public HostedQuizService(IQuizRepository quizRepository, IQuizEventsInvoker quizEvents, IParticipantRepository participantRepository, IUserContextAccessor userContextAccessor)
         {
             QuizRepository = quizRepository;
             QuizEvents = quizEvents;
+            ParticipantRepository = participantRepository;
             UserContextAccessor = userContextAccessor;
         }
 
@@ -41,12 +43,15 @@ namespace Quibble.Host.Hosted.Platform.Services
         public async Task<DtoQuiz> GetAsync(Guid id)
         {
             DbQuiz quiz = await QuizRepository.GetAsync(id);
+            DbQuibbleUser user = await UserContextAccessor.EnsureCurrentUserAsync();
 
-            if (quiz.PublishedAt == null)
+            if (quiz.OwnerId != user.Id)
             {
-                DbQuibbleUser user = await UserContextAccessor.EnsureCurrentUserAsync();
-                if (user.Id != quiz.OwnerId)
+                if (quiz.PublishedAt == null)
                     throw ThrowHelper.NotFound("Quiz", id);
+
+                if (!await ParticipantRepository.IsParticipatingAsync(id, user.Id))
+                    throw ThrowHelper.Unauthorised(ExceptionMessages.NotJoinedQuiz);
             }
 
             return new DtoQuiz(quiz);

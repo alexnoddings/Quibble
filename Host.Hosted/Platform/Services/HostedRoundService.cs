@@ -18,13 +18,15 @@ namespace Quibble.Host.Hosted.Platform.Services
     public class HostedRoundService : IRoundService
     {
         private IQuizRepository QuizRepository { get; }
+        private IParticipantRepository ParticipantRepository { get; }
         private IRoundRepository RoundRepository { get; }
         private IRoundEventsInvoker RoundEvents { get; }
         private IUserContextAccessor UserContextAccessor { get; }
 
-        public HostedRoundService(IQuizRepository quizRepository, IRoundRepository roundRepository, IRoundEventsInvoker roundEvents, IUserContextAccessor userContextAccessor)
+        public HostedRoundService(IQuizRepository quizRepository, IParticipantRepository participantRepository, IRoundRepository roundRepository, IRoundEventsInvoker roundEvents, IUserContextAccessor userContextAccessor)
         {
             QuizRepository = quizRepository;
+            ParticipantRepository = participantRepository;
             RoundRepository = roundRepository;
             RoundEvents = roundEvents;
             UserContextAccessor = userContextAccessor;
@@ -51,8 +53,14 @@ namespace Quibble.Host.Hosted.Platform.Services
             DbQuiz quiz = await QuizRepository.GetAsync(quizId);
             DbQuibbleUser user = await UserContextAccessor.EnsureCurrentUserAsync();
 
-            if (quiz.PublishedAt == null && user.Id != quiz.OwnerId)
-                throw ThrowHelper.NotFound("Quiz", quizId);
+            if (quiz.OwnerId != user.Id)
+            {
+                if (quiz.PublishedAt == null)
+                    throw ThrowHelper.NotFound("Quiz", quizId);
+
+                if (!await ParticipantRepository.IsParticipatingAsync(quizId, user.Id))
+                    throw ThrowHelper.Unauthorised(ExceptionMessages.NotJoinedQuiz);
+            }
 
             var rounds = await RoundRepository.GetForQuizAsync(quizId);
             return rounds.Select(r => new DtoRound(r)).ToList();

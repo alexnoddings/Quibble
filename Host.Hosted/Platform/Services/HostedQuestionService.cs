@@ -18,14 +18,16 @@ namespace Quibble.Host.Hosted.Platform.Services
     public class HostedQuestionService : IQuestionService
     {
         private IQuizRepository QuizRepository { get; }
+        private IParticipantRepository ParticipantRepository { get; }
         private IRoundRepository RoundRepository { get; }
         private IQuestionRepository QuestionRepository { get; }
         private IQuestionEventsInvoker QuestionEvents { get; }
         private IUserContextAccessor UserContextAccessor { get; }
 
-        public HostedQuestionService(IQuizRepository quizRepository, IRoundRepository roundRepository, IQuestionRepository questionRepository, IQuestionEventsInvoker questionEvents, IUserContextAccessor userContextAccessor)
+        public HostedQuestionService(IQuizRepository quizRepository, IParticipantRepository participantRepository, IRoundRepository roundRepository, IQuestionRepository questionRepository, IQuestionEventsInvoker questionEvents, IUserContextAccessor userContextAccessor)
         {
             QuizRepository = quizRepository;
+            ParticipantRepository = participantRepository;
             RoundRepository = roundRepository;
             QuestionRepository = questionRepository;
             QuestionEvents = questionEvents;
@@ -54,8 +56,14 @@ namespace Quibble.Host.Hosted.Platform.Services
             DbQuiz quiz = await QuizRepository.GetAsync(quizId);
             DbQuibbleUser user = await UserContextAccessor.EnsureCurrentUserAsync();
 
-            if (quiz.PublishedAt == null && user.Id != quiz.OwnerId)
-                throw ThrowHelper.NotFound("Quiz", quizId);
+            if (quiz.OwnerId != user.Id)
+            {
+                if (quiz.PublishedAt == null)
+                    throw ThrowHelper.NotFound("Quiz", quizId);
+
+                if (!await ParticipantRepository.IsParticipatingAsync(quizId, user.Id))
+                    throw ThrowHelper.Unauthorised(ExceptionMessages.NotJoinedQuiz);
+            }
 
             var questions = await QuestionRepository.GetForQuizAsync(quizId);
             return questions.Select(q => new DtoQuestion(q)).ToList();
