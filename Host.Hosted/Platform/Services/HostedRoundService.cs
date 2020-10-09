@@ -10,7 +10,7 @@ using Quibble.Host.Common.Repositories;
 using Quibble.Host.Common.Services;
 using Quibble.Host.Hosted.Platform.Events;
 using Quibble.UI.Core.Entities;
-using Quibble.UI.Core.Services;
+using Quibble.UI.Core.Services.Data;
 
 namespace Quibble.Host.Hosted.Platform.Services
 {

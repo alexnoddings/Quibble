@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Quibble.Core.Extensions;
 using Quibble.UI.Core.Entities;
-using Quibble.UI.Core.Services;
+using Quibble.UI.Core.Services.Data;
 using Quibble.UI.Operations;
 
 namespace Quibble.UI.Pages

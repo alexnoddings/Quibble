@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Quibble.Core.Entities;
 using Quibble.Host.Common;
 using Quibble.Host.Common.Data.Entities;
 using Quibble.Host.Common.Extensions;
@@ -11,6 +12,7 @@ using Quibble.Host.Common.Services;
 using Quibble.Host.Hosted.Platform.Events;
 using Quibble.UI.Core.Entities;
 using Quibble.UI.Core.Services;
+using Quibble.UI.Core.Services.Data;
 
 namespace Quibble.Host.Hosted.Platform.Services
 {

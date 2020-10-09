@@ -8,6 +8,7 @@ namespace Quibble.UI.Core.Entities
         public Guid Id { get; set; }
         public Guid QuizId { get; set; }
         public string Title { get; set; } = string.Empty;
+        public RoundState State { get; }
 
         public DtoRound()
         {
@@ -21,6 +22,7 @@ namespace Quibble.UI.Core.Entities
             Id = other.Id;
             QuizId = other.QuizId;
             Title = other.Title;
+            State = other.State;
         }
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Quibble.UI.Core.Entities;
 using Quibble.UI.Core.Events;
 
-namespace Quibble.UI.Core.Services
+namespace Quibble.UI.Core.Services.Data
 {
     public class SynchronisedQuizFactory : ISynchronisedQuizFactory
     {

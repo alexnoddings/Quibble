@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
-using Quibble.UI.Core.Services;
+using Quibble.UI.Core.Services.Data;
 
 namespace Quibble.UI.Pages
 {

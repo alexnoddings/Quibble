@@ -12,6 +12,8 @@ namespace Quibble.UI.Core.Entities
         public string QuestionText { get; set; }
         public string CorrectAnswer { get; set; }
 
+        public QuestionState State { get; private set; }
+
         private readonly AsyncEvent _updated = new();
         public event Func<Task> Updated
         {
@@ -29,26 +31,20 @@ namespace Quibble.UI.Core.Entities
             RoundId = dtoQuestion.RoundId;
             QuestionText = dtoQuestion.QuestionText;
             CorrectAnswer = dtoQuestion.CorrectAnswer;
+            State = dtoQuestion.State;
 
             _services.QuestionEvents.AnswerUpdated += OnQuestionAnswerUpdatedAsync;
             _services.QuestionEvents.TextUpdated += OnQuestionTextUpdatedAsync;
+            _services.QuestionEvents.StateUpdated += OnQuestionStateUpdatedAsync;
         }
 
-        public Task SaveTextAsync()
-        {
-            return _services.QuestionService.UpdateTextAsync(Id, QuestionText);
-        }
+        public Task SaveTextAsync() => _services.QuestionService.UpdateTextAsync(Id, QuestionText);
 
-        public Task SaveAnswerAsync()
-        {
-            return _services.QuestionService.UpdateAnswerAsync(Id, CorrectAnswer);
-        }
+        public Task SaveAnswerAsync() => _services.QuestionService.UpdateAnswerAsync(Id, CorrectAnswer);
 
-        public Task DeleteAsync()
+        public Task UpdateStateAsync(QuestionState newState) => _services.QuestionService.UpdateStateAsync(Id, newState);
 
-        {
-            return _services.QuestionService.DeleteAsync(Id);
-        }
+        public Task DeleteAsync() =>_services.QuestionService.DeleteAsync(Id);
 
         private Task OnQuestionTextUpdatedAsync(Guid questionId, string newText)
         {
@@ -68,10 +64,20 @@ namespace Quibble.UI.Core.Entities
             return _updated.InvokeAsync();
         }
 
+        private Task OnQuestionStateUpdatedAsync(Guid questionId, QuestionState newState)
+        {
+            if (questionId != Id) return Task.CompletedTask;
+
+            State = newState;
+
+            return _updated.InvokeAsync();
+        }
+
         public void Dispose()
         {
             _services.QuestionEvents.AnswerUpdated -= OnQuestionAnswerUpdatedAsync;
             _services.QuestionEvents.TextUpdated -= OnQuestionTextUpdatedAsync;
+            _services.QuestionEvents.StateUpdated -= OnQuestionStateUpdatedAsync;
         }
     }
 }
