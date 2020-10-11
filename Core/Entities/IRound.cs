@@ -7,5 +7,7 @@ namespace Quibble.Core.Entities
         public Guid QuizId { get; }
 
         public string Title { get; }
+
+        public RoundState State { get; }
     }
 }
