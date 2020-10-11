@@ -20,6 +20,7 @@ using Quibble.Host.Hosted.Platform.Events;
 using Quibble.Host.Hosted.Platform.Services;
 using Quibble.UI.Core.Events;
 using Quibble.UI.Core.Services;
+using Quibble.UI.Core.Services.Data;
 
 namespace Quibble.Host.Hosted
 {
@@ -58,6 +59,7 @@ namespace Quibble.Host.Hosted
 
             services.AddScoped<ISynchronisedQuizFactory, SynchronisedQuizFactory>();
             services.AddUserContextAccessor();
+            services.AddSimpleThemeProvider();
             services.AddQuibbleEntityFrameworkRepositories();
             services.AddScoped<IQuibbleDbContext, QuibbleServerSideDbContext>();
 
