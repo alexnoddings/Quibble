@@ -9,5 +9,7 @@ namespace Quibble.Core.Entities
         public string QuestionText { get; }
 
         public string CorrectAnswer { get; }
+
+        public QuestionState State { get; }
     }
 }
