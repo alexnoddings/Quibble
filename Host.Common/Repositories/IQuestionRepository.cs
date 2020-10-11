@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Quibble.Core.Entities;
 using Quibble.Host.Common.Data.Entities;
 
 namespace Quibble.Host.Common.Repositories
@@ -10,5 +11,6 @@ namespace Quibble.Host.Common.Repositories
         public Task<List<DbQuestion>> GetForQuizAsync(Guid quizId);
         public Task UpdateTextAsync(Guid id, string newText);
         public Task UpdateAnswerAsync(Guid id, string newAnswer);
+        public Task UpdateStateAsync(Guid id, QuestionState newState);
     }
 }

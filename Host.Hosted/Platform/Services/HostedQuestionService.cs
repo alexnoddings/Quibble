@@ -125,5 +125,30 @@ namespace Quibble.Host.Hosted.Platform.Services
             await QuestionRepository.UpdateAnswerAsync(id, newAnswer);
             await QuestionEvents.InvokeAnswerUpdatedAsync(id, newAnswer);
         }
+
+        public async Task UpdateStateAsync(Guid id, QuestionState newState)
+        {
+            DbQuestion question = await QuestionRepository.GetAsync(id);
+            DbRound round = await RoundRepository.GetAsync(question.RoundId);
+            DbQuiz quiz = await QuizRepository.GetAsync(round.QuizId);
+            DbQuibbleUser user = await UserContextAccessor.EnsureCurrentUserAsync();
+
+            if (quiz.OwnerId != user.Id)
+                throw ThrowHelper.Unauthorised(ExceptionMessages.NotQuizOwner);
+
+            if (quiz.PublishedAt == null)
+                throw ThrowHelper.InvalidOperation("Cannot update state for an unpublished quiz");
+
+            if ((question.State == QuestionState.Hidden && newState == QuestionState.Visible)
+                || (question.State == QuestionState.Visible && newState == QuestionState.Locked)
+                || (question.State == QuestionState.Locked && newState == QuestionState.WithAnswer))
+            {
+                await QuestionRepository.UpdateStateAsync(id, newState);
+                await QuestionEvents.InvokeStateUpdatedAsync(id, newState);
+                return;
+            }
+
+            throw ThrowHelper.BadArgument(nameof(newState), "Invalid state progression.");
+        }
     }
 }

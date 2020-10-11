@@ -16,6 +16,14 @@ namespace Quibble.Host.Hosted.Platform.Events
             remove => _titleUpdated.Remove(value);
         }
 
+        public Task InvokeStateUpdatedAsync(Guid id, RoundState newState) => _stateUpdated.InvokeAsync(id, newState);
+        private static readonly AsyncEvent<Guid, RoundState> _stateUpdated = new();
+        public event Func<Guid, RoundState, Task> StateUpdated
+        {
+            add => _stateUpdated.Add(value);
+            remove => _stateUpdated.Remove(value);
+        }
+
         public Task InvokeRoundAddedAsync(IRound newRound) => _roundAdded.InvokeAsync(newRound);
         private static readonly AsyncEvent<IRound> _roundAdded = new();
         public event Func<IRound, Task> RoundAdded

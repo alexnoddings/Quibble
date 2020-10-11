@@ -24,6 +24,14 @@ namespace Quibble.Host.Hosted.Platform.Events
             remove => _answerUpdated.Remove(value);
         }
 
+        public Task InvokeStateUpdatedAsync(Guid id, QuestionState newState) => _stateUpdated.InvokeAsync(id, newState);
+        private static readonly AsyncEvent<Guid, QuestionState> _stateUpdated = new();
+        public event Func<Guid, QuestionState, Task> StateUpdated
+        {
+            add => _stateUpdated.Add(value);
+            remove => _stateUpdated.Remove(value);
+        }
+
         public Task InvokeQuestionAddedAsync(IQuestion newQuestion) => _questionAdded.InvokeAsync(newQuestion);
         private static readonly AsyncEvent<IQuestion> _questionAdded = new();
         public event Func<IQuestion, Task> QuestionAdded

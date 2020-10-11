@@ -20,6 +20,8 @@ namespace Quibble.Host.Common.Data.Entities
 
         public string CorrectAnswer { get; set; } = string.Empty;
 
+        public QuestionState State { get; set; } = QuestionState.Hidden;
+
         public List<DbParticipantAnswer> Answers { get; set; } = new List<DbParticipantAnswer>();
     }
 }
