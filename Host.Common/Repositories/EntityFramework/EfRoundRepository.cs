@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Quibble.Core.Entities;
 using Quibble.Host.Common.Data;
 using Quibble.Host.Common.Data.Entities;
 using Quibble.Host.Common.Extensions;
@@ -73,6 +74,13 @@ namespace Quibble.Host.Common.Repositories.EntityFramework
         {
             DbRound round = await GetWithoutIncludesAsync(id);
             round.Title = newTitle;
+            await DbContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateStateAsync(Guid id, RoundState newState)
+        {
+            DbRound round = await GetWithoutIncludesAsync(id);
+            round.State = newState;
             await DbContext.SaveChangesAsync();
         }
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Quibble.Core.Entities;
 using Quibble.Host.Common;
 using Quibble.Host.Common.Data.Entities;
 using Quibble.Host.Common.Extensions;
@@ -98,6 +99,28 @@ namespace Quibble.Host.Hosted.Platform.Services
 
             await RoundRepository.UpdateTitleAsync(id, newTitle);
             await RoundEvents.InvokeTitleUpdatedAsync(id, newTitle);
+        }
+
+        public async Task UpdateStateAsync(Guid id, RoundState newState)
+        {
+            DbRound round = await RoundRepository.GetAsync(id);
+            DbQuiz quiz = await QuizRepository.GetAsync(round.QuizId);
+            DbQuibbleUser user = await UserContextAccessor.EnsureCurrentUserAsync();
+
+            if (quiz.OwnerId != user.Id)
+                throw ThrowHelper.Unauthorised(ExceptionMessages.NotQuizOwner);
+
+            if (quiz.PublishedAt == null)
+                throw ThrowHelper.InvalidOperation("Cannot update state for an unpublished quiz");
+
+            if (round.State == RoundState.Hidden && newState == RoundState.Visible)
+            {
+                await RoundRepository.UpdateStateAsync(id, newState);
+                await RoundEvents.InvokeStateUpdatedAsync(id, newState);
+                return;
+            }
+
+            throw ThrowHelper.BadArgument(nameof(newState), "Invalid state progression.");
         }
     }
 }

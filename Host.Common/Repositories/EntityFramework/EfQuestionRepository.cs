@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Quibble.Core.Entities;
 using Quibble.Host.Common.Data;
 using Quibble.Host.Common.Data.Entities;
 using Quibble.Host.Common.Extensions;
@@ -84,6 +85,13 @@ namespace Quibble.Host.Common.Repositories.EntityFramework
         {
             DbQuestion question = await GetWithoutIncludesAsync(id);
             question.CorrectAnswer = newAnswer;
+            await DbContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateStateAsync(Guid id, QuestionState newState)
+        {
+            DbQuestion question = await GetWithoutIncludesAsync(id);
+            question.State = newState;
             await DbContext.SaveChangesAsync();
         }
     }

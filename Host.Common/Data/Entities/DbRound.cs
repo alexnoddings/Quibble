@@ -18,6 +18,8 @@ namespace Quibble.Host.Common.Data.Entities
 
         public string Title { get; set; } = string.Empty;
 
+        public RoundState State { get; set; } = RoundState.Hidden;
+
         public List<DbQuestion> Questions { get; set; } = new List<DbQuestion>();
     }
 }
