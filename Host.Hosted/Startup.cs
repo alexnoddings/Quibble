@@ -20,6 +20,7 @@ using Quibble.Host.Hosted.Platform.Events;
 using Quibble.Host.Hosted.Platform.Services;
 using Quibble.UI.Core.Events;
 using Quibble.UI.Core.Services;
+using Quibble.UI.Core.Services.Data;
 
 namespace Quibble.Host.Hosted
 {
@@ -117,7 +118,7 @@ namespace Quibble.Host.Hosted
             app.UseQuibbleContentRewriter();
 
             var rewriteOptions = new RewriteOptions();
-            rewriteOptions.AddRedirect("^css/styles.css", "_content/Quibble.Host.Hosted/_framework/scoped.styles.css");
+            rewriteOptions.AddRedirect("^styles.css", "Quibble.Host.Hosted.styles.css");
             app.UseRewriter(rewriteOptions);
 
             app.UseEndpoints(endpoints =>
