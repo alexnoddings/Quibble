@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Solution Items", ".Solutio
 		.gitignore = .gitignore
 		Directory.Build.props = Directory.Build.props
 		LICENSE.txt = LICENSE.txt
+		NuGet.config = NuGet.config
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{5BB07AB1-6CBD-45F8-B918-B78D2B0F6104}"
@@ -50,7 +51,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quibble.Core", "Core\Quibbl
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{900A7BCA-86C4-4AFE-972D-655B526BD1AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quibble.Tests.Host.Common", "Tests.Host.Common\Quibble.Tests.Host.Common.csproj", "{7BFB6F60-915C-43B3-93F9-A819E248474A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quibble.Tests.Host.Common", "Tests.Host.Common\Quibble.Tests.Host.Common.csproj", "{7BFB6F60-915C-43B3-93F9-A819E248474A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
