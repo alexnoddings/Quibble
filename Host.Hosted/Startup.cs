@@ -58,6 +58,7 @@ namespace Quibble.Host.Hosted
 
             services.AddScoped<ISynchronisedQuizFactory, SynchronisedQuizFactory>();
             services.AddUserContextAccessor();
+            services.AddSimpleThemeProvider();
             services.AddQuibbleEntityFrameworkRepositories();
             services.AddScoped<IQuibbleDbContext, QuibbleServerSideDbContext>();
 

@@ -2,6 +2,7 @@
 using Quibble.Host.Common.Repositories;
 using Quibble.Host.Common.Repositories.EntityFramework;
 using Quibble.Host.Common.Services;
+using Quibble.UI.Core.Services.Theme;
 
 namespace Quibble.Host.Common.Extensions
 {
@@ -21,6 +22,13 @@ namespace Quibble.Host.Common.Extensions
         public static IServiceCollection AddUserContextAccessor(this IServiceCollection services)
         {
             services.AddScoped<IUserContextAccessor, EntityFrameworkUserContextAccessor>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddSimpleThemeProvider(this IServiceCollection services)
+        {
+            services.AddScoped<IThemeProvider, SimpleThemeProvider>();
 
             return services;
         }
