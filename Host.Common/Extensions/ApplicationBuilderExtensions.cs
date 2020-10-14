@@ -32,7 +32,6 @@ namespace Quibble.Host.Common.Extensions
 
             // Scoped CSS uses a relative path for imports, but styles.css is located in /css/ so we need to drop the /css/ before the _content
             // e.g. rewrite /css/_content/Project/Project.bundle.scp.css to /_content/Project/Project.bundle.scp.css
-            //rwo.AddRewrite("^\\w+/_content/", "_content/", false);
             rwo.AddRewrite("^css/_content/([\\w.]+)/\\1.bundle.scp.css", "_content/$1/$1.bundle.scp.css", false);
 
             app.UseRewriter(rwo);
