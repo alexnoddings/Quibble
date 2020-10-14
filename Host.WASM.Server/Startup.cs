@@ -63,6 +63,7 @@ namespace Quibble.Host.WASM.Server
             }
 
             app.UseHttpsRedirection();
+            app.UseQuibbleContentRewriter();
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
 
@@ -71,8 +72,6 @@ namespace Quibble.Host.WASM.Server
             app.UseIdentityServer();
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.UseQuibbleContentRewriter();
 
             app.UseEndpoints(endpoints =>
             {

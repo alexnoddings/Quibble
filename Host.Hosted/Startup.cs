@@ -5,7 +5,6 @@ using Blazorise.Icons.FontAwesome;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -104,6 +103,7 @@ namespace Quibble.Host.Hosted
             }
 
             app.UseHttpsRedirection();
+            app.UseQuibbleContentRewriter();
             app.UseStaticFiles();
 
             app.UseRouting();
@@ -114,8 +114,6 @@ namespace Quibble.Host.Hosted
             app.ApplicationServices
               .UseBootstrapProviders()
               .UseFontAwesomeIcons();
-
-            app.UseQuibbleContentRewriter();
 
             app.UseEndpoints(endpoints =>
             {
