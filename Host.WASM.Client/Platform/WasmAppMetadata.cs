@@ -5,7 +5,7 @@ namespace Quibble.Host.WASM.Client.Platform
 {
     public class WasmAppMetadata : IAppMetadata
     {
-        public string HostingModel => "WASM Hosted";
+        public HostModel HostingModel => HostModel.WASM;
 
         public Assembly[] GetAdditionalUIAssemblies() => new[] { typeof(Startup).Assembly };
     }

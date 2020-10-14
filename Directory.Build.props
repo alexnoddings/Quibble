@@ -27,12 +27,12 @@
     <!-- Targets -->
     <DefaultTargetFramework>net5.0</DefaultTargetFramework>
     <!-- Misc -->
-    <AspNetCoreVersion>5.0.0-rc.1.20451.17</AspNetCoreVersion>
-    <AspNetCoreWebAssemblyVersion>5.0.0-rc.1.20451.17</AspNetCoreWebAssemblyVersion>
-    <BlazoriseVersion>0.9.1.2</BlazoriseVersion>
-    <EntityFrameworkCoreVersion>5.0.0-rc.1.20451.13</EntityFrameworkCoreVersion>
-    <HttpExtensionsVersion>5.0.0-rc.1.20451.14</HttpExtensionsVersion>
-    <HttpJsonVersion>5.0.0-rc.1.20451.14</HttpJsonVersion>
+    <AspNetCoreVersion>5.0.0-rc.2.20475.17</AspNetCoreVersion>
+    <AspNetCoreWebAssemblyVersion>5.0.0-rc.2.20475.17</AspNetCoreWebAssemblyVersion>
+    <BlazoriseVersion>0.9.2-preview9</BlazoriseVersion>
+    <EntityFrameworkCoreVersion> 5.0.0-rc.2.20475.6</EntityFrameworkCoreVersion>
+    <HttpExtensionsVersion>5.0.0-rc.2.20475.5</HttpExtensionsVersion>
+    <HttpJsonVersion>5.0.0-rc.2.20475.5</HttpJsonVersion>
     <!-- Analysers -->
     <FxCopAnalyzersVersion>3.3.0</FxCopAnalyzersVersion>
     <ThreadingAnalyzersVersion>16.7.56</ThreadingAnalyzersVersion>

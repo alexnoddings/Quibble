@@ -6,7 +6,7 @@ namespace Quibble.Host.Hosted.Platform
 {
     public class HostedAppMetadata : IAppMetadata
     {
-        public string HostingModel => "Server Hosted";
+        public HostModel HostingModel => HostModel.Server;
 
         public Assembly[] GetAdditionalUIAssemblies() => Array.Empty<Assembly>();
     }

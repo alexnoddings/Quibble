@@ -2,7 +2,6 @@ using System;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -63,6 +62,7 @@ namespace Quibble.Host.WASM.Server
             }
 
             app.UseHttpsRedirection();
+            app.UseQuibbleContentRewriter();
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
 
@@ -71,12 +71,6 @@ namespace Quibble.Host.WASM.Server
             app.UseIdentityServer();
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.UseQuibbleContentRewriter();
-
-            var rewriteOptions = new RewriteOptions();
-            rewriteOptions.AddRedirect("^css/styles.css", "_framework/scoped.styles.css");
-            app.UseRewriter(rewriteOptions);
 
             app.UseEndpoints(endpoints =>
             {
