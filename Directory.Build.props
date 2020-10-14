@@ -27,8 +27,8 @@
     <!-- Targets -->
     <DefaultTargetFramework>net5.0</DefaultTargetFramework>
     <!-- Misc -->
-    <AspNetCoreVersion>5.0.0-rc.1.20451.17</AspNetCoreVersion>
-    <AspNetCoreWebAssemblyVersion>5.0.0-rc.1.20451.17</AspNetCoreWebAssemblyVersion>
+    <AspNetCoreVersion>5.0.0-rc.2.20475.17</AspNetCoreVersion>
+    <AspNetCoreWebAssemblyVersion>5.0.0-rc.2.20475.17</AspNetCoreWebAssemblyVersion>
     <BlazoriseVersion>0.9.1.2</BlazoriseVersion>
     <EntityFrameworkCoreVersion> 5.0.0-rc.2.20475.6</EntityFrameworkCoreVersion>
     <HttpExtensionsVersion>5.0.0-rc.2.20475.5</HttpExtensionsVersion>
