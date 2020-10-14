@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Reflection;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Rewrite;
 
 namespace Quibble.Host.Common.Extensions
@@ -19,6 +20,10 @@ namespace Quibble.Host.Common.Extensions
 
             rwo.AddRedirect("^css/blazorise.bootstrap.css", "_content/Blazorise.Bootstrap/blazorise.bootstrap.css");
             rwo.AddRedirect("^js/blazorise.bootstrap.js", "_content/Blazorise.Bootstrap/blazorise.bootstrap.js");
+
+            string? assemblyName = Assembly.GetEntryAssembly()?.GetName()?.Name;
+            if (assemblyName != null)
+                rwo.AddRedirect("^css/styles.css", $"{assemblyName}.styles.css");
 
             app.UseRewriter(rwo);
 

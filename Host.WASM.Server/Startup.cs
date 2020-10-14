@@ -74,10 +74,6 @@ namespace Quibble.Host.WASM.Server
 
             app.UseQuibbleContentRewriter();
 
-            var rewriteOptions = new RewriteOptions();
-            rewriteOptions.AddRedirect("^styles.css", "Quibble.Host.WASM.Server.styles.css");
-            app.UseRewriter(rewriteOptions);
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();

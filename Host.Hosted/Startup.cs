@@ -117,10 +117,6 @@ namespace Quibble.Host.Hosted
 
             app.UseQuibbleContentRewriter();
 
-            var rewriteOptions = new RewriteOptions();
-            rewriteOptions.AddRedirect("^styles.css", "Quibble.Host.Hosted.styles.css");
-            app.UseRewriter(rewriteOptions);
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
