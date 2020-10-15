@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using Blazorise;
 using Microsoft.AspNetCore.Components;
 
@@ -14,15 +13,14 @@ namespace Quibble.UI.Components
         [Parameter]
         public RenderFragment? DisabledContent { get; set; }
 
+        [Parameter]
+        public int? ReEnableDelayMs { get; set; }
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
             EnabledContent ??= ChildContent;
-
-            if (EnabledContent == null) 
-                throw new InvalidOperationException(nameof(EnabledContent));
-
             DisabledContent ??= EnabledContent;
         }
 
@@ -41,13 +39,20 @@ namespace Quibble.UI.Components
             }
             catch (Exception)
             {
+                await GetReEnableDelayAsync();
                 Disabled = false;
-                // Force the state to acknowledge this not being disabled before throwing
+                // Force the state to acknowledge this being re-enabled before throwing
                 await InvokeAsync(StateHasChanged);
                 throw;
             }
 
+            await GetReEnableDelayAsync();
             Disabled = false;
         }
+
+        private Task GetReEnableDelayAsync() =>
+            ReEnableDelayMs != null && ReEnableDelayMs > 0
+            ? Task.Delay(ReEnableDelayMs.Value)
+            : Task.CompletedTask;
     }
 }

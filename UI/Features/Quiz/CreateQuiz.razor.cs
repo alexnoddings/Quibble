@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Quibble.UI.Core.Services.Data;
 
-namespace Quibble.UI.Pages
+namespace Quibble.UI.Features.Quiz
 {
     [Authorize]
     [Route("/quiz/create")]

@@ -3,11 +3,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 
-namespace Quibble.UI.Pages
+namespace Quibble.UI.Features.Quiz.Join
 {
     [Authorize]
     [Route("/quiz/join")]
-    public partial class Join
+    public partial class JoinQuiz
     {
         [Inject]
         private NavigationManager NavigationManager { get; init; } = default!;

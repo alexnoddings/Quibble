@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Quibble.UI.Core.Entities;
 
-namespace Quibble.UI.Components
+namespace Quibble.UI.Features.Quiz.Edit
 {
     public sealed partial class EditRound : IDisposable
     {

@@ -8,7 +8,7 @@ using Quibble.UI.Core.Entities;
 using Quibble.UI.Core.Services.Data;
 using Quibble.UI.Operations;
 
-namespace Quibble.UI.Pages
+namespace Quibble.UI.Features.Quiz
 {
     [Authorize]
     [Route("/quiz/{id:guid}")]
