@@ -35,6 +35,8 @@ namespace Quibble.UI.Core.Entities
             Title = dtoRound.Title;
             State = dtoRound.State;
             _questions.AddRange(questions);
+            foreach (var question in _questions)
+                question.Updated += OnQuestionUpdatedInternalAsync;
 
             _services.RoundEvents.TitleUpdated += OnRoundTitleUpdatedAsync;
             _services.RoundEvents.StateUpdated += OnStateUpdatedAsync;
@@ -78,6 +80,7 @@ namespace Quibble.UI.Core.Entities
             if (question.RoundId != Id) return Task.CompletedTask;
 
             var syncedQuestion = new SyncedQuestion(question, _services);
+            syncedQuestion.Updated += OnQuestionUpdatedInternalAsync;
             _questions.Add(syncedQuestion);
             return _updated.InvokeAsync();
         }
@@ -88,9 +91,12 @@ namespace Quibble.UI.Core.Entities
             if (question == null)
                 return Task.CompletedTask;
 
+            question.Updated -= OnQuestionUpdatedInternalAsync;
             _questions.Remove(question);
             return _updated.InvokeAsync();
         }
+
+        private Task OnQuestionUpdatedInternalAsync() => _updated.InvokeAsync();
 
         public void Dispose()
         {
@@ -100,7 +106,10 @@ namespace Quibble.UI.Core.Entities
             _services.QuestionEvents.QuestionDeleted -= OnQuestionDeletedAsync;
 
             foreach (var question in _questions)
+            {
+                question.Updated -= OnQuestionUpdatedInternalAsync;
                 question.Dispose();
+            }
         }
     }
 }

@@ -53,8 +53,14 @@ namespace Quibble.UI.Core.Entities
             OwnerId = dtoQuiz.OwnerId;
             Title = dtoQuiz.Title;
             PublishedAt = dtoQuiz.PublishedAt;
+
             _rounds.AddRange(rounds);
+            foreach (var round in _rounds)
+                round.Updated += OnRoundUpdatedInternalAsync;
+
             _participants.AddRange(participants);
+            foreach (var participant in _participants)
+                participant.Updated += OnParticipantUpdatedInternalAsync;
 
             _services.QuizEvents.TitleUpdated += OnTitleUpdatedAsync;
             _services.QuizEvents.Published += OnPublishedAsync;
@@ -110,6 +116,7 @@ namespace Quibble.UI.Core.Entities
             if (round.QuizId != Id) return Task.CompletedTask;
 
             var syncedRound = new SyncedRound(round, _services);
+            syncedRound.Updated += OnRoundUpdatedInternalAsync;
             _rounds.Add(syncedRound);
             return _updated.InvokeAsync();
         }
@@ -120,15 +127,19 @@ namespace Quibble.UI.Core.Entities
             if (round == null)
                 return Task.CompletedTask;
 
+            round.Updated -= OnRoundUpdatedInternalAsync;
             _rounds.Remove(round);
             return _updated.InvokeAsync();
         }
+
+        private Task OnRoundUpdatedInternalAsync() => _updated.InvokeAsync();
 
         private Task OnParticipantJoinedAsync(IParticipant participant)
         {
             if (participant.QuizId != Id) return Task.CompletedTask;
 
             var syncedParticipant = new SyncedParticipant(participant, _services);
+            syncedParticipant.Updated += OnParticipantUpdatedInternalAsync;
             _participants.Add(syncedParticipant);
             return _updated.InvokeAsync();
         }
@@ -140,8 +151,11 @@ namespace Quibble.UI.Core.Entities
                 return Task.CompletedTask;
 
             _participants.Remove(participant);
+            participant.Updated -= OnParticipantUpdatedInternalAsync;
             return _updated.InvokeAsync();
         }
+
+        private Task OnParticipantUpdatedInternalAsync() => _updated.InvokeAsync();
 
         public void Dispose()
         {
@@ -156,7 +170,15 @@ namespace Quibble.UI.Core.Entities
             _services.ParticipantEvents.ParticipantLeft -= OnParticipantLeftAsync;
 
             foreach (var round in _rounds)
+            {
+                round.Updated -= OnRoundUpdatedInternalAsync;
                 round.Dispose();
+            }
+
+            foreach (var participant in _participants)
+            {
+                participant.Updated -= OnParticipantUpdatedInternalAsync;
+            }
         }
     }
 }
