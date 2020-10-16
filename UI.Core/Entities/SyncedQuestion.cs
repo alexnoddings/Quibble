@@ -41,7 +41,7 @@ namespace Quibble.UI.Core.Entities
 
         public Task SaveTextAsync() => _services.QuestionService.UpdateTextAsync(Id, QuestionText);
 
-        public Task SaveAnswerAsync() => _services.QuestionService.UpdateAnswerAsync(Id, CorrectAnswer);
+        public Task SaveCorrectAnswerAsync() => _services.QuestionService.UpdateCorrectAnswerAsync(Id, CorrectAnswer);
 
         public Task UpdateStateAsync(QuestionState newState) => _services.QuestionService.UpdateStateAsync(Id, newState);
 

@@ -106,7 +106,7 @@ namespace Quibble.Host.Hosted.Platform.Services
             await QuestionEvents.InvokeTextUpdatedAsync(id, newText);
         }
 
-        public async Task UpdateAnswerAsync(Guid id, string newAnswer)
+        public async Task UpdateCorrectAnswerAsync(Guid id, string newAnswer)
         {
             newAnswer ??= string.Empty;
 
