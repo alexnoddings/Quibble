@@ -1,11 +1,13 @@
-﻿@switch (QuizUiOperation.Status)
+﻿@using BlazoriseText = Blazorise.Text
+
+@switch (QuizUiOperation.Status)
 {
     case UiOperationStatus.Uninitialised:
     case UiOperationStatus.Loading:
-        <Text Color="TextColor.White">Loading...</Text>
+        <BlazoriseText Color="TextColor.White">Loading...</BlazoriseText>
         break;
     case UiOperationStatus.NotFound:
-        <Text Color="TextColor.White">Not found</Text>
+        <BlazoriseText Color="TextColor.White">Not found</BlazoriseText>
         break;
     case UiOperationStatus.Loaded:
         var quiz = QuizUiOperation.Result;
@@ -18,7 +20,7 @@
                 }
                 else
                 {
-                    <Text Color="TextColor.White">Take Quiz</Text>
+                    <BlazoriseText Color="TextColor.White">Take Quiz</BlazoriseText>
                 }
             }
             else
@@ -29,7 +31,7 @@
                 }
                 else
                 {
-                    <Text Color="TextColor.White">Not found</Text>
+                    <BlazoriseText Color="TextColor.White">Not found</BlazoriseText>
                 }
             }
         </CascadingValue>
