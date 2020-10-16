@@ -3,7 +3,7 @@
         <DelayedTextEdit @bind-Text="Question.QuestionText" DelayedTextChanged="Question.SaveTextAsync"></DelayedTextEdit>
     </Column>
     <Column ColumnSize="ColumnSize.Is3">
-        <DelayedTextEdit @bind-Text="Question.CorrectAnswer" DelayedTextChanged="Question.SaveAnswerAsync"></DelayedTextEdit>
+        <DelayedTextEdit @bind-Text="Question.CorrectAnswer" DelayedTextChanged="Question.SaveCorrectAnswerAsync"></DelayedTextEdit>
     </Column>
     <Column ColumnSize="ColumnSize.Is2">
         <ActionButton Outline="true" Block="true" Color="Color.Danger" Clicked="Question.DeleteAsync">Delete</ActionButton>

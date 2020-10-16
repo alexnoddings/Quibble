@@ -5,6 +5,6 @@
         Hidden,
         Visible,
         Locked,
-        WithAnswer
+        AnswerRevealed
     }
 }

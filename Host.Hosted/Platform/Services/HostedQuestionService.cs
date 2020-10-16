@@ -122,7 +122,7 @@ namespace Quibble.Host.Hosted.Platform.Services
                 throw ThrowHelper.InvalidOperation(ExceptionMessages.CannotEditPublishedQuiz);
 
             await QuestionRepository.UpdateAnswerAsync(id, newAnswer);
-            await QuestionEvents.InvokeAnswerUpdatedAsync(id, newAnswer);
+            await QuestionEvents.InvokeCorrectAnswerUpdatedAsync(id, newAnswer);
         }
 
         public async Task UpdateStateAsync(Guid id, QuestionState newState)
@@ -140,7 +140,7 @@ namespace Quibble.Host.Hosted.Platform.Services
 
             if ((question.State == QuestionState.Hidden && newState == QuestionState.Visible)
                 || (question.State == QuestionState.Visible && newState == QuestionState.Locked)
-                || (question.State == QuestionState.Locked && newState == QuestionState.WithAnswer))
+                || (question.State == QuestionState.Locked && newState == QuestionState.AnswerRevealed))
             {
                 await QuestionRepository.UpdateStateAsync(id, newState);
                 await QuestionEvents.InvokeStateUpdatedAsync(id, newState);

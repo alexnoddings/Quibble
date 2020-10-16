@@ -35,6 +35,7 @@ namespace Quibble.UI.Core.Entities
             QuizId = dtoRound.QuizId;
             Title = dtoRound.Title;
             State = dtoRound.State;
+
             _questions.AddRange(questions);
             foreach (var question in _questions)
                 question.Updated += OnQuestionUpdatedInternalAsync;

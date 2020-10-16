@@ -48,7 +48,7 @@ namespace Quibble.UI.Features.Quiz.Host
 
         private Task LockQuestionAsync() => SelectedQuestion.UpdateStateAsync(QuestionState.Locked);
 
-        private Task RevealAnswerAsync() => SelectedQuestion.UpdateStateAsync(QuestionState.WithAnswer);
+        private Task RevealCorrectAnswerAsync() => SelectedQuestion.UpdateStateAsync(QuestionState.AnswerRevealed);
 
         private async Task RevealRoundQuestionsAsync()
         {
@@ -65,7 +65,7 @@ namespace Quibble.UI.Features.Quiz.Host
         private async Task RevealRoundAnswersAsync()
         {
             foreach (var question in SelectedRound.Questions.Where(q => q.State == QuestionState.Locked))
-                await question.UpdateStateAsync(QuestionState.WithAnswer);
+                await question.UpdateStateAsync(QuestionState.AnswerRevealed);
         }
 
         public void Dispose()
