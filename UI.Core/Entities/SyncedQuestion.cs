@@ -5,7 +5,7 @@ using Quibble.Core.Events;
 
 namespace Quibble.UI.Core.Entities
 {
-    public sealed class SyncedQuestion : IQuestion, IDisposable
+    public class SyncedQuestion : IQuestion, IDisposable
     {
         public Guid Id { get; set; }
         public Guid RoundId { get; set; }
@@ -22,6 +22,7 @@ namespace Quibble.UI.Core.Entities
         }
 
         private readonly SyncServices _services;
+        private bool _isDisposed;
 
         internal SyncedQuestion(IQuestion dtoQuestion, SyncServices services)
         {
@@ -73,11 +74,25 @@ namespace Quibble.UI.Core.Entities
             return _updated.InvokeAsync();
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_isDisposed)
+            {
+                if (disposing)
+                {
+                    _services.QuestionEvents.AnswerUpdated -= OnQuestionAnswerUpdatedAsync;
+                    _services.QuestionEvents.TextUpdated -= OnQuestionTextUpdatedAsync;
+                    _services.QuestionEvents.StateUpdated -= OnQuestionStateUpdatedAsync;
+                }
+
+                _isDisposed = true;
+            }
+        }
+
         public void Dispose()
         {
-            _services.QuestionEvents.AnswerUpdated -= OnQuestionAnswerUpdatedAsync;
-            _services.QuestionEvents.TextUpdated -= OnQuestionTextUpdatedAsync;
-            _services.QuestionEvents.StateUpdated -= OnQuestionStateUpdatedAsync;
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

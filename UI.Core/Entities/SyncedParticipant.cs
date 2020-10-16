@@ -5,7 +5,7 @@ using Quibble.Core.Events;
 
 namespace Quibble.UI.Core.Entities
 {
-    public sealed class SyncedParticipant : IParticipant
+    public class SyncedParticipant : IParticipant
     {
         public Guid Id { get; }
         public Guid UserId { get; }
