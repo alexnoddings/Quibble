@@ -10,7 +10,7 @@ namespace Quibble.UI.Features.Quiz.Host
     public sealed partial class HostQuizControls : IDisposable
     {
 
-        [Parameter]
+        [CascadingParameter]
         public SyncedQuiz Quiz { get; set; } = default!;
 
         [Parameter]

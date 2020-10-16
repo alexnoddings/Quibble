@@ -42,7 +42,6 @@
                 </Text>
             </Heading>
             <HostQuizQuestionSelect
-                Quiz="Quiz"
                 SelectedRoundNumber="SelectedRoundNumber"
                 SelectedQuestionNumber="SelectedQuestionNumber"
                 SelectQuestion="(r, q) => { SelectedRoundNumber = r; SelectedQuestionNumber = q; StateHasChanged(); }" />
@@ -58,7 +57,6 @@
             </Row>
             <Row Margin="Margin.Is2.FromBottom.Is4.FromTop">
                 <HostQuizControls
-                    Quiz="Quiz"
                     SelectedRoundNumber="SelectedRoundNumber"
                     SelectedQuestionNumber="SelectedQuestionNumber"
                     MoveToPreviousQuestion="MoveToPreviousQuestion"

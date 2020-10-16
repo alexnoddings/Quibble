@@ -7,7 +7,7 @@ namespace Quibble.UI.Features.Quiz.Edit
 {
     public sealed partial class EditQuiz : IDisposable
     {
-        [Parameter]
+        [CascadingParameter]
         public SyncedQuiz Quiz { get; set; } = default!;
 
         [Inject]
