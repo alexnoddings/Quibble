@@ -6,27 +6,41 @@ namespace Quibble.UI.Core.Entities
     internal class SyncServices
     {
         public IQuizService QuizService { get; }
-        public IRoundService RoundService { get; }
-        public IQuestionService QuestionService { get; }
-        public IParticipantService ParticipantService { get; }
-
         public IQuizEvents QuizEvents { get; }
+
+        public IRoundService RoundService { get; }
         public IRoundEvents RoundEvents { get; }
+
+        public IQuestionService QuestionService { get; }
         public IQuestionEvents QuestionEvents { get; }
+
+        public IParticipantService ParticipantService { get; }
         public IParticipantEvents ParticipantEvents { get; }
 
+        public IAnswerService AnswerService { get; }
+        public IAnswerEvents AnswerEvents { get; }
+
         public SyncServices(
-            IQuizService quizService, IRoundService roundService, IQuestionService questionService, IParticipantService participantService,
-            IQuizEvents quizEvents, IRoundEvents roundEvents, IQuestionEvents questionEvents, IParticipantEvents participantEvents)
+            IQuizService quizService, IQuizEvents quizEvents,
+            IRoundService roundService, IRoundEvents roundEvents,
+            IQuestionService questionService, IQuestionEvents questionEvents,
+            IParticipantService participantService, IParticipantEvents participantEvents,
+            IAnswerService answerService, IAnswerEvents answerEvents)
         {
             QuizService = quizService;
-            RoundService = roundService;
-            QuestionService = questionService;
-            ParticipantService = participantService;
             QuizEvents = quizEvents;
+
+            RoundService = roundService;
             RoundEvents = roundEvents;
+
+            QuestionService = questionService;
             QuestionEvents = questionEvents;
+
+            ParticipantService = participantService;
             ParticipantEvents = participantEvents;
+
+            AnswerService = answerService;
+            AnswerEvents = answerEvents;
         }
     }
 }

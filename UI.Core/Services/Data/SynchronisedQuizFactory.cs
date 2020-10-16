@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Quibble.UI.Core.Entities;
 using Quibble.UI.Core.Events;
 
@@ -11,26 +10,41 @@ namespace Quibble.UI.Core.Services.Data
     public class SynchronisedQuizFactory : ISynchronisedQuizFactory
     {
         private IQuizService QuizService { get; }
-        private IRoundService RoundService { get; }
-        private IQuestionService QuestionService { get; }
-        private IParticipantService ParticipantService { get; }
-
         private IQuizEvents QuizEvents { get; }
+
+        private IRoundService RoundService { get; }
         private IRoundEvents RoundEvents { get; }
+
+        private IQuestionService QuestionService { get; }
         private IQuestionEvents QuestionEvents { get; }
+
+        private IParticipantService ParticipantService { get; }
         private IParticipantEvents ParticipantEvents { get; }
 
-        public SynchronisedQuizFactory(IServiceProvider serviceProvider)
-        {
-            QuizService = serviceProvider.GetRequiredService<IQuizService>();
-            RoundService = serviceProvider.GetRequiredService<IRoundService>();
-            QuestionService = serviceProvider.GetRequiredService<IQuestionService>();
-            ParticipantService = serviceProvider.GetRequiredService<IParticipantService>();
+        private IAnswerService AnswerService { get; }
+        private IAnswerEvents AnswerEvents { get; }
 
-            QuizEvents = serviceProvider.GetRequiredService<IQuizEvents>();
-            RoundEvents = serviceProvider.GetRequiredService<IRoundEvents>();
-            QuestionEvents = serviceProvider.GetRequiredService<IQuestionEvents>();
-            ParticipantEvents = serviceProvider.GetRequiredService<IParticipantEvents>();
+        public SynchronisedQuizFactory(
+            IQuizService quizService, IQuizEvents quizEvents,
+            IRoundService roundService, IRoundEvents roundEvents,
+            IQuestionService questionService, IQuestionEvents questionEvents,
+            IParticipantService participantService, IParticipantEvents participantEvents,
+            IAnswerService answerService, IAnswerEvents answerEvents)
+        {
+            QuizService = quizService;
+            QuizEvents = quizEvents;
+
+            RoundService = roundService;
+            RoundEvents = roundEvents;
+
+            QuestionService = questionService;
+            QuestionEvents = questionEvents;
+
+            ParticipantService = participantService;
+            ParticipantEvents = participantEvents;
+
+            AnswerService = answerService;
+            AnswerEvents = answerEvents;
         }
 
         public async Task<SyncedQuiz> GetAsync(Guid quizId)
@@ -53,7 +67,11 @@ namespace Quibble.UI.Core.Services.Data
 
         private SyncServices CreateSyncServices() =>
             new SyncServices(
-                QuizService, RoundService, QuestionService, ParticipantService, 
-                QuizEvents, RoundEvents, QuestionEvents, ParticipantEvents);
+                QuizService, QuizEvents,
+                RoundService, RoundEvents,
+                QuestionService, QuestionEvents,
+                ParticipantService, ParticipantEvents,
+                AnswerService, AnswerEvents
+                );
     }
 }
