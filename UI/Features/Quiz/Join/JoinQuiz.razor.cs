@@ -14,10 +14,11 @@ namespace Quibble.UI.Features.Quiz.Join
 
         private string QuizId { get; set; } = string.Empty;
 
-        private async Task JoinAsync()
+        private Task JoinAsync()
         {
             var id = Guid.Parse(QuizId);
             NavigationManager.NavigateTo(JoinDirect.FormatRoute(id));
+            return Task.CompletedTask;
         }
     }
 }
