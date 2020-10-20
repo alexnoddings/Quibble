@@ -4,10 +4,10 @@
             <DelayedTextEdit @bind-Text="Quiz.Title" DelayedTextChanged="Quiz.SaveTitleAsync"></DelayedTextEdit>
         </Column>
         <Column ColumnSize="ColumnSize.Is2" Padding="Padding.Is1">
-            <ActionButton Outline="true" Block="true" Color="Color.Info" Clicked="Quiz.PublishAsync">Publish</ActionButton>
+            <ActionButton Block="true" Color="Color.Info" Clicked="Quiz.PublishAsync">Publish</ActionButton>
         </Column>
         <Column ColumnSize="ColumnSize.Is2" Padding="Padding.Is1">
-            <ActionButton Outline="true" Block="true" Color="Color.Danger" Clicked="Quiz.DeleteAsync">Delete</ActionButton>
+            <ActionButton Block="true" Color="Color.Danger" Clicked="Quiz.DeleteAsync">Delete</ActionButton>
         </Column>
     </Row>
     
@@ -20,7 +20,7 @@
         <Column ColumnSize="ColumnSize.Is4">
         </Column>
         <Column ColumnSize="ColumnSize.Is4">
-            <ActionButton Outline="true" Block="true" Color="Color.Info" Clicked="Quiz.AddRoundAsync">New Round</ActionButton>
+            <ActionButton Block="true" Color="Color.Info" Clicked="Quiz.AddRoundAsync">New Round</ActionButton>
         </Column>
     </Row>
 </Container>
