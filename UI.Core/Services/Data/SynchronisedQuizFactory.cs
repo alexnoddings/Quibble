@@ -53,14 +53,23 @@ namespace Quibble.UI.Core.Services.Data
 
             DtoQuiz quiz = await QuizService.GetAsync(quizId);
 
-            List<DtoQuestion> questions = await QuestionService.GetForQuizAsync(quizId);
-            var syncedQuestions = questions.Select(q => new SyncedQuestion(q, services)).ToList();
+            List<DtoAnswer> dtoAnswers = await AnswerService.GetForQuizAsync(quizId);
+            var syncedAnswers = from answer in dtoAnswers
+                                select new SyncedAnswer(answer, services);
 
-            List<DtoRound> rounds = await RoundService.GetForQuizAsync(quizId);
-            var syncedRounds = rounds.Select(r => new SyncedRound(r, syncedQuestions.Where(q => q.RoundId == r.Id), services)).ToList();
+            List<DtoQuestion> dtoQuestions = await QuestionService.GetForQuizAsync(quizId);
+            var syncedQuestions = from question in dtoQuestions
+                                  join answer in syncedAnswers on question.Id equals answer.QuestionId into answers
+                                  select new SyncedQuestion(question, answers, services);
 
-            List<DtoParticipant> participants = await ParticipantService.GetForQuizAsync(quizId);
-            var syncedParticipant = participants.Select(p => new SyncedParticipant(p, services));
+            List<DtoRound> dtoRounds = await RoundService.GetForQuizAsync(quizId);
+            var syncedRounds = from round in dtoRounds
+                               join question in syncedQuestions on round.Id equals question.RoundId into questions
+                               select new SyncedRound(round, questions, services);
+
+            List<DtoParticipant> dtoParticipants = await ParticipantService.GetForQuizAsync(quizId);
+            var syncedParticipant = from participant in dtoParticipants
+                                    select new SyncedParticipant(participant, services);
 
             return new SyncedQuiz(quiz, syncedRounds, syncedParticipant, services);
         }
