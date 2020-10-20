@@ -3,9 +3,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Quibble.Core.Exceptions;
 using Quibble.Core.Extensions;
 using Quibble.UI.Core.Entities;
 using Quibble.UI.Core.Services.Data;
+using Quibble.UI.Features.Quiz.Join;
 using Quibble.UI.Operations;
 
 namespace Quibble.UI.Features.Quiz
@@ -19,6 +21,9 @@ namespace Quibble.UI.Features.Quiz
 
         [Inject]
         private ISynchronisedQuizFactory QuizFactory { get; init; } = default!;
+
+        [Inject]
+        private NavigationManager NavigationManager { get; init; } = default!;
 
         [CascadingParameter]
         private Task<AuthenticationState> GetAuthenticationState { get; init; } = default!;
@@ -34,7 +39,14 @@ namespace Quibble.UI.Features.Quiz
 
             UserId = (await GetAuthenticationState).User.GetId();
             QuizUiOperation.Set(QuizFactory.GetAsync(Id));
-            await QuizUiOperation;
+            try
+            {
+                await QuizUiOperation;
+            }
+            catch (UnauthorisedException e) when (e.Message.Contains("not joined", StringComparison.OrdinalIgnoreCase))
+            {
+                NavigationManager.NavigateTo(JoinDirect.FormatRoute(Id));
+            }
 
             if (QuizUiOperation.Status == UiOperationStatus.Loaded)
             {

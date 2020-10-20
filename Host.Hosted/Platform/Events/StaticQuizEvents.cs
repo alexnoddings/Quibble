@@ -7,9 +7,9 @@ namespace Quibble.Host.Hosted.Platform.Events
 {
     internal class StaticQuizEvents : IQuizEvents, IQuizEventsInvoker
     {
-        public Task InvokeTitleUpdatedAsync(Guid id, string newTitle) => _titleUpdated.InvokeAsync(id, newTitle);
-        private static readonly AsyncEvent<Guid, string> _titleUpdated = new();
-        public event Func<Guid, string, Task> TitleUpdated
+        public Task InvokeTitleUpdatedAsync(Guid id, string newTitle, Guid initiatorToken) => _titleUpdated.InvokeAsync(id, newTitle, initiatorToken);
+        private static readonly AsyncEvent<Guid, string, Guid> _titleUpdated = new();
+        public event Func<Guid, string, Guid, Task> TitleUpdated
         {
             add => _titleUpdated.Add(value);
             remove => _titleUpdated.Remove(value);

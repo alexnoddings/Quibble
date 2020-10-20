@@ -8,7 +8,7 @@ namespace Quibble.Host.Common.Repositories
         where TId : IEquatable<TId>
         where TEntity : IEntity<TId>
     {
-        public Task<TId> CreateAsync(TEntity entity);
+        public Task<TEntity> CreateAsync(TEntity entity);
         public Task<bool> ExistsAsync(TId id);
         public Task<TEntity> GetAsync(TId id);
         public Task DeleteAsync(TId id);

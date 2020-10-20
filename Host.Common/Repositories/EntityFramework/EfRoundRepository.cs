@@ -26,7 +26,7 @@ namespace Quibble.Host.Common.Repositories.EntityFramework
                     .ThenInclude(q => q.Answers)
                         .ThenInclude(a => a.Participant);
 
-        public async Task<Guid> CreateAsync(DbRound round)
+        public async Task<DbRound> CreateAsync(DbRound round)
         {
             Ensure.NotNullOrDefault(round, nameof(round));
             if (round.Id != default)
@@ -35,7 +35,7 @@ namespace Quibble.Host.Common.Repositories.EntityFramework
 
             DbContext.Rounds.Add(round);
             await DbContext.SaveChangesAsync();
-            return round.Id;
+            return round;
         }
 
         public Task<bool> ExistsAsync(Guid id)

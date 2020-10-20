@@ -7,8 +7,10 @@ using Quibble.Core.Events;
 
 namespace Quibble.UI.Core.Entities
 {
-    public sealed class SyncedRound : IRound, IDisposable
+    public class SyncedRound : IRound, IDisposable
     {
+        private Guid Token { get; } = Guid.NewGuid();
+
         public Guid Id { get; set; }
         public Guid QuizId { get; set; }
         public string Title { get; set; }
@@ -25,6 +27,7 @@ namespace Quibble.UI.Core.Entities
         }
 
         private readonly SyncServices _services;
+        private bool _isDisposed;
 
         internal SyncedRound(IRound dtoRound, IEnumerable<SyncedQuestion> questions, SyncServices services)
         {
@@ -34,6 +37,7 @@ namespace Quibble.UI.Core.Entities
             QuizId = dtoRound.QuizId;
             Title = dtoRound.Title;
             State = dtoRound.State;
+
             _questions.AddRange(questions);
             foreach (var question in _questions)
                 question.Updated += OnQuestionUpdatedInternalAsync;
@@ -49,7 +53,7 @@ namespace Quibble.UI.Core.Entities
         {
         }
 
-        public Task SaveTitleAsync() => _services.RoundService.UpdateTitleAsync(Id, Title);
+        public Task SaveTitleAsync() => _services.RoundService.UpdateTitleAsync(Id, Title, Token);
 
         public Task UpdateStateAsync(RoundState newState) => _services.RoundService.UpdateStateAsync(Id, newState);
 
@@ -57,8 +61,9 @@ namespace Quibble.UI.Core.Entities
 
         public Task DeleteAsync() => _services.RoundService.DeleteAsync(Id);
 
-        private Task OnRoundTitleUpdatedAsync(Guid roundId, string newTitle)
+        private Task OnRoundTitleUpdatedAsync(Guid roundId, string newTitle, Guid initiatorToken)
         {
+            if (Token == initiatorToken) return Task.CompletedTask;
             if (roundId != Id) return Task.CompletedTask;
 
             Title = newTitle;
@@ -98,18 +103,32 @@ namespace Quibble.UI.Core.Entities
 
         private Task OnQuestionUpdatedInternalAsync() => _updated.InvokeAsync();
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_isDisposed)
+            {
+                if (disposing)
+                {
+                    _services.RoundEvents.TitleUpdated -= OnRoundTitleUpdatedAsync;
+                    _services.RoundEvents.StateUpdated -= OnStateUpdatedAsync;
+                    _services.QuestionEvents.QuestionAdded -= OnQuestionAddedAsync;
+                    _services.QuestionEvents.QuestionDeleted -= OnQuestionDeletedAsync;
+
+                    foreach (var question in _questions)
+                    {
+                        question.Updated -= OnQuestionUpdatedInternalAsync;
+                        question.Dispose();
+                    }
+                }
+
+                _isDisposed = true;
+            }
+        }
+
         public void Dispose()
         {
-            _services.RoundEvents.TitleUpdated -= OnRoundTitleUpdatedAsync;
-            _services.RoundEvents.StateUpdated-= OnStateUpdatedAsync;
-            _services.QuestionEvents.QuestionAdded -= OnQuestionAddedAsync;
-            _services.QuestionEvents.QuestionDeleted -= OnQuestionDeletedAsync;
-
-            foreach (var question in _questions)
-            {
-                question.Updated -= OnQuestionUpdatedInternalAsync;
-                question.Dispose();
-            }
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -1,0 +1,58 @@
+﻿<Row>
+    <Column ColumnSize="ColumnSize.Is6">
+        @Question.QuestionText (@Guid.NewGuid())
+    </Column>
+    @if (Question.State == QuestionState.Visible)
+    {
+        <Column ColumnSize="ColumnSize.Is6">
+            <DelayedTextEdit @bind-Text="CurrentAnswer.Text" DelayedTextChanged="CurrentAnswer.SaveTextAsync" />
+        </Column>
+    }
+    else if (Question.State == QuestionState.Locked)
+    {
+        <Column ColumnSize="ColumnSize.Is6">
+            @if (string.IsNullOrWhiteSpace(CurrentAnswer.Text))
+            {
+                <Blazorise.Text Color="TextColor.Warning" Italic="true">
+                    No answer
+                </Blazorise.Text>
+            }
+            else
+            {
+                <Blazorise.Text Color="TextColor.Warning">
+                    @CurrentAnswer.Text
+                </Blazorise.Text>
+            }
+        </Column>
+    }
+    else if (Question.State == QuestionState.AnswerRevealed)
+    {
+        <Column ColumnSize="ColumnSize.Is3">
+            @{
+                var color = CurrentAnswer.Mark switch
+                {
+                    AnswerMark.Right => TextColor.Success,
+                    AnswerMark.Wrong => TextColor.Danger,
+                    _ => TextColor.Warning
+                };
+                if (string.IsNullOrWhiteSpace(CurrentAnswer.Text))
+                {
+                    <Blazorise.Text Color="color" Italic="true">
+                        No answer
+                    </Blazorise.Text>
+                }
+                else
+                {
+                    <Blazorise.Text Color="color">
+                        @CurrentAnswer.Text
+                    </Blazorise.Text>
+                }
+            }
+        </Column>
+        <Column ColumnSize="ColumnSize.Is3">
+            <Blazorise.Text Color="TextColor.Muted">
+                @Question.CorrectAnswer
+            </Blazorise.Text>
+        </Column>
+    }
+</Row>

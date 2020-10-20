@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Quibble.Core.Entities;
 using Quibble.Host.Common.Data;
 using Quibble.Host.Common.Data.Entities;
 using Quibble.Host.Common.Extensions;
@@ -24,7 +25,7 @@ namespace Quibble.Host.Common.Repositories.EntityFramework
                 .Include(p => p.User)
                 .Include(p => p.Answers);
 
-        public async Task<Guid> CreateAsync(DbParticipant participant)
+        public async Task<DbParticipant> CreateAsync(DbParticipant participant)
         {
             Ensure.NotNullOrDefault(participant, nameof(participant));
             if (participant.Id != default)
@@ -35,15 +36,17 @@ namespace Quibble.Host.Common.Repositories.EntityFramework
             DbContext.Participants.Add(participant);
             await DbContext.SaveChangesAsync();
 
-            var questionIds = from q in DbContext.Questions
-                join r in DbContext.Rounds on q.RoundId equals r.Id
-                where r.QuizId == participant.QuizId
-                select q.Id;
-            var answers = await questionIds.Select(q => new DbParticipantAnswer {ParticipantId = participant.Id, QuestionId = q}).ToListAsync();
-            DbContext.ParticipantAnswers.AddRange(answers);
+            var questions =
+                from question in DbContext.Questions
+                join round in DbContext.Rounds on question.RoundId equals round.Id
+                where round.QuizId == participant.QuizId
+                select new DbParticipantAnswer { ParticipantId = participant.Id, QuestionId = question.Id, Mark = AnswerMark.Unmarked };
+            var questionsList = await questions.ToListAsync();
+            DbContext.ParticipantAnswers.AddRange(questionsList);
             await DbContext.SaveChangesAsync();
+            participant.Answers = questionsList;
 
-            return participant.Id;
+            return participant;
         }
 
         public Task<bool> ExistsAsync(Guid id)

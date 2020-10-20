@@ -25,7 +25,7 @@
         }
         else if (SelectedQuestion.State == QuestionState.Locked)
         {
-            <ActionButton Block="true" Color="Color.Primary" Clicked="RevealAnswerAsync">
+            <ActionButton Block="true" Color="Color.Primary" Clicked="RevealCorrectAnswerAsync">
                 Reveal Answer
             </ActionButton>
         }
@@ -35,7 +35,7 @@
                 Question Revealed
             </ActionButton>
         }
-        @if (SelectedRound.State == RoundState.Visible && SelectedRound.Questions.Any(q => q.State != QuestionState.WithAnswer))
+        @if (SelectedRound.State == RoundState.Visible && SelectedRound.Questions.Any(q => q.State != QuestionState.AnswerRevealed))
         {
             <DropdownToggle Split="true" Color="Color.Primary"></DropdownToggle>
             <DropdownMenu>

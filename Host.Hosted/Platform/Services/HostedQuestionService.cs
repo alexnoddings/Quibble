@@ -25,7 +25,12 @@ namespace Quibble.Host.Hosted.Platform.Services
         private IQuestionEventsInvoker QuestionEvents { get; }
         private IUserContextAccessor UserContextAccessor { get; }
 
-        public HostedQuestionService(IQuizRepository quizRepository, IParticipantRepository participantRepository, IRoundRepository roundRepository, IQuestionRepository questionRepository, IQuestionEventsInvoker questionEvents, IUserContextAccessor userContextAccessor)
+        public HostedQuestionService(IQuizRepository quizRepository,
+            IParticipantRepository participantRepository,
+            IRoundRepository roundRepository,
+            IQuestionRepository questionRepository,
+            IQuestionEventsInvoker questionEvents,
+            IUserContextAccessor userContextAccessor)
         {
             QuizRepository = quizRepository;
             ParticipantRepository = participantRepository;
@@ -87,7 +92,7 @@ namespace Quibble.Host.Hosted.Platform.Services
             await QuestionEvents.InvokeQuestionDeletedAsync(id);
         }
 
-        public async Task UpdateTextAsync(Guid id, string newText)
+        public async Task UpdateTextAsync(Guid id, string newText, Guid initiatorToken)
         {
             newText ??= string.Empty;
 
@@ -103,10 +108,10 @@ namespace Quibble.Host.Hosted.Platform.Services
                 throw ThrowHelper.InvalidOperation(ExceptionMessages.CannotEditPublishedQuiz);
 
             await QuestionRepository.UpdateTextAsync(id, newText);
-            await QuestionEvents.InvokeTextUpdatedAsync(id, newText);
+            await QuestionEvents.InvokeTextUpdatedAsync(id, newText, initiatorToken);
         }
 
-        public async Task UpdateAnswerAsync(Guid id, string newAnswer)
+        public async Task UpdateCorrectAnswerAsync(Guid id, string newAnswer, Guid initiatorToken)
         {
             newAnswer ??= string.Empty;
 
@@ -122,7 +127,7 @@ namespace Quibble.Host.Hosted.Platform.Services
                 throw ThrowHelper.InvalidOperation(ExceptionMessages.CannotEditPublishedQuiz);
 
             await QuestionRepository.UpdateAnswerAsync(id, newAnswer);
-            await QuestionEvents.InvokeAnswerUpdatedAsync(id, newAnswer);
+            await QuestionEvents.InvokeCorrectAnswerUpdatedAsync(id, newAnswer, initiatorToken);
         }
 
         public async Task UpdateStateAsync(Guid id, QuestionState newState)
@@ -140,7 +145,7 @@ namespace Quibble.Host.Hosted.Platform.Services
 
             if ((question.State == QuestionState.Hidden && newState == QuestionState.Visible)
                 || (question.State == QuestionState.Visible && newState == QuestionState.Locked)
-                || (question.State == QuestionState.Locked && newState == QuestionState.WithAnswer))
+                || (question.State == QuestionState.Locked && newState == QuestionState.AnswerRevealed))
             {
                 await QuestionRepository.UpdateStateAsync(id, newState);
                 await QuestionEvents.InvokeStateUpdatedAsync(id, newState);

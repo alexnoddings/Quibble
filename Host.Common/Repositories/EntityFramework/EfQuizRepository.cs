@@ -26,7 +26,7 @@ namespace Quibble.Host.Common.Repositories.EntityFramework
                         .ThenInclude(q => q.Answers)
                             .ThenInclude(a => a.Participant);
 
-        public async Task<Guid> CreateAsync(DbQuiz quiz)
+        public async Task<DbQuiz> CreateAsync(DbQuiz quiz)
         {
             Ensure.NotNullOrDefault(quiz, nameof(quiz));
             if (quiz.Id != default)
@@ -34,7 +34,7 @@ namespace Quibble.Host.Common.Repositories.EntityFramework
 
             DbContext.Quizzes.Add(quiz);
             await DbContext.SaveChangesAsync();
-            return quiz.Id;
+            return quiz;
         }
 
         public Task<bool> ExistsAsync(Guid id)

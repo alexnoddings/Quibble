@@ -20,7 +20,10 @@ namespace Quibble.Host.Hosted.Platform.Services
         private IParticipantRepository ParticipantRepository { get; }
         private IUserContextAccessor UserContextAccessor { get; }
 
-        public HostedQuizService(IQuizRepository quizRepository, IQuizEventsInvoker quizEvents, IParticipantRepository participantRepository, IUserContextAccessor userContextAccessor)
+        public HostedQuizService(IQuizRepository quizRepository,
+            IQuizEventsInvoker quizEvents,
+            IParticipantRepository participantRepository,
+            IUserContextAccessor userContextAccessor)
         {
             QuizRepository = quizRepository;
             QuizEvents = quizEvents;
@@ -84,7 +87,7 @@ namespace Quibble.Host.Hosted.Platform.Services
             await QuizEvents.InvokeDeletedAsync(id);
         }
 
-        public async Task UpdateTitleAsync(Guid id, string newTitle)
+        public async Task UpdateTitleAsync(Guid id, string newTitle, Guid initiatorToken)
         {
             newTitle ??= string.Empty;
 
@@ -95,7 +98,7 @@ namespace Quibble.Host.Hosted.Platform.Services
                 throw ThrowHelper.Unauthorised(ExceptionMessages.NotQuizOwner);
 
             await QuizRepository.UpdateTitleAsync(id, newTitle);
-            await QuizEvents.InvokeTitleUpdatedAsync(id, newTitle);
+            await QuizEvents.InvokeTitleUpdatedAsync(id, newTitle, initiatorToken);
         }
     }
 }

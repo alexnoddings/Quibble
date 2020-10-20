@@ -21,14 +21,21 @@ namespace Quibble.Host.Hosted.Platform.Services
         private IUserRepository UserRepository { get; }
         private IParticipantRepository ParticipantRepository { get; }
         private IParticipantEventsInvoker ParticipantEvents { get; }
+        private IAnswerEventsInvoker AnswerEvents { get; }
         private IUserContextAccessor UserContextAccessor { get; }
 
-        public HostedParticipantService(IQuizRepository quizRepository, IUserRepository userRepository, IParticipantRepository participantRepository, IParticipantEventsInvoker participantEvents, IUserContextAccessor userContextAccessor)
+        public HostedParticipantService(IQuizRepository quizRepository,
+            IUserRepository userRepository,
+            IParticipantRepository participantRepository,
+            IParticipantEventsInvoker participantEvents,
+            IAnswerEventsInvoker answerEvents,
+            IUserContextAccessor userContextAccessor)
         {
             QuizRepository = quizRepository;
             UserRepository = userRepository;
             ParticipantRepository = participantRepository;
             ParticipantEvents = participantEvents;
+            AnswerEvents = answerEvents;
             UserContextAccessor = userContextAccessor;
         }
 
@@ -47,6 +54,8 @@ namespace Quibble.Host.Hosted.Platform.Services
             var participant = new DbParticipant {QuizId = quizId, UserId = user.Id, UserName = user.UserName};
             await ParticipantRepository.CreateAsync(participant);
             await ParticipantEvents.InvokeParticipantJoinedAsync(participant);
+
+            await Task.WhenAll(participant.Answers.Select(a => AnswerEvents.InvokeNewAnswerSubmittedAsync(a)));
         }
 
         public async Task<List<DtoParticipant>> GetForQuizAsync(Guid quizId)

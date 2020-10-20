@@ -7,8 +7,10 @@ using Quibble.Core.Events;
 
 namespace Quibble.UI.Core.Entities
 {
-    public sealed class SyncedQuiz : IQuiz, IDisposable
+    public class SyncedQuiz : IQuiz, IDisposable
     {
+        private Guid Token { get; } = Guid.NewGuid();
+
         public Guid Id { get; set; }
         public Guid OwnerId { get; }
 
@@ -44,6 +46,7 @@ namespace Quibble.UI.Core.Entities
         }
 
         private readonly SyncServices _services;
+        private bool _isDisposed;
 
         internal SyncedQuiz(IQuiz dtoQuiz, IEnumerable<SyncedRound> rounds, IEnumerable<SyncedParticipant> participants, SyncServices services)
         {
@@ -78,7 +81,7 @@ namespace Quibble.UI.Core.Entities
         {
         }
 
-        public Task SaveTitleAsync() => _services.QuizService.UpdateTitleAsync(Id, Title);
+        public Task SaveTitleAsync() => _services.QuizService.UpdateTitleAsync(Id, Title, Token);
 
         public Task PublishAsync() => _services.QuizService.PublishAsync(Id);
 
@@ -86,8 +89,9 @@ namespace Quibble.UI.Core.Entities
 
         public Task AddRoundAsync() => _services.RoundService.CreateAsync(Id);
 
-        private Task OnTitleUpdatedAsync(Guid quizId, string newTitle)
+        private Task OnTitleUpdatedAsync(Guid quizId, string newTitle, Guid initiatorToken)
         {
+            if (Token == initiatorToken) return Task.CompletedTask;
             if (quizId != Id) return Task.CompletedTask;
 
             Title = newTitle;
@@ -150,35 +154,49 @@ namespace Quibble.UI.Core.Entities
             if (participant == null)
                 return Task.CompletedTask;
 
-            _participants.Remove(participant);
             participant.Updated -= OnParticipantUpdatedInternalAsync;
+            _participants.Remove(participant);
             return _updated.InvokeAsync();
         }
 
         private Task OnParticipantUpdatedInternalAsync() => _updated.InvokeAsync();
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_isDisposed)
+            {
+                if (disposing)
+                {
+                    _services.QuizEvents.TitleUpdated -= OnTitleUpdatedAsync;
+                    _services.QuizEvents.Published -= OnPublishedAsync;
+                    _services.QuizEvents.Deleted -= OnDeletedAsync;
+
+                    _services.RoundEvents.RoundAdded -= OnRoundAddedAsync;
+                    _services.RoundEvents.RoundDeleted -= OnRoundDeletedAsync;
+
+                    _services.ParticipantEvents.ParticipantJoined -= OnParticipantJoinedAsync;
+                    _services.ParticipantEvents.ParticipantLeft -= OnParticipantLeftAsync;
+
+                    foreach (var round in _rounds)
+                    {
+                        round.Updated -= OnRoundUpdatedInternalAsync;
+                        round.Dispose();
+                    }
+
+                    foreach (var participant in _participants)
+                    {
+                        participant.Updated -= OnParticipantUpdatedInternalAsync;
+                    }
+                }
+
+                _isDisposed = true;
+            }
+        }
+
         public void Dispose()
         {
-            _services.QuizEvents.TitleUpdated -= OnTitleUpdatedAsync;
-            _services.QuizEvents.Published -= OnPublishedAsync;
-            _services.QuizEvents.Deleted -= OnDeletedAsync;
-
-            _services.RoundEvents.RoundAdded -= OnRoundAddedAsync;
-            _services.RoundEvents.RoundDeleted -= OnRoundDeletedAsync;
-
-            _services.ParticipantEvents.ParticipantJoined -= OnParticipantJoinedAsync;
-            _services.ParticipantEvents.ParticipantLeft -= OnParticipantLeftAsync;
-
-            foreach (var round in _rounds)
-            {
-                round.Updated -= OnRoundUpdatedInternalAsync;
-                round.Dispose();
-            }
-
-            foreach (var participant in _participants)
-            {
-                participant.Updated -= OnParticipantUpdatedInternalAsync;
-            }
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -24,7 +24,11 @@ namespace Quibble.Host.Hosted.Platform.Services
         private IRoundEventsInvoker RoundEvents { get; }
         private IUserContextAccessor UserContextAccessor { get; }
 
-        public HostedRoundService(IQuizRepository quizRepository, IParticipantRepository participantRepository, IRoundRepository roundRepository, IRoundEventsInvoker roundEvents, IUserContextAccessor userContextAccessor)
+        public HostedRoundService(IQuizRepository quizRepository,
+            IParticipantRepository participantRepository,
+            IRoundRepository roundRepository,
+            IRoundEventsInvoker roundEvents,
+            IUserContextAccessor userContextAccessor)
         {
             QuizRepository = quizRepository;
             ParticipantRepository = participantRepository;
@@ -83,7 +87,7 @@ namespace Quibble.Host.Hosted.Platform.Services
             await RoundEvents.InvokeRoundDeletedAsync(id);
         }
 
-        public async Task UpdateTitleAsync(Guid id, string newTitle)
+        public async Task UpdateTitleAsync(Guid id, string newTitle, Guid initiatorToken)
         {
             newTitle ??= string.Empty;
 
@@ -98,7 +102,7 @@ namespace Quibble.Host.Hosted.Platform.Services
                 throw ThrowHelper.InvalidOperation(ExceptionMessages.CannotEditPublishedQuiz);
 
             await RoundRepository.UpdateTitleAsync(id, newTitle);
-            await RoundEvents.InvokeTitleUpdatedAsync(id, newTitle);
+            await RoundEvents.InvokeTitleUpdatedAsync(id, newTitle, initiatorToken);
         }
 
         public async Task UpdateStateAsync(Guid id, RoundState newState)
