@@ -1,11 +1,6 @@
 
-.body {
-    position: relative;
-    min-height: 100vh;
-    background: #442222;
-}
-
 .background {
+    background: #442222;
     background: url("/img/bg.png");
     background-size: cover;
     position: fixed;
