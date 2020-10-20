@@ -1,17 +1,20 @@
-﻿@using BlazoriseText = Blazorise.Text
-
-@switch (QuizUiOperation.Status)
+﻿@switch (QuizUiOperation.Status)
 {
     case UiOperationStatus.Uninitialised:
     case UiOperationStatus.Loading:
-        <BlazoriseText Color="TextColor.White">Loading...</BlazoriseText>
+        <Blazorise.Text Color="TextColor.White">
+            Loading...
+        </Blazorise.Text>
         break;
     case UiOperationStatus.NotFound:
-        <BlazoriseText Color="TextColor.White">Not found</BlazoriseText>
+        <Blazorise.Text Color="TextColor.White">
+            Not found
+        </Blazorise.Text>
         break;
     case UiOperationStatus.Loaded:
         var quiz = QuizUiOperation.Result;
         <CascadingValue Value="quiz">
+        <CascadingValue Value="quiz.Participants.FirstOrDefault(p => p.UserId == UserId)">
             @if (quiz.PublishedAt != null)
             {
                 if (quiz.OwnerId == UserId)
@@ -20,7 +23,7 @@
                 }
                 else
                 {
-                    <BlazoriseText Color="TextColor.White">Take Quiz</BlazoriseText>
+                    <TakeQuiz />
                 }
             }
             else
@@ -31,9 +34,12 @@
                 }
                 else
                 {
-                    <BlazoriseText Color="TextColor.White">Not found</BlazoriseText>
+                    <Blazorise.Text Color="TextColor.White">
+                        Not found
+                    </Blazorise.Text>
                 }
             }
+        </CascadingValue>
         </CascadingValue>
         break;
 }
