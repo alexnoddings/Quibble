@@ -1,0 +1,16 @@
+﻿<Container Padding="Padding.Is0">
+    <Heading Size="HeadingSize.Is2">
+        <Text Alignment="TextAlignment.Center" Color="TextColor.White">
+            @Quiz.Title
+        </Text>
+        <Text Alignment="TextAlignment.Center" Color="TextColor.White">
+            Score: @CalculateScore()
+        </Text>
+    </Heading>
+    @foreach (var round in Quiz.Rounds)
+    {
+        <CascadingValue Value="round">
+            <TakeRound />
+        </CascadingValue>
+    }
+</Container>

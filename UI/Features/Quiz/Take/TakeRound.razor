@@ -1,0 +1,25 @@
+﻿<Card Margin="Margin.Is3.FromTop">
+    <CardHeader>
+        <Heading Float="Float.Left" Size="HeadingSize.Is4">
+            @Round.Title
+        </Heading>
+        @if (Round.Questions.Any(q => q.State == QuestionState.AnswerRevealed))
+        {
+            <Heading Float="Float.Right" Size="HeadingSize.Is4">
+                @CalculateScore()
+            </Heading>
+        }
+    </CardHeader>
+    <CardBody>
+        <ListGroup Flush="true">
+        @foreach (var question in Round.Questions)
+        {
+            <CascadingValue Value="question">
+                <ListGroupItem>
+                    <TakeQuestion />
+                </ListGroupItem>
+            </CascadingValue>
+        }
+        </ListGroup>
+    </CardBody>
+</Card>
