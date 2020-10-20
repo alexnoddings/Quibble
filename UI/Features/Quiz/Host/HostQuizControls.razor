@@ -25,9 +25,21 @@
         }
         else if (SelectedQuestion.State == QuestionState.Locked)
         {
-            <ActionButton Block="true" Color="Color.Primary" Clicked="RevealCorrectAnswerAsync">
-                Reveal Answer
-            </ActionButton>
+            if (SelectedQuestion.Answers.Any(a => a.Mark == AnswerMark.Unmarked))
+            {
+                <ActionButton Block="true" Color="Color.Primary" Disabled="true">
+                    <Tooltip Text="All answers must be marked to reveal the answer">
+                        Reveal Answer
+                        <Icon Name="IconName.Lock" />
+                    </Tooltip>
+                </ActionButton>
+            }
+            else
+            {
+                <ActionButton Block="true" Color="Color.Primary" Clicked="RevealCorrectAnswerAsync">
+                    Reveal Answer
+                </ActionButton>
+            }
         }
         else
         {
@@ -53,9 +65,21 @@
                 }
                 else if (SelectedRound.Questions.Any(q => q.State == QuestionState.Locked))
                 {
-                    <ActionButton Clicked="RevealRoundAnswersAsync">
-                        Reveal All Answers in Round @(SelectedRoundNumber + 1)
-                    </ActionButton>
+                    if (SelectedRound.Questions.SelectMany(q => q.Answers).Any(a => a.Mark == AnswerMark.Unmarked))
+                    {
+                            <ActionButton Disabled="true">
+                        <Tooltip Text="All answers must be marked to reveal answers">
+                                Reveal All Answers in Round @(SelectedRoundNumber + 1)
+                                <Icon Name="IconName.Lock" />
+                        </Tooltip>
+                            </ActionButton>
+                    }
+                    else
+                    {
+                        <ActionButton Clicked="RevealRoundAnswersAsync">
+                            Reveal All Answers in Round @(SelectedRoundNumber + 1)
+                        </ActionButton>
+                    }
                 }
             </DropdownMenu>
         }

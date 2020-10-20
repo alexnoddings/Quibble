@@ -1,0 +1,40 @@
+﻿<Card>
+    <CardBody Padding="Padding.Is2">
+        <CardSubtitle Color="TextColor.Muted">
+            @Quiz.Participants.First(p => p.Id == Answer.ParticipantId).UserName:
+        </CardSubtitle>
+        @{
+            TextColor color = Answer.Mark switch
+            {
+                AnswerMark.Unmarked => TextColor.Warning,
+                AnswerMark.Wrong => TextColor.Danger,
+                AnswerMark.Right => TextColor.Success,
+                _ => TextColor.None
+            };
+            if (string.IsNullOrWhiteSpace(Answer.Text))
+            {
+                <Blazorise.Text Margin="Margin.Is1.FromLeft" Color="color" Italic="true">
+                    No answer
+                </Blazorise.Text>
+            }
+            else
+            {
+                <Blazorise.Text Margin="Margin.Is1.FromLeft" Color="color">
+                    @Answer.Text
+                </Blazorise.Text>
+            }
+        }
+        <Row Margin="Margin.Is2.FromTop">
+            <Column Size="ColumnSize.Is6" Padding="Padding.Is2.FromRight">
+                <ActionButton Outline="true" Block="true" Color="Color.Success" Clicked="async () => await Answer.UpdateMarkAsync(AnswerMark.Right)">
+                    Right
+                </ActionButton>
+            </Column>
+            <Column Size="ColumnSize.Is6" Padding="Padding.Is2.FromLeft">
+                <ActionButton Outline="true" Block="true" Color="Color.Danger" Clicked="async () => await Answer.UpdateMarkAsync(AnswerMark.Wrong)">
+                    Wrong
+                </ActionButton>
+            </Column>
+        </Row>
+    </CardBody>
+</Card>

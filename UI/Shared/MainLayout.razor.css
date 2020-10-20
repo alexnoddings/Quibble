@@ -1,0 +1,4 @@
+﻿::deep .text-neon {
+    color: white;
+    text-shadow: rgb(255, 255, 255) 0px 0px 5px, rgb(255, 255, 255) 0px 0px 10px, var(--b-theme-primary) 0px 0px 15px, var(--b-theme-primary) 0px 0px 25px, var(--b-theme-primary) 0px 0px 45px, var(--b-theme-primary) 0px 0px 60px, var(--b-theme-primary) 0px 0px 80px;
+}

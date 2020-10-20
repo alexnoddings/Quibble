@@ -1,13 +1,29 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="main">
-        <div class="top-row px-4 auth">
-            <LoginDisplay />
-        </div>
-
-        <div class="content px-4">
-            @Body
-        </div>
-    </div>
+<div class="main">
+    <Container>
+        <Layout>
+            <LayoutHeader>
+                <Bar Breakpoint="Breakpoint.Desktop" Background="Background.None" ThemeContrast="ThemeContrast.Light">
+                    <BarBrand>
+                        <BarItem>
+                            <BarLink To="">
+                                <Heading Size="HeadingSize.Is2" Class="text-neon">
+                                    Quibble
+                                </Heading>
+                            </BarLink>
+                        </BarItem>
+                    </BarBrand>
+                    <BarMenu>
+                        <BarEnd>
+                            <LoginDisplay />
+                        </BarEnd>
+                    </BarMenu>
+                </Bar>
+            </LayoutHeader>
+            <LayoutContent Padding="Padding.Is4.OnX">
+                @Body
+            </LayoutContent>
+        </Layout>
+    </Container>
 </div>
