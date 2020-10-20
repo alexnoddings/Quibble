@@ -8,17 +8,17 @@ namespace Quibble.Host.Hosted.Platform.Events
 {
     internal class StaticQuestionEvents : IQuestionEvents, IQuestionEventsInvoker
     {
-        public Task InvokeTextUpdatedAsync(Guid id, string newText) => _textUpdated.InvokeAsync(id, newText);
-        private static readonly AsyncEvent<Guid, string> _textUpdated = new();
-        public event Func<Guid, string, Task> TextUpdated
+        public Task InvokeTextUpdatedAsync(Guid id, string newText, Guid initiatorToken) => _textUpdated.InvokeAsync(id, newText, initiatorToken);
+        private static readonly AsyncEvent<Guid, string, Guid> _textUpdated = new();
+        public event Func<Guid, string, Guid, Task> TextUpdated
         {
             add => _textUpdated.Add(value);
             remove => _textUpdated.Remove(value);
         }
 
-        public Task InvokeCorrectAnswerUpdatedAsync(Guid id, string newAnswer) => _correctAnswerUpdated.InvokeAsync(id, newAnswer);
-        private static readonly AsyncEvent<Guid, string> _correctAnswerUpdated = new();
-        public event Func<Guid, string, Task> CorrectAnswerUpdated
+        public Task InvokeCorrectAnswerUpdatedAsync(Guid id, string newAnswer, Guid initiatorToken) => _correctAnswerUpdated.InvokeAsync(id, newAnswer, initiatorToken);
+        private static readonly AsyncEvent<Guid, string, Guid> _correctAnswerUpdated = new();
+        public event Func<Guid, string, Guid, Task> CorrectAnswerUpdated
         {
             add => _correctAnswerUpdated.Add(value);
             remove => _correctAnswerUpdated.Remove(value);

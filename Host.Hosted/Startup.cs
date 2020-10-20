@@ -85,6 +85,10 @@ namespace Quibble.Host.Hosted
             services.AddScoped<IParticipantService, HostedParticipantService>();
             services.AddScoped<IParticipantEvents, StaticParticipantEvents>();
             services.AddScoped<IParticipantEventsInvoker, StaticParticipantEvents>();
+
+            services.AddScoped<IAnswerService, HostedAnswerService>();
+            services.AddScoped<IAnswerEvents, StaticAnswerEvents>();
+            services.AddScoped<IAnswerEventsInvoker, StaticAnswerEvents>();
         }
 
         public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
