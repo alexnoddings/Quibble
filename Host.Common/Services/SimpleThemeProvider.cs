@@ -6,7 +6,7 @@ namespace Quibble.Host.Common.Services
     {
         public IColourSet Primary { get; } = new SimpleThemeSet("#FFFFFF", "#FF5CE8");
         public IColourSet Secondary { get; } = new SimpleThemeSet("#FFFFFF", "#FF5C98");
-        public IColourSet Success { get; } = new SimpleThemeSet("#FFFFFF", "#5CFF72");
+        public IColourSet Success { get; } = new SimpleThemeSet("#FFFFFF", "#21A831");
         public IColourSet Info { get; } = new SimpleThemeSet("#FFFFFF", "#5CE9FF");
         public IColourSet Warning { get; } = new SimpleThemeSet("#FFFFFF", "#FFB85C");
         public IColourSet Danger { get; } = new SimpleThemeSet("#FFFFFF", "#FF725C");
