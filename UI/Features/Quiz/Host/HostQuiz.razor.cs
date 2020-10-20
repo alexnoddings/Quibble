@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Quibble.Core.Entities;
 using Quibble.UI.Core.Entities;
 
 namespace Quibble.UI.Features.Quiz.Host
@@ -9,6 +12,20 @@ namespace Quibble.UI.Features.Quiz.Host
     {
         [CascadingParameter]
         public SyncedQuiz Quiz { get; set; } = default!;
+
+        private IEnumerable<(SyncedParticipant, int)> ParticipantsWithScore =>
+            Quiz
+            .Participants
+            .Select(p =>
+                (p,
+                Quiz
+                .Rounds
+                .SelectMany(r => r.Questions)
+                .SelectMany(q => q.Answers)
+                .Where(a => a.ParticipantId == p.Id)
+                .Count(a => a.Mark == AnswerMark.Right))
+            )
+            .OrderByDescending(tuple => tuple.Item2);
 
         private int SelectedRoundNumber { get; set; } = 0;
         private int SelectedQuestionNumber { get; set; } = 0;

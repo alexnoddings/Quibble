@@ -1,0 +1,43 @@
+﻿
+<Column ColumnSize="ColumnSize.IsFull">
+    <Card>
+        <CardBody Padding="Padding.Is3">
+            @if (Round.State == RoundState.Hidden)
+            {
+                <Blazorise.Text Margin="Margin.Is1" Color="TextColor.Muted">
+                    (Hidden) @Question.QuestionText
+                </Blazorise.Text>
+                <Blazorise.Text Margin="Margin.Is1" Color="TextColor.Muted">
+                    (Hidden) @Question.CorrectAnswer
+                </Blazorise.Text>
+            }
+            else if (Question.State == QuestionState.Hidden)
+            {
+                <Blazorise.Text Margin="Margin.Is1" Color="TextColor.Muted">
+                    (Hidden) @Question.QuestionText
+                </Blazorise.Text>
+                <Blazorise.Text Margin="Margin.Is1" Color="TextColor.Muted">
+                    (Hidden) @Question.CorrectAnswer
+                </Blazorise.Text>
+            }
+            else if (Question.State != QuestionState.AnswerRevealed)
+            {
+                <Blazorise.Text Margin="Margin.Is1">
+                    @Question.QuestionText
+                </Blazorise.Text>
+                <Blazorise.Text Margin="Margin.Is1" Color="TextColor.Muted">
+                    (Hidden) @Question.CorrectAnswer
+                </Blazorise.Text>
+            }
+            else
+            {
+                <Blazorise.Text Margin="Margin.Is1">
+                    @Question.QuestionText
+                </Blazorise.Text>
+                <Blazorise.Text Margin="Margin.Is1">
+                    @Question.CorrectAnswer
+                </Blazorise.Text>
+            }
+        </CardBody>
+    </Card>
+</Column>
