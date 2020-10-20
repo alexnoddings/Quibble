@@ -9,6 +9,8 @@ namespace Quibble.UI.Core.Entities
 {
     public class SyncedQuiz : IQuiz, IDisposable
     {
+        private Guid Token { get; } = Guid.NewGuid();
+
         public Guid Id { get; set; }
         public Guid OwnerId { get; }
 
@@ -79,7 +81,7 @@ namespace Quibble.UI.Core.Entities
         {
         }
 
-        public Task SaveTitleAsync() => _services.QuizService.UpdateTitleAsync(Id, Title);
+        public Task SaveTitleAsync() => _services.QuizService.UpdateTitleAsync(Id, Title, Token);
 
         public Task PublishAsync() => _services.QuizService.PublishAsync(Id);
 
@@ -87,8 +89,9 @@ namespace Quibble.UI.Core.Entities
 
         public Task AddRoundAsync() => _services.RoundService.CreateAsync(Id);
 
-        private Task OnTitleUpdatedAsync(Guid quizId, string newTitle)
+        private Task OnTitleUpdatedAsync(Guid quizId, string newTitle, Guid initiatorToken)
         {
+            if (Token == initiatorToken) return Task.CompletedTask;
             if (quizId != Id) return Task.CompletedTask;
 
             Title = newTitle;
@@ -151,8 +154,8 @@ namespace Quibble.UI.Core.Entities
             if (participant == null)
                 return Task.CompletedTask;
 
-            _participants.Remove(participant);
             participant.Updated -= OnParticipantUpdatedInternalAsync;
+            _participants.Remove(participant);
             return _updated.InvokeAsync();
         }
 

@@ -9,6 +9,8 @@ namespace Quibble.UI.Core.Entities
 {
     public class SyncedRound : IRound, IDisposable
     {
+        private Guid Token { get; } = Guid.NewGuid();
+
         public Guid Id { get; set; }
         public Guid QuizId { get; set; }
         public string Title { get; set; }
@@ -51,7 +53,7 @@ namespace Quibble.UI.Core.Entities
         {
         }
 
-        public Task SaveTitleAsync() => _services.RoundService.UpdateTitleAsync(Id, Title);
+        public Task SaveTitleAsync() => _services.RoundService.UpdateTitleAsync(Id, Title, Token);
 
         public Task UpdateStateAsync(RoundState newState) => _services.RoundService.UpdateStateAsync(Id, newState);
 
@@ -59,8 +61,9 @@ namespace Quibble.UI.Core.Entities
 
         public Task DeleteAsync() => _services.RoundService.DeleteAsync(Id);
 
-        private Task OnRoundTitleUpdatedAsync(Guid roundId, string newTitle)
+        private Task OnRoundTitleUpdatedAsync(Guid roundId, string newTitle, Guid initiatorToken)
         {
+            if (Token == initiatorToken) return Task.CompletedTask;
             if (roundId != Id) return Task.CompletedTask;
 
             Title = newTitle;

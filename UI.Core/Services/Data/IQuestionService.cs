@@ -14,8 +14,8 @@ namespace Quibble.UI.Core.Services.Data
 
         public Task DeleteAsync(Guid id);
 
-        public Task UpdateTextAsync(Guid id, string newText);
-        public Task UpdateCorrectAnswerAsync(Guid id, string newAnswer);
+        public Task UpdateTextAsync(Guid id, string newText, Guid initiatorToken);
+        public Task UpdateCorrectAnswerAsync(Guid id, string newAnswer, Guid initiatorToken);
         public Task UpdateStateAsync(Guid id, QuestionState newState);
     }
 }
