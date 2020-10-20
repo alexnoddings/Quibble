@@ -5,12 +5,38 @@
 
 <AuthorizeView>
     <Authorized>
-        <a href="@LoginHandler.ProfileUrl">@GetGreeting(context.User.Identity)</a>
-        <button class="nav-link btn btn-link" @onclick="BeginSignOutAsync">Log out</button>
+        <BarItem>
+            <BarDropdown>
+                <BarDropdownToggle style="color: #FFF">
+                    @* Using a <Text> Element breaks the ::after arrow *@
+                    @GetGreeting(context.User.Identity)
+                </BarDropdownToggle>
+                <BarDropdownMenu>
+                    <BarDropdownItem To="@LoginHandler.ProfileUrl">
+                        Profile
+                    </BarDropdownItem>
+                    <BarDropdownItem Clicked="BeginSignOutAsync">
+                        Log out
+                    </BarDropdownItem>
+                </BarDropdownMenu>
+            </BarDropdown>
+        </BarItem>
     </Authorized>
     <NotAuthorized>
-        <a href="@LoginHandler.RegisterUrl">Register</a>
-        <a href="@LoginHandler.LoginUrl">Log in</a>
+        <BarItem>
+            <BarLink To="@LoginHandler.RegisterUrl">
+                <Text Color="TextColor.White">
+                    Register
+                </Text>
+            </BarLink>
+        </BarItem>
+        <BarItem>
+            <BarLink To="@LoginHandler.LoginUrl">
+                <Text Color="TextColor.White">
+                    Log in
+                </Text>
+            </BarLink>
+        </BarItem>
     </NotAuthorized>
 </AuthorizeView>
 
@@ -27,7 +53,7 @@
         return identity?.Name == null ? "Profile" : $"Hey {identity.Name}";
     }
 
-    private Task BeginSignOutAsync(MouseEventArgs _) => LoginHandler.BeginSignOutAsync();
+    private Task BeginSignOutAsync() => LoginHandler.BeginSignOutAsync();
 
     private void NavigationManager_LocationChanged(object? _, LocationChangedEventArgs __) => StateHasChanged();
 }
