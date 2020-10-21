@@ -52,6 +52,14 @@ namespace Quibble.Host.Common
             services.AddQuibbleEntityFrameworkRepositories();
             services.AddScoped<IQuibbleDbContext, TDbContext>();
 
+            services.AddSendGridEmail(options =>
+            {
+                options.ApiKey = Configuration["Email:SendGrid:Key"];
+                options.Domain = Configuration["Email:SendGrid:Domain"];
+                options.DefaultFromUserName = Configuration["Email:SendGrid:DefaultFromUserName"];
+                options.DefaultFromDisplayName = Configuration["Email:SendGrid:DefaultFromDisplayName"];
+            });
+
             ConfigurePlatformServices(services);
         }
 

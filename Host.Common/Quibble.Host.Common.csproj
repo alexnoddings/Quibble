@@ -13,6 +13,7 @@
     <PackageReference Version="$(AspNetCoreVersion)" Include="Microsoft.AspNetCore.Identity.UI" />
     <PackageReference Version="$(EntityFrameworkCoreVersion)" Include="Microsoft.EntityFrameworkCore.SqlServer" />
     <PackageReference Version="$(EntityFrameworkCoreVersion)" Include="Microsoft.EntityFrameworkCore.Tools" />
+    <PackageReference Version="9.17.0" Include="SendGrid" />
   </ItemGroup>
 
   <!-- Analysers -->
