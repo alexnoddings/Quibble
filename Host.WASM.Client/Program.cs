@@ -16,10 +16,10 @@ namespace Quibble.Host.WASM.Client
         {
             var hostBuilder = WebAssemblyHostBuilder.CreateDefault(args);
             hostBuilder.RootComponents.Add<Quibble.UI.App>("#app");
-            Startup.ConfigureServices(hostBuilder.Services, hostBuilder.HostEnvironment);
+            WasmClientStartup.ConfigureServices(hostBuilder.Services, hostBuilder.HostEnvironment);
 
             await using var host = hostBuilder.Build();
-            Startup.ConfigureHost(host);
+            WasmClientStartup.ConfigureHost(host);
 
             await host.RunAsync().ConfigureAwait(false);
         }

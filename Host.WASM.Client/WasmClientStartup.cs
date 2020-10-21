@@ -8,13 +8,14 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Quibble.Host.WASM.Client.Platform;
 using Quibble.UI.Core.Services;
+using Quibble.UI.Core.Services.Theme;
 
 namespace Quibble.Host.WASM.Client
 {
     /// <summary>
     /// Handles the startup for the program.
     /// </summary>
-    public static class Startup
+    public static class WasmClientStartup
     {
         /// <summary>
         /// Configures the services added to the system's container.
@@ -40,7 +41,7 @@ namespace Quibble.Host.WASM.Client
                 .AddBootstrapProviders()
                 .AddFontAwesomeIcons();
 
-            // Platform-specific services
+            services.AddScoped<IThemeProvider, SimpleThemeProvider>();
             services.AddScoped<ILoginHandler, WasmLoginHandler>();
             services.AddScoped<IAppMetadata, WasmAppMetadata>();
         }
