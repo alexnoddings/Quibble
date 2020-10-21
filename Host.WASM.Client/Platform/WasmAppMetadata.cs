@@ -7,6 +7,6 @@ namespace Quibble.Host.WASM.Client.Platform
     {
         public HostModel HostingModel => HostModel.WASM;
 
-        public Assembly[] GetAdditionalUIAssemblies() => new[] { typeof(Startup).Assembly };
+        public Assembly[] GetAdditionalUIAssemblies() => new[] { typeof(WasmClientStartup).Assembly };
     }
 }

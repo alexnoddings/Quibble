@@ -6,8 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Version="$(BlazoriseVersion)" Include="Blazorise.Bootstrap" />
+    <PackageReference Version="$(BlazoriseVersion)" Include="Blazorise.Icons.FontAwesome" />
+    <PackageReference Version="$(AspNetCoreVersion)" Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" />
     <PackageReference Version="$(AspNetCoreVersion)" Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
+    <PackageReference Version="$(AspNetCoreVersion)" Include="Microsoft.AspNetCore.Identity.UI" />
     <PackageReference Version="$(EntityFrameworkCoreVersion)" Include="Microsoft.EntityFrameworkCore.SqlServer" />
+    <PackageReference Version="$(EntityFrameworkCoreVersion)" Include="Microsoft.EntityFrameworkCore.Tools" />
   </ItemGroup>
 
   <!-- Analysers -->
