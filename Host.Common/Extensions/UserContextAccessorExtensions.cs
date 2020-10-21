@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Quibble.Core.Exceptions;
 using Quibble.Host.Common.Data.Entities;
-using Quibble.Host.Common.Services;
+using Quibble.Host.Common.Services.UserContextAccessor;
 
 namespace Quibble.Host.Common.Extensions
 {

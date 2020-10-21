@@ -47,7 +47,7 @@ namespace Quibble.Host.Common
                 .AddFontAwesomeIcons();
 
             services.AddScoped<ISynchronisedQuizFactory, SynchronisedQuizFactory>();
-            services.AddUserContextAccessor();
+            services.AddEntityFrameworkUserContextAccessor();
             services.AddScoped<IThemeProvider, SimpleThemeProvider>();
             services.AddQuibbleEntityFrameworkRepositories();
             services.AddScoped<IQuibbleDbContext, TDbContext>();
