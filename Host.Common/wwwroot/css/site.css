@@ -1,4 +1,8 @@
 
+:root {
+    --theme-primary: #FF5CE8;
+}
+
 .background {
     background: #442222;
     background: url("/img/bg.png");
@@ -9,6 +13,11 @@
     bottom: 0;
     left: 0;
     z-index: -1;
+}
+
+.text-neon {
+    color: white;
+    text-shadow: rgb(255, 255, 255) 0px 0px 5px, rgb(255, 255, 255) 0px 0px 10px, var(--theme-primary) 0px 0px 15px, var(--theme-primary) 0px 0px 25px, var(--theme-primary) 0px 0px 45px, var(--theme-primary) 0px 0px 60px, var(--theme-primary) 0px 0px 80px;
 }
 
 #app {
