@@ -46,6 +46,10 @@ namespace Quibble.UI.Identity.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
+            [Display(Name = "UserName")]
+            public string UserName { get; set; } = string.Empty;
+
+            [Required]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; } = string.Empty;
@@ -75,7 +79,7 @@ namespace Quibble.UI.Identity.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync().ConfigureAwait(false)).ToList();
             if (ModelState.IsValid)
             {
-                var user = new DbQuibbleUser { UserName = Input.Email, Email = Input.Email };
+                var user = new DbQuibbleUser { UserName = Input.UserName, Email = Input.Email };
                 var result = await _userManager.CreateAsync(user, Input.Password).ConfigureAwait(false);
                 if (result.Succeeded)
                 {
