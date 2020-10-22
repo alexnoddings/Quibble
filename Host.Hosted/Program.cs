@@ -13,9 +13,7 @@ namespace Quibble.Host.Hosted
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Hosting.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<HostedStartup>();
-                });
+                .ConfigureWebHostDefaults(
+                    webBuilder => webBuilder.UseStartup<HostedStartup>());
     }
 }

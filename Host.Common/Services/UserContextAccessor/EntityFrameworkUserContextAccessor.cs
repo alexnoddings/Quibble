@@ -8,7 +8,7 @@ using Quibble.Host.Common.Data;
 using Quibble.Host.Common.Data.Entities;
 using Quibble.Host.Common.Extensions;
 
-namespace Quibble.Host.Common.Services
+namespace Quibble.Host.Common.Services.UserContextAccessor
 {
     /// <summary>
     ///     Gets the <see cref="DbQuibbleUser"/> from the current context from Entity Framework.

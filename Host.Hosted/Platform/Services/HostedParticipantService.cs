@@ -7,7 +7,7 @@ using Quibble.Host.Common;
 using Quibble.Host.Common.Data.Entities;
 using Quibble.Host.Common.Extensions;
 using Quibble.Host.Common.Repositories;
-using Quibble.Host.Common.Services;
+using Quibble.Host.Common.Services.UserContextAccessor;
 using Quibble.Host.Hosted.Platform.Events;
 using Quibble.UI.Core.Entities;
 using Quibble.UI.Core.Services.Data;

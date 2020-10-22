@@ -9,6 +9,14 @@
     <SupportedPlatform Include="browser" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <NoWarn>
+      $(NoWarn);
+      <!-- Identity pages are standard, and as such won't be documented here. -->
+      CS1591;
+    </NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Version="$(AspNetCoreVersion)" Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
     <PackageReference Version="$(AspNetCoreVersion)" Include="Microsoft.AspNetCore.Identity.UI" />

@@ -13,9 +13,7 @@ namespace Quibble.Host.WASM.Server
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Hosting.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<WasmServerStartup>();
-                });
+                .ConfigureWebHostDefaults(
+                    webBuilder => webBuilder.UseStartup<WasmServerStartup>());
     }
 }

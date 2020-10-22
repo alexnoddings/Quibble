@@ -2,6 +2,8 @@
 @using Microsoft.AspNetCore.Mvc.ViewEngines
 @inject IWebHostEnvironment Environment
 @inject ICompositeViewEngine Engine
+@inject SignInManager<DbQuibbleUser> SignInManager
+@inject UserManager<DbQuibbleUser> UserManager
 
 @{
     const string thisLayout = "/Areas/Identity/Pages/Shared/_Layout.cshtml";
@@ -15,43 +17,60 @@
     }
 }
 
-<header>
-    <nav class="navbar navbar-expand-sm navbar-light navbar-toggleable-sm bg-white border-bottom box-shadow mb-3">
-        <div class="container">
-            <a class="navbar-brand" href="~/">Quibble</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                @{
-                    var result = Engine.FindView(ViewContext, "_LoginPartial", isMainPage: false);
-                }
-                @if (result.Success)
-                {
-                    await Html.RenderPartialAsync("_LoginPartial");
-                }
-                else
-                {
-                    throw new InvalidOperationException("The default Identity UI layout requires a partial view '_LoginPartial' " +
-                        "usually located at '/Pages/_LoginPartial' or at '/Views/Shared/_LoginPartial' to work. Based on your configuration " +
-                        $"we have looked at it in the following locations: {System.Environment.NewLine}{string.Join(System.Environment.NewLine, result.SearchedLocations)}.");
-                }
-            </div>
-        </div>
-    </nav>
-</header>
-
-<div class="container">
-    <main role="main" class="pb-3">
-        @RenderBody()
-    </main>
-</div>
-<footer class="footer border-top text-muted">
+<div class="main">
     <div class="container">
-        &copy; 2020 - Quibble - <a asp-area="" asp-page="Privacy">Privacy</a>
+        <section class="b-layout b-layout-root">
+            <header class="b-layout-header">
+                <nav class="navbar navbar-light b-bar-light navbar-expand-md b-bar-horizontal" data-broken="false">
+                    <div class="navbar-brand">
+                        <div class="nav-item">
+                            <a href="" class="active nav-link">
+                                <h2 class="h2 text-left text-neon">
+                                    Quibble
+                                </h2>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="collapse navbar-collapse show">
+                        <div class="navbar-nav ml-auto">
+                            @if (SignInManager.IsSignedIn(User))
+                            {
+                                <div class="nav-item">
+                                    <a class="nav-link text-white text-left" id="register" asp-area="Identity" asp-page="/Account/Register">
+                                        Register
+                                    </a>
+                                </div>
+                                <div class="nav-item">
+                                    <a class="nav-link text-white text-left" id="login" asp-area="Identity" asp-page="/Account/Login">
+                                        Log in
+                                    </a>
+                                </div>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a id="manage" class="nav-link text-white text-left" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+                                        @UserManager.GetUserName(User)
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="~/">
+                                        <button id="logout" type="submit" class="nav-link btn btn-link text-white">Logout</button>
+                                    </form>
+                                </li>
+                            }
+                        </div>
+                    </div>
+                </nav>
+            </header>
+            <main class="b-layout-content">
+                <div class="card px-4 py-3">
+                    @RenderBody()
+                </div>
+            </main>
+        </section>
     </div>
-</footer>
+</div>
 
 @section Head {
     @RenderSection("Head", false)

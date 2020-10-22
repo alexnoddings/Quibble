@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Quibble.Host.Common.Data.Entities;
 
-namespace Quibble.Host.Common.Services
+namespace Quibble.Host.Common.Services.UserContextAccessor
 {
     /// <summary>
     ///     Gets the <see cref="DbQuibbleUser"/> from the current context.

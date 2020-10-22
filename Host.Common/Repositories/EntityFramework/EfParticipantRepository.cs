@@ -67,7 +67,7 @@ namespace Quibble.Host.Common.Repositories.EntityFramework
             Ensure.NotNullOrDefault(quizId, nameof(quizId));
             Ensure.NotNullOrDefault(userId, nameof(userId));
             DbParticipant? participant = await Entities.Where(p => p.QuizId == quizId && p.UserId == userId).FirstOrDefaultAsync();
-            Ensure.Found(participant, "Participant", $"{quizId} + {userId}");
+            Ensure.Found(participant, "Participant", participant.Id);
             return participant;
         }
 

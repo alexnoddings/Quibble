@@ -47,10 +47,18 @@ namespace Quibble.Host.Common
                 .AddFontAwesomeIcons();
 
             services.AddScoped<ISynchronisedQuizFactory, SynchronisedQuizFactory>();
-            services.AddUserContextAccessor();
+            services.AddEntityFrameworkUserContextAccessor();
             services.AddScoped<IThemeProvider, SimpleThemeProvider>();
             services.AddQuibbleEntityFrameworkRepositories();
             services.AddScoped<IQuibbleDbContext, TDbContext>();
+
+            services.AddSendGridEmail(options =>
+            {
+                options.ApiKey = Configuration["Email:SendGrid:Key"];
+                options.Domain = Configuration["Email:SendGrid:Domain"];
+                options.DefaultFromUserName = Configuration["Email:SendGrid:DefaultFromUserName"];
+                options.DefaultFromDisplayName = Configuration["Email:SendGrid:DefaultFromDisplayName"];
+            });
 
             ConfigurePlatformServices(services);
         }
