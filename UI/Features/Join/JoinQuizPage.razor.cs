@@ -3,11 +3,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 
-namespace Quibble.UI.Features.Quiz.Join
+namespace Quibble.UI.Features.Join
 {
     [Authorize]
     [Route("/quiz/join")]
-    public partial class JoinQuiz
+    public partial class JoinQuizPage
     {
         [Inject]
         private NavigationManager NavigationManager { get; init; } = default!;
@@ -17,8 +17,10 @@ namespace Quibble.UI.Features.Quiz.Join
         private Task JoinAsync()
         {
             var id = Guid.Parse(QuizId);
-            NavigationManager.NavigateTo(JoinDirect.FormatRoute(id));
+            NavigationManager.NavigateTo(JoinDirectPage.FormatRoute(id));
             return Task.CompletedTask;
         }
+
+        public static string FormatRoute() => $"/quiz/join";
     }
 }

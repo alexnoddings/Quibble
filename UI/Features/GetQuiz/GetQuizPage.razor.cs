@@ -7,14 +7,14 @@ using Quibble.Core.Exceptions;
 using Quibble.Core.Extensions;
 using Quibble.UI.Core.Entities;
 using Quibble.UI.Core.Services.Data;
-using Quibble.UI.Features.Quiz.Join;
+using Quibble.UI.Features.Join;
 using Quibble.UI.Operations;
 
-namespace Quibble.UI.Features.Quiz
+namespace Quibble.UI.Features.GetQuiz
 {
     [Authorize]
     [Route("/quiz/{id:guid}")]
-    public sealed partial class GetQuiz : IDisposable
+    public sealed partial class GetQuizPage : IDisposable
     {
         [Parameter]
         public Guid Id { get; set; }
@@ -45,7 +45,7 @@ namespace Quibble.UI.Features.Quiz
             }
             catch (UnauthorisedException e) when (e.Message.Contains("not joined", StringComparison.OrdinalIgnoreCase))
             {
-                NavigationManager.NavigateTo(JoinDirect.FormatRoute(Id));
+                NavigationManager.NavigateTo(JoinDirectPage.FormatRoute(Id));
             }
 
             if (QuizUiOperation.Status == UiOperationStatus.Loaded)

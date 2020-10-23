@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Components;
-using Quibble.Core.Entities;
-using Quibble.UI.Core.Entities;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
+using Quibble.Core.Entities;
+using Quibble.UI.Core.Entities;
 
-namespace Quibble.UI.Features.Quiz.Take
+namespace Quibble.UI.Features.Take
 {
     public sealed partial class TakeQuiz : IDisposable
     {

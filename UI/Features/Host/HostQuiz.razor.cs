@@ -5,13 +5,18 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Quibble.Core.Entities;
 using Quibble.UI.Core.Entities;
+using Quibble.UI.Core.Services;
+using Quibble.UI.Features.Join;
 
-namespace Quibble.UI.Features.Quiz.Host
+namespace Quibble.UI.Features.Host
 {
     public sealed partial class HostQuiz : IDisposable
     {
         [CascadingParameter]
         public SyncedQuiz Quiz { get; set; } = default!;
+
+        [Inject]
+        private IAppMetadata AppMetadata { get; init; } = default!;
 
         private IEnumerable<(SyncedParticipant, int)> ParticipantsWithScore =>
             Quiz
@@ -36,6 +41,7 @@ namespace Quibble.UI.Features.Quiz.Host
         protected override async Task OnInitializedAsync()
         {
             if (Quiz == null) throw new ArgumentException(nameof(Quiz));
+            if (AppMetadata == null) throw new ArgumentException(nameof(AppMetadata));
 
             await base.OnInitializedAsync();
 
@@ -68,6 +74,13 @@ namespace Quibble.UI.Features.Quiz.Host
                 SelectedQuestionNumber = 0;
                 SelectedRoundNumber++;
             }
+        }
+
+        private string GenerateInviteLink()
+        {
+            var uriBuilder = new UriBuilder(AppMetadata.HostUri);
+            uriBuilder.Path = JoinDirectPage.FormatRoute(Quiz.Id);
+            return uriBuilder.Uri.ToString();
         }
 
         public void Dispose()

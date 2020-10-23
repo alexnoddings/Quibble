@@ -1,0 +1,55 @@
+﻿
+<Row>
+    <Column Margin="Margin.Is2.OnY" Class="d-flex justify-content-center" ColumnSize="ColumnSize.Is12">
+        <a class="mx-2 btn btn-lg btn-primary" href="@CreateQuizPage.FormatRoute()">
+            Create Quiz
+        </a>
+    </Column>
+    <Column Margin="Margin.Is2.OnY" Class="d-flex justify-content-center" ColumnSize="ColumnSize.Is12">
+        <a class="mx-2 btn btn-lg btn-primary" href="@JoinQuizPage.FormatRoute()">
+            Join Quiz
+        </a>
+    </Column>
+</Row>
+<Row>
+    <Column ColumnSize="ColumnSize.Is6">
+        @if (OwnedQuizzesOperation.Status == UiOperationStatus.Loaded)
+        {
+            <Heading Size="HeadingSize.Is3" Color="TextColor.White">
+                Owned Quizzes
+            </Heading>
+            <Card>
+                <CardBody Padding="Padding.Is2">
+                    <ListGroup Flush="true">
+                        @foreach ((string, Guid) tuple in OwnedQuizzesOperation.Result)
+                        {
+                        <ListGroupItem>
+                                <a href="@GetQuizPage.FormatRoute(tuple.Item2)">@tuple.Item1</a>
+                            </ListGroupItem>
+                        }
+                    </ListGroup>
+                </CardBody>
+            </Card>
+        }
+    </Column>
+    <Column ColumnSize="ColumnSize.Is6">
+        @if (ParticipatedQuizzesOperation.Status == UiOperationStatus.Loaded)
+        {
+            <Heading Size="HeadingSize.Is3" Color="TextColor.White">
+                Participated Quizzes
+            </Heading>
+            <Card>
+                <CardBody Padding="Padding.Is2">
+                    <ListGroup Flush="true">
+                        @foreach ((string, Guid) tuple in ParticipatedQuizzesOperation.Result)
+                        {
+                            <ListGroupItem>
+                                <a href="@GetQuizPage.FormatRoute(tuple.Item2)">@tuple.Item1</a>
+                            </ListGroupItem>
+                        }
+                    </ListGroup>
+                </CardBody>
+            </Card>
+        }
+    </Column>
+</Row>

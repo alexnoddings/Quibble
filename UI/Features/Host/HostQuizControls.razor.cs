@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Components;
-using Quibble.Core.Entities;
-using Quibble.UI.Core.Entities;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
+using Quibble.Core.Entities;
+using Quibble.UI.Core.Entities;
 
-namespace Quibble.UI.Features.Quiz.Host
+namespace Quibble.UI.Features.Host
 {
     public sealed partial class HostQuizControls : IDisposable
     {

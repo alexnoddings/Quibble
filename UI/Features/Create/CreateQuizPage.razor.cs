@@ -3,12 +3,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Quibble.UI.Core.Services.Data;
+using Quibble.UI.Features.GetQuiz;
 
-namespace Quibble.UI.Features.Quiz
+namespace Quibble.UI.Features.Create
 {
     [Authorize]
     [Route("/quiz/create")]
-    public partial class CreateQuiz
+    public partial class CreateQuizPage
     {
         private string QuizTitle { get; set; } = string.Empty;
 
@@ -23,7 +24,7 @@ namespace Quibble.UI.Features.Quiz
             if (string.IsNullOrEmpty(QuizTitle)) return;
 
             Guid quizId = await QuizService.CreateAsync(QuizTitle);
-            NavigationManager.NavigateTo(GetQuiz.FormatRoute(quizId));
+            NavigationManager.NavigateTo(GetQuizPage.FormatRoute(quizId));
         }
 
         public static string FormatRoute() => $"/quiz/create";

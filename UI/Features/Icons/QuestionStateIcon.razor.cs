@@ -1,11 +1,11 @@
-﻿using Blazorise;
+﻿using System;
+using System.Threading.Tasks;
+using Blazorise;
 using Microsoft.AspNetCore.Components;
 using Quibble.Core.Entities;
 using Quibble.UI.Core.Entities;
-using System;
-using System.Threading.Tasks;
 
-namespace Quibble.UI.Features.Quiz.Icons
+namespace Quibble.UI.Features.Icons
 {
     public sealed partial class QuestionStateIcon : IDisposable
     {

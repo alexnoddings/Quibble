@@ -3,12 +3,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Quibble.UI.Core.Services.Data;
+using Quibble.UI.Features.GetQuiz;
 
-namespace Quibble.UI.Features.Quiz.Join
+namespace Quibble.UI.Features.Join
 {
     [Authorize]
     [Route("/quiz/join/{id:guid}")]
-    public partial class JoinDirect
+    public partial class JoinDirectPage
     {
         [Parameter]
         public Guid Id { get; set; }
@@ -26,7 +27,7 @@ namespace Quibble.UI.Features.Quiz.Join
             await base.OnInitializedAsync();
 
             await ParticipantService.JoinAsync(Id);
-            NavigationManager.NavigateTo(GetQuiz.FormatRoute(Id));
+            NavigationManager.NavigateTo(GetQuizPage.FormatRoute(Id));
         }
     }
 }
