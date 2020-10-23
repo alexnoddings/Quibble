@@ -19,7 +19,9 @@ namespace Quibble.Host.Common.Extensions
             string? thisAssemblyName = typeof(ApplicationBuilderExtensions).Assembly.GetName().Name;
             string? executingAssemblyName = Assembly.GetEntryAssembly()?.GetName()?.Name;
 
+            // Content exported from an assembly X.Y is exposed under _content/X.Y/
             rwo.AddRewrite("^favicon.ico", $"_content/{thisAssemblyName}/favicon.ico", false);
+            rwo.AddRewrite("^js/site.js", $"_content/{thisAssemblyName}/js/site.js", false);
             rwo.AddRewrite("^css/site.css", $"_content/{thisAssemblyName}/css/site.css", false);
             rwo.AddRewrite("^img/bg.png", $"_content/{thisAssemblyName}/img/bg.png", false);
 
