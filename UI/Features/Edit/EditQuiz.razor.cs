@@ -31,6 +31,14 @@ namespace Quibble.UI.Features.Edit
             return Task.CompletedTask;
         }
 
+        private async Task AddRoundsAsync(int count)
+        {
+            for (var i = 0; i < count; i++)
+            {
+                await Quiz.AddRoundAsync();
+            }
+        }
+
         public void Dispose()
         {
             Quiz.Updated -= OnQuizUpdatedAsync;

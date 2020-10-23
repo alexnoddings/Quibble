@@ -21,6 +21,14 @@ namespace Quibble.UI.Features.Edit
 
         private Task OnRoundUpdatedAsync() => InvokeAsync(StateHasChanged);
 
+        private async Task AddQuestionsAsync(int count)
+        {
+            for (var i = 0; i < count; i++)
+            {
+                await Round.AddQuestionAsync();
+            }
+        }
+
         public void Dispose()
         {
             Round.Updated -= OnRoundUpdatedAsync;
