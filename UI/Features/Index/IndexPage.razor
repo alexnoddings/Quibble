@@ -1,11 +1,11 @@
 ﻿
 <Row>
-    <Column Margin="Margin.Is2.OnY" Class="d-flex justify-content-center" ColumnSize="ColumnSize.Is12">
+    <Column Margin="Margin.Is2.OnY" Class="d-flex justify-content-center" ColumnSize="ColumnSize.Is6">
         <a class="mx-2 btn btn-lg btn-primary" href="@CreateQuizPage.FormatRoute()">
             Create Quiz
         </a>
     </Column>
-    <Column Margin="Margin.Is2.OnY" Class="d-flex justify-content-center" ColumnSize="ColumnSize.Is12">
+    <Column Margin="Margin.Is2.OnY" Class="d-flex justify-content-center" ColumnSize="ColumnSize.Is6">
         <a class="mx-2 btn btn-lg btn-primary" href="@JoinQuizPage.FormatRoute()">
             Join Quiz
         </a>
@@ -21,10 +21,10 @@
             <Card>
                 <CardBody Padding="Padding.Is2">
                     <ListGroup Flush="true">
-                        @foreach ((string, Guid) tuple in OwnedQuizzesOperation.Result)
+                        @foreach ((string title, Guid id) in OwnedQuizzesOperation.Result)
                         {
                         <ListGroupItem>
-                                <a href="@GetQuizPage.FormatRoute(tuple.Item2)">@tuple.Item1</a>
+                                <a href="@GetQuizPage.FormatRoute(id)">@title</a>
                             </ListGroupItem>
                         }
                     </ListGroup>
@@ -41,10 +41,10 @@
             <Card>
                 <CardBody Padding="Padding.Is2">
                     <ListGroup Flush="true">
-                        @foreach ((string, Guid) tuple in ParticipatedQuizzesOperation.Result)
+                        @foreach ((string title, Guid id) in ParticipatedQuizzesOperation.Result)
                         {
                             <ListGroupItem>
-                                <a href="@GetQuizPage.FormatRoute(tuple.Item2)">@tuple.Item1</a>
+                                <a href="@GetQuizPage.FormatRoute(id)">@title</a>
                             </ListGroupItem>
                         }
                     </ListGroup>

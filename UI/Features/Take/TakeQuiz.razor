@@ -7,7 +7,7 @@
             Score: @CalculateScore()
         </Text>
     </Heading>
-    @foreach (var round in Quiz.Rounds)
+    @foreach (SyncedRound round in Quiz.Rounds.Where(r => r.State == RoundState.Visible))
     {
         <CascadingValue Value="round">
             <TakeRound />

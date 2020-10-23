@@ -36,6 +36,7 @@ namespace Quibble.UI.Features.Take
             Quiz
             .Rounds
             .SelectMany(r => r.Questions)
+            .Where(q => q.State == QuestionState.AnswerRevealed)
             .SelectMany(q => q.Answers)
             .Where(a => a.ParticipantId == Participant.Id)
             .Count(a => a.Mark == AnswerMark.Right);

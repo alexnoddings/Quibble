@@ -16,9 +16,13 @@
         {
             <EditQuestion Question="question"></EditQuestion>
         }
-        <Row Margin="Margin.Is2">
+        <Row Margin="Margin.Is2.OnY">
             <Column ColumnSize="ColumnSize.Is4.Is4.WithOffset">
-                <ActionButton Block="true" Color="Color.Info" Clicked="Round.AddQuestionAsync">New Question</ActionButton>
+                <Buttons class="d-flex justify-content-center">
+                    <ActionButton Color="Color.Info" Clicked="async () => await AddQuestionsAsync(1)">New Question x1</ActionButton>
+                    <ActionButton Color="Color.Info" Clicked="async () => await AddQuestionsAsync(5)">x5</ActionButton>
+                    <ActionButton Color="Color.Info" Clicked="async () => await AddQuestionsAsync(10)">x10</ActionButton>
+                </Buttons>
             </Column>
         </Row>
     </CardBody>

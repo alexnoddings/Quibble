@@ -10,17 +10,17 @@
             <ActionButton Block="true" Color="Color.Danger" Clicked="Quiz.DeleteAsync">Delete</ActionButton>
         </Column>
     </Row>
-    
-    @foreach (var round in Quiz.Rounds)
+    @foreach (SyncedRound round in Quiz.Rounds)
     {
-        <EditRound Round="round"></EditRound>
+        <EditRound Round="round" />
     }
-    
-    <Row Margin="Margin.Is2">
-        <Column ColumnSize="ColumnSize.Is4">
-        </Column>
-        <Column ColumnSize="ColumnSize.Is4">
-            <ActionButton Block="true" Color="Color.Info" Clicked="Quiz.AddRoundAsync">New Round</ActionButton>
+    <Row Margin="Margin.Is4.OnY">
+        <Column ColumnSize="ColumnSize.Is4.Is4.WithOffset">
+            <Buttons class="d-flex justify-content-center">
+                <ActionButton Color="Color.Info" Clicked="async () => await AddRoundsAsync(1)">New Round x1</ActionButton>
+                <ActionButton Color="Color.Info" Clicked="async () => await AddRoundsAsync(5)">x5</ActionButton>
+                <ActionButton Color="Color.Info" Clicked="async () => await AddRoundsAsync(10)">x10</ActionButton>
+            </Buttons>
         </Column>
     </Row>
 </Container>
