@@ -36,6 +36,19 @@
                             @if (SignInManager.IsSignedIn(User))
                             {
                                 <div class="nav-item">
+                                    <a id="manage" class="nav-link text-white text-left" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+                                        @UserManager.GetUserName(User)
+                                    </a>
+                                </div>
+                                <div class="nav-item">
+                                    <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="~/">
+                                        <button id="logout" type="submit" class="nav-link btn btn-link text-white">Logout</button>
+                                    </form>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="nav-item">
                                     <a class="nav-link text-white text-left" id="register" asp-area="Identity" asp-page="/Account/Register">
                                         Register
                                     </a>
@@ -45,19 +58,6 @@
                                         Log in
                                     </a>
                                 </div>
-                            }
-                            else
-                            {
-                                <li class="nav-item">
-                                    <a id="manage" class="nav-link text-white text-left" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
-                                        @UserManager.GetUserName(User)
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="~/">
-                                        <button id="logout" type="submit" class="nav-link btn btn-link text-white">Logout</button>
-                                    </form>
-                                </li>
                             }
                         </div>
                     </div>

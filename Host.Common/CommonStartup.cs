@@ -32,7 +32,8 @@ namespace Quibble.Host.Common
             if (services == null) throw new ArgumentNullException(nameof(services));
 
             services.AddDbContext<TDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), 
+                    o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 

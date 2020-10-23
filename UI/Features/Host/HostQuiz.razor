@@ -1,0 +1,87 @@
+﻿<Container Padding="Padding.Is0">
+    <Heading Size="HeadingSize.Is2">
+        <Text Alignment="TextAlignment.Center" Color="TextColor.White">
+            @Quiz.Title
+        </Text>
+    </Heading>
+    <Row>
+        <Column ColumnSize="ColumnSize.Is4">
+            <Heading Size="HeadingSize.Is4" Margin="Margin.Is2.FromBottom.Is4.FromTop">
+                <Text Alignment="TextAlignment.Center" Color="TextColor.White">
+                    Participants
+                </Text>
+            </Heading>
+            <Card>
+                <CardBody>
+                    <div class="px-3 pb-1">
+                        <CopyToClipboard Content="@GenerateInviteLink()"/>
+                    </div>
+                    <ListGroup Flush="true">
+                        @{
+                            IReadOnlyList<SyncedParticipant> participants = Quiz.Participants;
+                            if (participants.Count == 0)
+                            {
+                                <ListGroupItem Padding="Padding.Is0" Margin="Margin.Is1.FromTop.Is1.FromBottom">
+                                    <Text>No users have joined yet</Text>
+                                </ListGroupItem>
+                            }
+                            else
+                            {
+                                foreach ((SyncedParticipant participant, int score) in ParticipantsWithScore)
+                                {
+                                    <ListGroupItem Padding="Padding.Is0" Margin="Margin.Is1.FromTop.Is1.FromBottom">
+                                        <Text Float="Float.Left" Margin="Margin.Is2.FromRight">@score</Text>
+                                        <Text Float="Float.Left">@participant.UserName</Text>
+                                        <ActionButton Clicked="participant.KickAsync" Float="Float.Right" Padding="Padding.Is0">Kick</ActionButton>
+                                    </ListGroupItem>
+                                }
+                            }
+                        }
+                    </ListGroup>
+                </CardBody>
+            </Card>
+            <Heading Size="HeadingSize.Is4" Margin="Margin.Is2.FromBottom.Is4.FromTop">
+                <Text Alignment="TextAlignment.Center" Color="TextColor.White">
+                    Questions
+                </Text>
+            </Heading>
+            <HostQuizQuestionSelect
+                SelectedRoundNumber="SelectedRoundNumber"
+                SelectedQuestionNumber="SelectedQuestionNumber"
+                SelectQuestion="(r, q) => { SelectedRoundNumber = r; SelectedQuestionNumber = q; StateHasChanged(); }" />
+
+        </Column>
+        <Column ColumnSize="ColumnSize.Is8">
+            <Row>
+                <Column>
+                    <Heading Size="HeadingSize.Is4">
+                        <Text Alignment="TextAlignment.Center" Color="TextColor.White">
+                            Round @(SelectedRoundNumber + 1), Question @(SelectedQuestionNumber + 1)
+                        </Text>
+                    </Heading>
+                </Column>
+            </Row>
+            <Row Margin="Margin.Is2.FromBottom.Is4.FromTop">
+                <HostQuizControls
+                    SelectedRoundNumber="SelectedRoundNumber"
+                    SelectedQuestionNumber="SelectedQuestionNumber"
+                    MoveToPreviousQuestion="MoveToPreviousQuestion"
+                    MoveToNextQuestion="MoveToNextQuestion" />
+            </Row>
+            <Row>
+                <HostQuestion
+                    Round="SelectedRound"
+                    Question="SelectedQuestion" />
+            </Row>
+            <Row Margin="Margin.Is4.FromTop">
+                @foreach (var answer in SelectedQuestion.Answers)
+                {
+                    <Column ColumnSize="ColumnSize.Is4">
+                        <HostAnswer 
+                            Answer="answer" />
+                    </Column>
+                }
+            </Row>
+        </Column>
+    </Row>
+</Container>

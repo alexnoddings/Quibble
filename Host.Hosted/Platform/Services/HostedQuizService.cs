@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Quibble.Host.Common;
@@ -13,7 +14,7 @@ using Quibble.UI.Core.Services.Data;
 namespace Quibble.Host.Hosted.Platform.Services
 {
     [Authorize]
-    public class HostedQuizService : IQuizService
+    public sealed class HostedQuizService : IQuizService
     {
         private IQuizRepository QuizRepository { get; }
         private IQuizEventsInvoker QuizEvents { get; }
@@ -99,6 +100,18 @@ namespace Quibble.Host.Hosted.Platform.Services
 
             await QuizRepository.UpdateTitleAsync(id, newTitle);
             await QuizEvents.InvokeTitleUpdatedAsync(id, newTitle, initiatorToken);
+        }
+
+        public async Task<List<(string, Guid)>> GetOwnedQuizzesAsync()
+        {
+            DbQuibbleUser user = await UserContextAccessor.EnsureCurrentUserAsync();
+            return await QuizRepository.GetQuizzesByUserAsync(user.Id);
+        }
+
+        public async Task<List<(string, Guid)>> GetParticipatedQuizzesAsync()
+        {
+            DbQuibbleUser user = await UserContextAccessor.EnsureCurrentUserAsync();
+            return await QuizRepository.GetQuizzesParticipatedInAsync(user.Id);
         }
     }
 }

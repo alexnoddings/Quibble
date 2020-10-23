@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -86,6 +87,32 @@ namespace Quibble.Host.Common.Repositories.EntityFramework
             var quiz = await GetWithoutIncludesAsync(id);
             quiz.Title = newTitle;
             await DbContext.SaveChangesAsync();
+        }
+
+        public async Task<List<(string, Guid)>> GetQuizzesByUserAsync(Guid userId)
+        {
+            Ensure.NotNullOrDefault(userId, nameof(userId));
+            DbQuibbleUser? user = await DbContext.Users.WithIdAsync(userId);
+            Ensure.Found(user, "User", userId);
+            IQueryable<DbQuiz> quizzes =
+                from q in DbContext.Quizzes
+                where q.OwnerId == userId
+                select q;
+            return (await quizzes.ToListAsync()).ConvertAll(q => (q.Title, q.Id));
+        }
+
+        public async Task<List<(string, Guid)>> GetQuizzesParticipatedInAsync(Guid userId)
+        {
+            Ensure.NotNullOrDefault(userId, nameof(userId));
+            DbQuibbleUser? user = await DbContext.Users.WithIdAsync(userId);
+            Ensure.Found(user, "User", userId);
+            IQueryable<DbQuiz> quizzes =
+                from p in DbContext.Participants
+                join q in DbContext.Quizzes
+                    on p.QuizId equals q.Id
+                where p.UserId == userId
+                select q;
+            return (await quizzes.ToListAsync()).ConvertAll(q => (q.Title, q.Id));
         }
     }
 }

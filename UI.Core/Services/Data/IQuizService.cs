@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Quibble.UI.Core.Entities;
 
@@ -10,6 +11,10 @@ namespace Quibble.UI.Core.Services.Data
         public Task<Guid> CreateAsync(string title);
 
         public Task<DtoQuiz> GetAsync(Guid id);
+
+        public Task<List<(string, Guid)>> GetOwnedQuizzesAsync();
+
+        public Task<List<(string, Guid)>> GetParticipatedQuizzesAsync();
 
         public Task PublishAsync(Guid id);
 
