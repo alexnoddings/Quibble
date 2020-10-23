@@ -1,0 +1,19 @@
+﻿<Row>
+    <Column ColumnSize="ColumnSize.IsFull">
+        <Text Alignment="TextAlignment.Center">
+            Invite Code:
+        </Text>
+    </Column>
+</Row>
+<Row>
+    <Column Padding="Padding.Is0">
+        <TextEdit class="text-truncate" Text="@Content" ReadOnly="true"/>
+    </Column>
+    <Column Padding="Padding.Is0" ColumnSize="ColumnSize.IsAuto">
+        <Tooltip Text="Copy to clipboard" Placement="Placement.Right">
+            <ActionButton Color="Color.Primary" Clicked="CopyToClipboardAsync">
+                <Icon Name="@IconName"/>
+            </ActionButton>
+        </Tooltip>
+    </Column>
+</Row>

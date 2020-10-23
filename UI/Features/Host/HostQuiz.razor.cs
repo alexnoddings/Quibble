@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Quibble.Core.Entities;
 using Quibble.UI.Core.Entities;
-using Quibble.UI.Core.Services;
 using Quibble.UI.Features.Join;
 
 namespace Quibble.UI.Features.Host
@@ -16,7 +15,7 @@ namespace Quibble.UI.Features.Host
         public SyncedQuiz Quiz { get; set; } = default!;
 
         [Inject]
-        private IAppMetadata AppMetadata { get; init; } = default!;
+        private NavigationManager NavigationManager { get; init; } = default!;
 
         private IEnumerable<(SyncedParticipant, int)> ParticipantsWithScore =>
             Quiz
@@ -41,7 +40,7 @@ namespace Quibble.UI.Features.Host
         protected override async Task OnInitializedAsync()
         {
             if (Quiz == null) throw new ArgumentException(nameof(Quiz));
-            if (AppMetadata == null) throw new ArgumentException(nameof(AppMetadata));
+            if (NavigationManager == null) throw new ArgumentException(nameof(NavigationManager));
 
             await base.OnInitializedAsync();
 
@@ -78,8 +77,10 @@ namespace Quibble.UI.Features.Host
 
         private string GenerateInviteLink()
         {
-            var uriBuilder = new UriBuilder(AppMetadata.HostUri);
-            uriBuilder.Path = JoinDirectPage.FormatRoute(Quiz.Id);
+            var uriBuilder = new UriBuilder(NavigationManager.BaseUri)
+            {
+                Path = JoinDirectPage.FormatRoute(Quiz.Id)
+            };
             return uriBuilder.Uri.ToString();
         }
 
