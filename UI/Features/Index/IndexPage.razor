@@ -53,17 +53,3 @@
         }
     </Column>
 </Row>
-
-
-<Row>
-    <Card>
-        <CardBody>
-            @foreach (var iconName in Enum.GetValues<IconName>())
-            {
-                <Blazorise.Text Margin="Margin.Is1.OnY.Is3.OnX">
-                    @iconName: <Icon Name="iconName" />
-                </Blazorise.Text>
-            }
-        </CardBody>
-    </Card>
-</Row>
