@@ -12,7 +12,7 @@
     </CardHeader>
     <CardBody>
         <ListGroup Flush="true">
-        @foreach (var question in Round.Questions)
+        @foreach (SyncedQuestion question in Round.Questions.Where(q => q.State != QuestionState.Hidden))
         {
             <CascadingValue Value="question">
                 <ListGroupItem>
