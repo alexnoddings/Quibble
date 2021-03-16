@@ -1,7 +1,6 @@
 ﻿@page "/auth/login"
 @using BlazorIdentityBase.Client.Services
 @using BlazorIdentityBase.Shared.Authentication
-@using BlazorIdentityBase.Client.Extensions
 
 <h2>Login</h2>
 
@@ -68,12 +67,17 @@
 
     private IList<string>? Errors { get; set; }
 
-    private string ReturnUrl { get; set; } = "/";
+    private string ReturnUrl { get; set; }
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
+
         ReturnUrl = NavigationManager.GetQueryParameter("returnUrl", "/");
+
+        // Only return to a well-formed relative url
+        if (!Uri.IsWellFormedUriString(ReturnUrl, UriKind.Relative))
+            ReturnUrl = "/";
     }
 
     private async Task LoginAsync()
@@ -81,9 +85,8 @@
         Errors = null;
 
         var result = await AuthenticationProvider.LoginAsync(Model.UserName, Model.Password, Model.ShouldRememberUser);
-        // todo: return url
         if (result.WasSuccessful)
-            NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateTo(ReturnUrl);
         else
             Errors = result.Errors?.ToList() ?? new List<string>();
     }

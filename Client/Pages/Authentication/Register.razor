@@ -64,6 +64,12 @@
 
 @code
 {
+    [Inject]
+    public IdentityAuthenticationStateProvider AuthenticationProvider { get; set; }
+
+    [Inject]
+    public NavigationManager NavigationManager { get; set; }
+
     private class RegisterModel : RegisterRequest
     {
         [Required]
@@ -73,22 +79,28 @@
 
     private RegisterModel Model { get; } = new();
 
-    [Inject]
-    public IdentityAuthenticationStateProvider AuthenticationProvider { get; set; }
-
-    [Inject]
-    public NavigationManager NavigationManager { get; set; }
-
     private IList<string>? Errors { get; set; }
+
+    private string ReturnUrl { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        
+        ReturnUrl = NavigationManager.GetQueryParameter("returnUrl", "/");
+
+        // Only return to a well-formed relative url
+        if (!Uri.IsWellFormedUriString(ReturnUrl, UriKind.Relative))
+            ReturnUrl = "/";
+    }
 
     private async Task RegisterAsync()
     {
         Errors = null;
 
         var result = await AuthenticationProvider.RegisterAsync(Model.UserName, Model.Email, Model.Password);
-        // todo: return url
         if (result.WasSuccessful)
-            NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateTo(ReturnUrl);
         else
             Errors = result.Errors?.ToList() ?? new List<string>();
     }
