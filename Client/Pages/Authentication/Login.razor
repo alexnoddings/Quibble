@@ -1,0 +1,90 @@
+﻿@page "/auth/login"
+@using BlazorIdentityBase.Client.Services
+@using BlazorIdentityBase.Shared.Authentication
+@using BlazorIdentityBase.Client.Extensions
+
+<h2>Login</h2>
+
+@if (Errors != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @foreach (var error in Errors)
+        {
+            <p>@error</p>
+        }
+    </div>
+}
+
+<EditForm Model="Model" OnValidSubmit="LoginAsync" class="card card-body bg-light my-4">
+    <DataAnnotationsValidator />
+    <div class="form-group row">
+        <label for="username" class="col-md-2 col-form-label">
+            Username
+        </label>
+        <div class="col-md-10">
+            <InputText id="username" class="form-control" @bind-Value="Model.UserName" />
+            <ValidationMessage For="() => Model.UserName" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="password" class="col-md-2 col-form-label">
+            Password
+        </label>
+        <div class="col-md-10">
+            <InputText id="password" class="form-control" @bind-Value="Model.Password" type="Password" />
+            <ValidationMessage For="() => Model.Password" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="shouldRememberUser" class="col-md-2 col-form-label">
+            Remember Me
+        </label>
+        <div class="col-md-10">
+            <InputCheckbox id="shouldRememberUser" class="form-control" @bind-Value="Model.ShouldRememberUser" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-right">
+            <button type="submit" class="btn btn-primary btn-block">
+                Login
+            </button>
+        </div>
+    </div>
+</EditForm>
+
+@code
+{
+    [Inject]
+    public IdentityAuthenticationStateProvider AuthenticationProvider { get; set; }
+
+    [Inject]
+    public NavigationManager NavigationManager { get; set; }
+
+    private class LoginModel : LoginRequest
+    {
+    }
+
+    private LoginModel Model { get; } = new();
+
+    private IList<string>? Errors { get; set; }
+
+    private string ReturnUrl { get; set; } = "/";
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        ReturnUrl = NavigationManager.GetQueryParameter("returnUrl", "/");
+    }
+
+    private async Task LoginAsync()
+    {
+        Errors = null;
+
+        var result = await AuthenticationProvider.LoginAsync(Model.UserName, Model.Password, Model.ShouldRememberUser);
+        // todo: return url
+        if (result.WasSuccessful)
+            NavigationManager.NavigateTo("/");
+        else
+            Errors = result.Errors?.ToList() ?? new List<string>();
+    }
+}

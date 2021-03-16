@@ -1,0 +1,23 @@
+﻿@page "/auth/logout"
+@using BlazorIdentityBase.Client.Services
+
+@inject IdentityAuthenticationStateProvider AuthenticationStateProvider
+
+<AuthorizeView>
+    <Authorized>
+        Logging out...
+    </Authorized>
+    <NotAuthorized>
+        Logged out.
+    </NotAuthorized>
+</AuthorizeView>
+
+@code
+{
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        if (authState.User.Identity?.IsAuthenticated == true)
+            await AuthenticationStateProvider.LogoutAsync();
+    }
+}
