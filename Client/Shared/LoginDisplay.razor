@@ -1,10 +1,23 @@
-﻿<AuthorizeView>
+﻿
+<AuthorizeView>
     <Authorized>
         <a href="">@context.User.Identity.Name</a>
         <a href="auth/logout">Log out</a>
     </Authorized>
     <NotAuthorized>
-        <a href="auth/register">Register</a>
-        <a href="auth/login">Log in</a>
+        @* These are links so that they can be opened in a new tab, but opening in the current will instead navigate through NavigationManager. *@
+        <a href="auth/register" @onclick="Register" @onclick:preventDefault>Register</a>
+        <a href="auth/login" @onclick="Login" @onclick:preventDefault>Log in</a>
     </NotAuthorized>
 </AuthorizeView>
+
+@code {
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+
+    private void Login() => 
+        NavigationManager.NavigateTo($"auth/login?returnUrl={Uri.EscapeDataString(NavigationManager.GetRelativeUrl())}");
+
+    private void Register() => 
+        NavigationManager.NavigateTo($"auth/register?returnUrl={Uri.EscapeDataString(NavigationManager.GetRelativeUrl())}");
+}
