@@ -15,9 +15,26 @@
     [Inject]
     private NavigationManager NavigationManager { get; set; }
 
-    private void Login() => 
-        NavigationManager.NavigateTo($"auth/login?returnUrl={Uri.EscapeDataString(NavigationManager.GetRelativeUrl())}");
+    private void Login()
+    {
+        var relativeUrl = NavigationManager.GetRelativeUrl();
+        if (relativeUrl == string.Empty || relativeUrl == "/")
+            // Allow login page to redirect back home
+            NavigationManager.NavigateTo("auth/login");
+        else if (!relativeUrl.Contains("auth/", StringComparison.OrdinalIgnoreCase))
+            // Only navigate if not on an auth page
+            NavigationManager.NavigateTo($"auth/login?returnUrl={Uri.EscapeDataString(relativeUrl)}");
+    }
 
-    private void Register() => 
-        NavigationManager.NavigateTo($"auth/register?returnUrl={Uri.EscapeDataString(NavigationManager.GetRelativeUrl())}");
+    private void Register()
+    {
+        var relativeUrl = NavigationManager.GetRelativeUrl();
+        if (relativeUrl == string.Empty || relativeUrl == "/")
+            // Allow register page to redirect back home
+            NavigationManager.NavigateTo("auth/register");
+        else if (!relativeUrl.Contains("auth/", StringComparison.OrdinalIgnoreCase))
+            // Only navigate if not on an auth page
+            NavigationManager.NavigateTo($"auth/register?returnUrl={Uri.EscapeDataString(relativeUrl)}");
+    }
+
 }
