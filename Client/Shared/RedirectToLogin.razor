@@ -2,5 +2,5 @@
 
 @code {
     protected override void OnInitialized() => 
-        NavigationManager.NavigateTo($"auth/login?returnUrl={Uri.EscapeDataString(NavigationManager.GetRelativeUrl())}");
+        NavigationManager.NavigateTo("/auth/login?returnUrl=" + Uri.EscapeDataString(NavigationManager.GetRelativeUrl()));
 }

@@ -6,8 +6,8 @@
     </Authorized>
     <NotAuthorized>
         @* These are links so that they can be opened in a new tab, but opening in the current will instead navigate through NavigationManager. *@
-        <a href="auth/register" @onclick="Register" @onclick:preventDefault>Register</a>
-        <a href="auth/login" @onclick="Login" @onclick:preventDefault>Log in</a>
+        <a href="auth/register" @onclick="RedirectToRegister" @onclick:preventDefault>Register</a>
+        <a href="auth/login" @onclick="RedirectToLogin" @onclick:preventDefault>Log in</a>
     </NotAuthorized>
 </AuthorizeView>
 
@@ -15,26 +15,26 @@
     [Inject]
     private NavigationManager NavigationManager { get; set; }
 
-    private void Login()
+    private void RedirectToLogin()
     {
         var relativeUrl = NavigationManager.GetRelativeUrl();
         if (relativeUrl == string.Empty || relativeUrl == "/")
             // Allow login page to redirect back home
-            NavigationManager.NavigateTo("auth/login");
+            NavigationManager.NavigateTo("/auth/login");
         else if (!relativeUrl.Contains("auth/", StringComparison.OrdinalIgnoreCase))
             // Only navigate if not on an auth page
-            NavigationManager.NavigateTo($"auth/login?returnUrl={Uri.EscapeDataString(relativeUrl)}");
+            NavigationManager.NavigateTo("/auth/login?returnUrl=" + Uri.EscapeDataString(relativeUrl));
     }
 
-    private void Register()
+    private void RedirectToRegister()
     {
         var relativeUrl = NavigationManager.GetRelativeUrl();
         if (relativeUrl == string.Empty || relativeUrl == "/")
             // Allow register page to redirect back home
-            NavigationManager.NavigateTo("auth/register");
+            NavigationManager.NavigateTo("/auth/register");
         else if (!relativeUrl.Contains("auth/", StringComparison.OrdinalIgnoreCase))
             // Only navigate if not on an auth page
-            NavigationManager.NavigateTo($"auth/register?returnUrl={Uri.EscapeDataString(relativeUrl)}");
+            NavigationManager.NavigateTo("/auth/register?returnUrl=" + Uri.EscapeDataString(relativeUrl));
     }
 
 }
