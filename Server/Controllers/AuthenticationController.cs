@@ -38,6 +38,21 @@ namespace BlazorIdentityBase.Server.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet("User")]
+        public async Task<IActionResult> GetUserAsync()
+        {
+            if (User.Identity?.IsAuthenticated == true)
+                return Ok(new UserInfo
+                {
+                    IsAuthenticated = true,
+                    UserName = User.Identity?.Name ?? string.Empty,
+                    Claims = User.Claims.Where(claim => ExposedClaimTypes.Contains(claim.Type)).ToDictionary(claim => claim.Type, claim => claim.Value)
+                });
+
+            return Ok(UserInfo.Unauthenticated());
+        }
+
+        [AllowAnonymous]
         [HttpPost("Register")]
         public async Task<IActionResult> RegisterAsync([FromBody] RegisterRequest register)
         {
@@ -92,21 +107,6 @@ namespace BlazorIdentityBase.Server.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("User")]
-        public async Task<IActionResult> GetUserAsync()
-        {
-            if (User.Identity?.IsAuthenticated == true)
-                return Ok(new UserInfo
-                {
-                    IsAuthenticated = true,
-                    UserName = User.Identity?.Name ?? string.Empty,
-                    Claims = User.Claims.Where(claim => ExposedClaimTypes.Contains(claim.Type)).ToDictionary(claim => claim.Type, claim => claim.Value)
-                });
-
-            return Ok(UserInfo.Unauthenticated());
-        }
-
-        [AllowAnonymous]
         [HttpPost("ForgotPassword")]
         public async Task<IActionResult> ForgotPasswordAsync(ForgotPasswordRequest forgotPassword)
         {
@@ -115,7 +115,6 @@ namespace BlazorIdentityBase.Server.Controllers
                 return Ok();
 
             string token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            token = Uri.EscapeDataString(token);
             string host = HttpContext.Request.Host.Value;
 
             var url = $"https://{host}/auth/resetPassword?email={user.Email}&token={Uri.EscapeDataString(token)}";
@@ -159,6 +158,10 @@ namespace BlazorIdentityBase.Server.Controllers
                 return BadRequest(ModelStateErrors);
             }
 
+            await _signInManager.RefreshSignInAsync(user);
+
+            return Ok();
+        }
 
         [Authorize]
         [HttpPost("RequestChangeEmail")]
