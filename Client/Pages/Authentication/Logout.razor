@@ -8,7 +8,8 @@
         Logging out...
     </Authorized>
     <NotAuthorized>
-        Logged out.
+        <RedirectTo Url="/" After="TimeSpan.FromMilliseconds(1500)" />
+        Logged out. Redirecting you to the home page.
     </NotAuthorized>
 </AuthorizeView>
 
