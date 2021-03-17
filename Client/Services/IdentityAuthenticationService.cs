@@ -42,6 +42,7 @@ namespace BlazorIdentityBase.Client.Services
         public async Task<AuthenticationOperation<UserInfo>> LoginAsync(string username, string password, bool shouldRememberUser)
         {
             var request = new LoginRequest { UserName = username, Password = password, ShouldRememberUser = shouldRememberUser};
+            var request = new LoginRequest { UserName = username, Password = password, ShouldRememberUser = shouldRememberUser };
             var result = await _httpClient.PostAsJsonAsync(ApiBase + "Login", request);
             var contentStream = await result.Content.ReadAsStreamAsync();
 
@@ -72,6 +73,7 @@ namespace BlazorIdentityBase.Client.Services
             var request = new ForgotPasswordRequest { Email = email };
             var result = await _httpClient.PostAsJsonAsync(ApiBase + "ForgotPassword", request);
             
+
             if (result.IsSuccessStatusCode)
                 return AuthenticationOperation.FromSuccess();
 
@@ -96,6 +98,7 @@ namespace BlazorIdentityBase.Client.Services
         public async Task<AuthenticationOperation> ChangePasswordAsync(string currentPassword, string newPassword)
         {
             var request = new ChangePasswordRequest {CurrentPassword = currentPassword, NewPassword = newPassword};
+            var request = new ChangePasswordRequest { CurrentPassword = currentPassword, NewPassword = newPassword };
             var result = await _httpClient.PostAsJsonAsync(ApiBase + "ChangePassword", request);
 
             if (result.IsSuccessStatusCode)
