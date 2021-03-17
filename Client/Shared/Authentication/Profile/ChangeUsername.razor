@@ -35,7 +35,7 @@
             New Username
         </label>
         <div class="col-md-10">
-            <InputText id="newUsername" class="form-control" @bind-Value="Model.NewUsername" />
+            <InputText id="newUsername" class="form-control" @bind-Value="Model.NewUsername" autocomplete="off" />
             <ValidationMessage For="() => Model.NewUsername" />
         </div>
     </div>

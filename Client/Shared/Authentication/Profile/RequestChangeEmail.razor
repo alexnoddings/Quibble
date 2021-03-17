@@ -37,7 +37,7 @@ else
                 New Email
             </label>
             <div class="col-md-10">
-                <InputText id="newEmail" class="form-control" @bind-Value="Model.NewEmail" type="email" />
+                <InputText id="newEmail" class="form-control" @bind-Value="Model.NewEmail" type="email" autocomplete="off" />
                 <ValidationMessage For="() => Model.NewEmail" />
             </div>
         </div>
