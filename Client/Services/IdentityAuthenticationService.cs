@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
+using BlazorIdentityBase.Client.Shared.Authentication.Profile;
 using BlazorIdentityBase.Shared.Authentication;
 
 namespace BlazorIdentityBase.Client.Services
@@ -41,7 +42,6 @@ namespace BlazorIdentityBase.Client.Services
 
         public async Task<AuthenticationOperation<UserInfo>> LoginAsync(string username, string password, bool shouldRememberUser)
         {
-            var request = new LoginRequest { UserName = username, Password = password, ShouldRememberUser = shouldRememberUser};
             var request = new LoginRequest { UserName = username, Password = password, ShouldRememberUser = shouldRememberUser };
             var result = await _httpClient.PostAsJsonAsync(ApiBase + "Login", request);
             var contentStream = await result.Content.ReadAsStreamAsync();
@@ -72,7 +72,6 @@ namespace BlazorIdentityBase.Client.Services
         {
             var request = new ForgotPasswordRequest { Email = email };
             var result = await _httpClient.PostAsJsonAsync(ApiBase + "ForgotPassword", request);
-            
 
             if (result.IsSuccessStatusCode)
                 return AuthenticationOperation.FromSuccess();
@@ -97,9 +96,34 @@ namespace BlazorIdentityBase.Client.Services
 
         public async Task<AuthenticationOperation> ChangePasswordAsync(string currentPassword, string newPassword)
         {
-            var request = new ChangePasswordRequest {CurrentPassword = currentPassword, NewPassword = newPassword};
             var request = new ChangePasswordRequest { CurrentPassword = currentPassword, NewPassword = newPassword };
             var result = await _httpClient.PostAsJsonAsync(ApiBase + "ChangePassword", request);
+
+            if (result.IsSuccessStatusCode)
+                return AuthenticationOperation.FromSuccess();
+
+            var contentStream = await result.Content.ReadAsStreamAsync();
+            var errors = await JsonSerializer.DeserializeAsync<List<string>>(contentStream, DefaultDeserialisationOptions);
+            return AuthenticationOperation.FromError(errors);
+        }
+
+        public async Task<AuthenticationOperation> RequestChangeEmailAsync(string currentPassword, string newEmail)
+        {
+            var request = new RequestChangeEmailRequest { Password = currentPassword, NewEmail = newEmail };
+            var result = await _httpClient.PostAsJsonAsync(ApiBase + "RequestChangeEmail", request);
+
+            if (result.IsSuccessStatusCode)
+                return AuthenticationOperation.FromSuccess();
+
+            var contentStream = await result.Content.ReadAsStreamAsync();
+            var errors = await JsonSerializer.DeserializeAsync<List<string>>(contentStream, DefaultDeserialisationOptions);
+            return AuthenticationOperation.FromError(errors);
+        }
+
+        public async Task<AuthenticationOperation> ChangeEmailAsync(string newEmail, string token)
+        {
+            var request = new ChangeEmailRequest { NewEmail = newEmail, Token = token };
+            var result = await _httpClient.PostAsJsonAsync(ApiBase + "ChangeEmail", request);
 
             if (result.IsSuccessStatusCode)
                 return AuthenticationOperation.FromSuccess();

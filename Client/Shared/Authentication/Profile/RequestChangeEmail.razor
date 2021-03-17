@@ -1,0 +1,96 @@
+﻿@using BlazorIdentityBase.Client.Services
+@using BlazorIdentityBase.Shared.Authentication
+@using System.Security.Claims
+
+<h2>Change Email Request</h2>
+
+@if (Errors != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @foreach (var error in Errors)
+        {
+            <p>@error</p>
+        }
+    </div>
+}
+
+@if (WasSuccessful)
+{
+    <div class="alert alert-success" role="alert">
+        <p>Check @Model.NewEmail for a link.</p>
+    </div>
+}
+else
+{
+    <EditForm Model="Model" OnValidSubmit="RequestChangeEmailAsync" class="card card-body bg-light my-4">
+        <DataAnnotationsValidator />
+        <div class="form-group row">
+            <label for="currentEmail" class="col-md-2 col-form-label">
+                Current Email
+            </label>
+            <div class="col-md-10">
+                <input id="currentEmail" class="form-control" value="@CurrentEmail" disabled type="email" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="newEmail" class="col-md-2 col-form-label">
+                New Email
+            </label>
+            <div class="col-md-10">
+                <InputText id="newEmail" class="form-control" @bind-Value="Model.NewEmail" type="email" />
+                <ValidationMessage For="() => Model.NewEmail" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="password" class="col-md-2 col-form-label">
+                Password
+            </label>
+            <div class="col-md-10">
+                <InputText id="password" class="form-control" @bind-Value="Model.Password" type="password" />
+                <ValidationMessage For="() => Model.Password" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-right">
+                <button type="submit" class="btn btn-primary btn-block">
+                    Request Email Change
+                </button>
+            </div>
+        </div>
+    </EditForm>
+}
+
+@code
+{
+    [Inject]
+    public IdentityAuthenticationStateProvider AuthenticationProvider { get; set; }
+
+    private class RequestChangeEmailModel : RequestChangeEmailRequest
+    {
+    }
+
+    private RequestChangeEmailModel Model { get; } = new();
+
+    private IList<string>? Errors { get; set; }
+
+    private bool WasSuccessful { get; set; }
+
+    private string? CurrentEmail { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        CurrentEmail = (await AuthenticationProvider.GetAuthenticationStateAsync()).User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email)?.Value;
+    }
+
+    private async Task RequestChangeEmailAsync()
+    {
+        Errors = null;
+
+        var result = await AuthenticationProvider.RequestChangeEmailAsync(Model.Password, Model.NewEmail);
+        WasSuccessful = result.WasSuccessful;
+        if (!WasSuccessful)
+            Errors = result.Errors?.ToList() ?? new List<string>();
+    }
+}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using BlazorIdentityBase.Client.Shared.Authentication.Profile;
 using BlazorIdentityBase.Server.Data;
 using BlazorIdentityBase.Server.Services;
 using BlazorIdentityBase.Shared.Authentication;
@@ -158,6 +159,53 @@ namespace BlazorIdentityBase.Server.Controllers
                 return BadRequest(ModelStateErrors);
             }
 
+
+        [Authorize]
+        [HttpPost("RequestChangeEmail")]
+        public async Task<IActionResult> RequestChangeEmailAsync(RequestChangeEmailRequest requestChangeEmail)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            var isPasswordCorrect = await _userManager.CheckPasswordAsync(user, requestChangeEmail.Password);
+            if (!isPasswordCorrect)
+            {
+                ModelState.AddModelError("BadPassword", "Incorrect password.");
+                return BadRequest(ModelStateErrors);
+            }
+
+            var existingEmailUser = await _userManager.FindByEmailAsync(requestChangeEmail.NewEmail);
+            if (existingEmailUser is not null)
+            {
+                ModelState.AddModelError("BadEmail", "Another user is registered with that email.");
+                return BadRequest(ModelStateErrors);
+            }
+
+            var token = await _userManager.GenerateChangeEmailTokenAsync(user, requestChangeEmail.NewEmail);
+            string host = HttpContext.Request.Host.Value;
+
+            var url = $"https://{host}/auth/changeEmail?email={requestChangeEmail.NewEmail}&token={Uri.EscapeDataString(token)}";
+            await _emailSender.SendAsync(requestChangeEmail.NewEmail, url);
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPost("ChangeEmail")]
+        public async Task<IActionResult> ChangeEmailAsync(ChangeEmailRequest changeEmail)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            var changeEmailResult = await _userManager.ChangeEmailAsync(user, changeEmail.NewEmail, changeEmail.Token);
+            if (!changeEmailResult.Succeeded)
+            {
+                foreach (var error in changeEmailResult.Errors)
+                    ModelState.AddModelError(error.Code, error.Description);
+                return BadRequest(ModelStateErrors);
+            }
+
+            await _signInManager.RefreshSignInAsync(user);
+
+            return Ok();
+        }
             return Ok();
         }
     }

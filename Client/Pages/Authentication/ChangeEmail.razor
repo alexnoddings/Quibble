@@ -1,0 +1,50 @@
+﻿@page "/auth/changeEmail"
+@using BlazorIdentityBase.Client.Services
+@using BlazorIdentityBase.Shared.Authentication
+
+<h2>Change Email</h2>
+
+@if (Errors != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @foreach (var error in Errors)
+        {
+            <p>@error</p>
+        }
+    </div>
+}
+else
+{
+    <p>Loading...</p>
+}
+
+@code
+{
+    [Inject]
+    public IdentityAuthenticationStateProvider AuthenticationProvider { get; set; }
+
+    [Inject]
+    public NavigationManager NavigationManager { get; set; }
+
+    private class ChangeEmailModel : ChangeEmailRequest
+    {
+    }
+
+    private ChangeEmailModel Model { get; } = new();
+
+    private IList<string>? Errors { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        Model.NewEmail = NavigationManager.GetQueryParameter("email", string.Empty);
+        Model.Token = NavigationManager.GetQueryParameter("token", string.Empty, unEscape: true);
+
+        var result = await AuthenticationProvider.ChangeEmailAsync(Model.NewEmail, Model.Token);
+        if (result.WasSuccessful)
+            NavigationManager.NavigateTo("/auth/profile");
+        else
+            Errors = result.Errors?.ToList() ?? new List<string>();
+    }
+}
