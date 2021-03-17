@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ using BlazorIdentityBase.Server.Data;
 using BlazorIdentityBase.Server.Services;
 using BlazorIdentityBase.Shared.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -113,8 +115,11 @@ namespace BlazorIdentityBase.Server.Controllers
                 return Ok();
 
             string token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            token = Uri.EscapeDataString(token);
             string host = HttpContext.Request.Host.Value;
-            await _emailSender.SendAsync(user.Email, $"https://{host}/auth/resetpassword?user={user.Email}&token={token}");
+
+            var url = $"https://{host}/auth/resetPassword?email={user.Email}&token={Uri.EscapeDataString(token)}";
+            await _emailSender.SendAsync(user.Email, url);
             return Ok();
         }
 
