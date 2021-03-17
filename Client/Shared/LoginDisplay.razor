@@ -1,13 +1,13 @@
 ﻿
 <AuthorizeView>
     <Authorized>
-        <a href="">@context.User.Identity.Name</a>
-        <a href="auth/logout">Log out</a>
+        <a href="/auth/profile">@context.User.Identity.Name</a>
+        <a href="/auth/logout">Log out</a>
     </Authorized>
     <NotAuthorized>
         @* These are links so that they can be opened in a new tab, but opening in the current will instead navigate through NavigationManager. *@
-        <a href="auth/register" @onclick="RedirectToRegister" @onclick:preventDefault>Register</a>
-        <a href="auth/login" @onclick="RedirectToLogin" @onclick:preventDefault>Log in</a>
+        <a href="/auth/register" @onclick="RedirectToRegister" @onclick:preventDefault>Register</a>
+        <a href="/auth/login" @onclick="RedirectToLogin" @onclick:preventDefault>Log in</a>
     </NotAuthorized>
 </AuthorizeView>
 
