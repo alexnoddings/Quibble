@@ -206,6 +206,37 @@ namespace BlazorIdentityBase.Server.Controllers
 
             return Ok();
         }
+
+        [Authorize]
+        [HttpPost("ChangeUsername")]
+        public async Task<IActionResult> ChangeUsernameAsync(ChangeUsernameRequest changeUsername)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            var isPasswordCorrect = await _userManager.CheckPasswordAsync(user, changeUsername.Password);
+            if (!isPasswordCorrect)
+            {
+                ModelState.AddModelError("BadPassword", "Incorrect password.");
+                return BadRequest(ModelStateErrors);
+            }
+
+            var existingUser = await _userManager.FindByNameAsync(changeUsername.NewUsername);
+            if (existingUser is not null)
+            {
+                ModelState.AddModelError("BadUsername", "Another user is registered with that username.");
+                return BadRequest(ModelStateErrors);
+            }
+
+            var changeEmailResult = await _userManager.SetUserNameAsync(user, changeUsername.NewUsername);
+            if (!changeEmailResult.Succeeded)
+            {
+                foreach (var error in changeEmailResult.Errors)
+                    ModelState.AddModelError(error.Code, error.Description);
+                return BadRequest(ModelStateErrors);
+            }
+
+            await _signInManager.RefreshSignInAsync(user);
+
             return Ok();
         }
     }

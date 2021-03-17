@@ -132,5 +132,18 @@ namespace BlazorIdentityBase.Client.Services
             var errors = await JsonSerializer.DeserializeAsync<List<string>>(contentStream, DefaultDeserialisationOptions);
             return AuthenticationOperation.FromError(errors);
         }
+
+        public async Task<AuthenticationOperation> ChangeUsernameAsync(string currentPassword, string newUsername)
+        {
+            var request = new ChangeUsernameRequest {Password = currentPassword, NewUsername = newUsername};
+            var result = await _httpClient.PostAsJsonAsync(ApiBase + "ChangeUsername", request);
+
+            if (result.IsSuccessStatusCode)
+                return AuthenticationOperation.FromSuccess();
+
+            var contentStream = await result.Content.ReadAsStreamAsync();
+            var errors = await JsonSerializer.DeserializeAsync<List<string>>(contentStream, DefaultDeserialisationOptions);
+            return AuthenticationOperation.FromError(errors);
+        }
     }
 }

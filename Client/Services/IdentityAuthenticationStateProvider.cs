@@ -93,6 +93,19 @@ namespace BlazorIdentityBase.Client.Services
 
             return operation;
         }
+
+        public async Task<AuthenticationOperation> ChangeUsernameAsync(string currentPassword, string newUsername)
+        {
+            var operation = await _authenticationService.ChangeUsernameAsync(currentPassword, newUsername);
+            if (operation.WasSuccessful)
+            {
+                _userInfo = null;
+                NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+            }
+
+            return operation;
+        }
+
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             _userInfo ??= await _authenticationService.GetUserAsync();
