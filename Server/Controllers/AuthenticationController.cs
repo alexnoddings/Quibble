@@ -7,7 +7,6 @@ using BlazorIdentityBase.Server.Data;
 using BlazorIdentityBase.Server.Services;
 using BlazorIdentityBase.Shared.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -143,6 +142,23 @@ namespace BlazorIdentityBase.Server.Controllers
             }
 
             return await LoginAsync(new LoginRequest { UserName = user.UserName, Password = resetPassword.NewPassword });
+        }
+
+        [Authorize]
+        [HttpPost("ChangePassword")]
+        public async Task<IActionResult> ChangePasswordAsync(ChangePasswordRequest changePassword)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            var changePasswordResult = await _userManager.ChangePasswordAsync(user, changePassword.CurrentPassword, changePassword.NewPassword);
+            if (!changePasswordResult.Succeeded)
+            {
+                foreach (var error in changePasswordResult.Errors)
+                    ModelState.AddModelError(error.Code, error.Description);
+                return BadRequest(ModelStateErrors);
+            }
+
+            return Ok();
         }
     }
 }
