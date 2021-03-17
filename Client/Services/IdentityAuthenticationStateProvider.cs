@@ -112,7 +112,7 @@ namespace BlazorIdentityBase.Client.Services
 
             var identity = new ClaimsIdentity();
             if (_userInfo.IsAuthenticated)
-                identity = new ClaimsIdentity(_userInfo.Claims.Select(kv => new Claim(kv.Key, kv.Value)), "Server Identity");
+                identity = new ClaimsIdentity(_userInfo.Claims.Select(kv => new Claim(kv.Key, kv.Value)), _userInfo.AuthenticationType);
 
             return new AuthenticationState(new ClaimsPrincipal(identity));
         }

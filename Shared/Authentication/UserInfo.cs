@@ -5,6 +5,7 @@ namespace BlazorIdentityBase.Shared.Authentication
     public class UserInfo
     {
         public bool IsAuthenticated { get; set; }
+        public string AuthenticationType { get; set; } = string.Empty;
 
         public string UserName { get; set; } = string.Empty;
 

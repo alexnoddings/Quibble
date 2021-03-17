@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using BlazorIdentityBase.Client.Shared.Authentication.Profile;
 using BlazorIdentityBase.Server.Data;
 using BlazorIdentityBase.Server.Services;
 using BlazorIdentityBase.Shared.Authentication;
@@ -45,6 +44,7 @@ namespace BlazorIdentityBase.Server.Controllers
                 return Ok(new UserInfo
                 {
                     IsAuthenticated = true,
+                    AuthenticationType = User.Identity.AuthenticationType ?? "Identity.Application",
                     UserName = User.Identity?.Name ?? string.Empty,
                     Claims = User.Claims.Where(claim => ExposedClaimTypes.Contains(claim.Type)).ToDictionary(claim => claim.Type, claim => claim.Value)
                 });
