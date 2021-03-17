@@ -76,6 +76,9 @@ namespace BlazorIdentityBase.Client.Services
             return operation;
         }
 
+        public Task<AuthenticationOperation> ChangePasswordAsync(string currentPassword, string newPassword) =>
+            _authenticationService.ChangePasswordAsync(currentPassword, newPassword);
+
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             _userInfo ??= await _authenticationService.GetUserAsync();
