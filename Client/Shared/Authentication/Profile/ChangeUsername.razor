@@ -50,7 +50,7 @@
     </div>
     <div class="row">
         <div class="col-md-12 text-right">
-            <button type="submit" class="btn btn-primary btn-block">
+            <button type="submit" class="btn btn-primary btn-block" disabled="@IsSubmitting">
                 Change Username
             </button>
         </div>
@@ -74,6 +74,8 @@
 
     private string CurrentUsername { get; set; }
 
+    private bool IsSubmitting { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
@@ -83,11 +85,15 @@
 
     private async Task ChangeUsernameAsync()
     {
-        Errors = null;
+        IsSubmitting = true;
 
         var result = await AuthenticationProvider.ChangeUsernameAsync(Model.Password, Model.NewUsername);
         WasSuccessful = result.WasSuccessful;
-        if (!WasSuccessful)
+        if (WasSuccessful)
+            Errors = null;
+        else
             Errors = result.Errors?.ToList() ?? new List<string>();
+
+        IsSubmitting = false;
     }
 }

@@ -52,7 +52,7 @@ else
         </div>
         <div class="row">
             <div class="col-md-12 text-right">
-                <button type="submit" class="btn btn-primary btn-block">
+                <button type="submit" class="btn btn-primary btn-block" disabled="@IsSubmitting">
                     Request Email Change
                 </button>
             </div>
@@ -77,6 +77,8 @@ else
 
     private string? CurrentEmail { get; set; }
 
+    private bool IsSubmitting { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
@@ -86,11 +88,15 @@ else
 
     private async Task RequestChangeEmailAsync()
     {
-        Errors = null;
+        IsSubmitting = true;
 
         var result = await AuthenticationProvider.RequestChangeEmailAsync(Model.Password, Model.NewEmail);
         WasSuccessful = result.WasSuccessful;
-        if (!WasSuccessful)
+        if (WasSuccessful)
+            Errors = null;
+        else
             Errors = result.Errors?.ToList() ?? new List<string>();
+
+        IsSubmitting = false;
     }
 }

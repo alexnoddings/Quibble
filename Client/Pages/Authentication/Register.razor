@@ -55,7 +55,7 @@
     </div>
     <div class="row">
         <div class="col-md-12 text-right">
-            <button type="submit" class="btn btn-primary btn-block">
+            <button type="submit" class="btn btn-primary btn-block" disabled="@IsSubmitting">
                 Register
             </button>
         </div>
@@ -85,6 +85,8 @@
 
     private string ReturnUrl { get; set; }
 
+    private bool IsSubmitting { get; set; }
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
@@ -98,12 +100,14 @@
 
     private async Task RegisterAsync()
     {
-        Errors = null;
+        IsSubmitting = true;
 
         var result = await AuthenticationProvider.RegisterAsync(Model.UserName, Model.Email, Model.Password);
         if (result.WasSuccessful)
             NavigationManager.NavigateTo(ReturnUrl);
         else
             Errors = result.Errors?.ToList() ?? new List<string>();
+
+        IsSubmitting = false;
     }
 }
