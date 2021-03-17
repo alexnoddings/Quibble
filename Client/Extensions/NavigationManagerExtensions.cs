@@ -10,15 +10,18 @@ namespace BlazorIdentityBase.Client.Extensions
     public static class NavigationManagerExtensions
     {
         [return: NotNullIfNotNull("defaultValue")]
-        public static string? GetQueryParameter(this NavigationManager navigationManager, string parameterName, string? defaultValue = null)
+        public static string? GetQueryParameter(this NavigationManager navigationManager, string parameterName, string? defaultValue = null, bool unEscape = false)
         {
             var uri = navigationManager.ToAbsoluteUri(navigationManager.Uri);
 
             var value = QueryHelpers.ParseQuery(uri.Query).GetValueOrDefault(parameterName, StringValues.Empty);
+            string? returnValue;
             if (value.Equals(StringValues.Empty))
-                return defaultValue;
+                returnValue = defaultValue;
+            else
+                returnValue = value;
 
-            return value;
+            return unEscape ? Uri.UnescapeDataString(returnValue ?? string.Empty) : returnValue;
         }
 
         public static string GetRelativeUrl(this NavigationManager navigationManager)
