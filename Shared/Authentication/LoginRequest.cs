@@ -5,10 +5,12 @@ namespace BlazorIdentityBase.Shared.Authentication
     public class LoginRequest
     {
         [Required]
-        public string UserName { get; set; }
+        [DataType("Username")]
+        public string UserName { get; set; } = string.Empty;
 
         [Required]
-        public string Password { get; set; }
+        [DataType(DataType.Password)]
+        public string Password { get; set; } = string.Empty;
 
         public bool ShouldRememberUser { get; set; }
     }

@@ -5,9 +5,11 @@ namespace BlazorIdentityBase.Shared.Authentication
     public class ChangePasswordRequest
     {
         [Required]
-        public string CurrentPassword { get; set; }
+        [DataType(DataType.Password)]
+        public string CurrentPassword { get; set; } = string.Empty;
 
         [Required]
-        public string NewPassword { get; set; }
+        [DataType(DataType.Password)]
+        public string NewPassword { get; set; } = string.Empty;
     }
 }

@@ -6,6 +6,7 @@ namespace BlazorIdentityBase.Shared.Authentication
     {
         [Required]
         [EmailAddress]
+        [DataType(DataType.EmailAddress)]
         public string Email { get; set; } = string.Empty;
     }
 }
