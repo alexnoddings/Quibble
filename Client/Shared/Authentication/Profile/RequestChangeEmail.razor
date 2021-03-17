@@ -46,7 +46,7 @@ else
                 Password
             </label>
             <div class="col-md-10">
-                <InputText id="password" class="form-control" @bind-Value="Model.Password" type="password" />
+                <InputText id="password" class="form-control" @bind-Value="Model.Password" type="password" autocomplete="current-password" />
                 <ValidationMessage For="() => Model.Password" />
             </div>
         </div>

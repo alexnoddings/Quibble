@@ -21,7 +21,7 @@
             Username
         </label>
         <div class="col-md-10">
-            <InputText id="username" class="form-control" @bind-Value="Model.UserName" />
+            <InputText id="username" class="form-control" @bind-Value="Model.UserName" autocomplete="username" />
             <ValidationMessage For="() => Model.UserName" />
         </div>
     </div>
@@ -30,7 +30,7 @@
             Password
         </label>
         <div class="col-md-10">
-            <InputText id="password" class="form-control" @bind-Value="Model.Password" type="Password" />
+            <InputText id="password" class="form-control" @bind-Value="Model.Password" type="Password" autocomplete="current-password" />
             <ValidationMessage For="() => Model.Password" />
         </div>
     </div>
