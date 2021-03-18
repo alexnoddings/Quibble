@@ -49,9 +49,7 @@ namespace BlazorIdentityBase.Client.Pages.Authentication
             IsSubmitting = true;
 
             var result = await AuthenticationProvider.RegisterAsync(Model.UserName, Model.Email, Model.Password);
-            if (result.WasSuccessful)
-                NavigationManager.NavigateTo(ReturnUrl);
-            else
+            if (!result.WasSuccessful)
                 Errors = result.Errors?.ToList() ?? new List<string>();
 
             IsSubmitting = false;

@@ -45,9 +45,7 @@ namespace BlazorIdentityBase.Client.Pages.Authentication
             IsSubmitting = true;
 
             var result = await AuthenticationProvider.LoginAsync(Model.UserName, Model.Password, Model.ShouldRememberUser);
-            if (result.WasSuccessful)
-                NavigationManager.NavigateTo(ReturnUrl);
-            else
+            if (!result.WasSuccessful)
                 Errors = result.Errors?.ToList() ?? new List<string>();
 
             IsSubmitting = false;
