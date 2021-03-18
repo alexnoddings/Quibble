@@ -1,6 +1,5 @@
 ﻿@page "/auth/profile"
 @attribute [Authorize]
-@using BlazorIdentityBase.Client.Services
 
 <h2>@(UserName ?? "Profile")</h2>
 
@@ -16,17 +15,3 @@
     <ChangeUsername />
 </div>
 
-@code
-{
-    [Inject]
-    public IdentityAuthenticationStateProvider AuthenticationProvider { get; set; }
-
-    private string UserName { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-
-        UserName = (await AuthenticationProvider.GetAuthenticationStateAsync()).User?.Identity?.Name;
-    }
-}

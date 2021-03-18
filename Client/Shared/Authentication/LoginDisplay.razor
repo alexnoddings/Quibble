@@ -1,7 +1,6 @@
-﻿
-<AuthorizeView>
+﻿<AuthorizeView>
     <Authorized>
-        <a href="/auth/profile">@context.User.Identity.Name</a>
+        <a href="/auth/profile">@(context.User?.Identity?.Name ?? "Profile")</a>
         <a href="/auth/logout">Log out</a>
     </Authorized>
     <NotAuthorized>
@@ -10,19 +9,3 @@
         <a href="/auth/login" @onclick="RedirectToLogin" @onclick:preventDefault>Log in</a>
     </NotAuthorized>
 </AuthorizeView>
-
-@code {
-    [Inject]
-    private NavigationManager NavigationManager { get; set; }
-
-    private void RedirectToLogin() => RedirectTo("login");
-    private void RedirectToRegister() => RedirectTo("register");
-
-    private void RedirectTo(string page)
-    {
-        var relativeUrl = NavigationManager.GetRelativeUrl();
-        if (relativeUrl == string.Empty || !Uri.IsWellFormedUriString(relativeUrl, UriKind.Relative))
-            relativeUrl = "/";
-        NavigationManager.NavigateTo("/auth/" + page + "?returnUrl=" + Uri.EscapeDataString(relativeUrl));
-    }
-}

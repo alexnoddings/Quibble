@@ -1,6 +1,4 @@
 ﻿@page "/auth/login"
-@using BlazorIdentityBase.Client.Services
-@using BlazorIdentityBase.Shared.Authentication
 
 <h2>Login</h2>
 
@@ -58,48 +56,3 @@
     <a href="/auth/register?returnUrl=@ReturnUrl">Register</a>
     <a href="/auth/forgotPassword">Forgot Password</a>
 </EditForm>
-
-@code
-{
-    [Inject]
-    public IdentityAuthenticationStateProvider AuthenticationProvider { get; set; }
-
-    [Inject]
-    public NavigationManager NavigationManager { get; set; }
-
-    private class LoginModel : LoginRequest
-    {
-    }
-
-    private LoginModel Model { get; } = new();
-
-    private IList<string>? Errors { get; set; }
-
-    private string ReturnUrl { get; set; }
-
-    private bool IsSubmitting { get; set; }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-
-        ReturnUrl = NavigationManager.GetQueryParameter("returnUrl", "/");
-
-        // Only return to a well-formed relative url
-        if (!Uri.IsWellFormedUriString(ReturnUrl, UriKind.Relative))
-            ReturnUrl = "/";
-    }
-
-    private async Task LoginAsync()
-    {
-        IsSubmitting = true;
-
-        var result = await AuthenticationProvider.LoginAsync(Model.UserName, Model.Password, Model.ShouldRememberUser);
-        if (result.WasSuccessful)
-            NavigationManager.NavigateTo(ReturnUrl);
-        else
-            Errors = result.Errors?.ToList() ?? new List<string>();
-
-        IsSubmitting = false;
-    }
-}

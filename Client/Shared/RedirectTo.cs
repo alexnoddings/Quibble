@@ -13,7 +13,7 @@ namespace BlazorIdentityBase.Client.Shared
         public TimeSpan After { get; set; } = TimeSpan.Zero;
 
         [Inject]
-        public NavigationManager NavigationManager { get; set; }
+        private NavigationManager NavigationManager { get; set; }
 
         private bool _isDisposed = false;
 
