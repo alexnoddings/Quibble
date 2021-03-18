@@ -13,23 +13,23 @@ namespace Quibble.Client.Pages.Authentication
     public partial class Register
     {
         [Inject]
-        private IdentityAuthenticationStateProvider AuthenticationProvider { get; set; }
+        private IdentityAuthenticationStateProvider AuthenticationProvider { get; set; } = default!;
 
         [Inject]
-        private NavigationManager NavigationManager { get; set; }
+        private NavigationManager NavigationManager { get; set; } = default!;
 
         private class RegisterModel : RegisterRequest
         {
             [Required]
             [Compare(nameof(Password), ErrorMessage = "Passwords do not match.")]
-            public string ConfirmPassword { get; set; }
+            public string ConfirmPassword { get; set; } = string.Empty;
         }
 
         private RegisterModel Model { get; } = new();
 
         private IList<string>? Errors { get; set; }
 
-        private string ReturnUrl { get; set; }
+        private string ReturnUrl { get; set; } = string.Empty;
 
         private bool IsSubmitting { get; set; }
 

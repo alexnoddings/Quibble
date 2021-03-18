@@ -12,7 +12,7 @@ namespace Quibble.Client.Services
             Result = result;
         }
 
-        public static AuthenticationOperation<TResult> FromSuccess(TResult result) =>
+        public static AuthenticationOperation<TResult> FromSuccess(TResult? result) =>
             new (true, null, result);
 
         public new static AuthenticationOperation<TResult> FromError(IEnumerable<string> errors) =>

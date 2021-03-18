@@ -7,15 +7,15 @@ namespace Quibble.Client.Pages.Authentication
     public partial class Profile
     {
         [Inject]
-        private IdentityAuthenticationStateProvider AuthenticationProvider { get; set; }
+        private IdentityAuthenticationStateProvider AuthenticationProvider { get; set; } = default!;
 
-        private string UserName { get; set; }
+        private string UserName { get; set; } = string.Empty;
 
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
 
-            UserName = (await AuthenticationProvider.GetAuthenticationStateAsync()).User?.Identity?.Name;
+            UserName = (await AuthenticationProvider.GetAuthenticationStateAsync()).User?.Identity?.Name ?? string.Empty;
         }
     }
 }

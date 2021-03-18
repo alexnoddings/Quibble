@@ -12,10 +12,10 @@ namespace Quibble.Client.Pages.Authentication
     public partial class Login
     {
         [Inject]
-        private IdentityAuthenticationStateProvider AuthenticationProvider { get; set; }
+        private IdentityAuthenticationStateProvider AuthenticationProvider { get; set; } = default!;
 
         [Inject]
-        private NavigationManager NavigationManager { get; set; }
+        private NavigationManager NavigationManager { get; set; } = default!;
 
         private class LoginModel : LoginRequest
         {
@@ -25,7 +25,7 @@ namespace Quibble.Client.Pages.Authentication
 
         private IList<string>? Errors { get; set; }
 
-        private string ReturnUrl { get; set; }
+        private string ReturnUrl { get; set; } = string.Empty;
 
         private bool IsSubmitting { get; set; }
 

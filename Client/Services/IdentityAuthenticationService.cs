@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -27,16 +28,16 @@ namespace Quibble.Client.Services
         {
             var result = await _httpClient.GetAsync(ApiBase + "User");
             var contentStream = await result.Content.ReadAsStreamAsync();
-            return await JsonSerializer.DeserializeAsync<UserInfo>(contentStream, DefaultDeserialisationOptions);
+            return await JsonSerializer.DeserializeAsync<UserInfo>(contentStream, DefaultDeserialisationOptions) ?? UserInfo.Unauthenticated();
         }
 
         public Task<AuthenticationOperation<UserInfo>> RegisterAsync(string username, string email, string password) =>
-            PerformPostAsync<RegisterRequest, UserInfo>("Register", new RegisterRequest {UserName = username, Email = email, Password = password});
+            PerformPostAsync<RegisterRequest, UserInfo>("Register", new RegisterRequest { UserName = username, Email = email, Password = password });
 
         public Task<AuthenticationOperation<UserInfo>> LoginAsync(string username, string password, bool shouldRememberUser) =>
             PerformPostAsync<LoginRequest, UserInfo>("Login", new LoginRequest { UserName = username, Password = password, ShouldRememberUser = shouldRememberUser });
 
-        public Task LogoutAsync() => 
+        public Task LogoutAsync() =>
             _httpClient.PostAsync(ApiBase + "Logout", null);
 
         public Task<AuthenticationOperation> ForgotPasswordAsync(string email) =>
@@ -55,7 +56,7 @@ namespace Quibble.Client.Services
             PerformPostAsync("ChangeEmail", new ChangeEmailRequest { NewEmail = newEmail, Token = token });
 
         public Task<AuthenticationOperation> ChangeUsernameAsync(string currentPassword, string newUsername) =>
-            PerformPostAsync("ChangeUsername", new ChangeUsernameRequest {Password = currentPassword, NewUsername = newUsername});
+            PerformPostAsync("ChangeUsername", new ChangeUsernameRequest { Password = currentPassword, NewUsername = newUsername });
 
         private async Task<AuthenticationOperation> PerformPostAsync<TValue>(string endpoint, TValue value)
         {
@@ -66,7 +67,7 @@ namespace Quibble.Client.Services
 
             var contentStream = await result.Content.ReadAsStreamAsync();
             var errors = await JsonSerializer.DeserializeAsync<List<string>>(contentStream, DefaultDeserialisationOptions);
-            return AuthenticationOperation.FromError(errors);
+            return AuthenticationOperation.FromError(errors ?? new List<string> { "An unknown error has occurred." });
         }
 
         private async Task<AuthenticationOperation<TReturn>> PerformPostAsync<TValue, TReturn>(string endpoint, TValue value)
@@ -81,7 +82,7 @@ namespace Quibble.Client.Services
             }
 
             var errors = await JsonSerializer.DeserializeAsync<List<string>>(contentStream, DefaultDeserialisationOptions);
-            return AuthenticationOperation<TReturn>.FromError(errors);
+            return AuthenticationOperation<TReturn>.FromError(errors ?? new List<string> { "An unknown error occurred." });
         }
     }
 }

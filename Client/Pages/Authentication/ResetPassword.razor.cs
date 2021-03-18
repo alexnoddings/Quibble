@@ -12,16 +12,16 @@ namespace Quibble.Client.Pages.Authentication
     public partial class ResetPassword
     {
         [Inject]
-        private IdentityAuthenticationStateProvider AuthenticationProvider { get; set; }
+        private IdentityAuthenticationStateProvider AuthenticationProvider { get; set; } = default!;
 
         [Inject]
-        private NavigationManager NavigationManager { get; set; }
+        private NavigationManager NavigationManager { get; set; } = default!;
 
         private class ResetPasswordModel : ResetPasswordRequest
         {
             [Required]
             [Compare(nameof(NewPassword), ErrorMessage = "Passwords do not match.")]
-            public string ConfirmPassword { get; set; }
+            public string ConfirmPassword { get; set; } = string.Empty;
         }
 
         private ResetPasswordModel Model { get; } = new();

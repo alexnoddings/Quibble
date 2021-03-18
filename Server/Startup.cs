@@ -37,7 +37,8 @@ namespace Quibble.Server
                     options.InvalidModelStateResponseFactory = context =>
                     {
                         var errors = context.ModelState
-                            .SelectMany(kv => kv.Value?.Errors)
+                            .Where(kv => kv.Value is not null)
+                            .SelectMany(kv => kv.Value!.Errors)
                             .Select(modelError => modelError.ErrorMessage)
                             .ToList();
                         return new BadRequestObjectResult(errors);

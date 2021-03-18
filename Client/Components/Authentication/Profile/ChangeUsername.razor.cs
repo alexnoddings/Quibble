@@ -10,7 +10,7 @@ namespace Quibble.Client.Components.Authentication.Profile
     public partial class ChangeUsername
     {
         [Inject]
-        private IdentityAuthenticationStateProvider AuthenticationProvider { get; set; }
+        private IdentityAuthenticationStateProvider AuthenticationProvider { get; set; } = default!;
 
         private class ChangeUsernameModel : ChangeUsernameRequest
         {
@@ -22,7 +22,7 @@ namespace Quibble.Client.Components.Authentication.Profile
 
         private bool WasSuccessful { get; set; }
 
-        private string CurrentUsername { get; set; }
+        private string CurrentUsername { get; set; } = string.Empty;
 
         private bool IsSubmitting { get; set; }
 
@@ -30,7 +30,7 @@ namespace Quibble.Client.Components.Authentication.Profile
         {
             await base.OnInitializedAsync();
 
-            CurrentUsername = (await AuthenticationProvider.GetAuthenticationStateAsync()).User?.Identity?.Name;
+            CurrentUsername = (await AuthenticationProvider.GetAuthenticationStateAsync()).User?.Identity?.Name ?? string.Empty;
         }
 
         private async Task ChangeUsernameAsync()

@@ -7,7 +7,7 @@ namespace Quibble.Client.Components.Authentication
     public partial class LoginDisplay
     {
         [Inject]
-        private NavigationManager NavigationManager { get; set; }
+        private NavigationManager NavigationManager { get; set; } = default!;
 
         private void RedirectToLogin() => RedirectTo("login");
         private void RedirectToRegister() => RedirectTo("register");

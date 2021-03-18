@@ -9,7 +9,7 @@ namespace Quibble.Client.Services
     public class IdentityAuthenticationStateProvider : AuthenticationStateProvider
     {
         private readonly IIdentityAuthenticationService _authenticationService;
-        private UserInfo _userInfo;
+        private UserInfo? _userInfo;
 
         public IdentityAuthenticationStateProvider(IIdentityAuthenticationService authenticationService)
         {

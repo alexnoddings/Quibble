@@ -4,7 +4,7 @@
     {
         private bool CollapseNavMenu { get; set; }
 
-        private string NavMenuCssClass => CollapseNavMenu ? "collapse" : null;
+        private string NavMenuCssClass => CollapseNavMenu ? "collapse" : string.Empty;
 
         private void ToggleNavMenu()
         {

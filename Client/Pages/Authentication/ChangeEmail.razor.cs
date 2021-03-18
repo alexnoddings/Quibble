@@ -11,10 +11,10 @@ namespace Quibble.Client.Pages.Authentication
     public partial class ChangeEmail
     {
         [Inject]
-        private IdentityAuthenticationStateProvider AuthenticationProvider { get; set; }
+        private IdentityAuthenticationStateProvider AuthenticationProvider { get; set; } = default!;
 
         [Inject]
-        private NavigationManager NavigationManager { get; set; }
+        private NavigationManager NavigationManager { get; set; } = default!;
 
         private class ChangeEmailModel : ChangeEmailRequest
         {

@@ -10,7 +10,7 @@ namespace Quibble.Client.Pages.Authentication
     public partial class ForgotPassword
     {
         [Inject]
-        private IdentityAuthenticationStateProvider AuthenticationProvider { get; set; }
+        private IdentityAuthenticationStateProvider AuthenticationProvider { get; set; } = default!;
 
         private class ForgotPasswordModel : ForgotPasswordRequest
         {

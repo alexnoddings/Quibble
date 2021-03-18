@@ -25,7 +25,8 @@ namespace Quibble.Server.Controllers
 
         private List<string> ModelStateErrors => 
             ModelState
-                .SelectMany(kv => kv.Value?.Errors)
+                .Where(kv => kv.Value is not null)
+                .SelectMany(kv => kv.Value!.Errors)
                 .Select(modelError => modelError.ErrorMessage)
                 .ToList();
 

@@ -9,9 +9,9 @@ namespace Quibble.Client.Pages
     public partial class FetchData
     {
         [Inject]
-        private HttpClient HttpClient { get; set; }
+        private HttpClient HttpClient { get; set; } = default!;
 
-        private WeatherForecast[] Forecasts { get; set; }
+        private WeatherForecast[]? Forecasts { get; set; }
 
         protected override async Task OnInitializedAsync()
         {

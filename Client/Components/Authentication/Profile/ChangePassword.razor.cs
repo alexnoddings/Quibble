@@ -11,13 +11,13 @@ namespace Quibble.Client.Components.Authentication.Profile
     public partial class ChangePassword
     {
         [Inject]
-        private IdentityAuthenticationStateProvider AuthenticationProvider { get; set; }
+        private IdentityAuthenticationStateProvider AuthenticationProvider { get; set; } = default!;
 
         private class ChangePasswordModel : ChangePasswordRequest
         {
             [Required]
             [Compare(nameof(NewPassword), ErrorMessage = "Passwords do not match.")]
-            public string ConfirmPassword { get; set; }
+            public string ConfirmPassword { get; set; } = string.Empty;
         }
 
         private ChangePasswordModel Model { get; } = new();

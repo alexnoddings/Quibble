@@ -7,7 +7,7 @@ namespace Quibble.Client.Pages.Authentication
     public partial class Logout
     {
         [Inject]
-        private IdentityAuthenticationStateProvider AuthenticationStateProvider { get; set; }
+        private IdentityAuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
 
         protected override async Task OnInitializedAsync()
         {

@@ -7,13 +7,13 @@ namespace Quibble.Client.Components
     public class RedirectTo : ComponentBase, IDisposable
     {
         [Parameter]
-        public string Url { get; set; }
+        public string Url { get; set; } = string.Empty;
 
         [Parameter]
         public TimeSpan After { get; set; } = TimeSpan.Zero;
 
         [Inject]
-        private NavigationManager NavigationManager { get; set; }
+        private NavigationManager NavigationManager { get; set; } = default!;
 
         private bool _isDisposed = false;
 
@@ -21,8 +21,8 @@ namespace Quibble.Client.Components
         {
             // Made local to prevent it changing while waiting
             string url = Url;
-            if (url is null)
-                throw new InvalidOperationException($"Parameter {nameof(Url)} is not set.");
+            if (string.IsNullOrEmpty(url))
+                throw new InvalidOperationException($"Parameter {nameof(Url)} is null or empty. Use \"/\" to navigate to the root.");
 
             if (After > TimeSpan.Zero)
                 await Task.Delay(After);
