@@ -1,4 +1,4 @@
-﻿namespace BlazorIdentityBase.Client.Shared
+﻿namespace BlazorIdentityBase.Client.Components
 {
     public partial class NavMenu
     {

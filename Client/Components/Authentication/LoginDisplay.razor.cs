@@ -2,7 +2,7 @@
 using BlazorIdentityBase.Client.Extensions;
 using Microsoft.AspNetCore.Components;
 
-namespace BlazorIdentityBase.Client.Shared.Authentication
+namespace BlazorIdentityBase.Client.Components.Authentication
 {
     public partial class LoginDisplay
     {

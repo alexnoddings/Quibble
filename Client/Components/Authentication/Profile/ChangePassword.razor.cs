@@ -1,43 +1,38 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using BlazorIdentityBase.Client.Services;
 using BlazorIdentityBase.Shared.Authentication;
 using Microsoft.AspNetCore.Components;
 
-namespace BlazorIdentityBase.Client.Shared.Authentication.Profile
+namespace BlazorIdentityBase.Client.Components.Authentication.Profile
 {
-    public partial class ChangeUsername
+    public partial class ChangePassword
     {
         [Inject]
         private IdentityAuthenticationStateProvider AuthenticationProvider { get; set; }
 
-        private class ChangeUsernameModel : ChangeUsernameRequest
+        private class ChangePasswordModel : ChangePasswordRequest
         {
+            [Required]
+            [Compare(nameof(NewPassword), ErrorMessage = "Passwords do not match.")]
+            public string ConfirmPassword { get; set; }
         }
 
-        private ChangeUsernameModel Model { get; } = new();
+        private ChangePasswordModel Model { get; } = new();
 
         private IList<string>? Errors { get; set; }
 
         private bool WasSuccessful { get; set; }
 
-        private string CurrentUsername { get; set; }
-
         private bool IsSubmitting { get; set; }
 
-        protected override async Task OnInitializedAsync()
-        {
-            await base.OnInitializedAsync();
-
-            CurrentUsername = (await AuthenticationProvider.GetAuthenticationStateAsync()).User?.Identity?.Name;
-        }
-
-        private async Task ChangeUsernameAsync()
+        private async Task ChangePasswordAsync()
         {
             IsSubmitting = true;
 
-            var result = await AuthenticationProvider.ChangeUsernameAsync(Model.Password, Model.NewUsername);
+            var result = await AuthenticationProvider.ChangePasswordAsync(Model.CurrentPassword, Model.NewPassword);
             WasSuccessful = result.WasSuccessful;
             if (WasSuccessful)
                 Errors = null;

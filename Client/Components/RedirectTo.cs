@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
-namespace BlazorIdentityBase.Client.Shared
+namespace BlazorIdentityBase.Client.Components
 {
     public class RedirectTo : ComponentBase, IDisposable
     {

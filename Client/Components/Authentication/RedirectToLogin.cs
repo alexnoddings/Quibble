@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Threading.Tasks;
 using BlazorIdentityBase.Client.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
-namespace BlazorIdentityBase.Client.Shared.Authentication
+namespace BlazorIdentityBase.Client.Components.Authentication
 {
     public class RedirectToLogin : ComponentBase
     {
