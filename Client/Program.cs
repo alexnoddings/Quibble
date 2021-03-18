@@ -20,7 +20,7 @@ namespace BlazorIdentityBase.Client
             builder.Services.AddAuthorizationCore();
             builder.Services.AddScoped<IdentityAuthenticationStateProvider>();
             builder.Services.AddScoped<AuthenticationStateProvider>(services => services.GetRequiredService<IdentityAuthenticationStateProvider>());
-            builder.Services.AddScoped<IdentityAuthenticationService>();
+            builder.Services.AddScoped<IIdentityAuthenticationService, IdentityAuthenticationService>();
 
             builder.Services.AddScoped(_ => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 

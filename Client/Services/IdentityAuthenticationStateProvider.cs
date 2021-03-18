@@ -8,10 +8,10 @@ namespace BlazorIdentityBase.Client.Services
 {
     public class IdentityAuthenticationStateProvider : AuthenticationStateProvider
     {
-        private readonly IdentityAuthenticationService _authenticationService;
+        private readonly IIdentityAuthenticationService _authenticationService;
         private UserInfo _userInfo;
 
-        public IdentityAuthenticationStateProvider(IdentityAuthenticationService authenticationService)
+        public IdentityAuthenticationStateProvider(IIdentityAuthenticationService authenticationService)
         {
             _authenticationService = authenticationService;
         }

@@ -7,7 +7,7 @@ using BlazorIdentityBase.Shared.Authentication;
 
 namespace BlazorIdentityBase.Client.Services
 {
-    public class IdentityAuthenticationService
+    public class IdentityAuthenticationService : IIdentityAuthenticationService
     {
         private const string ApiBase = "/api/Authentication/";
 
