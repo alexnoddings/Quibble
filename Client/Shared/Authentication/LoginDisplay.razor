@@ -21,12 +21,8 @@
     private void RedirectTo(string page)
     {
         var relativeUrl = NavigationManager.GetRelativeUrl();
-        if (relativeUrl == string.Empty || relativeUrl == "/")
-            // Allow register page to redirect back home
-            NavigationManager.NavigateTo("/auth/" + page);
-        else if (!relativeUrl.Contains("auth/", StringComparison.OrdinalIgnoreCase))
-            // Only navigate if not on an auth page
-            NavigationManager.NavigateTo("/auth/" + page + "?returnUrl=" + Uri.EscapeDataString(relativeUrl));
+        if (relativeUrl == string.Empty || !Uri.IsWellFormedUriString(relativeUrl, UriKind.Relative))
+            relativeUrl = "/";
+        NavigationManager.NavigateTo("/auth/" + page + "?returnUrl=" + Uri.EscapeDataString(relativeUrl));
     }
-
 }
