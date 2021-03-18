@@ -5,6 +5,12 @@
 
 <h2>Register</h2>
 
+<AuthorizeView>
+    <Authorized>
+        <RedirectTo Url="@ReturnUrl" />
+    </Authorized>
+</AuthorizeView>
+
 @if (Errors != null)
 {
     <div class="alert alert-danger" role="alert">
