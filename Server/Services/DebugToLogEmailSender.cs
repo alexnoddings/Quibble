@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
-namespace BlazorIdentityBase.Server.Services
+namespace Quibble.Server.Services
 {
     public class DebugToLogEmailSender : IEmailSender
     {

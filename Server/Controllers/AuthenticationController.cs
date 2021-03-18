@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using BlazorIdentityBase.Server.Data;
-using BlazorIdentityBase.Server.Services;
-using BlazorIdentityBase.Shared.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Quibble.Server.Data;
+using Quibble.Server.Services;
+using Quibble.Shared.Authentication;
 
-namespace BlazorIdentityBase.Server.Controllers
+namespace Quibble.Server.Controllers
 {
     [Authorize]
     [ApiController]

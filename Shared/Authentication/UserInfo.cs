@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BlazorIdentityBase.Shared.Authentication
+namespace Quibble.Shared.Authentication
 {
     public class UserInfo
     {

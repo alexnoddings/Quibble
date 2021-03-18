@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlazorIdentityBase.Server.Data
+namespace Quibble.Server.Data
 {
     public class AppDbContext : IdentityDbContext<AppUser, AppRole, Guid>
     {

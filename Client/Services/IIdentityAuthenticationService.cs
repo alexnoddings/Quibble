@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using BlazorIdentityBase.Shared.Authentication;
+using Quibble.Shared.Authentication;
 
-namespace BlazorIdentityBase.Client.Services
+namespace Quibble.Client.Services
 {
     public interface IIdentityAuthenticationService
     {

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace BlazorIdentityBase.Server.Services
+namespace Quibble.Server.Services
 {
     public interface IEmailSender
     {

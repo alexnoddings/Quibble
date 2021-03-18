@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using BlazorIdentityBase.Shared.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
+using Quibble.Shared.Authentication;
 
-namespace BlazorIdentityBase.Client.Services
+namespace Quibble.Client.Services
 {
     public class IdentityAuthenticationStateProvider : AuthenticationStateProvider
     {

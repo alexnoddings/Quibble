@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>BlazorIdentityBase.Server</RootNamespace>
+    <RootNamespace>Quibble.Server</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

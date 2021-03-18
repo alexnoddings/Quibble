@@ -2,11 +2,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using BlazorIdentityBase.Client.Services;
-using BlazorIdentityBase.Shared.Authentication;
 using Microsoft.AspNetCore.Components;
+using Quibble.Client.Services;
+using Quibble.Shared.Authentication;
 
-namespace BlazorIdentityBase.Client.Components.Authentication.Profile
+namespace Quibble.Client.Components.Authentication.Profile
 {
     public partial class ChangePassword
     {

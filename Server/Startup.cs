@@ -2,8 +2,6 @@ using System;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
-using BlazorIdentityBase.Server.Data;
-using BlazorIdentityBase.Server.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -14,8 +12,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Quibble.Server.Data;
+using Quibble.Server.Services;
 
-namespace BlazorIdentityBase.Server
+namespace Quibble.Server
 {
     public class Startup
     {

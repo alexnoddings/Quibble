@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace BlazorIdentityBase.Server
+namespace Quibble.Server
 {
     public class Program
     {

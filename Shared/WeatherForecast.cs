@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BlazorIdentityBase.Shared
+namespace Quibble.Shared
 {
     public class WeatherForecast
     {

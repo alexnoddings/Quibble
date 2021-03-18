@@ -1,4 +1,4 @@
-﻿namespace BlazorIdentityBase.Client.Components
+﻿namespace Quibble.Client.Components
 {
     public partial class NavMenu
     {

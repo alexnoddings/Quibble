@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
-namespace BlazorIdentityBase.Client.Components
+namespace Quibble.Client.Components
 {
     public class RedirectTo : ComponentBase, IDisposable
     {

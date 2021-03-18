@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using BlazorIdentityBase.Client.Services;
 using Microsoft.AspNetCore.Components;
+using Quibble.Client.Services;
 
-namespace BlazorIdentityBase.Client.Pages.Authentication
+namespace Quibble.Client.Pages.Authentication
 {
     public partial class Profile
     {

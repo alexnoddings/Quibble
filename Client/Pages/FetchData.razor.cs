@@ -1,10 +1,10 @@
 ﻿using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using BlazorIdentityBase.Shared;
 using Microsoft.AspNetCore.Components;
+using Quibble.Shared;
 
-namespace BlazorIdentityBase.Client.Pages
+namespace Quibble.Client.Pages
 {
     public partial class FetchData
     {

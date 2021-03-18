@@ -1,8 +1,8 @@
 ﻿using System;
-using BlazorIdentityBase.Client.Extensions;
 using Microsoft.AspNetCore.Components;
+using Quibble.Client.Extensions;
 
-namespace BlazorIdentityBase.Client.Components.Authentication
+namespace Quibble.Client.Components.Authentication
 {
     public partial class LoginDisplay
     {

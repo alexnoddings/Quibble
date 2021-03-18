@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
 
-namespace BlazorIdentityBase.Client.Extensions
+namespace Quibble.Client.Extensions
 {
     public static class NavigationManagerExtensions
     {

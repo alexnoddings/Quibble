@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace BlazorIdentityBase.Client.Services
+namespace Quibble.Client.Services
 {
     public class AuthenticationOperation<TResult> : AuthenticationOperation
     {

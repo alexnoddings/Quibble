@@ -2,12 +2,12 @@ using System;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using BlazorIdentityBase.Client.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Quibble.Client.Services;
 
-namespace BlazorIdentityBase.Client
+namespace Quibble.Client
 {
     public class Program
     {

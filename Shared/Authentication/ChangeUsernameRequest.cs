@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BlazorIdentityBase.Shared.Authentication
+namespace Quibble.Shared.Authentication
 {
     public class ChangeUsernameRequest
     {

@@ -3,9 +3,9 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
-using BlazorIdentityBase.Shared.Authentication;
+using Quibble.Shared.Authentication;
 
-namespace BlazorIdentityBase.Client.Services
+namespace Quibble.Client.Services
 {
     public class IdentityAuthenticationService : IIdentityAuthenticationService
     {

@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BlazorIdentityBase.Client.Services;
-using BlazorIdentityBase.Shared.Authentication;
 using Microsoft.AspNetCore.Components;
+using Quibble.Client.Services;
+using Quibble.Shared.Authentication;
 
-namespace BlazorIdentityBase.Client.Pages.Authentication
+namespace Quibble.Client.Pages.Authentication
 {
     public partial class ForgotPassword
     {

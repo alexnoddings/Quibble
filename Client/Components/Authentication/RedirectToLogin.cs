@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Threading.Tasks;
-using BlazorIdentityBase.Client.Extensions;
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
+using Quibble.Client.Extensions;
 
-namespace BlazorIdentityBase.Client.Components.Authentication
+namespace Quibble.Client.Components.Authentication
 {
     public class RedirectToLogin : ComponentBase
     {
