@@ -177,6 +177,12 @@ namespace Quibble.Server.Controllers
                 return BadRequest(ModelStateErrors);
             }
 
+            if (user.Email.Equals(requestChangeEmail.NewEmail, StringComparison.InvariantCultureIgnoreCase))
+            {
+                ModelState.AddModelError("SameEmail", "New email is the same as your current.");
+                return BadRequest(ModelStateErrors);
+            }
+
             var existingEmailUser = await _userManager.FindByEmailAsync(requestChangeEmail.NewEmail);
             if (existingEmailUser is not null)
             {
