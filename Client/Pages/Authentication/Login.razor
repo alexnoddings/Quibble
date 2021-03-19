@@ -1,6 +1,5 @@
 ﻿@page "/auth/login"
-
-<h2>Login</h2>
+@layout AuthLayout
 
 <AuthorizeView>
     <Authorized>
@@ -8,43 +7,34 @@
     </Authorized>
 </AuthorizeView>
 
-@if (Errors != null)
-{
-    <div class="alert alert-danger" role="alert">
-        @foreach (var error in Errors)
-        {
-            <p>@error</p>
-        }
-    </div>
-}
-
-<EditForm Model="Model" OnValidSubmit="LoginAsync" class="card card-body bg-light my-4">
-    <DataAnnotationsValidator />
-    <div class="form-group row">
-        <label for="username" class="col-md-2 col-form-label">
-            Username
-        </label>
-        <div class="col-md-10">
-            <InputText id="username" class="form-control" @bind-Value="Model.UserName" autocomplete="username" />
+<AuthForm Errors="Errors" Model="Model" OnSubmit="LoginAsync">
+    <Title>
+        Log in to Quibble
+    </Title>
+    <Form>
+        <Field>
+            <FieldLabel For="username">
+                Username
+            </FieldLabel>
+            <TextEdit id="username" @bind-Text="Model.UserName" autocomplete="username" />
             <ValidationMessage For="() => Model.UserName" />
-        </div>
-    </div>
-    <div class="form-group row">
-        <label for="password" class="col-md-2 col-form-label">
-            Password
-        </label>
-        <div class="col-md-10">
-            <InputText id="password" class="form-control" @bind-Value="Model.Password" type="Password" autocomplete="current-password" />
+        </Field>
+        <Field Class="auth-field-with-extra-label">
+            <FieldLabel For="password">
+                Password
+            </FieldLabel>
+            <TextEdit id="password" @bind-Text="Model.Password" Role="TextRole.Password" autocomplete="current-password" />
+            <a class="auth-extra-label" href="/auth/forgotPassword">Forgot your password?</a>
             <ValidationMessage For="() => Model.Password" />
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12 text-right">
-            <button type="submit" class="btn btn-primary btn-block" disabled="@IsSubmitting">
-                Login
-            </button>
-        </div>
-    </div>
-    <a href="/auth/register?returnUrl=@ReturnUrl">Register</a>
-    <a href="/auth/forgotPassword">Forgot Password</a>
-</EditForm>
+        </Field>
+    </Form>
+    <Submit>
+        Log in
+    </Submit>
+    <Footer>
+        <Text Alignment="TextAlignment.Center">
+            New here?
+            <a href="/auth/register?returnUrl=@Uri.EscapeDataString(ReturnUrl)">Create an account</a>.
+        </Text>
+    </Footer>
+</AuthForm>

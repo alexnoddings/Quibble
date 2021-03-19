@@ -1,17 +1,39 @@
 ﻿@page "/auth/changeEmail"
 
-<h2>Change Email</h2>
+<Heading Alignment="TextAlignment.Center" Size="HeadingSize.Is1" Margin="Margin.Is3.FromBottom">
+    Change email
+</Heading>
 
 @if (Errors != null)
 {
-    <div class="alert alert-danger" role="alert">
-        @foreach (var error in Errors)
+    <Alert Color="Color.Danger" Margin="Margin.Is3.OnY" Visible="true">
+        <AlertDescription>
+            @foreach (var error in Errors!)
+            {
+                <Paragraph Margin="Margin.Is1.OnY" Padding="Padding.Is2.FromRight">@error</Paragraph>
+            }
+        </AlertDescription>
+        <CloseButton Class="close-alerts" />
+    </Alert>
+}
+
+<Card Background="Background.Light">
+    <CardBody>
+        @if (Errors is null)
         {
-            <p>@error</p>
+            <Paragraph>Changing email...</Paragraph>
         }
-    </div>
-}
-else
-{
-    <p>Loading...</p>
-}
+        else
+        {
+            <Paragraph>Error changing email.</Paragraph>
+        }
+    </CardBody>
+</Card>
+
+<Card Background="Background.Transparent" Margin="Margin.Is3.OnY">
+    <CardBody>
+        <Text Alignment="TextAlignment.Center">
+            Go back to <a href="/auth/profile">your profile</a>.
+        </Text>
+    </CardBody>
+</Card>

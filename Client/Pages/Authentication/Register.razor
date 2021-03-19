@@ -1,6 +1,5 @@
 ﻿@page "/auth/register"
-
-<h2>Register</h2>
+@layout AuthLayout
 
 <AuthorizeView>
     <Authorized>
@@ -8,61 +7,45 @@
     </Authorized>
 </AuthorizeView>
 
-@if (Errors != null)
-{
-    <div class="alert alert-danger" role="alert">
-        @foreach (var error in Errors)
-        {
-            <p>@error</p>
-        }
-    </div>
-}
-
-<EditForm Model="Model" OnValidSubmit="RegisterAsync" class="card card-body bg-light my-4">
-    <DataAnnotationsValidator />
-    <div class="form-group row">
-        <label for="email" class="col-md-2 col-form-label">
-            Email
-        </label>
-        <div class="col-md-10">
-            <InputText id="email" class="form-control" @bind-Value="Model.Email" type="email" autocomplete="email" />
+<AuthForm Errors="Errors" Model="Model" OnSubmit="RegisterAsync">
+    <Title>Create your account</Title>
+    <Form>
+        <Field>
+            <FieldLabel Class="input-required" For="email">
+                Email
+            </FieldLabel>
+            <TextEdit id="email" @bind-Text="@Model.Email" Role="TextRole.Email" autocomplete="email" />
             <ValidationMessage For="() => Model.Email" />
-        </div>
-    </div>
-    <div class="form-group row">
-        <label for="username" class="col-md-2 col-form-label">
-            Username
-        </label>
-        <div class="col-md-10">
-            <InputText id="username" class="form-control" @bind-Value="Model.UserName" autocomplete="username" />
+        </Field>
+        <Field>
+            <FieldLabel Class="input-required" For="username">
+                Username
+            </FieldLabel>
+            <TextEdit id="username" @bind-Text="@Model.UserName" autocomplete="username" />
             <ValidationMessage For="() => Model.UserName" />
-        </div>
-    </div>
-    <div class="form-group row">
-        <label for="password" class="col-md-2 col-form-label">
-            Password
-        </label>
-        <div class="col-md-10">
-            <InputText id="password" class="form-control" @bind-Value="Model.Password" type="password" autocomplete="new-password" />
+        </Field>
+        <Field>
+            <FieldLabel Class="input-required" For="password">
+                Password
+            </FieldLabel>
+            <TextEdit id="password" @bind-Text="@Model.Password" Role="TextRole.Password" autocomplete="new-password" />
             <ValidationMessage For="() => Model.Password" />
-        </div>
-    </div>
-    <div class="form-group row">
-        <label for="confirmPassword" class="col-md-2 col-form-label">
-            Confirm Password
-        </label>
-        <div class="col-md-10">
-            <InputText id="confirmPassword" class="form-control" @bind-Value="Model.ConfirmPassword" type="password" autocomplete="new-password" />
-            <ValidationMessage For="() => Model.ConfirmPassword" />
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12 text-right">
-            <button type="submit" class="btn btn-primary btn-block" disabled="@IsSubmitting">
-                Register
-            </button>
-        </div>
-    </div>
-    <a href="/auth/login?returnUrl=@ReturnUrl">Login</a>
-    <a href="/auth/forgotPassword">Forgot Password</a>
-</EditForm>
+        </Field>
+        <Field>
+            <FieldLabel Class="input-required" For="confirmPassword">
+                Confirm your Password
+            </FieldLabel>
+            <TextEdit id="confirmPassword" @bind-Text="@Model.ConfirmPassword" Role="TextRole.Password" autocomplete="new-password" />
+            <ValidationMessage For="() => Model.Password" />
+        </Field>
+    </Form>
+    <Submit>
+        Create account
+    </Submit>
+    <Footer>
+        <Text Alignment="TextAlignment.Center">
+            New here?
+            <a href="/auth/register?returnUrl=@Uri.EscapeDataString(ReturnUrl)">Create an account</a>.
+        </Text>
+    </Footer>
+</AuthForm>

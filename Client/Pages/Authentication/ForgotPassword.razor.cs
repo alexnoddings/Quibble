@@ -18,7 +18,7 @@ namespace Quibble.Client.Pages.Authentication
 
         private ForgotPasswordModel Model { get; } = new();
 
-        private IList<string>? Errors { get; set; }
+        private List<string>? Errors { get; set; }
 
         private bool WasSuccessful { get; set; } = false;
 

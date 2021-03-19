@@ -26,7 +26,7 @@ namespace Quibble.Client.Pages.Authentication
 
         private ResetPasswordModel Model { get; } = new();
 
-        private IList<string>? Errors { get; set; }
+        private List<string>? Errors { get; set; }
 
         private bool IsTokenPreFilled { get; set; }
 

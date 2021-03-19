@@ -23,11 +23,9 @@ namespace Quibble.Client.Pages.Authentication
 
         private LoginModel Model { get; } = new();
 
-        private IList<string>? Errors { get; set; }
+        private List<string>? Errors { get; set; }
 
         private string ReturnUrl { get; set; } = string.Empty;
-
-        private bool IsSubmitting { get; set; }
 
         protected override void OnInitialized()
         {
@@ -42,13 +40,9 @@ namespace Quibble.Client.Pages.Authentication
 
         private async Task LoginAsync()
         {
-            IsSubmitting = true;
-
-            var result = await AuthenticationProvider.LoginAsync(Model.UserName, Model.Password, Model.ShouldRememberUser);
+            var result = await AuthenticationProvider.LoginAsync(Model.UserName, Model.Password);
             if (!result.WasSuccessful)
                 Errors = result.Errors?.ToList() ?? new List<string>();
-
-            IsSubmitting = false;
         }
     }
 }
