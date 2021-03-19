@@ -69,7 +69,7 @@ namespace Quibble.Server.Controllers
                 return BadRequest(ModelStateErrors);
             }
 
-            return await LoginAsync(new LoginRequest { UserName = register.UserName, Password = register.Password, ShouldRememberUser = true });
+            return await LoginAsync(new LoginRequest { UserName = register.UserName, Password = register.Password });
         }
 
         [AllowAnonymous]
@@ -79,7 +79,7 @@ namespace Quibble.Server.Controllers
             if (login is null || !ModelState.IsValid)
                 return BadRequest(ModelStateErrors);
 
-            var signInResult = await _signInManager.PasswordSignInAsync(login.UserName, login.Password, login.ShouldRememberUser, false);
+            var signInResult = await _signInManager.PasswordSignInAsync(login.UserName, login.Password, true, false);
             if (!signInResult.Succeeded)
             {
                 ModelState.AddModelError("BadRequest", "Invalid username or password.");

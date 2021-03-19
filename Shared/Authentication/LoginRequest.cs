@@ -11,7 +11,5 @@ namespace Quibble.Shared.Authentication
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; } = string.Empty;
-
-        public bool ShouldRememberUser { get; set; }
     }
 }
