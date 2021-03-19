@@ -2,6 +2,8 @@ using System;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Blazorise;
+using Blazorise.Bootstrap;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,6 +28,10 @@ namespace Quibble.Client
 
             builder.Services.AddOptions<JsonSerializerOptions>().Configure(o => o.PropertyNameCaseInsensitive = true);
 
+            builder.Services
+                .AddBlazorise(options => options.ChangeTextOnKeyPress = true)
+                .AddBootstrapProviders();
+            
             await builder.Build().RunAsync();
         }
     }
