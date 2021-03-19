@@ -1,0 +1,47 @@
+<Project>
+
+  <!-- Project information -->
+  <PropertyGroup>
+    <Product>Quibble</Product>
+    <Authors>Alex Noddings</Authors>
+    <Company>Alex Noddings</Company>
+    <StrongNameKeyId>AlexNoddingsQuibble</StrongNameKeyId>
+  </PropertyGroup>
+
+  <!-- Default values -->
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+
+    <RepoRoot>$(MSBuildThisFileDirectory)</RepoRoot>
+    <RepositoryUrl>https://github.com/alexnoddings/Quibble</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <!-- The SPDX name for the source license. See https://spdx.org/licenses/. -->
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+    <!-- Enables Strict mode for Roslyn compiler -->
+    <Features>strict</Features>
+  </PropertyGroup>
+
+  <!-- Default package versions -->
+  <PropertyGroup>
+    <!-- Targets -->
+    <DefaultFramework>net6.0</DefaultFramework>
+  </PropertyGroup>
+
+  <!-- Warnings and errors -->
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <!-- Warnings to ignore and not surface. -->
+    <NoWarn>
+      $(NoWarn);
+    </NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- Warnings to not treat as errors but still surface. -->
+    <WarningsNotAsErrors>
+      $(WarningsNotAsErrors);
+      <!-- Don't make marking a method as async without performing an await a fatal build error as it makes some methods easier to read. -->
+      CS1998;
+    </WarningsNotAsErrors>
+  </PropertyGroup>
+
+</Project>
