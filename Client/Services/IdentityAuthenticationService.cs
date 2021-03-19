@@ -34,8 +34,8 @@ namespace Quibble.Client.Services
         public Task<AuthenticationOperation<UserInfo>> RegisterAsync(string username, string email, string password) =>
             PerformPostAsync<RegisterRequest, UserInfo>("Register", new RegisterRequest { UserName = username, Email = email, Password = password });
 
-        public Task<AuthenticationOperation<UserInfo>> LoginAsync(string username, string password, bool shouldRememberUser) =>
-            PerformPostAsync<LoginRequest, UserInfo>("Login", new LoginRequest { UserName = username, Password = password, ShouldRememberUser = shouldRememberUser });
+        public Task<AuthenticationOperation<UserInfo>> LoginAsync(string username, string password) =>
+            PerformPostAsync<LoginRequest, UserInfo>("Login", new LoginRequest { UserName = username, Password = password});
 
         public Task LogoutAsync() =>
             _httpClient.PostAsync(ApiBase + "Logout", null);

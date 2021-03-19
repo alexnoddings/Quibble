@@ -38,9 +38,9 @@ namespace Quibble.Client.Services
         /// The operation is returned without the &lt;TResult&gt; as claims aren't populated in login/register requests.
         ///  These are populated by GetAuthenticationStateAsync.
         /// </remarks>
-        public async Task<AuthenticationOperation> LoginAsync(string username, string password, bool shouldRememberUser)
+        public async Task<AuthenticationOperation> LoginAsync(string username, string password)
         {
-            var operation = await _authenticationService.LoginAsync(username, password, shouldRememberUser);
+            var operation = await _authenticationService.LoginAsync(username, password);
             if (operation.WasSuccessful)
             {
                 _userInfo = null;
