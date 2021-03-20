@@ -6,7 +6,7 @@ using Quibble.Client.Extensions;
 using Quibble.Client.Services;
 using Quibble.Shared.Authentication;
 
-namespace Quibble.Client.Pages.Authentication
+namespace Quibble.Client.Pages.Settings
 {
     public partial class ChangeEmail
     {

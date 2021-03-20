@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using Quibble.Client.Services;
 
-namespace Quibble.Client.Pages.Authentication
+namespace Quibble.Client.Pages
 {
     public partial class Logout
     {

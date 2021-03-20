@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,9 +7,9 @@ using Quibble.Client.Extensions;
 using Quibble.Client.Services;
 using Quibble.Shared.Authentication;
 
-namespace Quibble.Client.Pages.Authentication
+namespace Quibble.Client.Pages
 {
-    public partial class Register
+    public partial class ResetPassword
     {
         [Inject]
         private IdentityAuthenticationStateProvider AuthenticationProvider { get; set; } = default!;
@@ -18,18 +17,18 @@ namespace Quibble.Client.Pages.Authentication
         [Inject]
         private NavigationManager NavigationManager { get; set; } = default!;
 
-        private class RegisterModel : RegisterRequest
+        private class ResetPasswordModel : ResetPasswordRequest
         {
             [Required]
-            [Compare(nameof(Password), ErrorMessage = "Passwords do not match.")]
+            [Compare(nameof(NewPassword), ErrorMessage = "Passwords do not match.")]
             public string ConfirmPassword { get; set; } = string.Empty;
         }
 
-        private RegisterModel Model { get; } = new();
+        private ResetPasswordModel Model { get; } = new();
 
         private List<string>? Errors { get; set; }
 
-        private string ReturnUrl { get; set; } = string.Empty;
+        private bool IsTokenPreFilled { get; set; }
 
         private bool IsSubmitting { get; set; }
 
@@ -37,19 +36,19 @@ namespace Quibble.Client.Pages.Authentication
         {
             base.OnInitialized();
 
-            ReturnUrl = NavigationManager.GetQueryParameter("returnUrl", "/");
-
-            // Only return to a well-formed relative url
-            if (!Uri.IsWellFormedUriString(ReturnUrl, UriKind.Relative))
-                ReturnUrl = "/";
+            Model.Email = NavigationManager.GetQueryParameter("email", string.Empty);
+            Model.Token = NavigationManager.GetQueryParameter("token", string.Empty, unEscape: true);
+            IsTokenPreFilled = !string.IsNullOrWhiteSpace(Model.Token);
         }
 
-        private async Task RegisterAsync()
+        private async Task ResetPasswordAsync()
         {
             IsSubmitting = true;
 
-            var result = await AuthenticationProvider.RegisterAsync(Model.UserName, Model.Email, Model.Password);
-            if (!result.WasSuccessful)
+            var result = await AuthenticationProvider.ResetPasswordAsync(Model.Email, Model.Token, Model.NewPassword);
+            if (result.WasSuccessful)
+                NavigationManager.NavigateTo("/");
+            else
                 Errors = result.Errors?.ToList() ?? new List<string>();
 
             IsSubmitting = false;

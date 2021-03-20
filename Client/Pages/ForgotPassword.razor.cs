@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components;
 using Quibble.Client.Services;
 using Quibble.Shared.Authentication;
 
-namespace Quibble.Client.Pages.Authentication
+namespace Quibble.Client.Pages
 {
     public partial class ForgotPassword
     {
