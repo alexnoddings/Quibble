@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using Quibble.Client.Extensions;
 using Quibble.Client.Services;
 using Quibble.Shared.Authentication;
 
@@ -13,27 +13,32 @@ namespace Quibble.Client.Pages.Settings
         [Inject]
         private IdentityAuthenticationStateProvider AuthenticationProvider { get; set; } = default!;
 
-        [Inject]
-        private NavigationManager NavigationManager { get; set; } = default!;
-
-        private class ChangeEmailModel : ChangeEmailRequest
+        private class RequestChangeEmailModel : RequestChangeEmailRequest
         {
         }
 
-        private ChangeEmailModel Model { get; } = new();
+        private RequestChangeEmailModel Model { get; } = new();
 
-        private IList<string>? Errors { get; set; }
+        private List<string>? Errors { get; set; }
+
+        private bool WasSuccessful { get; set; }
+
+        private string? CurrentEmail { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
 
-            Model.NewEmail = NavigationManager.GetQueryParameter("email", string.Empty);
-            Model.Token = NavigationManager.GetQueryParameter("token", string.Empty, unEscape: true);
+            CurrentEmail = (await AuthenticationProvider.GetAuthenticationStateAsync()).User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email)?.Value;
+        }
 
-            var result = await AuthenticationProvider.ChangeEmailAsync(Model.NewEmail, Model.Token);
-            if (result.WasSuccessful)
-                NavigationManager.NavigateTo("/auth/profile");
+        private async Task RequestChangeEmailAsync()
+        {
+            WasSuccessful = false;
+            var result = await AuthenticationProvider.RequestChangeEmailAsync(Model.Password, Model.NewEmail);
+            WasSuccessful = result.WasSuccessful;
+            if (WasSuccessful)
+                Errors = null;
             else
                 Errors = result.Errors?.ToList() ?? new List<string>();
         }

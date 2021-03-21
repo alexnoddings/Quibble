@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 using Quibble.Client.Services;
 using Quibble.Shared.Authentication;
 
-namespace Quibble.Client.Components.Authentication.Profile
+namespace Quibble.Client.Pages.Settings
 {
     public partial class ChangePassword
     {
@@ -22,24 +22,18 @@ namespace Quibble.Client.Components.Authentication.Profile
 
         private ChangePasswordModel Model { get; } = new();
 
-        private IList<string>? Errors { get; set; }
+        private List<string>? Errors { get; set; }
 
         private bool WasSuccessful { get; set; }
 
-        private bool IsSubmitting { get; set; }
-
         private async Task ChangePasswordAsync()
         {
-            IsSubmitting = true;
-
             var result = await AuthenticationProvider.ChangePasswordAsync(Model.CurrentPassword, Model.NewPassword);
             WasSuccessful = result.WasSuccessful;
             if (WasSuccessful)
                 Errors = null;
             else
                 Errors = result.Errors?.ToList() ?? new List<string>();
-
-            IsSubmitting = false;
         }
     }
 }

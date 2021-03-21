@@ -1,0 +1,36 @@
+﻿@page "/settings/user"
+@layout SettingsLayout
+@attribute [Authorize]
+
+<PageTitle Value="User settings" />
+
+<AuthForm Errors="Errors" Model="Model" OnSubmit="ChangeUsernameAsync">
+    <Title>
+        User settings
+    </Title>
+    <Form>
+        <Field>
+            <FieldLabel for="currentUsername">
+                Current Username
+            </FieldLabel>
+            <TextEdit id="currentUsername" Text="@CurrentUsername" Disabled="true" />
+        </Field>
+        <Field>
+            <FieldLabel For="newUsername">
+                New Username
+            </FieldLabel>
+            <TextEdit id="newUsername" @bind-Text="Model.NewUsername" autocomplete="off" />
+            <ValidationMessage For="() => Model.NewUsername" />
+        </Field>
+        <Field>
+            <FieldLabel For="password">
+                Password
+            </FieldLabel>
+            <TextEdit id="password" @bind-Text="Model.Password" Role="TextRole.Password" autocomplete="current-password" />
+            <ValidationMessage For="() => Model.Password" />
+        </Field>
+    </Form>
+    <Submit>
+        Change username
+    </Submit>
+</AuthForm>

@@ -1,39 +1,46 @@
-﻿@page "/auth/changeEmail"
+﻿@page "/settings/email"
+@layout SettingsLayout
+@attribute [Authorize]
 
-<Heading Alignment="TextAlignment.Center" Size="HeadingSize.Is1" Margin="Margin.Is3.FromBottom">
-    Change email
-</Heading>
+<PageTitle Value="Email settings" />
 
-@if (Errors != null)
+<AuthForm Errors="Errors" Model="Model" OnSubmit="RequestChangeEmailAsync">
+    <Title>
+        Email settings
+    </Title>
+    <Form>
+        <Field>
+            <FieldLabel for="currentEmail">
+                Current Email
+            </FieldLabel>
+            <TextEdit id="currentEmail" Text="@CurrentEmail" Disabled="true"/>
+        </Field>
+        <Field>
+            <FieldLabel For="newEmail">
+                New Email
+            </FieldLabel>
+            <TextEdit id="newEmail" @bind-Text="Model.NewEmail" Role="TextRole.Email" autocomplete="email" />
+            <ValidationMessage For="() => Model.NewEmail" />
+        </Field>
+        <Field>
+            <FieldLabel For="password">
+                Password
+            </FieldLabel>
+            <TextEdit id="password" @bind-Text="Model.Password" Role="TextRole.Password" autocomplete="current-password" />
+            <ValidationMessage For="() => Model.Password" />
+        </Field>
+    </Form>
+    <Submit>
+        Request email change
+    </Submit>
+</AuthForm>
+
+@if (WasSuccessful)
 {
-    <Alert Color="Color.Danger" Margin="Margin.Is3.OnY" Visible="true">
+    <Alert Color="Color.Success" Margin="Margin.Is3.OnY" Visible="true">
         <AlertDescription>
-            @foreach (var error in Errors!)
-            {
-                <Paragraph Margin="Margin.Is1.OnY" Padding="Padding.Is2.FromRight">@error</Paragraph>
-            }
+            Check @Model.NewEmail for your confirmation email.
         </AlertDescription>
-        <CloseButton Class="close-alerts" />
+        <CloseButton Class="close-alerts-center" />
     </Alert>
 }
-
-<Card Background="Background.Light">
-    <CardBody>
-        @if (Errors is null)
-        {
-            <Paragraph>Changing email...</Paragraph>
-        }
-        else
-        {
-            <Paragraph>Error changing email.</Paragraph>
-        }
-    </CardBody>
-</Card>
-
-<Card Background="Background.Transparent" Margin="Margin.Is3.OnY">
-    <CardBody>
-        <Text Alignment="TextAlignment.Center">
-            Go back to <a href="/auth/profile">your profile</a>.
-        </Text>
-    </CardBody>
-</Card>

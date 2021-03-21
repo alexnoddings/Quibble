@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components;
 using Quibble.Client.Services;
 using Quibble.Shared.Authentication;
 
-namespace Quibble.Client.Components.Authentication.Profile
+namespace Quibble.Client.Pages.Settings
 {
     public partial class ChangeUsername
     {
@@ -18,13 +18,11 @@ namespace Quibble.Client.Components.Authentication.Profile
 
         private ChangeUsernameModel Model { get; } = new();
 
-        private IList<string>? Errors { get; set; }
+        private List<string>? Errors { get; set; }
 
         private bool WasSuccessful { get; set; }
 
         private string CurrentUsername { get; set; } = string.Empty;
-
-        private bool IsSubmitting { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -35,16 +33,12 @@ namespace Quibble.Client.Components.Authentication.Profile
 
         private async Task ChangeUsernameAsync()
         {
-            IsSubmitting = true;
-
             var result = await AuthenticationProvider.ChangeUsernameAsync(Model.Password, Model.NewUsername);
             WasSuccessful = result.WasSuccessful;
             if (WasSuccessful)
                 Errors = null;
             else
                 Errors = result.Errors?.ToList() ?? new List<string>();
-
-            IsSubmitting = false;
         }
     }
 }
