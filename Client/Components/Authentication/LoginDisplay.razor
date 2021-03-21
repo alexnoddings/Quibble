@@ -1,11 +1,41 @@
 ﻿<AuthorizeView>
     <Authorized>
-        <a href="/auth/profile">@(context.User?.Identity?.Name ?? "Profile")</a>
-        <a href="/auth/logout">Log out</a>
+        <BarItem>
+            <BarDropdown>
+                <BarDropdownToggle Class="text-light">
+                    @(context.User?.Identity?.Name ?? "Profile")
+                </BarDropdownToggle>
+                <BarDropdownMenu RightAligned="true">
+                    <BarDropdownItem Margin="Margin.Is1.OnY">
+                        <Text Padding="Padding.Is0">
+                            Logged in as
+                        </Text>
+                        <Text Weight="TextWeight.Bold" Padding="Padding.Is0">
+                            @context.User?.Identity?.Name
+                        </Text>
+                    </BarDropdownItem>
+                    <Divider Margin="Margin.Is2.OnY" />
+                    <BarDropdownItem To="/settings/user" Margin="Margin.Is1.OnY">
+                        Settings
+                    </BarDropdownItem>
+                    <Divider Margin="Margin.Is2.OnY" />
+                    <BarDropdownItem To="/logout" Margin="Margin.Is1.OnY">
+                        Log out
+                    </BarDropdownItem>
+                </BarDropdownMenu>
+            </BarDropdown>
+        </BarItem>
     </Authorized>
     <NotAuthorized>
-        @* These are links so that they can be opened in a new tab, but opening in the current will instead navigate through NavigationManager. *@
-        <a href="/auth/register" @onclick="RedirectToRegister" @onclick:preventDefault>Register</a>
-        <a href="/auth/login" @onclick="RedirectToLogin" @onclick:preventDefault>Log in</a>
+        <BarItem>
+            <Text Color="TextColor.Light">
+                <a href="/login" @onclick="RedirectToLogin" @onclick:preventDefault>Log in</a>
+            </Text>
+        </BarItem>
+        <BarItem>
+            <Text Color="TextColor.Light">
+                <a href="/register" @onclick="RedirectToRegister" @onclick:preventDefault>Register</a>
+            </Text>
+        </BarItem>
     </NotAuthorized>
 </AuthorizeView>
