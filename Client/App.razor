@@ -1,24 +1,40 @@
 <PageTitle />
 <CascadingAuthenticationState>
-    <Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
-        <Found Context="routeData">
-            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" Context="authState">
-                <NotAuthorized>
-                    @if (authState.User.Identity?.IsAuthenticated == true)
-                    {
-                        <p>Unauthorised.</p>
-                    }
-                    else
-                    {
-                        <RedirectToLogin/>
-                    }
-                </NotAuthorized>
-            </AuthorizeRouteView>
-        </Found>
-        <NotFound>
-            <LayoutView Layout="@typeof(MainLayout)">
-                <p>Sorry, there's nothing at this address.</p>
-            </LayoutView>
-        </NotFound>
-    </Router>
+    <ThemeProvider Theme="@_theme">
+        <Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
+            <Found Context="routeData">
+                <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" Context="authState">
+                    <NotAuthorized>
+                        @if (authState.User.Identity?.IsAuthenticated == true)
+                        {
+                            <Heading Size="HeadingSize.Is1">Unauthorised.</Heading>
+                        }
+                        else
+                        {
+                            <RedirectToLogin />
+                        }
+                    </NotAuthorized>
+                </AuthorizeRouteView>
+            </Found>
+            <NotFound>
+                <LayoutView Layout="@typeof(MainLayout)">
+                    <p>Sorry, there's nothing at this address.</p>
+                </LayoutView>
+            </NotFound>
+        </Router>
+    </ThemeProvider>
 </CascadingAuthenticationState>
+
+@code{
+    private readonly Theme _theme = new Theme
+    {
+        ColorOptions = new ThemeColorOptions
+        {
+            Dark = "#28232D"
+        },
+        BackgroundOptions = new ThemeBackgroundOptions
+        {
+            Dark = "#28232D"
+        }
+    };
+}
