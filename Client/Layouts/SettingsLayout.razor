@@ -1,0 +1,22 @@
+﻿@inherits LayoutComponentBase
+@layout MainLayout
+
+<div class="cwrapper">
+    <Container Class="profile-form" Margin="Margin.IsAuto">
+        <Row>
+            <Column ColumnSize="ColumnSize.Is3.OnDesktop.Is2.WithOffset.OnDesktop.Is12.OnMobile">
+                <ListGroup>
+                    <ListGroupItem Disabled="true">
+                        Account Settings
+                    </ListGroupItem>
+                    <NavLink class="list-group-item" href="/settings/user" Match="NavLinkMatch.Prefix">User</NavLink>
+                    <NavLink class="list-group-item" href="/settings/email" Match="NavLinkMatch.Prefix">Email</NavLink>
+                    <NavLink class="list-group-item" href="/settings/security" Match="NavLinkMatch.Prefix">Password</NavLink>
+                </ListGroup>
+            </Column>
+            <Column ColumnSize="ColumnSize.Is5.OnDesktop.Is12.OnMobile">
+                @Body
+            </Column>
+        </Row>
+    </Container>
+</div>

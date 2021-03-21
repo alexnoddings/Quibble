@@ -1,0 +1,22 @@
+::deep h1 {
+    font-weight: lighter;
+    font-size: 2rem;
+}
+
+::deep a.list-group-item {
+    color: unset;
+}
+
+::deep .list-group-item:hover {
+    background-color: var(--light);
+    text-decoration: none;
+}
+
+::deep .list-group-item.active {
+    background-color: var(--light);
+    border-color: rgba(0,0,0,.125);
+}
+
+::deep .list-group-item.active:hover {
+    cursor: default;
+}
