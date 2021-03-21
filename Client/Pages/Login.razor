@@ -1,6 +1,8 @@
 ﻿@page "/login"
 @layout AuthLayout
 
+<PageTitle Value="Log in to Quibble" />
+
 <AuthorizeView>
     <Authorized>
         <RedirectTo Url="@ReturnUrl" />

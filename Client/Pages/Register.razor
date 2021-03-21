@@ -1,6 +1,8 @@
 ﻿@page "/register"
 @layout AuthLayout
 
+<PageTitle Value="Create an account" />
+
 <AuthorizeView>
     <Authorized>
         <RedirectTo Url="@ReturnUrl" />
