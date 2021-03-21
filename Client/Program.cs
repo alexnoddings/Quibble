@@ -29,7 +29,12 @@ namespace Quibble.Client
             builder.Services.AddOptions<JsonSerializerOptions>().Configure(o => o.PropertyNameCaseInsensitive = true);
 
             builder.Services
-                .AddBlazorise(options => options.ChangeTextOnKeyPress = true)
+                .AddBlazorise(options =>
+                {
+                    options.ChangeTextOnKeyPress = true;
+                    options.DelayTextOnKeyPress = true;
+                    options.DelayTextOnKeyPressInterval = 80;
+                })
                 .AddBootstrapProviders();
             
             await builder.Build().RunAsync();
