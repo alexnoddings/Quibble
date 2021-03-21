@@ -1,17 +1,27 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+<Layout>
+    <LayoutHeader>
+        <Bar Breakpoint="Breakpoint.Desktop" Background="Background.Dark" ThemeContrast="ThemeContrast.Dark">
+            <BarBrand>
+                <BarItem>
+                    <BarLink To="/">
+                        <QuibbleIcon Size="32" />
+                    </BarLink>
+                </BarItem>
+            </BarBrand>
+            <BarToggler />
+            <BarMenu>
+                <BarEnd>
+                    <LoginDisplay />
+                </BarEnd>
+            </BarMenu>
+        </Bar>
+    </LayoutHeader>
+    <LayoutContent Padding="Padding.Is5.OnY">
+        @Body
+    </LayoutContent>
+    <LayoutFooter>
+    </LayoutFooter>
+</Layout>
 
-    <div class="main">
-        <div class="top-row px-4">
-            <LoginDisplay />
-        </div>
-
-        <div class="content px-4">
-            @Body
-        </div>
-    </div>
-</div>
