@@ -17,7 +17,7 @@ namespace Quibble.Client.Components.Authentication
             var relativeUrl = NavigationManager.GetRelativeUrl();
             if (relativeUrl == string.Empty || !Uri.IsWellFormedUriString(relativeUrl, UriKind.Relative))
                 relativeUrl = "/";
-            NavigationManager.NavigateTo("/auth/" + page + "?returnUrl=" + Uri.EscapeDataString(relativeUrl));
+            NavigationManager.NavigateTo("/" + page + "?returnUrl=" + Uri.EscapeDataString(relativeUrl));
         }
     }
 }

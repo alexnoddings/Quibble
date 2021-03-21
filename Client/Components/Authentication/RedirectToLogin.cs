@@ -10,6 +10,6 @@ namespace Quibble.Client.Components.Authentication
         private NavigationManager NavigationManager { get; set; } = default!;
 
         protected override void OnInitialized() =>
-            NavigationManager.NavigateTo("/auth/login?returnUrl=" + Uri.EscapeDataString(NavigationManager.GetRelativeUrl()));
+            NavigationManager.NavigateTo("/login?returnUrl=" + Uri.EscapeDataString(NavigationManager.GetRelativeUrl()));
     }
 }

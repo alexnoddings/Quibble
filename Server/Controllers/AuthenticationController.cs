@@ -118,7 +118,7 @@ namespace Quibble.Server.Controllers
             string token = await _userManager.GeneratePasswordResetTokenAsync(user);
             string host = HttpContext.Request.Host.Value;
 
-            var url = $"https://{host}/auth/resetPassword?email={user.Email}&token={Uri.EscapeDataString(token)}";
+            var url = $"https://{host}/reset_password?email={user.Email}&token={Uri.EscapeDataString(token)}";
             await _emailSender.SendAsync(user.Email, url);
             return Ok();
         }
@@ -193,7 +193,7 @@ namespace Quibble.Server.Controllers
             var token = await _userManager.GenerateChangeEmailTokenAsync(user, requestChangeEmail.NewEmail);
             string host = HttpContext.Request.Host.Value;
 
-            var url = $"https://{host}/auth/changeEmail?email={requestChangeEmail.NewEmail}&token={Uri.EscapeDataString(token)}";
+            var url = $"https://{host}/settings/email_change?email={requestChangeEmail.NewEmail}&token={Uri.EscapeDataString(token)}";
             await _emailSender.SendAsync(requestChangeEmail.NewEmail, url);
             return Ok();
         }
