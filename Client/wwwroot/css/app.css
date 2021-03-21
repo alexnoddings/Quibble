@@ -21,6 +21,17 @@ label.input-required::after {
     fill: currentColor;
 }
 
+.header .quicon {
+    color: rgb(40, 35, 45);
+}
+
+.alert .close-alerts-center {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
 #blazor-error-ui {
     background: lightyellow;
     bottom: 0;

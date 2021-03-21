@@ -7,10 +7,6 @@
     max-width: 330px;
 }
 
-::deep .auth-header .quicon {
-    color: rgb(40, 35, 45);
-}
-
 ::deep .auth-field-with-extra-label {
     position: relative;
 }
@@ -19,11 +15,4 @@
     top: 0;
     right: 0;
     position: absolute;
-}
-
-::deep .alert .close-alerts {
-    position: absolute;
-    right: 16px;
-    top: 50%;
-    transform: translateY(-50%);
 }
