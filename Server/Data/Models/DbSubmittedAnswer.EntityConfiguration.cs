@@ -7,8 +7,6 @@ namespace Quibble.Server.Data.Models
         public override void Configure(EntityTypeBuilder<DbSubmittedAnswer> builder)
         {
             base.Configure(builder);
-
-            builder.
         }
     }
 }

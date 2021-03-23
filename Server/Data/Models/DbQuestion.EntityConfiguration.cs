@@ -8,7 +8,11 @@ namespace Quibble.Server.Data.Models
         {
             base.Configure(builder);
 
-            builder.
+            builder
+                .HasMany(question => question.SubmittedAnswers)
+                .WithOne(submittedAnswer => submittedAnswer.Question)
+                .HasForeignKey(submittedAnswer => submittedAnswer.QuestionId)
+                .IsRequired();
         }
     }
 }
