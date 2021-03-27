@@ -1,13 +1,15 @@
 using System;
 using System.Net.Http;
+using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Blazorise;
 using Blazorise.Bootstrap;
+using Fluxor;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Quibble.Client.Services;
+using Quibble.Client.Services.Authentication;
 
 namespace Quibble.Client
 {
@@ -36,7 +38,9 @@ namespace Quibble.Client
                     options.DelayTextOnKeyPressInterval = 80;
                 })
                 .AddBootstrapProviders();
-            
+
+            builder.Services.AddFluxor(options => options.ScanAssemblies(Assembly.GetExecutingAssembly()));
+
             await builder.Build().RunAsync();
         }
     }
