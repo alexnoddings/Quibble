@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Quibble.Server.Data;
+using Quibble.Server.Hubs;
 using Quibble.Server.Services;
 
 namespace Quibble.Server
@@ -79,6 +80,8 @@ namespace Quibble.Server
                     return Task.CompletedTask;
                 };
             });
+
+            services.AddSignalR();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -106,6 +109,14 @@ namespace Quibble.Server
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<EventHub>("api/events");
+
+                // Will prevent calls to APIs which don't exist to return a 404 rather than fall through to index.html.
+                endpoints.Map("api/{**catch-all}", context =>
+                {
+                    context.Response.StatusCode = 404;
+                    return Task.CompletedTask;
+                });
                 endpoints.MapFallbackToFile("index.html");
             });
         }
