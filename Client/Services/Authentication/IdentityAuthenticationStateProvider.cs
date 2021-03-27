@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Authorization;
 using Quibble.Shared.Authentication;
 
-namespace Quibble.Client.Services
+namespace Quibble.Client.Services.Authentication
 {
     public class IdentityAuthenticationStateProvider : AuthenticationStateProvider
     {

@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Quibble.Shared.Authentication;
 
-namespace Quibble.Client.Services
+namespace Quibble.Client.Services.Authentication
 {
     public class IdentityAuthenticationService : IIdentityAuthenticationService
     {

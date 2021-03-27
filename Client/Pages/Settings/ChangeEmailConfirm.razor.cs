@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Quibble.Client.Extensions;
-using Quibble.Client.Services;
+using Quibble.Client.Services.Authentication;
 using Quibble.Shared.Authentication;
 
 namespace Quibble.Client.Pages.Settings

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Quibble.Client.Services
+namespace Quibble.Client.Services.Authentication
 {
     public class AuthenticationOperation
     {

@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Quibble.Shared.Authentication;
 
-namespace Quibble.Client.Services
+namespace Quibble.Client.Services.Authentication
 {
     public interface IIdentityAuthenticationService
     {

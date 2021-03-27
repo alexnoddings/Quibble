@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using Quibble.Client.Services;
+using Quibble.Client.Services.Authentication;
 
 namespace Quibble.Client.Pages
 {
