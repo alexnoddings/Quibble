@@ -8,5 +8,7 @@ namespace Quibble.Shared.Models
         public Guid RoundId { get; set; }
         public string Text { get; set; } = string.Empty;
         public string Answer { get; set; } = string.Empty;
+        public sbyte Points { get; set; } = 1;
+        public QuestionState State { get; set; }
     }
 }
