@@ -9,6 +9,7 @@ namespace Quibble.Server.Data
     public class AppUser : IdentityUser<Guid>, IEntity
     {
         public List<DbQuiz> Quizzes { get; set; } = default!;
+        public List<DbQuiz> ParticipatedIn { get; set; } = default!;
         public List<DbSubmittedAnswer> SubmittedAnswers { get; set; } = default!;
     }
 }

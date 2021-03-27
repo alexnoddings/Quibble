@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Quibble.Server.Data.Models
 {
@@ -13,6 +14,11 @@ namespace Quibble.Server.Data.Models
                 .WithOne(round => round.Quiz)
                 .HasForeignKey(round => round.QuizId)
                 .IsRequired();
+
+            builder
+                .HasMany(quiz => quiz.Participants)
+                .WithMany(user => user.ParticipatedIn)
+                .UsingEntity(joinBuilder => joinBuilder.ToTable("QuizParticipants"));
         }
     }
 }
