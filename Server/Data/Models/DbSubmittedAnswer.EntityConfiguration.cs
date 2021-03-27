@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Quibble.Server.Data.Models
 {
@@ -7,6 +8,8 @@ namespace Quibble.Server.Data.Models
         public override void Configure(EntityTypeBuilder<DbSubmittedAnswer> builder)
         {
             base.Configure(builder);
+
+            builder.ToTable("SubmittedAnswers");
         }
     }
 }

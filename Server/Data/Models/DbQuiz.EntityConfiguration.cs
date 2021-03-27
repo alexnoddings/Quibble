@@ -19,6 +19,8 @@ namespace Quibble.Server.Data.Models
                 .HasMany(quiz => quiz.Participants)
                 .WithMany(user => user.ParticipatedIn)
                 .UsingEntity(joinBuilder => joinBuilder.ToTable("QuizParticipants"));
+
+            builder.ToTable("Quizzes");
         }
     }
 }

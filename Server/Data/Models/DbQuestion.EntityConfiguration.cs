@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Quibble.Server.Data.Models
 {
@@ -13,6 +14,8 @@ namespace Quibble.Server.Data.Models
                 .WithOne(submittedAnswer => submittedAnswer.Question)
                 .HasForeignKey(submittedAnswer => submittedAnswer.QuestionId)
                 .IsRequired();
+
+            builder.ToTable("Questions");
         }
     }
 }
