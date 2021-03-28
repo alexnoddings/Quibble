@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Http;
 using System.Reflection;
 using System.Text.Json;
 using Blazorise;
@@ -23,10 +22,18 @@ namespace Quibble.Client
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddOptions();
+            var baseAddress = _environment.BaseAddress;
+            if (!baseAddress.EndsWith('/'))
+                baseAddress += '/';
 
-            ConfigureAuthorisation(services);
-            ConfigureApi(services);
+            services.AddOptions();
+            services.AddOptions<JsonSerializerOptions>().Configure(o => o.PropertyNameCaseInsensitive = true);
+
+            services.AddAuthorizationCore();
+            services.AddScoped<IIdentityAuthenticationService, IdentityAuthenticationService>();
+            services.AddHttpClient(nameof(IdentityAuthenticationService), httpClient => httpClient.BaseAddress = new Uri(baseAddress + "api/Authentication/"));
+            services.AddScoped<IdentityAuthenticationStateProvider>();
+            services.AddScoped<AuthenticationStateProvider>(serviceProvider => serviceProvider.GetRequiredService<IdentityAuthenticationStateProvider>());
 
             services
                 .AddBlazorise(options =>
@@ -45,20 +52,6 @@ namespace Quibble.Client
                 if (_environment.IsDevelopment())
                     options.UseReduxDevTools();
             });
-        }
-
-        private void ConfigureAuthorisation(IServiceCollection services)
-        {
-            services.AddAuthorizationCore();
-            services.AddScoped<IdentityAuthenticationStateProvider>();
-            services.AddScoped<AuthenticationStateProvider>(serviceProvider => serviceProvider.GetRequiredService<IdentityAuthenticationStateProvider>());
-            services.AddScoped<IIdentityAuthenticationService, IdentityAuthenticationService>();
-        }
-
-        private void ConfigureApi(IServiceCollection services)
-        {
-            services.AddScoped(_ => new HttpClient { BaseAddress = new Uri(_environment.BaseAddress) });
-            services.AddOptions<JsonSerializerOptions>().Configure(o => o.PropertyNameCaseInsensitive = true);
         }
     }
 }

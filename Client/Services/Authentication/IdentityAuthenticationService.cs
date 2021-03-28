@@ -9,8 +9,6 @@ namespace Quibble.Client.Services.Authentication
 {
     public class IdentityAuthenticationService : IIdentityAuthenticationService
     {
-        private const string ApiBase = "/api/Authentication/";
-
         private static readonly JsonSerializerOptions DefaultDeserialisationOptions = new()
         {
             PropertyNameCaseInsensitive = true
@@ -18,14 +16,14 @@ namespace Quibble.Client.Services.Authentication
 
         private readonly HttpClient _httpClient;
 
-        public IdentityAuthenticationService(HttpClient httpClient)
+        public IdentityAuthenticationService(IHttpClientFactory httpClientFactory)
         {
-            _httpClient = httpClient;
+            _httpClient = httpClientFactory.CreateClient(nameof(IdentityAuthenticationService));
         }
 
         public async Task<UserInfo> GetUserAsync()
         {
-            var result = await _httpClient.GetAsync(ApiBase + "User");
+            var result = await _httpClient.GetAsync("User");
             var contentStream = await result.Content.ReadAsStreamAsync();
             return await JsonSerializer.DeserializeAsync<UserInfo>(contentStream, DefaultDeserialisationOptions) ?? UserInfo.Unauthenticated();
         }
@@ -37,7 +35,7 @@ namespace Quibble.Client.Services.Authentication
             PerformPostAsync<LoginRequest, UserInfo>("Login", new LoginRequest { UserName = username, Password = password});
 
         public Task LogoutAsync() =>
-            _httpClient.PostAsync(ApiBase + "Logout", null);
+            _httpClient.PostAsync("Logout", null);
 
         public Task<AuthenticationOperation> ForgotPasswordAsync(string email) =>
             PerformPostAsync("ForgotPassword", new ForgotPasswordRequest { Email = email });
@@ -59,7 +57,7 @@ namespace Quibble.Client.Services.Authentication
 
         private async Task<AuthenticationOperation> PerformPostAsync<TValue>(string endpoint, TValue value)
         {
-            var result = await _httpClient.PostAsJsonAsync(ApiBase + endpoint, value);
+            var result = await _httpClient.PostAsJsonAsync(endpoint, value);
 
             if (result.IsSuccessStatusCode)
                 return AuthenticationOperation.FromSuccess();
@@ -71,7 +69,7 @@ namespace Quibble.Client.Services.Authentication
 
         private async Task<AuthenticationOperation<TReturn>> PerformPostAsync<TValue, TReturn>(string endpoint, TValue value)
         {
-            var result = await _httpClient.PostAsJsonAsync(ApiBase + endpoint, value);
+            var result = await _httpClient.PostAsJsonAsync(endpoint, value);
             var contentStream = await result.Content.ReadAsStreamAsync();
 
             if (result.IsSuccessStatusCode)
