@@ -9,6 +9,18 @@ namespace Quibble.Server.Data.Models
         {
             base.Configure(builder);
 
+            builder
+                .HasOne(answer => answer.Question)
+                .WithMany(question => question.SubmittedAnswers)
+                .HasForeignKey(answer => answer.QuestionId)
+                .IsRequired();
+
+            builder
+                .HasOne(answer => answer.Participant)
+                .WithMany(participant => participant.SubmittedAnswers)
+                .HasForeignKey(answer => answer.ParticipantId)
+                .IsRequired();
+
             builder.ToTable("SubmittedAnswers");
         }
     }

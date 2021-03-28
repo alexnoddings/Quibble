@@ -10,15 +10,24 @@ namespace Quibble.Server.Data.Models
             base.Configure(builder);
 
             builder
+                .HasOne(quiz => quiz.Owner)
+                .WithMany(user => user.Quizzes)
+                .HasForeignKey(quiz => quiz.OwnerId)
+                .IsRequired();
+
+            builder
                 .HasMany(quiz => quiz.Rounds)
                 .WithOne(round => round.Quiz)
                 .HasForeignKey(round => round.QuizId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired();
 
             builder
                 .HasMany(quiz => quiz.Participants)
-                .WithMany(user => user.ParticipatedIn)
-                .UsingEntity(joinBuilder => joinBuilder.ToTable("QuizParticipants"));
+                .WithOne(participant => participant.Quiz)
+                .HasForeignKey(participant => participant.QuizId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired();
 
             builder.ToTable("Quizzes");
         }

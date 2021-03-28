@@ -6,8 +6,8 @@ namespace Quibble.Shared.Models
     {
         public Guid Id { get; set; }
         public Guid QuestionId { get; set; }
-        public Guid SubmitterId { get; set; }
+        public Guid ParticipantId { get; set; }
         public string Text { get; set; } = string.Empty;
-        public sbyte Points { get; set; } = -1;
+        public sbyte AssignedPoints { get; set; } = -1;
     }
 }

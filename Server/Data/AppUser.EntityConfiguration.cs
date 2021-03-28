@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Quibble.Server.Data.Models;
 
 namespace Quibble.Server.Data
@@ -13,12 +14,14 @@ namespace Quibble.Server.Data
                 .HasMany(user => user.Quizzes)
                 .WithOne(quiz => quiz.Owner)
                 .HasForeignKey(quiz => quiz.OwnerId)
+                .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
 
             builder
-                .HasMany(user => user.SubmittedAnswers)
-                .WithOne(submittedAnswer => submittedAnswer.Submitter)
-                .HasForeignKey(submittedAnswer => submittedAnswer.SubmitterId)
+                .HasMany(user => user.Participations)
+                .WithOne(participant => participant.User)
+                .HasForeignKey(participant => participant.UserId)
+                .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
         }
     }

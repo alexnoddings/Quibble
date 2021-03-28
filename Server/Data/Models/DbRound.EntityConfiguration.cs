@@ -10,9 +10,17 @@ namespace Quibble.Server.Data.Models
             base.Configure(builder);
 
             builder
+                .HasOne(round => round.Quiz)
+                .WithMany(quiz => quiz.Rounds)
+                .HasForeignKey(round => round.QuizId)
+                .IsRequired();
+
+
+            builder
                 .HasMany(round => round.Questions)
                 .WithOne(question => question.Round)
                 .HasForeignKey(question => question.RoundId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired();
 
             builder.ToTable("Rounds");

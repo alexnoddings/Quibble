@@ -3,9 +3,10 @@ using Quibble.Shared.Models;
 
 namespace Quibble.Server.Data.Models
 {
-    public class DbQuestion : Question
+    public class DbParticipant : Participant
     {
-        public DbRound Round { get; set; } = default!;
+        public DbQuiz Quiz { get; set; } = default!;
+        public AppUser User { get; set; } = default!;
         public List<DbSubmittedAnswer> SubmittedAnswers { get; set; } = new();
     }
 }

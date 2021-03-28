@@ -12,6 +12,7 @@ namespace Quibble.Server.Data
         public DbSet<DbRound> Rounds { get; set; } = default!;
         public DbSet<DbQuestion> Questions { get; set; } = default!;
         public DbSet<DbSubmittedAnswer> SubmittedAnswers { get; set; } = default!;
+        public DbSet<DbParticipant> Participants { get; set; } = default!;
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
