@@ -15,8 +15,13 @@ namespace Quibble.Client.Components.Authentication
         private void RedirectTo(string page)
         {
             var relativeUrl = NavigationManager.GetRelativeUrl();
+
             if (relativeUrl == string.Empty || !Uri.IsWellFormedUriString(relativeUrl, UriKind.Relative))
                 relativeUrl = "/";
+
+            if (relativeUrl == "logout")
+                relativeUrl = "/";
+
             NavigationManager.NavigateTo("/" + page + "?returnUrl=" + Uri.EscapeDataString(relativeUrl));
         }
     }
