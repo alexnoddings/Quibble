@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Quibble.Server.FluentEnsure;
+using Quibble.Shared.Api;
 
 namespace Quibble.Server.Controllers
 {
@@ -17,17 +15,12 @@ namespace Quibble.Server.Controllers
                                     ?? throw new InvalidOperationException("User is not authenticated.");
         public Guid UserId => Guid.Parse(UserIdStr);
 
-        [DebuggerStepThrough]
-        public EnsureChained<TEntity> EnsureExists<TEntity>([NotNull] TEntity? entity)
-        {
-            if (entity is null)
-                throw new ArgumentNullException();
+        public ApiResponse ErrorResponse(string humanError) => new() {WasSuccessful = false, HumanError = humanError};
+        public ApiResponse<TResult> ErrorResponse<TResult>(string humanError) => new() {WasSuccessful = false, HumanError = humanError};
+        public ApiResponse<TResult> ErrorResponse<TResult>(string humanError, TResult result) => new() {WasSuccessful = false, HumanError = humanError, Result = result};
 
-            return new EnsureChained<TEntity>(entity, UserId);
-        }
-
-        [DebuggerStepThrough]
-        public EnsureFirst<TEntity> Ensure<TEntity>(TEntity entity) => 
-            new(entity, UserId);
+        public ApiResponse SuccessResponse() => new() {WasSuccessful = true};
+        public ApiResponse<TResult> SuccessResponse<TResult>() => new() {WasSuccessful = true};
+        public ApiResponse<TResult> SuccessResponse<TResult>(TResult result) => new() {WasSuccessful = true, Result = result};
     }
 }
