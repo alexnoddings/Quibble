@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Quibble.Server.Data.Models;
 
@@ -23,6 +24,21 @@ namespace Quibble.Server.Data
                 .HasForeignKey(participant => participant.UserId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
+
+            builder.HasData(new AppUser
+            {
+                Id = AppUser.DeletedUserId,
+                UserName = "[Deleted User]",
+                NormalizedUserName = "[DELETED USER]",
+                Email = string.Empty,
+                NormalizedEmail = string.Empty,
+                PasswordHash = string.Empty,
+                PhoneNumber = string.Empty,
+                SecurityStamp = string.Empty,
+                ConcurrencyStamp = string.Empty,
+                LockoutEnabled = true,
+                LockoutEnd = DateTimeOffset.MaxValue
+            });
         }
     }
 }

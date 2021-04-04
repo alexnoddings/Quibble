@@ -8,8 +8,10 @@ namespace Quibble.Server.Data
 {
     public class AppUser : IdentityUser<Guid>, IEntity
     {
-        public List<DbQuiz> Quizzes { get; set; } = default!;
-        public List<DbParticipant> Participations { get; set; } = default!;
-        public List<DbSubmittedAnswer> SubmittedAnswers { get; set; } = default!;
+        public static readonly Guid DeletedUserId = Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF");
+
+        public List<DbQuiz> Quizzes { get; set; } = new();
+        public List<DbParticipant> Participations { get; set; } = new();
+        public List<DbSubmittedAnswer> SubmittedAnswers { get; set; } = new();
     }
 }
