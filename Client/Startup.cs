@@ -31,9 +31,11 @@ namespace Quibble.Client
 
             services.AddAuthorizationCore();
             services.AddScoped<IIdentityAuthenticationService, IdentityAuthenticationService>();
-            services.AddHttpClient(nameof(IdentityAuthenticationService), httpClient => httpClient.BaseAddress = new Uri(baseAddress + "api/Authentication/"));
+            services.AddHttpClient(nameof(IdentityAuthenticationService), httpClient => httpClient.BaseAddress = new Uri(baseAddress + "Api/Authentication/"));
             services.AddScoped<IdentityAuthenticationStateProvider>();
             services.AddScoped<AuthenticationStateProvider>(serviceProvider => serviceProvider.GetRequiredService<IdentityAuthenticationStateProvider>());
+
+            services.AddHttpClient("QuizApi", httpClient => httpClient.BaseAddress = new Uri(baseAddress + "Api/Quiz/"));
 
             services
                 .AddBlazorise(options =>
