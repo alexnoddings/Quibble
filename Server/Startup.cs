@@ -15,7 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Quibble.Server.Data;
 using Quibble.Server.Hubs;
-using Quibble.Server.Services;
+using Quibble.Server.Services.EmailSender;
 
 namespace Quibble.Server
 {

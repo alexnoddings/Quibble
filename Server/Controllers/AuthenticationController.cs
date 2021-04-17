@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Quibble.Server.Data;
-using Quibble.Server.Services;
+using Quibble.Server.Services.EmailSender;
 using Quibble.Shared.Authentication;
 
 namespace Quibble.Server.Controllers
@@ -17,13 +17,13 @@ namespace Quibble.Server.Controllers
     [Route("api/[controller]")]
     public class AuthenticationController : ControllerBase
     {
-        private static readonly string[] ExposedClaimTypes = {ClaimTypes.NameIdentifier, ClaimTypes.Name, ClaimTypes.Email};
+        private static readonly string[] ExposedClaimTypes = { ClaimTypes.NameIdentifier, ClaimTypes.Name, ClaimTypes.Email };
 
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IEmailSender _emailSender;
 
-        private List<string> ModelStateErrors => 
+        private List<string> ModelStateErrors =>
             ModelState
                 .Where(kv => kv.Value is not null)
                 .SelectMany(kv => kv.Value!.Errors)
@@ -39,18 +39,21 @@ namespace Quibble.Server.Controllers
 
         [AllowAnonymous]
         [HttpGet("User")]
-        public async Task<IActionResult> GetUserAsync()
+        public Task<IActionResult> GetUserAsync()
         {
-            if (User.Identity?.IsAuthenticated == true)
-                return Ok(new UserInfo
-                {
-                    IsAuthenticated = true,
-                    AuthenticationType = User.Identity.AuthenticationType ?? "Identity.Application",
-                    UserName = User.Identity?.Name ?? string.Empty,
-                    Claims = User.Claims.Where(claim => ExposedClaimTypes.Contains(claim.Type)).ToDictionary(claim => claim.Type, claim => claim.Value)
-                });
+            UserInfo userInfo =
+                User.Identity?.IsAuthenticated == true
+                    ? new UserInfo
+                    {
+                        IsAuthenticated = true,
+                        AuthenticationType = User.Identity.AuthenticationType ?? "Identity.Application",
+                        UserName = User.Identity?.Name ?? string.Empty,
+                        Claims = User.Claims.Where(claim => ExposedClaimTypes.Contains(claim.Type)).ToDictionary(claim => claim.Type, claim => claim.Value)
+                    }
+                    : UserInfo.Unauthenticated();
 
-            return Ok(UserInfo.Unauthenticated());
+            IActionResult result = Ok(userInfo);
+            return Task.FromResult(result);
         }
 
         [AllowAnonymous]

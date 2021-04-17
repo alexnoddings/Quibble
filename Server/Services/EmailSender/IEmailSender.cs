@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Quibble.Server.Services
+namespace Quibble.Server.Services.EmailSender
 {
     public interface IEmailSender
     {
