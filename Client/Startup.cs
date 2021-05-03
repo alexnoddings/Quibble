@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Reflection;
 using System.Text.Json;
 using Blazorise;
 using Blazorise.Bootstrap;
-using Fluxor;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Quibble.Client.Services.Authentication;
+using Quibble.Client.Sync.Extensions;
 
 namespace Quibble.Client
 {
@@ -36,6 +35,7 @@ namespace Quibble.Client
             services.AddScoped<AuthenticationStateProvider>(serviceProvider => serviceProvider.GetRequiredService<IdentityAuthenticationStateProvider>());
 
             services.AddHttpClient("QuizApi", httpClient => httpClient.BaseAddress = new Uri(baseAddress + "Api/Quiz/"));
+            services.AddSynchronisedQuizFactory();
 
             services
                 .AddBlazorise(options =>
@@ -45,15 +45,6 @@ namespace Quibble.Client
                     options.DelayTextOnKeyPressInterval = 80;
                 })
                 .AddBootstrapProviders();
-
-            services.AddFluxor(options =>
-            {
-                options.UseRouting();
-                options.ScanAssemblies(Assembly.GetExecutingAssembly());
-
-                if (_environment.IsDevelopment())
-                    options.UseReduxDevTools();
-            });
         }
     }
 }
