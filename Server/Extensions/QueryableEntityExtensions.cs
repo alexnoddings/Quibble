@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Quibble.Shared.Models;
+using Quibble.Shared.Entities;
 
 namespace Quibble.Server.Extensions
 {
@@ -31,7 +31,7 @@ namespace Quibble.Server.Extensions
         ///     More than one <typeparamref name="TEntity"/> in <paramref name="source"/> has the given <paramref name="id"/>.
         /// </exception>
         /// <exception cref="OperationCanceledException">If the <see cref="CancellationToken"/> is cancelled.</exception>
-        public static Task<TEntity> FindAsync<TId, TEntity>(this IQueryable<TEntity> source, TId id, CancellationToken cancellationToken = default)
+        public static Task<TEntity?> FindAsync<TId, TEntity>(this IQueryable<TEntity> source, TId id, CancellationToken cancellationToken = default)
             where TId : IEquatable<TId>
             where TEntity : IEntity<TId> =>
             source.SingleOrDefaultAsync(entity => entity.Id.Equals(id), cancellationToken);

@@ -7,15 +7,14 @@ using Microsoft.EntityFrameworkCore;
 using Quibble.Server.Data;
 using Quibble.Server.Data.Models;
 using Quibble.Server.Extensions;
-using Quibble.Shared.Api;
-using Quibble.Shared.Hubs;
-using Quibble.Shared.Models;
+using Quibble.Shared.Entities;
+using Quibble.Shared.Hub;
 using Quibble.Shared.Resources;
 
-namespace Quibble.Server.Hubs
+namespace Quibble.Server.Hub
 {
     [Authorize]
-    public partial class QuibbleHub : Hub<IEventClient>, IEventHub
+    public partial class QuibbleHub : Hub<IQuibbleHubClient>
     {
         private AppDbContext DbContext { get; }
         private IMapper Mapper { get; }
@@ -55,7 +54,7 @@ namespace Quibble.Server.Hubs
                     var participant = new DbParticipant { Quiz = dbQuiz, UserId = userId };
                     dbQuiz.Participants.Add(participant);
                     await DbContext.SaveChangesAsync();
-                    await Clients.Group(GetQuizGroupName(quizId)).OnParticipantJoinedAsync(participant.Id, user.UserName);
+                    await Clients.Group(GetQuizGroupName(quizId)).OnParticipantJoinedAsync(participant.Id, user!.UserName);
                 }
             }
 
@@ -84,6 +83,7 @@ namespace Quibble.Server.Hubs
             return quizId;
         }
 
+        // ToDo: initialise in constructor
         private HubExecutionContext ExecutionContext
         {
             get
@@ -100,13 +100,14 @@ namespace Quibble.Server.Hubs
 
         private record HubExecutionContext(Guid UserId, Guid QuizId, string? ErrorCode = null);
 
-        private HubResponse Success() => new(true);
-        private HubResponse<TValue> Success<TValue>(TValue? value = default) => new(true, null, value);
-        private HubResponse Failure(string? errorCode = null) => new(false, errorCode);
-        private HubResponse<TValue> Failure<TValue>(string? errorCode = null) => new(false, errorCode);
+        private HubResponse Success() => HubResponse.FromSuccess();
+        private HubResponse<TValue> Success<TValue>(TValue value) => HubResponse.FromSuccess(value);
+        private HubResponse Failure(string errorCode) => HubResponse.FromError(errorCode);
+        private HubResponse<TValue> Failure<TValue>(string errorCode) => HubResponse.FromError<TValue>(errorCode);
 
-        private IEventClient QuizGroup(Guid quizId) => Clients.Group(GetQuizGroupName(quizId));
-        private IEventClient QuizHostGroup(Guid quizId) => Clients.Group(GetQuizHostGroupName(quizId));
+        private IQuibbleHubClient QuizGroup(Guid quizId) => Clients.Group(GetQuizGroupName(quizId));
+        private IQuibbleHubClient QuizGroupExcept(Guid quizId, string excludedConnection) => Clients.GroupExcept(GetQuizGroupName(quizId), excludedConnection);
+        private IQuibbleHubClient QuizGroupExceptCurrent(Guid quizId) => Clients.GroupExcept(GetQuizGroupName(quizId), Context.ConnectionId);
 
         public static string GetQuizGroupName(Guid quizId) => $"quiz::{quizId}";
         public static string GetQuizHostGroupName(Guid quizId) => $"quiz::{quizId}::host";

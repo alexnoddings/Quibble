@@ -4,15 +4,16 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Quibble.Server.Data.Models;
 using Quibble.Server.Extensions;
-using Quibble.Shared.Api;
+using Quibble.Shared.Entities;
+using Quibble.Shared.Hub;
 using Quibble.Shared.Models;
 using Quibble.Shared.Resources;
 
-namespace Quibble.Server.Hubs
+namespace Quibble.Server.Hub
 {
     public partial class QuibbleHub
     {
-        [HubMethodName("CreateQuestion")]
+        [HubMethodName(Endpoints.CreateQuestion)]
         public async Task<HubResponse> CreateQuestionAsync(Guid roundId, string text, string answer, sbyte points)
         {
             (Guid userId, Guid quizId, string? errorCode) = ExecutionContext;
@@ -35,8 +36,8 @@ namespace Quibble.Server.Hubs
             if (points < 1)
                 return Failure(nameof(ErrorMessages.PointsCantBeLessThanOne));
 
-            if (points > 100)
-                return Failure(nameof(ErrorMessages.PointsCantBeMoreThanOneHundred));
+            if (points > 10)
+                return Failure(nameof(ErrorMessages.PointsCantBeMoreThanTen));
 
             var dbQuestion = new DbQuestion
             {
@@ -48,13 +49,13 @@ namespace Quibble.Server.Hubs
             dbRound.Questions.Add(dbQuestion);
             await DbContext.SaveChangesAsync();
 
-            var question = Mapper.Map<Question>(dbQuestion);
+            var question = Mapper.Map<QuestionDto>(dbQuestion);
             await QuizGroup(quizId).OnQuestionAddedAsync(question);
 
             return Success();
         }
 
-        [HubMethodName("UpdateQuestionText")]
+        [HubMethodName(Endpoints.UpdateQuestionText)]
         public async Task<HubResponse> UpdateQuestionTextAsync(Guid questionId, string newText)
         {
             (Guid userId, Guid quizId, string? errorCode) = ExecutionContext;
@@ -83,7 +84,7 @@ namespace Quibble.Server.Hubs
             return Success();
         }
 
-        [HubMethodName("UpdateQuestionAnswer")]
+        [HubMethodName(Endpoints.UpdateQuestionAnswer)]
         public async Task<HubResponse> UpdateQuestionAnswerAsync(Guid questionId, string newAnswer)
         {
             (Guid userId, Guid quizId, string? errorCode) = ExecutionContext;
@@ -112,7 +113,7 @@ namespace Quibble.Server.Hubs
             return Success();
         }
 
-        [HubMethodName("UpdateQuestionPoints")]
+        [HubMethodName(Endpoints.UpdateQuestionPoints)]
         public async Task<HubResponse> UpdateQuestionPointsAsync(Guid questionId, sbyte newPoints)
         {
             (Guid userId, Guid quizId, string? errorCode) = ExecutionContext;
@@ -135,8 +136,8 @@ namespace Quibble.Server.Hubs
             if (newPoints < 1)
                 return Failure(nameof(ErrorMessages.PointsCantBeLessThanOne));
 
-            if (newPoints > 100)
-                return Failure(nameof(ErrorMessages.PointsCantBeMoreThanOneHundred));
+            if (newPoints > 10)
+                return Failure(nameof(ErrorMessages.PointsCantBeMoreThanTen));
 
             dbQuestion.Points = newPoints;
             await DbContext.SaveChangesAsync();
@@ -146,7 +147,7 @@ namespace Quibble.Server.Hubs
             return Success();
         }
 
-        [HubMethodName("UpdateQuestionState")]
+        [HubMethodName(Endpoints.UpdateQuestionState)]
         public async Task<HubResponse> UpdateQuestionStateAsync(Guid questionId, QuestionState newState)
         {
             (Guid userId, Guid quizId, string? errorCode) = ExecutionContext;
@@ -190,7 +191,7 @@ namespace Quibble.Server.Hubs
             return Success();
         }
 
-        [HubMethodName("DeleteQuestion")]
+        [HubMethodName(Endpoints.DeleteQuestion)]
         public async Task<HubResponse> DeleteQuestionAsync(Guid questionId)
         {
             (Guid userId, Guid quizId, string? errorCode) = ExecutionContext;

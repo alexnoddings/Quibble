@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Quibble.Shared.Models;
+using Quibble.Shared.Entities;
 
 namespace Quibble.Server.Data.Models
 {

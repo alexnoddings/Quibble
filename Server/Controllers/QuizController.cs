@@ -5,13 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Quibble.Server.Data;
 using Quibble.Server.Data.Models;
 using Quibble.Server.Extensions;
+using Quibble.Shared.Entities;
 using Quibble.Shared.Models;
-using Quibble.Shared.Resources;
 
 namespace Quibble.Server.Controllers
 {
@@ -49,7 +48,7 @@ namespace Quibble.Server.Controllers
         }
 
         [HttpGet("{QuizId:guid}/negotiate")]
-        public async Task<string?> NegotiateAsync(Guid quizId)
+        public async Task<QuizNegotiationDto?> NegotiateAsync(Guid quizId)
         {
             var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
@@ -57,17 +56,17 @@ namespace Quibble.Server.Controllers
             if (dbQuiz is null)
             {
                 Response.StatusCode = StatusCodes.Status404NotFound;
-                return nameof(ErrorMessages.QuizNotFound);
+                return null;
             }
 
-            if (dbQuiz.OwnerId != userId && dbQuiz.State != QuizState.Open)
+            if (dbQuiz.OwnerId != userId && dbQuiz.State == QuizState.InDevelopment)
             {
                 Response.StatusCode = StatusCodes.Status403Forbidden;
-                return nameof(ErrorMessages.QuizNotOpen);
+                return new QuizNegotiationDto { CanEdit = false, State = QuizState.InDevelopment };
             }
 
-            Response.StatusCode = StatusCodes.Status204NoContent;
-            return null;
+            Response.StatusCode = StatusCodes.Status200OK;
+            return new QuizNegotiationDto {CanEdit = userId == dbQuiz.OwnerId, State = dbQuiz.State};
         }
     }
 }

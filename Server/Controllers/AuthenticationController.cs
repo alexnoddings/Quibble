@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Quibble.Server.Data;
 using Quibble.Server.Services.EmailSender;
-using Quibble.Shared.Authentication;
+using Quibble.Shared.Api.Authentication;
 
 namespace Quibble.Server.Controllers
 {

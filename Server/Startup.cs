@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Net.Mime;
-using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -14,8 +13,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Quibble.Server.Data;
-using Quibble.Server.Hubs;
+using Quibble.Server.Data.Models;
+using Quibble.Server.Hub;
 using Quibble.Server.Services.EmailSender;
+using Quibble.Shared.Models;
 
 namespace Quibble.Server
 {
@@ -83,7 +84,12 @@ namespace Quibble.Server
             });
 
             services.AddSignalR();
-            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            services.AddAutoMapper(config =>
+            {
+                config.CreateMap<DbQuiz, QuizDto>();
+                config.CreateMap<DbRound, RoundDto>();
+                config.CreateMap<DbQuestion, QuestionDto>();
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

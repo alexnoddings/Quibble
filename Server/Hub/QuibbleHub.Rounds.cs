@@ -4,15 +4,16 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Quibble.Server.Data.Models;
 using Quibble.Server.Extensions;
-using Quibble.Shared.Api;
+using Quibble.Shared.Entities;
+using Quibble.Shared.Hub;
 using Quibble.Shared.Models;
 using Quibble.Shared.Resources;
 
-namespace Quibble.Server.Hubs
+namespace Quibble.Server.Hub
 {
     public partial class QuibbleHub
     {
-        [HubMethodName("CreateRound")]
+        [HubMethodName(Endpoints.CreateRound)]
         public async Task<HubResponse> CreateRoundAsync(string title)
         {
             (Guid userId, Guid quizId, string? errorCode) = ExecutionContext;
@@ -23,8 +24,8 @@ namespace Quibble.Server.Hubs
             if (dbQuiz is null)
                 return Failure(nameof(ErrorMessages.RoundParentQuizNotFound));
 
-            if (dbQuiz.OwnerId == userId)
-                return Success(Mapper.Map<Quiz>(dbQuiz));
+            if (dbQuiz.OwnerId != userId)
+                return Failure(nameof(ErrorMessages.QuizCantEditAsNotOwner));
 
             if (dbQuiz.State != QuizState.InDevelopment)
                 return Failure(nameof(ErrorMessages.CantEditAsQuizNotInDevelopment));
@@ -37,13 +38,13 @@ namespace Quibble.Server.Hubs
             dbQuiz.Rounds.Add(dbRound);
             await DbContext.SaveChangesAsync();
 
-            var round = Mapper.Map<Round>(dbRound);
+            var round = Mapper.Map<RoundDto>(dbRound);
             await QuizGroup(quizId).OnRoundAddedAsync(round);
 
             return Success();
         }
 
-        [HubMethodName("UpdateRoundTitle")]
+        [HubMethodName(Endpoints.UpdateRoundTitle)]
         public async Task<HubResponse> UpdateRoundTitleAsync(Guid roundId, string newTitle)
         {
             (Guid userId, Guid quizId, string? errorCode) = ExecutionContext;
@@ -72,7 +73,7 @@ namespace Quibble.Server.Hubs
             return Success();
         }
 
-        [HubMethodName("OpenRoundAsync")]
+        [HubMethodName(Endpoints.OpenRound)]
         public async Task<HubResponse> OpenRoundAsync(Guid roundId)
         {
             (Guid userId, Guid quizId, string? errorCode) = ExecutionContext;
@@ -100,7 +101,7 @@ namespace Quibble.Server.Hubs
             return Success();
         }
 
-        [HubMethodName("DeleteRound")]
+        [HubMethodName(Endpoints.DeleteRound)]
         public async Task<HubResponse> DeleteRoundAsync(Guid roundId)
         {
             (Guid userId, Guid quizId, string? errorCode) = ExecutionContext;

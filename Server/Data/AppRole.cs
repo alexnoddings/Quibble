@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Identity;
-using Quibble.Shared.Models;
+using Quibble.Shared.Entities;
 
 namespace Quibble.Server.Data
 {
