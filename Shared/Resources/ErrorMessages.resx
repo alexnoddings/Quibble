@@ -126,8 +126,8 @@
   <data name="PointsCantBeLessThanOne" xml:space="preserve">
     <value>Point values can't go below 1.</value>
   </data>
-  <data name="PointsCantBeMoreThanOneHundred" xml:space="preserve">
-    <value>Point values can't go over 100.</value>
+  <data name="PointsCantBeMoreThanTen" xml:space="preserve">
+    <value>Point values can't go over 10.</value>
   </data>
   <data name="QuestionBadState" xml:space="preserve">
     <value>Can't update this question's state.</value>

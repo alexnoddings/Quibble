@@ -1,8 +1,9 @@
 ﻿using System;
+using Quibble.Shared.Entities;
 
 namespace Quibble.Shared.Models
 {
-    public class Round : IEntity
+    public class RoundDto : IRound
     {
         public Guid Id { get; set; }
         public Guid QuizId { get; set; }

@@ -1,8 +1,9 @@
 ﻿using System;
+using Quibble.Shared.Entities;
 
 namespace Quibble.Shared.Models
 {
-    public class Quiz : IEntity
+    public class QuizDto : IQuiz
     {
         public Guid Id { get; set; }
         public Guid OwnerId { get; set; }

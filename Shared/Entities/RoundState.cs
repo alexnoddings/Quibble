@@ -1,4 +1,4 @@
-﻿namespace Quibble.Shared.Models
+﻿namespace Quibble.Shared.Entities
 {
     public enum RoundState
     {

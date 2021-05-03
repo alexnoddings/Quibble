@@ -88,11 +88,11 @@ namespace Quibble.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Point values can&apos;t go over 100..
+        ///   Looks up a localized string similar to Point values can&apos;t go over 10..
         /// </summary>
-        public static string PointsCantBeMoreThanOneHundred {
+        public static string PointsCantBeMoreThanTen {
             get {
-                return ResourceManager.GetString("PointsCantBeMoreThanOneHundred", resourceCulture);
+                return ResourceManager.GetString("PointsCantBeMoreThanTen", resourceCulture);
             }
         }
         

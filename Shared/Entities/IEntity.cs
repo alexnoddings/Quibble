@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Quibble.Shared.Models
+namespace Quibble.Shared.Entities
 {
     public interface IEntity : IEntity<Guid>
     {
