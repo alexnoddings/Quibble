@@ -14,11 +14,10 @@ namespace Quibble.Client.Components
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            string pageTitle;
-            if (string.IsNullOrEmpty(Value))
-                pageTitle = TitleSuffix;
-            else
-                pageTitle = Value + TitleBreak + TitleSuffix;
+            string pageTitle = 
+                string.IsNullOrEmpty(Value) 
+                    ? TitleSuffix 
+                    : Value + TitleBreak + TitleSuffix;
 
             builder.OpenComponent<Title>(0);
             builder.AddAttribute(1, "Value", pageTitle);

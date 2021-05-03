@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Quibble.Shared.Entities;
-using Quibble.Shared.Models;
 
 namespace Quibble.Client.Sync.Entities.EditMode
 {
