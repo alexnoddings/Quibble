@@ -2,6 +2,7 @@
 using System.Text.Json;
 using Blazorise;
 using Blazorise.Bootstrap;
+using Blazorise.Icons.FontAwesome;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,7 +45,8 @@ namespace Quibble.Client
                     options.DelayTextOnKeyPress = true;
                     options.DelayTextOnKeyPressInterval = 80;
                 })
-                .AddBootstrapProviders();
+                .AddBootstrapProviders()
+                .AddFontAwesomeIcons();
         }
     }
 }
