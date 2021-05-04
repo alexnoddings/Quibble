@@ -47,7 +47,13 @@ namespace Quibble.Server
                         return new BadRequestObjectResult(errors);
                     });
 
-            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<AppDbContext>(options =>
+            {
+                options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"), sqlOptions =>
+                {
+                    sqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+                });
+            });
 
             services.AddIdentity<AppUser, AppRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
@@ -94,7 +100,7 @@ namespace Quibble.Server
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseResponseCompression();
+            //app.UseResponseCompression();
 
             if (env.IsDevelopment())
             {
