@@ -108,5 +108,15 @@ namespace Quibble.Client.Sync.Internal.EditMode
                 SyncedQuestions.Remove(question);
             }
         }
+
+        public override int GetStateStamp()
+        {
+            var hashCode = new HashCode();
+            hashCode.Add(Title);
+            hashCode.Add(State);
+            foreach (var question in SyncedQuestions)
+                hashCode.Add(question.GetStateStamp());
+            return hashCode.ToHashCode();
+        }
     }
 }

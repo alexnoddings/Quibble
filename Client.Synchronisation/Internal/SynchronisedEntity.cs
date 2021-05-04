@@ -12,5 +12,7 @@ namespace Quibble.Client.Sync.Internal
             Updated?.Invoke() is null
                 ? Task.CompletedTask
                 : Updated.Invoke();
+
+        public abstract int GetStateStamp();
     }
 }

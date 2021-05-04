@@ -103,5 +103,15 @@ namespace Quibble.Client.Sync.Internal.EditMode
                 _eventHandlers.Remove(handler);
             }
         }
+
+        public override int GetStateStamp()
+        {
+            var hashCode = new HashCode();
+            hashCode.Add(Text);
+            hashCode.Add(Answer);
+            hashCode.Add(Points);
+            hashCode.Add(State);
+            return hashCode.ToHashCode();
+        }
     }
 }
