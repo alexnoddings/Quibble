@@ -14,7 +14,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "hotReloadProfile": "aspnetcore"
+      "hotReloadProfile": "blazorwasm"
     },
     "Quibble": {
       "commandName": "Project",
@@ -24,7 +24,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "hotReloadProfile": "aspnetcore"
+      "hotReloadProfile": "blazorwasm",
+      "launchBrowser": true
     }
   }
 }
