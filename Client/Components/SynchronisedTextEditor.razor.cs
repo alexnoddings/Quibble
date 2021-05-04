@@ -28,6 +28,8 @@ namespace Quibble.Client.Components
         [Parameter]
         public Size Size { get; set; } = Size.None;
 
+        private bool IsSaveIconShown { get; set; }
+
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
@@ -38,7 +40,7 @@ namespace Quibble.Client.Components
                 LocalValue = Value;
             }
 
-            SaveDebouncer.Executor = SaveFunction;
+            SaveDebouncer.Executor = SaveAsync;
             PreviewThrottler.Executor = PreviewFunction;
         }
 
@@ -53,6 +55,20 @@ namespace Quibble.Client.Components
         {
             await PreviewThrottler.FlushAsync();
             await SaveDebouncer.FlushAsync();
+        }
+
+        private Task SaveAsync(string newValue)
+        {
+            IsSaveIconShown = true;
+            StateHasChanged();
+
+            Task.Run(async () =>
+            {
+                await Task.Delay(900);
+                IsSaveIconShown = false;
+                return InvokeAsync(StateHasChanged);
+            });
+            return SaveFunction(newValue);
         }
 
         public async ValueTask DisposeAsync()

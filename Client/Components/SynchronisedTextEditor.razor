@@ -1,6 +1,9 @@
 ﻿
-<TextEdit Role="TextRole.Text" 
-          Text="@LocalValue" 
-          TextChanged="OnTextChanged" 
-          Blur="OnBlurAsync"
-          Size="Size"/>
+<div class="q-synced-text-field @(IsSaveIconShown ? "q-synced-text-field-saved" : string.Empty)">
+    <TextEdit Role="TextRole.Text" 
+              Text="@LocalValue" 
+              TextChanged="OnTextChanged" 
+              Blur="OnBlurAsync"
+              Size="Size">
+    </TextEdit>
+</div>
