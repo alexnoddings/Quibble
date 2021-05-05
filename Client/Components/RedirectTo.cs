@@ -37,11 +37,6 @@ namespace Quibble.Client.Components
         {
             if (IsDisposed) return;
 
-            if (isDisposing)
-            {
-                IsDisposed = true;
-            }
-
             IsDisposed = true;
         }
 
