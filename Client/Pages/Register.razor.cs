@@ -31,8 +31,6 @@ namespace Quibble.Client.Pages
 
         private string ReturnUrl { get; set; } = string.Empty;
 
-        private bool IsSubmitting { get; set; }
-
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -46,13 +44,9 @@ namespace Quibble.Client.Pages
 
         private async Task RegisterAsync()
         {
-            IsSubmitting = true;
-
             var result = await AuthenticationProvider.RegisterAsync(Model.UserName, Model.Email, Model.Password);
             if (!result.WasSuccessful)
                 Errors = result.Errors?.ToList() ?? new List<string>();
-
-            IsSubmitting = false;
         }
     }
 }

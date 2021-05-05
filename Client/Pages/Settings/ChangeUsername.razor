@@ -4,9 +4,9 @@
 
 <PageTitle Value="User settings" />
 
-<AuthForm Errors="Errors" Model="Model" OnSubmit="ChangeUsernameAsync">
+<AuthForm Errors="Errors" Model="Model" OnSubmit="ChangeUsernameAsync" SubmitText="Change username">
     <Title>
-        User settings
+        User Settings
     </Title>
     <Form>
         <Field>
@@ -30,7 +30,4 @@
             <ValidationMessage For="() => Model.Password" />
         </Field>
     </Form>
-    <Submit>
-        Change username
-    </Submit>
 </AuthForm>

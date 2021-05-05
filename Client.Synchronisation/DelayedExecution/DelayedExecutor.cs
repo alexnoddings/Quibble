@@ -16,8 +16,7 @@ namespace Quibble.Client.Sync.DelayedExecution
 
         public DelayedExecutor(double intervalMs, bool shouldDebounce)
         {
-            _timer = new Timer(intervalMs);
-            _timer.AutoReset = false;
+            _timer = new Timer(intervalMs) {AutoReset = false};
             _timer.Elapsed += OnTimerElapsed;
 
             _shouldDebounce = shouldDebounce;
@@ -66,13 +65,13 @@ namespace Quibble.Client.Sync.DelayedExecution
         {
             if (IsDisposed) return;
 
-            IsDisposed = true;
-
             if (isDisposing)
             {
                 _timer.Stop();
                 _timer.Dispose();
             }
+
+            IsDisposed = true;
         }
 
         public void Dispose()

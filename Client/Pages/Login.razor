@@ -1,7 +1,7 @@
 ﻿@page "/login"
 @layout AuthLayout
 
-<PageTitle Value="Log in to Quibble" />
+<PageTitle Value="Log in" />
 
 <AuthorizeView>
     <Authorized>
@@ -9,7 +9,7 @@
     </Authorized>
 </AuthorizeView>
 
-<AuthForm Errors="Errors" Model="Model" OnSubmit="LoginAsync">
+<AuthForm Errors="Errors" Model="Model" OnSubmit="LoginAsync" SubmitText="Log in">
     <Title>
         Log in to Quibble
     </Title>
@@ -30,9 +30,6 @@
             <ValidationMessage For="() => Model.Password" />
         </Field>
     </Form>
-    <Submit>
-        Log in
-    </Submit>
     <Footer>
         <Text Alignment="TextAlignment.Center">
             New here?

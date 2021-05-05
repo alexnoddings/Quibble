@@ -4,6 +4,7 @@
     <TargetFramework>$(DefaultFramework)</TargetFramework>
     <RootNamespace>Quibble.Shared</RootNamespace>
     <Nullable>enable</Nullable>
+    <NeutralLanguage>en-GB</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>

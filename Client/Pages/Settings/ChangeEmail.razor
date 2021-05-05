@@ -4,9 +4,9 @@
 
 <PageTitle Value="Email settings" />
 
-<AuthForm Errors="Errors" Model="Model" OnSubmit="RequestChangeEmailAsync">
+<AuthForm Errors="Errors" Model="Model" OnSubmit="RequestChangeEmailAsync" SubmitText="Request email change">
     <Title>
-        Email settings
+        Email Settings
     </Title>
     <Form>
         <Field>
@@ -30,9 +30,6 @@
             <ValidationMessage For="() => Model.Password" />
         </Field>
     </Form>
-    <Submit>
-        Request email change
-    </Submit>
 </AuthForm>
 
 @if (WasSuccessful)

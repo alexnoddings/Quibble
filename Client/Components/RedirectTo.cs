@@ -15,10 +15,13 @@ namespace Quibble.Client.Components
         [Inject]
         private NavigationManager NavigationManager { get; set; } = default!;
 
-        private bool _isDisposed = false;
+        protected bool IsDisposed { get; private set; }
 
         protected override async Task OnInitializedAsync()
         {
+            if (IsDisposed)
+                return;
+
             // Made local to prevent it changing while waiting
             string url = Url;
             if (string.IsNullOrEmpty(url))
@@ -27,15 +30,25 @@ namespace Quibble.Client.Components
             if (After > TimeSpan.Zero)
                 await Task.Delay(After);
 
-            if (_isDisposed) 
-                return;
-
             NavigationManager.NavigateTo(url);
+        }
+
+        protected virtual void Dispose(bool isDisposing)
+        {
+            if (IsDisposed) return;
+
+            if (isDisposing)
+            {
+                IsDisposed = true;
+            }
+
+            IsDisposed = true;
         }
 
         public void Dispose()
         {
-            _isDisposed = true;
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

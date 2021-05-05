@@ -30,8 +30,6 @@ namespace Quibble.Client.Pages
 
         private bool IsTokenPreFilled { get; set; }
 
-        private bool IsSubmitting { get; set; }
-
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -43,15 +41,11 @@ namespace Quibble.Client.Pages
 
         private async Task ResetPasswordAsync()
         {
-            IsSubmitting = true;
-
             var result = await AuthenticationProvider.ResetPasswordAsync(Model.Email, Model.Token, Model.NewPassword);
             if (result.WasSuccessful)
                 NavigationManager.NavigateTo("/");
             else
                 Errors = result.Errors?.ToList() ?? new List<string>();
-
-            IsSubmitting = false;
         }
     }
 }

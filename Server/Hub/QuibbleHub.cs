@@ -100,10 +100,10 @@ namespace Quibble.Server.Hub
 
         private record HubExecutionContext(Guid UserId, Guid QuizId, string? ErrorCode = null);
 
-        private HubResponse Success() => HubResponse.FromSuccess();
-        private HubResponse<TValue> Success<TValue>(TValue value) => HubResponse.FromSuccess(value);
-        private HubResponse Failure(string errorCode) => HubResponse.FromError(errorCode);
-        private HubResponse<TValue> Failure<TValue>(string errorCode) => HubResponse.FromError<TValue>(errorCode);
+        private static HubResponse Success() => HubResponse.FromSuccess();
+        private static HubResponse<TValue> Success<TValue>(TValue value) => HubResponse.FromSuccess(value);
+        private static HubResponse Failure(string errorCode) => HubResponse.FromError(errorCode);
+        private static HubResponse<TValue> Failure<TValue>(string errorCode) => HubResponse.FromError<TValue>(errorCode);
 
         private IQuibbleHubClient QuizGroup(Guid quizId) => Clients.Group(GetQuizGroupName(quizId));
         private IQuibbleHubClient QuizGroupExcept(Guid quizId, string excludedConnection) => Clients.GroupExcept(GetQuizGroupName(quizId), excludedConnection);

@@ -30,6 +30,8 @@ namespace Quibble.Client.Components
 
         private bool IsSaveIconShown { get; set; }
 
+        protected bool IsDisposed { get; private set; }
+
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
@@ -71,10 +73,23 @@ namespace Quibble.Client.Components
             return SaveFunction(newValue);
         }
 
+        protected virtual async ValueTask DisposeAsync(bool isDisposing)
+        {
+            if (IsDisposed) return;
+
+            if (isDisposing)
+            {
+                await PreviewThrottler.FlushAsync();
+                await SaveDebouncer.FlushAsync();
+            }
+
+            IsDisposed = true;
+        }
+
         public async ValueTask DisposeAsync()
         {
-            await PreviewThrottler.FlushAsync();
-            await SaveDebouncer.FlushAsync();
+            await DisposeAsync(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

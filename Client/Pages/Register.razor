@@ -9,7 +9,7 @@
     </Authorized>
 </AuthorizeView>
 
-<AuthForm Errors="Errors" Model="Model" OnSubmit="RegisterAsync">
+<AuthForm Errors="Errors" Model="Model" OnSubmit="RegisterAsync" SubmitText="Create account">
     <Title>Create your account</Title>
     <Form>
         <Field>
@@ -41,9 +41,6 @@
             <ValidationMessage For="() => Model.Password" />
         </Field>
     </Form>
-    <Submit>
-        Create account
-    </Submit>
     <Footer>
         <Text Alignment="TextAlignment.Center">
             Already have an account?

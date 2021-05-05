@@ -13,7 +13,7 @@ namespace Quibble.Shared.Hub
         public HubResponse(bool wasSuccessful, string? errorCode)
         {
             if (!wasSuccessful && string.IsNullOrWhiteSpace(errorCode))
-                throw new ArgumentException(nameof(errorCode));
+                throw new ArgumentException($"Cannot be null or whitespace when {nameof(wasSuccessful)} is false.", nameof(errorCode));
 
             WasSuccessful = wasSuccessful;
             ErrorCode = errorCode;

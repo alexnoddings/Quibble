@@ -27,15 +27,13 @@
         </BarItem>
     </Authorized>
     <NotAuthorized>
-        <BarItem>
-            <Text Color="TextColor.Light">
-                <a href="/login" @onclick="RedirectToLogin" @onclick:preventDefault>Log in</a>
-            </Text>
+        <BarItem Margin="Margin.Is2.OnX">
+            <a class="q-login-link" href="/login" @onclick="RedirectToLogin" @onclick:preventDefault>
+                Log in
+            </a>
         </BarItem>
-        <BarItem>
-            <Text Color="TextColor.Light">
-                <a href="/register" @onclick="RedirectToRegister" @onclick:preventDefault>Register</a>
-            </Text>
+        <BarItem Margin="Margin.Is2.OnX">
+            <a class="q-login-link" href="/register" @onclick="RedirectToRegister" @onclick:preventDefault>Register</a>
         </BarItem>
     </NotAuthorized>
 </AuthorizeView>

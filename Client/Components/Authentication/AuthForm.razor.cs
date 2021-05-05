@@ -15,7 +15,7 @@ namespace Quibble.Client.Components.Authentication
         public RenderFragment Form { get; set; } = default!;
 
         [Parameter]
-        public RenderFragment Submit { get; set; } = default!;
+        public string? SubmitText { get; set; }
 
         [Parameter]
         public RenderFragment? Footer { get; set; }

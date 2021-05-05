@@ -22,19 +22,13 @@ namespace Quibble.Client.Pages
 
         private bool WasSuccessful { get; set; } = false;
 
-        private bool IsSubmitting { get; set; }
-
         private async Task ForgotPasswordAsync()
         {
-            IsSubmitting = true;
-
             var result = await AuthenticationProvider.ForgotPasswordAsync(Model.Email);
             if (result.WasSuccessful)
                 WasSuccessful = true;
             else
                 Errors = result.Errors?.ToList() ?? new List<string>();
-
-            IsSubmitting = false;
         }
     }
 }
