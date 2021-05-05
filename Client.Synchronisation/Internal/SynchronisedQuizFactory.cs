@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -24,18 +25,21 @@ namespace Quibble.Client.Sync.Internal
             NavigationManager = navigationManager;
         }
 
-        public async Task<HubResponse<ISynchronisedEntity>> GetQuizAsync(Guid quizId)
+        public async Task<HubResponse<ISynchronisedQuiz>> GetQuizAsync(Guid quizId)
         {
             if (quizId == Guid.Empty)
-                return HubResponse.FromError<ISynchronisedEntity>(nameof(ErrorMessages.QuizNotFound));
+                return HubResponse.FromError<ISynchronisedQuiz>(nameof(ErrorMessages.QuizNotFound));
 
             var quizNegotiationResponse = await HttpClient.GetAsync($"{quizId}/negotiate");
+            if (quizNegotiationResponse.StatusCode == HttpStatusCode.NotFound)
+                return HubResponse.FromError<ISynchronisedQuiz>(nameof(ErrorMessages.QuizNotFound));
+
             var quizNegotiation = await quizNegotiationResponse.Content.ReadFromJsonAsync<QuizNegotiationDto>();
             if (quizNegotiation is null)
-                return HubResponse.FromError<ISynchronisedEntity>(nameof(ErrorMessages.QuizNotFound));
+                return HubResponse.FromError<ISynchronisedQuiz>(nameof(ErrorMessages.QuizNotFound));
 
             if (quizNegotiation.State == QuizState.InDevelopment && !quizNegotiation.CanEdit)
-                    return HubResponse.FromError<ISynchronisedEntity>(nameof(ErrorMessages.QuizNotOpen));
+                    return HubResponse.FromError<ISynchronisedQuiz>(nameof(ErrorMessages.QuizNotOpen));
 
             var hubUrl = NavigationManager.ToAbsoluteUri($"Api/Quibble/{quizId}");
             var hubConnection =
@@ -47,18 +51,18 @@ namespace Quibble.Client.Sync.Internal
             await hubConnection.StartAsync();
             var getQuizHubResponse = await hubConnection.InvokeAsync<HubResponse<FullQuizDto>>(Endpoints.GetQuiz);
             if (!getQuizHubResponse.WasSuccessful)
-                return HubResponse.FromError<ISynchronisedEntity>(getQuizHubResponse.ErrorCode);
+                return HubResponse.FromError<ISynchronisedQuiz>(getQuizHubResponse.ErrorCode);
             if (getQuizHubResponse.Value is null)
-                return HubResponse.FromError<ISynchronisedEntity>(nameof(ErrorMessages.QuizNotFound));
+                return HubResponse.FromError<ISynchronisedQuiz>(nameof(ErrorMessages.QuizNotFound));
 
             var quiz = getQuizHubResponse.Value.Quiz;
             var rounds = getQuizHubResponse.Value.Rounds;
             var questions = getQuizHubResponse.Value.Questions;
 
-            ISynchronisedEntity synchronisedEntity;
+            ISynchronisedQuiz synchronisedQuiz;
             if (quizNegotiation.State == QuizState.InDevelopment)
             {
-                synchronisedEntity =
+                synchronisedQuiz =
                     new SynchronisedEditModeQuizBuilder()
                         .WithHubConnection(hubConnection)
                         .WithQuiz(quiz)
@@ -72,7 +76,7 @@ namespace Quibble.Client.Sync.Internal
                 throw new NotImplementedException();
             }
 
-            return HubResponse.FromSuccess(synchronisedEntity);
+            return HubResponse.FromSuccess(synchronisedQuiz);
         }
     }
 }

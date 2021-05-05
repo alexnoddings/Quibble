@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Quibble.Shared.Entities;
 
 namespace Quibble.Client.Sync.Entities.EditMode
 {
-    public interface ISynchronisedEditModeQuiz : IQuiz, ISynchronisedEntity, IDisposable
+    public interface ISynchronisedEditModeQuiz : ISynchronisedQuiz
     {
+        public bool IsDeleted { get; }
         public IEnumerable<ISynchronisedEditModeRound> Rounds { get; }
 
         public Task UpdateTitleAsync(string newTitle);

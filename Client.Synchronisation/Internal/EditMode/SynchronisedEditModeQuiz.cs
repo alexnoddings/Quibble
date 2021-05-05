@@ -10,7 +10,7 @@ using Quibble.Shared.Models;
 
 namespace Quibble.Client.Sync.Internal.EditMode
 {
-    internal sealed class SynchronisedEditModeQuiz : SynchronisedEntity, ISynchronisedEditModeQuiz, IDisposable
+    internal sealed class SynchronisedEditModeQuiz : SynchronisedEntity, ISynchronisedEditModeQuiz
     {
         private readonly List<IDisposable> _eventHandlers = new();
         private HubConnection HubConnection { get; }
@@ -21,6 +21,9 @@ namespace Quibble.Client.Sync.Internal.EditMode
         public QuizState State { get; private set; }
         public DateTime CreatedAt { get; }
         public DateTime? OpenedAt { get; private set; }
+
+        public bool IsDeleted { get; private set; }
+        private bool IsDisposed { get; set; }
 
         internal List<SynchronisedEditModeRound> SyncedRounds { get; } = new();
         public IEnumerable<ISynchronisedEditModeRound> Rounds => SyncedRounds.AsEnumerable();
@@ -74,7 +77,7 @@ namespace Quibble.Client.Sync.Internal.EditMode
 
         private Task HandleDeletedAsync()
         {
-            // ToDo: implement this
+            IsDeleted = true;
             return OnUpdatedAsync();
         }
 
@@ -96,7 +99,20 @@ namespace Quibble.Client.Sync.Internal.EditMode
             return OnUpdatedAsync();
         }
 
-        public void Dispose()
+        public override int GetStateStamp()
+        {
+            var hashCode = new HashCode();
+            hashCode.Add(Title);
+            hashCode.Add(State);
+            hashCode.Add(CreatedAt);
+            hashCode.Add(OpenedAt);
+            hashCode.Add(IsDeleted);
+            foreach (var round in SyncedRounds)
+                hashCode.Add(round.GetStateStamp());
+            return hashCode.ToHashCode();
+        }
+
+        public async ValueTask DisposeAsync()
         {
             while (_eventHandlers.Count > 0)
             {
@@ -111,18 +127,10 @@ namespace Quibble.Client.Sync.Internal.EditMode
                 round.Dispose();
                 SyncedRounds.Remove(round);
             }
-        }
+            
+            IsDisposed = true;
 
-        public override int GetStateStamp()
-        {
-            var hashCode = new HashCode();
-            hashCode.Add(Title);
-            hashCode.Add(State);
-            hashCode.Add(CreatedAt);
-            hashCode.Add(OpenedAt);
-            foreach (var round in SyncedRounds)
-                hashCode.Add(round.GetStateStamp());
-            return hashCode.ToHashCode();
+            await HubConnection.DisposeAsync();
         }
     }
 }

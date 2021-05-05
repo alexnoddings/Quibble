@@ -7,6 +7,6 @@ namespace Quibble.Client.Sync
 {
     public interface ISynchronisedQuizFactory
     {
-        Task<HubResponse<ISynchronisedEntity>> GetQuizAsync(Guid quizId);
+        Task<HubResponse<ISynchronisedQuiz>> GetQuizAsync(Guid quizId);
     }
 }
