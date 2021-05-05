@@ -79,20 +79,20 @@ namespace Quibble.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Point values can&apos;t go below 1..
+        ///   Looks up a localized string similar to Point values can&apos;t go over 10..
         /// </summary>
-        public static string PointsCantBeLessThanOne {
+        public static string PointsTooHigh {
             get {
-                return ResourceManager.GetString("PointsCantBeLessThanOne", resourceCulture);
+                return ResourceManager.GetString("PointsTooHigh", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Point values can&apos;t go over 10..
+        ///   Looks up a localized string similar to Point values can&apos;t go below 0.25..
         /// </summary>
-        public static string PointsCantBeMoreThanTen {
+        public static string PointsTooLow {
             get {
-                return ResourceManager.GetString("PointsCantBeMoreThanTen", resourceCulture);
+                return ResourceManager.GetString("PointsTooLow", resourceCulture);
             }
         }
         

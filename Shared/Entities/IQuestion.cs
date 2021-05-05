@@ -7,7 +7,7 @@ namespace Quibble.Shared.Entities
         public Guid RoundId { get; }
         public string Text { get; }
         public string Answer { get; }
-        public sbyte Points { get; }
+        public decimal Points { get; }
         public QuestionState State { get; }
     }
 }

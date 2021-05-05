@@ -19,7 +19,7 @@ namespace Quibble.Shared.Hub
         public Task OnQuestionAddedAsync(QuestionDto question);
         public Task OnQuestionTextUpdatedAsync(Guid questionId, string newText);
         public Task OnQuestionAnswerUpdatedAsync(Guid questionId, string newAnswer);
-        public Task OnQuestionPointsUpdatedAsync(Guid questionId, sbyte newPoints);
+        public Task OnQuestionPointsUpdatedAsync(Guid questionId, decimal newPoints);
         public Task OnQuestionStateUpdatedAsync(Guid questionId, QuestionState newState);
         public Task OnQuestionDeletedAsync(Guid questionId);
 

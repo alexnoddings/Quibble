@@ -8,7 +8,7 @@ namespace Quibble.Client.Sync.Entities.EditMode
     {
         public Task UpdateTextAsync(string newText);
         public Task UpdateAnswerAsync(string newAnswer);
-        public Task UpdatePointsAsync(sbyte newPoints);
+        public Task UpdatePointsAsync(decimal newPoints);
         public Task UpdateStateAsync(QuestionState newState);
         public Task DeleteAsync();
     }

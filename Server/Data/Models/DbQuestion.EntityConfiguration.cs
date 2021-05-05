@@ -22,6 +22,10 @@ namespace Quibble.Server.Data.Models
                 .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired();
 
+            builder
+                .Property(question => question.Points)
+                .HasPrecision(4, 2);
+
             builder.ToTable("Questions");
         }
     }

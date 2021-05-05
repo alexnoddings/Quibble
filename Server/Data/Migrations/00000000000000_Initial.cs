@@ -227,7 +227,7 @@ namespace Quibble.Server.Data.Migrations
                     RoundId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Answer = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Points = table.Column<short>(type: "smallint", nullable: false),
+                    Points = table.Column<decimal>(type: "decimal(4,2)", precision: 4, scale: 2, nullable: false),
                     State = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -246,11 +246,11 @@ namespace Quibble.Server.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AppUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     QuestionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ParticipantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AssignedPoints = table.Column<short>(type: "smallint", nullable: false)
+                    AssignedPoints = table.Column<short>(type: "smallint", nullable: false),
+                    AppUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {

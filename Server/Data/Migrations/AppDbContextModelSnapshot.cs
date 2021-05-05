@@ -14,7 +14,7 @@ namespace Quibble.Server.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "6.0.0-preview.2.21154.2")
+                .HasAnnotation("ProductVersion", "6.0.0-preview.3.21201.2")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -263,8 +263,9 @@ namespace Quibble.Server.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<short>("Points")
-                        .HasColumnType("smallint");
+                    b.Property<decimal>("Points")
+                        .HasPrecision(4, 2)
+                        .HasColumnType("decimal(4,2)");
 
                     b.Property<Guid>("RoundId")
                         .HasColumnType("uniqueidentifier");

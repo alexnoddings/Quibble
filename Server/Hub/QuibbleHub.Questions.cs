@@ -14,7 +14,7 @@ namespace Quibble.Server.Hub
     public partial class QuibbleHub
     {
         [HubMethodName(Endpoints.CreateQuestion)]
-        public async Task<HubResponse> CreateQuestionAsync(Guid roundId, string text, string answer, sbyte points)
+        public async Task<HubResponse> CreateQuestionAsync(Guid roundId, string text, string answer, decimal points)
         {
             (Guid userId, Guid quizId, string? errorCode) = ExecutionContext;
             if (errorCode is not null)
@@ -33,11 +33,14 @@ namespace Quibble.Server.Hub
             if (dbRound.Quiz.State != QuizState.InDevelopment)
                 return Failure(nameof(ErrorMessages.CantEditAsQuizNotInDevelopment));
 
-            if (points < 1)
-                return Failure(nameof(ErrorMessages.PointsCantBeLessThanOne));
+            if (points < 0.25m)
+                return Failure(nameof(ErrorMessages.PointsTooLow));
 
-            if (points > 10)
-                return Failure(nameof(ErrorMessages.PointsCantBeMoreThanTen));
+            if (points > 10m)
+                return Failure(nameof(ErrorMessages.PointsTooHigh));
+
+            // Ensure points are a division of 0.25
+            points = Math.Round(points * 4, MidpointRounding.ToEven) / 4;
 
             var dbQuestion = new DbQuestion
             {
@@ -114,7 +117,7 @@ namespace Quibble.Server.Hub
         }
 
         [HubMethodName(Endpoints.UpdateQuestionPoints)]
-        public async Task<HubResponse> UpdateQuestionPointsAsync(Guid questionId, sbyte newPoints)
+        public async Task<HubResponse> UpdateQuestionPointsAsync(Guid questionId, decimal newPoints)
         {
             (Guid userId, Guid quizId, string? errorCode) = ExecutionContext;
             if (errorCode is not null)
@@ -133,11 +136,14 @@ namespace Quibble.Server.Hub
             if (dbQuestion.Round.Quiz.State != QuizState.InDevelopment)
                 return Failure(nameof(ErrorMessages.CantEditAsQuizNotInDevelopment));
 
-            if (newPoints < 1)
-                return Failure(nameof(ErrorMessages.PointsCantBeLessThanOne));
+            if (newPoints < 0.25m)
+                return Failure(nameof(ErrorMessages.PointsTooLow));
 
             if (newPoints > 10)
-                return Failure(nameof(ErrorMessages.PointsCantBeMoreThanTen));
+                return Failure(nameof(ErrorMessages.PointsTooHigh));
+
+            // Ensure points are a division of 0.25
+            newPoints = Math.Round(newPoints * 4, MidpointRounding.ToEven) / 4;
 
             dbQuestion.Points = newPoints;
             await DbContext.SaveChangesAsync();

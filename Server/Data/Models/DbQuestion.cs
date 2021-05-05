@@ -12,7 +12,7 @@ namespace Quibble.Server.Data.Models
 
         public string Text { get; set; } = string.Empty;
         public string Answer { get; set; } = string.Empty;
-        public sbyte Points { get; set; }
+        public decimal Points { get; set; }
         public QuestionState State { get; set; }
 
         public List<DbSubmittedAnswer> SubmittedAnswers { get; set; } = new();

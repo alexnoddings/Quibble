@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Quibble.Client.Sync.Entities.EditMode;
 using Quibble.Shared.Entities;
 using Quibble.Shared.Hub;
-using Quibble.Shared.Models;
 
 namespace Quibble.Client.Sync.Internal.EditMode
 {
@@ -18,7 +17,7 @@ namespace Quibble.Client.Sync.Internal.EditMode
         public Guid RoundId { get; }
         public string Text { get; private set; }
         public string Answer { get; private set; }
-        public sbyte Points { get; private set; }
+        public decimal Points { get; private set; }
         public QuestionState State { get; private set; }
 
         public SynchronisedEditModeQuestion(HubConnection hubConnection, IQuestion question)
@@ -33,7 +32,7 @@ namespace Quibble.Client.Sync.Internal.EditMode
 
             _eventHandlers.Add(hubConnection.On<Guid, string>(nameof(IQuibbleHubClient.OnQuestionTextUpdatedAsync), HandleTextUpdatedAsync));
             _eventHandlers.Add(hubConnection.On<Guid, string>(nameof(IQuibbleHubClient.OnQuestionAnswerUpdatedAsync), HandleAnswerUpdatedAsync));
-            _eventHandlers.Add(hubConnection.On<Guid, sbyte>(nameof(IQuibbleHubClient.OnQuestionPointsUpdatedAsync), HandlePointsUpdatedAsync));
+            _eventHandlers.Add(hubConnection.On<Guid, decimal>(nameof(IQuibbleHubClient.OnQuestionPointsUpdatedAsync), HandlePointsUpdatedAsync));
             _eventHandlers.Add(hubConnection.On<Guid, QuestionState>(nameof(IQuibbleHubClient.OnQuestionStateUpdatedAsync), HandleStateUpdatedAsync));
         }
 
@@ -49,7 +48,7 @@ namespace Quibble.Client.Sync.Internal.EditMode
             Answer = newAnswer;
         }
 
-        public Task UpdatePointsAsync(sbyte newPoints) =>
+        public Task UpdatePointsAsync(decimal newPoints) =>
             HubConnection.InvokeAsync(Endpoints.UpdateQuestionPoints, Id, newPoints);
 
         public Task UpdateStateAsync(QuestionState newState) =>
@@ -76,7 +75,7 @@ namespace Quibble.Client.Sync.Internal.EditMode
             return OnUpdatedAsync();
         }
 
-        private Task HandlePointsUpdatedAsync(Guid questionId, sbyte newPoints)
+        private Task HandlePointsUpdatedAsync(Guid questionId, decimal newPoints)
         {
             if (questionId != Id)
                 return Task.CompletedTask;

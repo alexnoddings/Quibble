@@ -123,11 +123,11 @@
   <data name="CantUpdateAsQuizNotOpen" xml:space="preserve">
     <value>You can't update this as the quiz is not open yet.</value>
   </data>
-  <data name="PointsCantBeLessThanOne" xml:space="preserve">
-    <value>Point values can't go below 1.</value>
-  </data>
-  <data name="PointsCantBeMoreThanTen" xml:space="preserve">
+  <data name="PointsTooHigh" xml:space="preserve">
     <value>Point values can't go over 10.</value>
+  </data>
+  <data name="PointsTooLow" xml:space="preserve">
+    <value>Point values can't go below 0.25.</value>
   </data>
   <data name="QuestionBadState" xml:space="preserve">
     <value>Can't update this question's state.</value>
