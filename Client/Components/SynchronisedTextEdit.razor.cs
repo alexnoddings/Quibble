@@ -6,14 +6,14 @@ using Quibble.Client.Sync.DelayedExecution;
 
 namespace Quibble.Client.Components
 {
-    public partial class SynchronisedTextEditor : IAsyncDisposable
+    public partial class SynchronisedTextEdit : IAsyncDisposable
     {
         [Parameter]
-        public string Value { get; set; } = string.Empty;
+        public string Text { get; set; } = string.Empty;
 
-        private string PreviousValue { get; set; } = string.Empty;
+        private string PreviousText { get; set; } = string.Empty;
 
-        private string LocalValue { get; set; } = string.Empty;
+        private string LocalText { get; set; } = string.Empty;
 
         [Parameter]
         public Func<string, Task> SaveFunction { get; set; } = default!;
@@ -34,21 +34,21 @@ namespace Quibble.Client.Components
         {
             base.OnParametersSet();
 
-            if (PreviousValue != Value)
+            if (PreviousText != Text)
             {
-                PreviousValue = Value;
-                LocalValue = Value;
+                PreviousText = Text;
+                LocalText = Text;
             }
 
             SaveDebouncer.Executor = SaveAsync;
             PreviewThrottler.Executor = PreviewFunction;
         }
 
-        private void OnTextChanged(string newValue)
+        private void OnTextChanged(string newText)
         {
-            LocalValue = newValue;
-            PreviewThrottler.Invoke(newValue);
-            SaveDebouncer.Invoke(newValue);
+            LocalText = newText;
+            PreviewThrottler.Invoke(newText);
+            SaveDebouncer.Invoke(newText);
         }
 
         private async Task OnBlurAsync()
