@@ -1,0 +1,20 @@
+﻿<Addons>
+    <Addon AddonType="AddonType.Body">
+        <TextEdit Role="TextRole.Text"
+                  @bind-Text="@LocalPointsString"
+                  MaskType="MaskType.Numeric"
+                  Blur="RoundAndUpdatePointsAsync"
+                  Class="text-center" />
+    </Addon>
+    <Addon AddonType="AddonType.End">
+        <Dropdown>
+            <DropdownToggle Color="Color.Secondary" Outline="true" />
+            <DropdownMenu>
+                <DropdownItem Clicked="() => SaveFunction(0.25m)">0.25</DropdownItem>
+                <DropdownItem Clicked="() => SaveFunction(0.5m)">0.5</DropdownItem>
+                <DropdownItem Clicked="() => SaveFunction(1m)">1</DropdownItem>
+                <DropdownItem Clicked="() => SaveFunction(2m)">2</DropdownItem>
+            </DropdownMenu>
+        </Dropdown>
+    </Addon>
+</Addons>
