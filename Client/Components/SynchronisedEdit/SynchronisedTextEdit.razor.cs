@@ -4,7 +4,7 @@ using Blazorise;
 using Microsoft.AspNetCore.Components;
 using Quibble.Client.Sync.DelayedExecution;
 
-namespace Quibble.Client.Components
+namespace Quibble.Client.Components.SynchronisedEdit
 {
     public partial class SynchronisedTextEdit : IAsyncDisposable
     {
