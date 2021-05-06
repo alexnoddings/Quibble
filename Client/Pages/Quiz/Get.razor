@@ -1,0 +1,77 @@
+﻿@page "/quiz/{QuizId:guid}"
+@using Quibble.Client.Pages.Quiz.Edit
+@using Quibble.Client.Sync.Entities.EditMode
+@using Quibble.Shared.Hub
+@attribute [Authorize]
+@implements IAsyncDisposable
+
+@if (GetQuizResult is null)
+{
+    <PageTitle Value="Loading quiz" />
+    <text>Loading</text>
+}
+else if (GetQuizResult.ErrorCode is not null)
+{
+    <PageTitle Value="Error loading quiz" />
+    @GetQuizResult.ErrorCode
+}
+else if (GetQuizResult.Value is ISynchronisedEditModeQuiz editModeQuiz)
+{
+    <EditQuizPage Quiz="editModeQuiz" />
+}
+@*
+else if (GetQuizResult.Value is ISynchronisedHostModeQuiz hostModeQuiz)
+{
+    <HostQuizPage Quiz="hostModeQuiz" />
+}
+*@
+@*
+else if (GetQuizResult.Value is ISynchronisedParticipateModeQuiz participateModeQuiz)
+{
+    <ParticipateQuizPage Quiz="participateModeQuiz" />
+}
+*@
+
+@code {
+    [Parameter]
+    public Guid QuizId { get; set; }
+
+    [Inject]
+    private ISynchronisedQuizFactory QuizFactory { get; set; } = default!;
+
+    private HubResponse<ISynchronisedQuiz>? GetQuizResult { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await ReloadQuizAsync();
+    }
+
+    private async Task ReloadQuizAsync()
+    {
+        if (GetQuizResult?.Value is not null)
+        {
+            GetQuizResult.Value.Invalidated -= OnQuizInvalidated;
+            await GetQuizResult.Value.DisposeAsync();
+            GetQuizResult = null;
+        }
+        
+        GetQuizResult = await QuizFactory.GetQuizAsync(QuizId);
+        if (GetQuizResult.WasSuccessful && GetQuizResult.Value is not null)
+            GetQuizResult.Value.Invalidated += OnQuizInvalidated;
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private Task OnQuizInvalidated() => ReloadQuizAsync();
+
+    public async ValueTask DisposeAsync()
+    {
+        var synchronisedQuiz = GetQuizResult?.Value;
+        if (synchronisedQuiz is null)
+            return;
+
+        synchronisedQuiz.Invalidated -= OnQuizInvalidated;
+        await synchronisedQuiz.DisposeAsync();
+    }
+}
