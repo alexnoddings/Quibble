@@ -5,7 +5,6 @@ namespace Quibble.Client.Sync.Entities.EditMode
 {
     public interface ISynchronisedEditModeQuiz : ISynchronisedQuiz
     {
-        public bool IsDeleted { get; }
         public IEnumerable<ISynchronisedEditModeRound> Rounds { get; }
 
         public Task UpdateTitleAsync(string newTitle);

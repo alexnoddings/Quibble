@@ -15,6 +15,8 @@ namespace Quibble.Client.Sync.Internal.EditMode
         private readonly List<IDisposable> _eventHandlers = new();
         private HubConnection HubConnection { get; }
 
+        public event Func<Task>? Invalidated;
+
         public Guid Id { get; }
         public Guid OwnerId { get; }
         public string Title { get; private set; }
@@ -22,7 +24,6 @@ namespace Quibble.Client.Sync.Internal.EditMode
         public DateTime CreatedAt { get; }
         public DateTime? OpenedAt { get; private set; }
 
-        public bool IsDeleted { get; private set; }
         private bool IsDisposed { get; set; }
 
         internal List<SynchronisedEditModeRound> SyncedRounds { get; } = new();
@@ -68,18 +69,19 @@ namespace Quibble.Client.Sync.Internal.EditMode
             return OnUpdatedAsync();
         }
 
-        private Task HandleOpenedAsync()
+        private async Task HandleOpenedAsync()
         {
             State = QuizState.Open;
             OpenedAt = DateTime.UtcNow;
-            return OnUpdatedAsync();
+
+            // EditMode is no longer valid if the quiz has been opened
+            if (Invalidated is not null)
+                await Invalidated.Invoke();
+            await OnUpdatedAsync();
         }
 
-        private Task HandleDeletedAsync()
-        {
-            IsDeleted = true;
-            return OnUpdatedAsync();
-        }
+        private Task HandleDeletedAsync() => 
+            Invalidated?.Invoke() ?? Task.CompletedTask;
 
         private Task HandleRoundAddedAsync(RoundDto round)
         {
@@ -106,7 +108,6 @@ namespace Quibble.Client.Sync.Internal.EditMode
             hashCode.Add(State);
             hashCode.Add(CreatedAt);
             hashCode.Add(OpenedAt);
-            hashCode.Add(IsDeleted);
             foreach (var round in SyncedRounds)
                 hashCode.Add(round.GetStateStamp());
             return hashCode.ToHashCode();

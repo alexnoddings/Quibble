@@ -73,7 +73,7 @@ namespace Quibble.Client.Sync.Internal
             else
             {
                 // ToDo: add when other modes are added
-                throw new NotImplementedException();
+                return HubResponse.FromError<ISynchronisedQuiz>("NotImplemented");
             }
 
             return HubResponse.FromSuccess(synchronisedQuiz);
