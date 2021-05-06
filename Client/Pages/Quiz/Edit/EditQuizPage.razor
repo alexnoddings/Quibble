@@ -1,0 +1,12 @@
+﻿@using Quibble.Client.Sync.Entities.EditMode
+
+<PageTitle Value="@($"Editing {Quiz.Title}")" />
+<CascadingValue Value="Quiz">
+	<EditQuizView />
+</CascadingValue>
+
+@code
+{
+	[Parameter]
+	public ISynchronisedEditModeQuiz Quiz { get; set; } = default!;
+}
