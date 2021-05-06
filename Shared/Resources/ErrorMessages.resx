@@ -132,6 +132,9 @@
   <data name="QuestionBadState" xml:space="preserve">
     <value>Can't update this question's state.</value>
   </data>
+  <data name="QuestionMissingContent" xml:space="preserve">
+    <value>A question is missing content.</value>
+  </data>
   <data name="QuestionNotFound" xml:space="preserve">
     <value>Question not found.</value>
   </data>
@@ -147,6 +150,9 @@
   <data name="QuizCantEditAsNotOwner" xml:space="preserve">
     <value>You can't edit this quiz as you aren't it's owner.</value>
   </data>
+  <data name="QuizEmpty" xml:space="preserve">
+    <value>The quiz is empty.</value>
+  </data>
   <data name="QuizNotFound" xml:space="preserve">
     <value>Quiz not found.</value>
   </data>
@@ -155,6 +161,9 @@
   </data>
   <data name="QuizUserNotParticipant" xml:space="preserve">
     <value>You haven't joined this quiz yet.</value>
+  </data>
+  <data name="RoundMissingTitle" xml:space="preserve">
+    <value>A round is missing a title.</value>
   </data>
   <data name="RoundNotFound" xml:space="preserve">
     <value>Round not found.</value>

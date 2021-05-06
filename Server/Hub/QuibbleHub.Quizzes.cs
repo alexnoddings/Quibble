@@ -78,6 +78,26 @@ namespace Quibble.Server.Hub
             if (dbQuiz.State == QuizState.Open)
                 return Failure(nameof(ErrorMessages.QuizAlreadyOpen));
 
+            var quizRounds =
+                from round in DbContext.Rounds
+                where round.QuizId == quizId
+                select round;
+
+            var quizQuestions =
+                from round in quizRounds
+                join question in DbContext.Questions
+                    on round.Id equals question.RoundId
+                select question;
+
+            if (!await quizQuestions.AnyAsync())
+                return Failure(nameof(ErrorMessages.QuizEmpty));
+
+            if (await quizRounds.AnyAsync(round => string.IsNullOrWhiteSpace(round.Title)))
+                return Failure(nameof(ErrorMessages.RoundMissingTitle));
+
+            if (await quizQuestions.AnyAsync(question => string.IsNullOrWhiteSpace(question.Text) || string.IsNullOrWhiteSpace(question.Answer)))
+                return Failure(nameof(ErrorMessages.QuestionMissingContent));
+            
             dbQuiz.State = QuizState.Open;
             dbQuiz.OpenedAt = DateTime.UtcNow;
             await DbContext.SaveChangesAsync();

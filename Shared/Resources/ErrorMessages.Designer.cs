@@ -106,6 +106,15 @@ namespace Quibble.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A question is missing content..
+        /// </summary>
+        public static string QuestionMissingContent {
+            get {
+                return ResourceManager.GetString("QuestionMissingContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Question not found..
         /// </summary>
         public static string QuestionNotFound {
@@ -151,6 +160,15 @@ namespace Quibble.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The quiz is empty..
+        /// </summary>
+        public static string QuizEmpty {
+            get {
+                return ResourceManager.GetString("QuizEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Quiz not found..
         /// </summary>
         public static string QuizNotFound {
@@ -174,6 +192,15 @@ namespace Quibble.Shared.Resources {
         public static string QuizUserNotParticipant {
             get {
                 return ResourceManager.GetString("QuizUserNotParticipant", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A round is missing a title..
+        /// </summary>
+        public static string RoundMissingTitle {
+            get {
+                return ResourceManager.GetString("RoundMissingTitle", resourceCulture);
             }
         }
         
