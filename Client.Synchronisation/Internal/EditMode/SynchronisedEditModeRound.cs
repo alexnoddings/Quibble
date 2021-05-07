@@ -15,7 +15,7 @@ namespace Quibble.Client.Sync.Internal.EditMode
         public Guid Id { get; }
         public Guid QuizId { get; }
         public string Title { get; private set; }
-        public RoundState State { get; private set; }
+        public RoundState State { get; }
 
         internal List<SynchronisedEditModeQuestion> SyncedQuestions { get; } = new();
         public IEnumerable<ISynchronisedEditModeQuestion> Questions => SyncedQuestions.AsEnumerable();
@@ -29,7 +29,6 @@ namespace Quibble.Client.Sync.Internal.EditMode
             State = round.State;
 
             AddEventHandler(hubConnection.On<Guid, string>(nameof(IQuibbleHubClient.OnRoundTitleUpdatedAsync), HandleTitleUpdatedAsync));
-            AddEventHandler(hubConnection.On<Guid>(nameof(IQuibbleHubClient.OnRoundOpenedAsync), HandleOpenedAsync));
 
             AddEventHandler(hubConnection.On<QuestionDto>(nameof(IQuibbleHubClient.OnQuestionAddedAsync), HandleQuestionAddedAsync));
             AddEventHandler(hubConnection.On<Guid>(nameof(IQuibbleHubClient.OnQuestionDeletedAsync), HandleQuestionDeletedAsync));
@@ -40,9 +39,6 @@ namespace Quibble.Client.Sync.Internal.EditMode
             await HubConnection.InvokeAsync<HubResponse>(Endpoints.UpdateRoundTitle, Id, newTitle);
             Title = newTitle;
         }
-
-        public Task OpenAsync() =>
-            HubConnection.InvokeAsync(Endpoints.OpenRound, Id);
 
         public Task DeleteAsync() =>
             HubConnection.InvokeAsync(Endpoints.DeleteRound, Id);
@@ -56,15 +52,6 @@ namespace Quibble.Client.Sync.Internal.EditMode
                 return Task.CompletedTask;
 
             Title = newTitle;
-            return OnUpdatedAsync();
-        }
-
-        private Task HandleOpenedAsync(Guid roundId)
-        {
-            if (roundId != Id)
-                return Task.CompletedTask;
-
-            State = RoundState.Open;
             return OnUpdatedAsync();
         }
 
@@ -93,7 +80,6 @@ namespace Quibble.Client.Sync.Internal.EditMode
         {
             var hashCode = new HashCode();
             hashCode.Add(Title);
-            hashCode.Add(State);
             foreach (var question in SyncedQuestions)
                 hashCode.Add(question.GetStateStamp());
             return hashCode.ToHashCode();

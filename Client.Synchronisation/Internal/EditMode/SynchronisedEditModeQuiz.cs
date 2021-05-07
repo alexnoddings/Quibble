@@ -101,7 +101,6 @@ namespace Quibble.Client.Sync.Internal.EditMode
             var hashCode = new HashCode();
             hashCode.Add(Title);
             hashCode.Add(State);
-            hashCode.Add(CreatedAt);
             hashCode.Add(OpenedAt);
             foreach (var round in SyncedRounds)
                 hashCode.Add(round.GetStateStamp());

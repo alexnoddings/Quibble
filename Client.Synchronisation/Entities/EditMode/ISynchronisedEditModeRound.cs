@@ -9,7 +9,6 @@ namespace Quibble.Client.Sync.Entities.EditMode
         public IEnumerable<ISynchronisedEditModeQuestion> Questions { get; }
 
         public Task UpdateTitleAsync(string newTitle);
-        public Task OpenAsync();
         public Task DeleteAsync();
         public Task AddQuestionAsync();
     }

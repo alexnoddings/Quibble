@@ -14,10 +14,10 @@ namespace Quibble.Client.Sync.Internal.EditMode
         public string Text { get; private set; }
         public string Answer { get; private set; }
         public decimal Points { get; private set; }
-        public QuestionState State { get; private set; }
+        public QuestionState State { get; }
 
         public SynchronisedEditModeQuestion(HubConnection hubConnection, IQuestion question)
-			: base(hubConnection)
+            : base(hubConnection)
         {
             Id = question.Id;
             RoundId = question.RoundId;
@@ -29,7 +29,6 @@ namespace Quibble.Client.Sync.Internal.EditMode
             AddEventHandler(hubConnection.On<Guid, string>(nameof(IQuibbleHubClient.OnQuestionTextUpdatedAsync), HandleTextUpdatedAsync));
             AddEventHandler(hubConnection.On<Guid, string>(nameof(IQuibbleHubClient.OnQuestionAnswerUpdatedAsync), HandleAnswerUpdatedAsync));
             AddEventHandler(hubConnection.On<Guid, decimal>(nameof(IQuibbleHubClient.OnQuestionPointsUpdatedAsync), HandlePointsUpdatedAsync));
-            AddEventHandler(hubConnection.On<Guid, QuestionState>(nameof(IQuibbleHubClient.OnQuestionStateUpdatedAsync), HandleStateUpdatedAsync));
         }
 
         public async Task UpdateTextAsync(string newText)
@@ -46,9 +45,6 @@ namespace Quibble.Client.Sync.Internal.EditMode
 
         public Task UpdatePointsAsync(decimal newPoints) =>
             HubConnection.InvokeAsync(Endpoints.UpdateQuestionPoints, Id, newPoints);
-
-        public Task UpdateStateAsync(QuestionState newState) =>
-            HubConnection.InvokeAsync(Endpoints.UpdateQuestionState, Id, newState);
 
         public Task DeleteAsync() =>
             HubConnection.InvokeAsync(Endpoints.DeleteQuestion, Id);
@@ -80,22 +76,12 @@ namespace Quibble.Client.Sync.Internal.EditMode
             return OnUpdatedAsync();
         }
 
-        private Task HandleStateUpdatedAsync(Guid questionId, QuestionState newState)
-        {
-            if (questionId != Id)
-                return Task.CompletedTask;
-
-            State = newState;
-            return OnUpdatedAsync();
-        }
-
         public override int GetStateStamp()
         {
             var hashCode = new HashCode();
             hashCode.Add(Text);
             hashCode.Add(Answer);
             hashCode.Add(Points);
-            hashCode.Add(State);
             return hashCode.ToHashCode();
         }
     }
