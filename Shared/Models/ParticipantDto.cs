@@ -7,6 +7,6 @@ namespace Quibble.Shared.Models
     {
         public Guid Id { get; set; }
         public Guid QuizId { get; set; }
-        public Guid UserId { get; set; }
+        public string UserName { get; set; } = string.Empty;
     }
 }

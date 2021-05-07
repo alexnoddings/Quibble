@@ -93,8 +93,12 @@ namespace Quibble.Server
             services.AddAutoMapper(config =>
             {
                 config.CreateMap<DbQuiz, QuizDto>();
+                config.CreateMap<DbParticipant, ParticipantDto>()
+                    .ForMember(dto => dto.UserName, 
+                        options => options.MapFrom(dbParticipant => dbParticipant.User.UserName));
                 config.CreateMap<DbRound, RoundDto>();
                 config.CreateMap<DbQuestion, QuestionDto>();
+                config.CreateMap<DbSubmittedAnswer, SubmittedAnswerDto>();
             });
         }
 

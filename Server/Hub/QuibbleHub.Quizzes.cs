@@ -24,10 +24,12 @@ namespace Quibble.Server.Hub
             var dbQuiz = 
                 await DbContext.Quizzes
                     .Include(q => q.Participants)
+                        .ThenInclude(pt => pt.User)
                     .Include(q => q.Rounds)
                         .ThenInclude(r => r.Questions)
                             .ThenInclude(qs => qs.SubmittedAnswers)
                     .FindAsync(quizId);
+
             if (dbQuiz is null)
                 return Failure<FullQuizDto>(nameof(ErrorMessages.QuizNotFound));
 
