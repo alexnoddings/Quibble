@@ -7,6 +7,6 @@ namespace Quibble.Shared.Entities
         public Guid QuestionId { get; }
         public Guid ParticipantId { get; }
         public string Text { get; }
-        public sbyte AssignedPoints { get; }
+        public decimal AssignedPoints { get; }
     }
 }

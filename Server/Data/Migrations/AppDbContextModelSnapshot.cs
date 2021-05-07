@@ -345,8 +345,9 @@ namespace Quibble.Server.Data.Migrations
                     b.Property<Guid?>("AppUserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<short>("AssignedPoints")
-                        .HasColumnType("smallint");
+                    b.Property<decimal>("AssignedPoints")
+                        .HasPrecision(4, 2)
+                        .HasColumnType("decimal(4,2)");
 
                     b.Property<Guid>("ParticipantId")
                         .HasColumnType("uniqueidentifier");

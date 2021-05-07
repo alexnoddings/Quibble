@@ -12,6 +12,6 @@ namespace Quibble.Server.Data.Models
         public DbParticipant Participant { get; set; } = default!;
 
         public string Text { get; set; } = string.Empty;
-        public sbyte AssignedPoints { get; set; }
+        public decimal AssignedPoints { get; set; }
     }
 }

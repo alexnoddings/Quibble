@@ -249,7 +249,7 @@ namespace Quibble.Server.Data.Migrations
                     QuestionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ParticipantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AssignedPoints = table.Column<short>(type: "smallint", nullable: false),
+                    AssignedPoints = table.Column<decimal>(type: "decimal(4,2)", precision: 4, scale: 2, nullable: false),
                     AppUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>

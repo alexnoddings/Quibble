@@ -21,6 +21,10 @@ namespace Quibble.Server.Data.Models
                 .HasForeignKey(answer => answer.ParticipantId)
                 .IsRequired();
 
+            builder
+                .Property(answer => answer.AssignedPoints)
+                .HasPrecision(4, 2);
+
             builder.ToTable("SubmittedAnswers");
         }
     }
