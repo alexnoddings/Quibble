@@ -16,7 +16,10 @@ namespace Quibble.Client.Sync.Internal.EditMode
         public decimal Points { get; private set; }
         public QuestionState State { get; }
 
-        public SynchronisedEditModeQuestion(HubConnection hubConnection, IQuestion question)
+        internal SynchronisedEditModeRound SyncedRound { get; }
+        public ISynchronisedEditModeRound Round => SyncedRound;
+
+        public SynchronisedEditModeQuestion(HubConnection hubConnection, IQuestion question, SynchronisedEditModeRound round)
             : base(hubConnection)
         {
             Id = question.Id;
@@ -25,6 +28,8 @@ namespace Quibble.Client.Sync.Internal.EditMode
             Answer = question.Answer;
             Points = question.Points;
             State = question.State;
+
+            SyncedRound = round;
 
             AddEventHandler(hubConnection.On<Guid, string>(nameof(IQuibbleHubClient.OnQuestionTextUpdatedAsync), HandleTextUpdatedAsync));
             AddEventHandler(hubConnection.On<Guid, string>(nameof(IQuibbleHubClient.OnQuestionAnswerUpdatedAsync), HandleAnswerUpdatedAsync));

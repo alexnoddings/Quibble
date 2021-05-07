@@ -27,11 +27,11 @@ namespace Quibble.Client.Sync.Internal.EditMode
             var synchronisedQuiz = new SynchronisedEditModeQuiz(HubConnection, Quiz);
             foreach (var round in Rounds)
             {
-                var synchronisedRound = new SynchronisedEditModeRound(HubConnection, round);
+                var synchronisedRound = new SynchronisedEditModeRound(HubConnection, round, synchronisedQuiz);
                 foreach (var question in Questions.Where(q => q.RoundId == round.Id))
                 {
-                    var syncedQuestion = new SynchronisedEditModeQuestion(HubConnection, question);
-                    synchronisedRound.SyncedQuestions.Add(syncedQuestion);
+                    var synchronisedQuestion = new SynchronisedEditModeQuestion(HubConnection, question, synchronisedRound);
+                    synchronisedRound.SyncedQuestions.Add(synchronisedQuestion);
                 }
                 synchronisedQuiz.SyncedRounds.Add(synchronisedRound);
             }

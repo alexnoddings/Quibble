@@ -17,16 +17,21 @@ namespace Quibble.Client.Sync.Internal.EditMode
         public string Title { get; private set; }
         public RoundState State { get; }
 
+        internal SynchronisedEditModeQuiz SyncedQuiz { get; }
+        public ISynchronisedEditModeQuiz Quiz => SyncedQuiz;
+
         internal List<SynchronisedEditModeQuestion> SyncedQuestions { get; } = new();
         public IEnumerable<ISynchronisedEditModeQuestion> Questions => SyncedQuestions.AsEnumerable();
 
-        public SynchronisedEditModeRound(HubConnection hubConnection, IRound round)
+        public SynchronisedEditModeRound(HubConnection hubConnection, IRound round, SynchronisedEditModeQuiz quiz)
             : base(hubConnection)
         {
             Id = round.Id;
             QuizId = round.QuizId;
             Title = round.Title;
             State = round.State;
+
+            SyncedQuiz = quiz;
 
             AddEventHandler(hubConnection.On<Guid, string>(nameof(IQuibbleHubClient.OnRoundTitleUpdatedAsync), HandleTitleUpdatedAsync));
 
@@ -60,7 +65,7 @@ namespace Quibble.Client.Sync.Internal.EditMode
             if (question.RoundId != Id)
                 return Task.CompletedTask;
 
-            var synchronisedQuestion = new SynchronisedEditModeQuestion(HubConnection, question);
+            var synchronisedQuestion = new SynchronisedEditModeQuestion(HubConnection, question, this);
             SyncedQuestions.Add(synchronisedQuestion);
             return OnUpdatedAsync();
         }

@@ -80,7 +80,7 @@ namespace Quibble.Client.Sync.Internal.EditMode
 
         private Task HandleRoundAddedAsync(RoundDto round)
         {
-            var synchronisedRound = new SynchronisedEditModeRound(HubConnection, round);
+            var synchronisedRound = new SynchronisedEditModeRound(HubConnection, round, this);
             SyncedRounds.Add(synchronisedRound);
             return OnUpdatedAsync();
         }
