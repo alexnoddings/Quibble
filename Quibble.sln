@@ -17,7 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Solution Items", ".Solutio
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client.Sync", "Client.Synchronisation\Client.Sync.csproj", "{A6AF647E-83EE-408E-BA37-7F04B286F051}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client.Sync", "Client.Synchronisation\Client.Sync.csproj", "{A6AF647E-83EE-408E-BA37-7F04B286F051}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
