@@ -21,7 +21,13 @@ namespace Quibble.Server.Hub
             if (errorCode is not null)
                 return Failure<FullQuizDto>(errorCode);
 
-            var dbQuiz = await DbContext.Quizzes.Include(q => q.Rounds).ThenInclude(r => r.Questions).FindAsync(quizId);
+            var dbQuiz = 
+                await DbContext.Quizzes
+                    .Include(q => q.Participants)
+                    .Include(q => q.Rounds)
+                        .ThenInclude(r => r.Questions)
+                            .ThenInclude(qs => qs.SubmittedAnswers)
+                    .FindAsync(quizId);
             if (dbQuiz is null)
                 return Failure<FullQuizDto>(nameof(ErrorMessages.QuizNotFound));
 
@@ -29,10 +35,36 @@ namespace Quibble.Server.Hub
                 return Failure<FullQuizDto>(nameof(ErrorMessages.QuizNotOpen));
 
             var quiz = Mapper.Map<QuizDto>(dbQuiz);
-            var rounds = Mapper.Map<List<RoundDto>>(dbQuiz.Rounds);
-            var questions = Mapper.Map<List<QuestionDto>>(dbQuiz.Rounds.SelectMany(r => r.Questions));
+            List<RoundDto> rounds;
+            List<ParticipantDto> participants;
+            List<QuestionDto> questions;
+            List<SubmittedAnswerDto> submittedAnswers;
 
-            return Success(new FullQuizDto(quiz, rounds, questions));
+            if (dbQuiz.State == QuizState.InDevelopment)
+            {
+                rounds = Mapper.Map<List<RoundDto>>(dbQuiz.Rounds);
+                participants = new List<ParticipantDto>();
+                questions = Mapper.Map<List<QuestionDto>>(dbQuiz.Rounds.SelectMany(r => r.Questions));
+                submittedAnswers = new List<SubmittedAnswerDto>();
+            }
+            else if (dbQuiz.State == QuizState.Open && dbQuiz.OwnerId == userId)
+            {
+                rounds = Mapper.Map<List<RoundDto>>(dbQuiz.Rounds);
+                participants = Mapper.Map<List<ParticipantDto>>(dbQuiz.Participants);
+
+                var dbQuestions = dbQuiz.Rounds.SelectMany(r => r.Questions).ToList();
+                questions = Mapper.Map<List<QuestionDto>>(dbQuestions);
+
+                var dbSubmittedAnswers = dbQuestions.SelectMany(qs => qs.SubmittedAnswers).ToList();
+                submittedAnswers = Mapper.Map<List<SubmittedAnswerDto>>(dbSubmittedAnswers);
+            }
+            else
+            {
+                // ToDo: filter based on visibility
+                throw new NotImplementedException();
+            }
+
+            return Success(new FullQuizDto(quiz, participants, rounds, questions, submittedAnswers));
         }
 
         [HubMethodName(Endpoints.UpdateQuizTitle)]
