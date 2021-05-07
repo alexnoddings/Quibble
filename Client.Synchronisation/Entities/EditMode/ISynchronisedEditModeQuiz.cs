@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Quibble.Client.Sync.Entities.EditMode
 {
     public interface ISynchronisedEditModeQuiz : ISynchronisedQuiz
     {
+	    public event Func<Task>? OnInvalidated;
+
         public IEnumerable<ISynchronisedEditModeRound> Rounds { get; }
 
         public Task UpdateTitleAsync(string newTitle);

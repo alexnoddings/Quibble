@@ -12,10 +12,7 @@ namespace Quibble.Client.Sync.Internal.EditMode
 {
     internal sealed class SynchronisedEditModeQuiz : SynchronisedEntity, ISynchronisedEditModeQuiz
     {
-        private readonly List<IDisposable> _eventHandlers = new();
-        private HubConnection HubConnection { get; }
-
-        public event Func<Task>? Invalidated;
+        public event Func<Task>? OnInvalidated;
 
         public Guid Id { get; }
         public Guid OwnerId { get; }
@@ -24,14 +21,12 @@ namespace Quibble.Client.Sync.Internal.EditMode
         public DateTime CreatedAt { get; }
         public DateTime? OpenedAt { get; private set; }
 
-        private bool IsDisposed { get; set; }
-
         internal List<SynchronisedEditModeRound> SyncedRounds { get; } = new();
         public IEnumerable<ISynchronisedEditModeRound> Rounds => SyncedRounds.AsEnumerable();
 
-        public SynchronisedEditModeQuiz(HubConnection hubConnection, IQuiz quiz)
+        public SynchronisedEditModeQuiz(HubConnection hubConnection, IQuiz quiz) 
+	        : base(hubConnection)
         {
-            HubConnection = hubConnection;
             Id = quiz.Id;
             OwnerId = quiz.OwnerId;
             Title = quiz.Title;
@@ -39,12 +34,12 @@ namespace Quibble.Client.Sync.Internal.EditMode
             CreatedAt = quiz.CreatedAt;
             OpenedAt = quiz.OpenedAt;
 
-            _eventHandlers.Add(hubConnection.On<string>(nameof(IQuibbleHubClient.OnQuizTitleUpdatedAsync), HandleTitleUpdatedAsync));
-            _eventHandlers.Add(hubConnection.On(nameof(IQuibbleHubClient.OnQuizOpenedAsync), HandleOpenedAsync));
-            _eventHandlers.Add(hubConnection.On(nameof(IQuibbleHubClient.OnQuizDeletedAsync), HandleDeletedAsync));
+            AddEventHandler(hubConnection.On<string>(nameof(IQuibbleHubClient.OnQuizTitleUpdatedAsync), HandleTitleUpdatedAsync));
+            AddEventHandler(hubConnection.On(nameof(IQuibbleHubClient.OnQuizOpenedAsync), HandleOpenedAsync));
+            AddEventHandler(hubConnection.On(nameof(IQuibbleHubClient.OnQuizDeletedAsync), HandleDeletedAsync));
 
-            _eventHandlers.Add(hubConnection.On<RoundDto>(nameof(IQuibbleHubClient.OnRoundAddedAsync), HandleRoundAddedAsync));
-            _eventHandlers.Add(hubConnection.On<Guid>(nameof(IQuibbleHubClient.OnRoundDeletedAsync), HandleRoundDeletedAsync));
+            AddEventHandler(hubConnection.On<RoundDto>(nameof(IQuibbleHubClient.OnRoundAddedAsync), HandleRoundAddedAsync));
+            AddEventHandler(hubConnection.On<Guid>(nameof(IQuibbleHubClient.OnRoundDeletedAsync), HandleRoundDeletedAsync));
         }
 
         public async Task UpdateTitleAsync(string newTitle)
@@ -75,13 +70,13 @@ namespace Quibble.Client.Sync.Internal.EditMode
             OpenedAt = DateTime.UtcNow;
 
             // EditMode is no longer valid if the quiz has been opened
-            if (Invalidated is not null)
-                await Invalidated.Invoke();
+            if (OnInvalidated is not null)
+                await OnInvalidated.Invoke();
             await OnUpdatedAsync();
         }
 
-        private Task HandleDeletedAsync() => 
-            Invalidated?.Invoke() ?? Task.CompletedTask;
+        private Task HandleDeletedAsync() =>
+	        OnInvalidated?.Invoke() ?? Task.CompletedTask;
 
         private Task HandleRoundAddedAsync(RoundDto round)
         {
@@ -115,23 +110,19 @@ namespace Quibble.Client.Sync.Internal.EditMode
 
         public async ValueTask DisposeAsync()
         {
-            while (_eventHandlers.Count > 0)
-            {
-                var handler = _eventHandlers[0];
-                handler.Dispose();
-                _eventHandlers.Remove(handler);
-            }
+	        if (IsDisposed) return;
 
             while (SyncedRounds.Count > 0)
             {
                 var round = SyncedRounds[0];
                 round.Dispose();
-                SyncedRounds.Remove(round);
+                SyncedRounds.RemoveAt(0);
             }
-            
-            IsDisposed = true;
 
-            await HubConnection.DisposeAsync();
+            // base.Dispose will cause HubConnection to throw a disposed exception
+            var hubConnection = HubConnection;
+            base.Dispose(true);
+            await hubConnection.DisposeAsync();
         }
     }
 }

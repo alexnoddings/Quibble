@@ -12,9 +12,6 @@ namespace Quibble.Client.Sync.Internal.EditMode
 {
     internal sealed class SynchronisedEditModeRound : SynchronisedEntity, ISynchronisedEditModeRound, IDisposable
     {
-        private readonly List<IDisposable> _eventHandlers = new();
-        private HubConnection HubConnection { get; }
-
         public Guid Id { get; }
         public Guid QuizId { get; }
         public string Title { get; private set; }
@@ -24,18 +21,18 @@ namespace Quibble.Client.Sync.Internal.EditMode
         public IEnumerable<ISynchronisedEditModeQuestion> Questions => SyncedQuestions.AsEnumerable();
 
         public SynchronisedEditModeRound(HubConnection hubConnection, IRound round)
+            : base(hubConnection)
         {
-            HubConnection = hubConnection;
             Id = round.Id;
             QuizId = round.QuizId;
             Title = round.Title;
             State = round.State;
 
-            _eventHandlers.Add(hubConnection.On<Guid, string>(nameof(IQuibbleHubClient.OnRoundTitleUpdatedAsync), HandleTitleUpdatedAsync));
-            _eventHandlers.Add(hubConnection.On<Guid>(nameof(IQuibbleHubClient.OnRoundOpenedAsync), HandleOpenedAsync));
+            AddEventHandler(hubConnection.On<Guid, string>(nameof(IQuibbleHubClient.OnRoundTitleUpdatedAsync), HandleTitleUpdatedAsync));
+            AddEventHandler(hubConnection.On<Guid>(nameof(IQuibbleHubClient.OnRoundOpenedAsync), HandleOpenedAsync));
 
-            _eventHandlers.Add(hubConnection.On<QuestionDto>(nameof(IQuibbleHubClient.OnQuestionAddedAsync), HandleQuestionAddedAsync));
-            _eventHandlers.Add(hubConnection.On<Guid>(nameof(IQuibbleHubClient.OnQuestionDeletedAsync), HandleQuestionDeletedAsync));
+            AddEventHandler(hubConnection.On<QuestionDto>(nameof(IQuibbleHubClient.OnQuestionAddedAsync), HandleQuestionAddedAsync));
+            AddEventHandler(hubConnection.On<Guid>(nameof(IQuibbleHubClient.OnQuestionDeletedAsync), HandleQuestionDeletedAsync));
         }
 
         public async Task UpdateTitleAsync(string newTitle)
@@ -92,23 +89,6 @@ namespace Quibble.Client.Sync.Internal.EditMode
             return OnUpdatedAsync();
         }
 
-        public void Dispose()
-        {
-            while (_eventHandlers.Count > 0)
-            {
-                var handler = _eventHandlers[0];
-                handler.Dispose();
-                _eventHandlers.Remove(handler);
-            }
-
-            while (SyncedQuestions.Count > 0)
-            {
-                var question = SyncedQuestions[0];
-                question.Dispose();
-                SyncedQuestions.Remove(question);
-            }
-        }
-
         public override int GetStateStamp()
         {
             var hashCode = new HashCode();
@@ -117,6 +97,23 @@ namespace Quibble.Client.Sync.Internal.EditMode
             foreach (var question in SyncedQuestions)
                 hashCode.Add(question.GetStateStamp());
             return hashCode.ToHashCode();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (IsDisposed) return;
+
+            if (disposing)
+            {
+                while (SyncedQuestions.Count > 0)
+                {
+                    var question = SyncedQuestions[0];
+                    question.Dispose();
+                    SyncedQuestions.RemoveAt(0);
+                }
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

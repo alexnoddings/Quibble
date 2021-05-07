@@ -47,18 +47,26 @@ else if (GetQuizResult.Value is ISynchronisedParticipateModeQuiz participateMode
         await ReloadQuizAsync();
     }
 
+    private async Task DisposeQuizAsync()
+    {
+        var syncedQuiz = GetQuizResult?.Value;
+        if (syncedQuiz is null) return;
+
+        if (syncedQuiz is ISynchronisedEditModeQuiz editModeQuiz)
+            editModeQuiz.OnInvalidated -= OnQuizInvalidated;
+
+        await syncedQuiz.DisposeAsync();
+        GetQuizResult = null;
+    }
+
     private async Task ReloadQuizAsync()
     {
-        if (GetQuizResult?.Value is not null)
-        {
-            GetQuizResult.Value.Invalidated -= OnQuizInvalidated;
-            await GetQuizResult.Value.DisposeAsync();
-            GetQuizResult = null;
-        }
+        await DisposeQuizAsync();
         
         GetQuizResult = await QuizFactory.GetQuizAsync(QuizId);
-        if (GetQuizResult.WasSuccessful && GetQuizResult.Value is not null)
-            GetQuizResult.Value.Invalidated += OnQuizInvalidated;
+
+        if (GetQuizResult.Value is ISynchronisedEditModeQuiz editModeQuiz)
+            editModeQuiz.OnInvalidated += OnQuizInvalidated;
 
         await InvokeAsync(StateHasChanged);
     }
@@ -67,11 +75,6 @@ else if (GetQuizResult.Value is ISynchronisedParticipateModeQuiz participateMode
 
     public async ValueTask DisposeAsync()
     {
-        var synchronisedQuiz = GetQuizResult?.Value;
-        if (synchronisedQuiz is null)
-            return;
-
-        synchronisedQuiz.Invalidated -= OnQuizInvalidated;
-        await synchronisedQuiz.DisposeAsync();
+        await DisposeQuizAsync();
     }
 }

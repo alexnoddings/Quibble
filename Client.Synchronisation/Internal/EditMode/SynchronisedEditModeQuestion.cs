@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
 using Quibble.Client.Sync.Entities.EditMode;
@@ -10,9 +9,6 @@ namespace Quibble.Client.Sync.Internal.EditMode
 {
     internal sealed class SynchronisedEditModeQuestion : SynchronisedEntity, ISynchronisedEditModeQuestion, IDisposable
     {
-        private readonly List<IDisposable> _eventHandlers = new();
-        private HubConnection HubConnection { get; }
-
         public Guid Id { get; }
         public Guid RoundId { get; }
         public string Text { get; private set; }
@@ -21,8 +17,8 @@ namespace Quibble.Client.Sync.Internal.EditMode
         public QuestionState State { get; private set; }
 
         public SynchronisedEditModeQuestion(HubConnection hubConnection, IQuestion question)
+			: base(hubConnection)
         {
-            HubConnection = hubConnection;
             Id = question.Id;
             RoundId = question.RoundId;
             Text = question.Text;
@@ -30,10 +26,10 @@ namespace Quibble.Client.Sync.Internal.EditMode
             Points = question.Points;
             State = question.State;
 
-            _eventHandlers.Add(hubConnection.On<Guid, string>(nameof(IQuibbleHubClient.OnQuestionTextUpdatedAsync), HandleTextUpdatedAsync));
-            _eventHandlers.Add(hubConnection.On<Guid, string>(nameof(IQuibbleHubClient.OnQuestionAnswerUpdatedAsync), HandleAnswerUpdatedAsync));
-            _eventHandlers.Add(hubConnection.On<Guid, decimal>(nameof(IQuibbleHubClient.OnQuestionPointsUpdatedAsync), HandlePointsUpdatedAsync));
-            _eventHandlers.Add(hubConnection.On<Guid, QuestionState>(nameof(IQuibbleHubClient.OnQuestionStateUpdatedAsync), HandleStateUpdatedAsync));
+            AddEventHandler(hubConnection.On<Guid, string>(nameof(IQuibbleHubClient.OnQuestionTextUpdatedAsync), HandleTextUpdatedAsync));
+            AddEventHandler(hubConnection.On<Guid, string>(nameof(IQuibbleHubClient.OnQuestionAnswerUpdatedAsync), HandleAnswerUpdatedAsync));
+            AddEventHandler(hubConnection.On<Guid, decimal>(nameof(IQuibbleHubClient.OnQuestionPointsUpdatedAsync), HandlePointsUpdatedAsync));
+            AddEventHandler(hubConnection.On<Guid, QuestionState>(nameof(IQuibbleHubClient.OnQuestionStateUpdatedAsync), HandleStateUpdatedAsync));
         }
 
         public async Task UpdateTextAsync(string newText)
@@ -91,16 +87,6 @@ namespace Quibble.Client.Sync.Internal.EditMode
 
             State = newState;
             return OnUpdatedAsync();
-        }
-
-        public void Dispose()
-        {
-            while (_eventHandlers.Count > 0)
-            {
-                var handler = _eventHandlers[0];
-                handler.Dispose();
-                _eventHandlers.Remove(handler);
-            }
         }
 
         public override int GetStateStamp()
