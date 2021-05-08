@@ -9,8 +9,8 @@ namespace Quibble.Client.Pages.Quiz.Edit
 {
     public partial class EditQuestionView : IDisposable
     {
-	    [CascadingParameter]
-	    private ISynchronisedEditModeQuestion Question { get; set; } = default!;
+	    [Parameter]
+	    public ISynchronisedEditModeQuestion Question { get; set; } = default!;
 
 	    private OptionsModal<bool> ConfirmDeleteModal { get; set; } = default!;
 

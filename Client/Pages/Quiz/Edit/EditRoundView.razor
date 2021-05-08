@@ -37,9 +37,7 @@
             int questionIndex = 1;
             foreach (var question in Round.Questions)
             {
-                <CascadingValue Value="question" @key="question.Id">
-                    <EditQuestionView Index="questionIndex++" />
-                </CascadingValue>
+                <EditQuestionView Question="question" Index="questionIndex++" @key="question.Id" />
             }
         }
         <Fields>

@@ -49,9 +49,7 @@
 
 @foreach (var round in Quiz.Rounds)
 {
-    <CascadingValue Value="round" @key="round.Id">
-        <EditRoundView />
-    </CascadingValue>
+    <EditRoundView Round="round" @key="round.Id" />
 }
 
 <Fields>

@@ -12,7 +12,8 @@ namespace Quibble.Client.Pages.Quiz.Edit
 {
     public partial class EditQuizView : IDisposable
     {
-        [CascadingParameter] private ISynchronisedEditModeQuiz Quiz { get; set; } = default!;
+        [Parameter]
+        public ISynchronisedEditModeQuiz Quiz { get; set; } = default!;
 
         private OptionsModal<bool> ConfirmPublishModal { get; set; } = default!;
 

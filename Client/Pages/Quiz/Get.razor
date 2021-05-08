@@ -1,9 +1,6 @@
 ﻿@page "/quiz/{QuizId:guid}"
 @using Quibble.Client.Pages.Quiz.Edit
 @using Quibble.Client.Sync.Entities.EditMode
-@using Quibble.Shared.Hub
-@attribute [Authorize]
-@implements IAsyncDisposable
 
 @if (GetQuizResult is null)
 {
@@ -17,64 +14,20 @@ else if (GetQuizResult.ErrorCode is not null)
 }
 else if (GetQuizResult.Value is ISynchronisedEditModeQuiz editModeQuiz)
 {
-    <EditQuizPage Quiz="editModeQuiz" />
+    <PageTitle Value="@($"Editing {editModeQuiz.Title}")" />
+    <EditQuizView Quiz="editModeQuiz" />
 }
 @*
 else if (GetQuizResult.Value is ISynchronisedHostModeQuiz hostModeQuiz)
 {
-    <HostQuizPage Quiz="hostModeQuiz" />
+    <PageTitle Value="@($"Hosting {hostModeQuiz.Title}")" />
+    <HostQuizView Quiz="hostModeQuiz" />
 }
 *@
 @*
 else if (GetQuizResult.Value is ISynchronisedParticipateModeQuiz participateModeQuiz)
 {
-    <ParticipateQuizPage Quiz="participateModeQuiz" />
+    <PageTitle Value="@hostModeQuiz.Title" />
+    <ParticipateQuizView Quiz="participateModeQuiz" />
 }
 *@
-
-@code {
-    [Parameter]
-    public Guid QuizId { get; set; }
-
-    [Inject]
-    private ISynchronisedQuizFactory QuizFactory { get; set; } = default!;
-
-    private HubResponse<ISynchronisedQuiz>? GetQuizResult { get; set; } = default!;
-
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-        await ReloadQuizAsync();
-    }
-
-    private async Task DisposeQuizAsync()
-    {
-        var syncedQuiz = GetQuizResult?.Value;
-        if (syncedQuiz is null) return;
-
-        if (syncedQuiz is ISynchronisedEditModeQuiz editModeQuiz)
-            editModeQuiz.OnInvalidated -= OnQuizInvalidated;
-
-        await syncedQuiz.DisposeAsync();
-        GetQuizResult = null;
-    }
-
-    private async Task ReloadQuizAsync()
-    {
-        await DisposeQuizAsync();
-        
-        GetQuizResult = await QuizFactory.GetQuizAsync(QuizId);
-
-        if (GetQuizResult.Value is ISynchronisedEditModeQuiz editModeQuiz)
-            editModeQuiz.OnInvalidated += OnQuizInvalidated;
-
-        await InvokeAsync(StateHasChanged);
-    }
-
-    private Task OnQuizInvalidated() => ReloadQuizAsync();
-
-    public async ValueTask DisposeAsync()
-    {
-        await DisposeQuizAsync();
-    }
-}
