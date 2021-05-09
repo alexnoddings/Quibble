@@ -20,7 +20,12 @@ namespace Quibble.Server.Hub
             if (errorCode is not null)
                 return Failure(errorCode);
 
-            var dbRound = await DbContext.Rounds.Include(round => round.Quiz).Include(round => round.Questions).FindAsync(roundId);
+            var dbRound = 
+                await DbContext.Rounds
+                    .Include(round => round.Quiz)
+                    .Include(round => round.Questions)
+                    .FindAsync(roundId);
+
             if (dbRound is null)
                 return Failure(nameof(ErrorMessages.QuestionParentRoundNotFound));
 
@@ -65,7 +70,12 @@ namespace Quibble.Server.Hub
             if (errorCode is not null)
                 return Failure(errorCode);
 
-            var dbQuestion = await DbContext.Questions.Include(question => question.Round).ThenInclude(round => round.Quiz).FindAsync(questionId);
+            var dbQuestion = 
+                await DbContext.Questions
+                    .Include(question => question.Round)
+                        .ThenInclude(round => round.Quiz)
+                    .FindAsync(questionId);
+
             if (dbQuestion is null)
                 return Failure(nameof(ErrorMessages.QuestionNotFound));
 
@@ -82,7 +92,7 @@ namespace Quibble.Server.Hub
             dbQuestion.Text = newText;
             await DbContext.SaveChangesAsync();
 
-            await QuizGroup(quizId).OnQuestionTextUpdatedAsync(dbQuestion.Id, newText);
+            await QuizGroup(quizId).OnQuestionTextUpdatedAsync(questionId, newText);
 
             return Success();
         }
@@ -94,7 +104,12 @@ namespace Quibble.Server.Hub
             if (errorCode is not null)
                 return Failure(errorCode);
 
-            var dbQuestion = await DbContext.Questions.Include(question => question.Round).ThenInclude(round => round.Quiz).FindAsync(questionId);
+            var dbQuestion = 
+                await DbContext.Questions
+                    .Include(question => question.Round)
+                        .ThenInclude(round => round.Quiz)
+                    .FindAsync(questionId);
+
             if (dbQuestion is null)
                 return Failure(nameof(ErrorMessages.QuestionNotFound));
 
@@ -111,7 +126,7 @@ namespace Quibble.Server.Hub
             dbQuestion.Answer = newAnswer;
             await DbContext.SaveChangesAsync();
 
-            await QuizGroup(quizId).OnQuestionAnswerUpdatedAsync(dbQuestion.Id, newAnswer);
+            await QuizGroup(quizId).OnQuestionAnswerUpdatedAsync(questionId, newAnswer);
 
             return Success();
         }
@@ -123,7 +138,12 @@ namespace Quibble.Server.Hub
             if (errorCode is not null)
                 return Failure(errorCode);
 
-            var dbQuestion = await DbContext.Questions.Include(question => question.Round).ThenInclude(round => round.Quiz).FindAsync(questionId);
+            var dbQuestion = 
+                await DbContext.Questions
+                    .Include(question => question.Round)
+                        .ThenInclude(round => round.Quiz)
+                    .FindAsync(questionId);
+
             if (dbQuestion is null)
                 return Failure(nameof(ErrorMessages.QuestionNotFound));
 
@@ -148,7 +168,7 @@ namespace Quibble.Server.Hub
             dbQuestion.Points = newPoints;
             await DbContext.SaveChangesAsync();
 
-            await QuizGroup(quizId).OnQuestionPointsUpdatedAsync(dbQuestion.Id, newPoints);
+            await QuizGroup(quizId).OnQuestionPointsUpdatedAsync(questionId, newPoints);
 
             return Success();
         }
@@ -160,7 +180,12 @@ namespace Quibble.Server.Hub
             if (errorCode is not null)
                 return Failure(errorCode);
 
-            var dbQuestion = await DbContext.Questions.Include(question => question.Round).ThenInclude(round => round.Quiz).FindAsync(questionId);
+            var dbQuestion = 
+                await DbContext.Questions
+                    .Include(question => question.Round)
+                        .ThenInclude(round => round.Quiz)
+                    .FindAsync(questionId);
+
             if (dbQuestion is null)
                 return Failure(nameof(ErrorMessages.QuestionNotFound));
 
@@ -192,7 +217,7 @@ namespace Quibble.Server.Hub
             dbQuestion.State = newState;
             await DbContext.SaveChangesAsync();
 
-            await QuizGroup(quizId).OnQuestionStateUpdatedAsync(dbQuestion.Id, newState);
+            await QuizGroup(quizId).OnQuestionStateUpdatedAsync(questionId, newState);
 
             return Success();
         }
@@ -204,7 +229,12 @@ namespace Quibble.Server.Hub
             if (errorCode is not null)
                 return Failure(errorCode);
 
-            var dbQuestion = await DbContext.Questions.Include(question => question.Round).ThenInclude(round => round.Quiz).FindAsync(questionId);
+            var dbQuestion = 
+                await DbContext.Questions
+                    .Include(question => question.Round)
+                        .ThenInclude(round => round.Quiz)
+                    .FindAsync(questionId);
+
             if (dbQuestion is null)
                 return Failure(nameof(ErrorMessages.QuestionNotFound));
 
@@ -220,7 +250,7 @@ namespace Quibble.Server.Hub
             DbContext.Questions.Remove(dbQuestion);
             await DbContext.SaveChangesAsync();
 
-            await QuizGroup(quizId).OnQuestionDeletedAsync(dbQuestion.Id);
+            await QuizGroup(quizId).OnQuestionDeletedAsync(questionId);
 
             return Success();
         }
