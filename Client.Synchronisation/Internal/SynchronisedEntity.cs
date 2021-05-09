@@ -8,6 +8,8 @@ namespace Quibble.Client.Sync.Internal
 {
     public abstract class SynchronisedEntity : ISynchronisedEntity, IDisposable
     {
+        public abstract Guid Id { get; }
+
         public event Func<Task>? Updated;
 
         private HubConnection? _hubConnection;

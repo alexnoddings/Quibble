@@ -15,6 +15,7 @@ namespace Quibble.Client.Sync.Internal.EditMode
         public event Func<Task>? OnInvalidated;
 
         public Guid Id { get; }
+        public override Guid Id { get; }
         public Guid OwnerId { get; }
         public string Title { get; private set; }
         public QuizState State { get; private set; }

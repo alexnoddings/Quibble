@@ -10,6 +10,7 @@ namespace Quibble.Client.Sync.Internal.EditMode
     internal sealed class SynchronisedEditModeQuestion : SynchronisedEntity, ISynchronisedEditModeQuestion, IDisposable
     {
         public Guid Id { get; }
+        public override Guid Id { get; }
         public Guid RoundId { get; }
         public string Text { get; private set; }
         public string Answer { get; private set; }
