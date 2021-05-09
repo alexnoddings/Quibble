@@ -14,7 +14,6 @@ namespace Quibble.Client.Sync.Internal.EditMode
     {
         public event Func<Task>? OnInvalidated;
 
-        public Guid Id { get; }
         public override Guid Id { get; }
         public Guid OwnerId { get; }
         public string Title { get; private set; }
@@ -35,12 +34,12 @@ namespace Quibble.Client.Sync.Internal.EditMode
             CreatedAt = quiz.CreatedAt;
             OpenedAt = quiz.OpenedAt;
 
-            AddEventHandler(hubConnection.On<string>(nameof(IQuibbleHubClient.OnQuizTitleUpdatedAsync), HandleTitleUpdatedAsync));
-            AddEventHandler(hubConnection.On(nameof(IQuibbleHubClient.OnQuizOpenedAsync), HandleOpenedAsync));
-            AddEventHandler(hubConnection.On(nameof(IQuibbleHubClient.OnQuizDeletedAsync), HandleDeletedAsync));
+            AddEventHandler<string>(c => c.OnQuizTitleUpdatedAsync, HandleTitleUpdatedAsync);
+            AddEventHandler(c => c.OnQuizOpenedAsync, HandleOpenedAsync);
+            AddEventHandler(c => c.OnQuizDeletedAsync, HandleDeletedAsync);
 
-            AddEventHandler(hubConnection.On<RoundDto>(nameof(IQuibbleHubClient.OnRoundAddedAsync), HandleRoundAddedAsync));
-            AddEventHandler(hubConnection.On<Guid>(nameof(IQuibbleHubClient.OnRoundDeletedAsync), HandleRoundDeletedAsync));
+            AddEventHandler<RoundDto>(c => c.OnRoundAddedAsync, HandleRoundAddedAsync);
+            AddEventHandler<Guid>(c => c.OnRoundDeletedAsync, HandleRoundDeletedAsync);
         }
 
         public async Task UpdateTitleAsync(string newTitle)

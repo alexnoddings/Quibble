@@ -9,7 +9,6 @@ namespace Quibble.Client.Sync.Internal.EditMode
 {
     internal sealed class SynchronisedEditModeQuestion : SynchronisedEntity, ISynchronisedEditModeQuestion, IDisposable
     {
-        public Guid Id { get; }
         public override Guid Id { get; }
         public Guid RoundId { get; }
         public string Text { get; private set; }
@@ -32,9 +31,9 @@ namespace Quibble.Client.Sync.Internal.EditMode
 
             SyncedRound = round;
 
-            AddEventHandler(hubConnection.On<Guid, string>(nameof(IQuibbleHubClient.OnQuestionTextUpdatedAsync), HandleTextUpdatedAsync));
-            AddEventHandler(hubConnection.On<Guid, string>(nameof(IQuibbleHubClient.OnQuestionAnswerUpdatedAsync), HandleAnswerUpdatedAsync));
-            AddEventHandler(hubConnection.On<Guid, decimal>(nameof(IQuibbleHubClient.OnQuestionPointsUpdatedAsync), HandlePointsUpdatedAsync));
+            AddFilteredEventHandler<string>(c => c.OnQuestionTextUpdatedAsync, HandleTextUpdatedAsync);
+            AddFilteredEventHandler<string>(c => c.OnQuestionAnswerUpdatedAsync, HandleAnswerUpdatedAsync);
+            AddFilteredEventHandler<decimal>(c => c.OnQuestionPointsUpdatedAsync, HandlePointsUpdatedAsync);
         }
 
         public async Task UpdateTextAsync(string newText)
@@ -55,29 +54,20 @@ namespace Quibble.Client.Sync.Internal.EditMode
         public Task DeleteAsync() =>
             HubConnection.InvokeAsync(Endpoints.DeleteQuestion, Id);
 
-        private Task HandleTextUpdatedAsync(Guid questionId, string newText)
+        private Task HandleTextUpdatedAsync(string newText)
         {
-            if (questionId != Id)
-                return Task.CompletedTask;
-
             Text = newText;
             return OnUpdatedAsync();
         }
 
-        private Task HandleAnswerUpdatedAsync(Guid questionId, string newAnswer)
+        private Task HandleAnswerUpdatedAsync(string newAnswer)
         {
-            if (questionId != Id)
-                return Task.CompletedTask;
-
             Answer = newAnswer;
             return OnUpdatedAsync();
         }
 
-        private Task HandlePointsUpdatedAsync(Guid questionId, decimal newPoints)
+        private Task HandlePointsUpdatedAsync(decimal newPoints)
         {
-            if (questionId != Id)
-                return Task.CompletedTask;
-
             Points = newPoints;
             return OnUpdatedAsync();
         }

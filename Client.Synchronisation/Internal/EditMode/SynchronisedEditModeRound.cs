@@ -12,7 +12,6 @@ namespace Quibble.Client.Sync.Internal.EditMode
 {
     internal sealed class SynchronisedEditModeRound : SynchronisedEntity, ISynchronisedEditModeRound, IDisposable
     {
-        public Guid Id { get; }
         public override Guid Id { get; }
         public Guid QuizId { get; }
         public string Title { get; private set; }
@@ -34,10 +33,10 @@ namespace Quibble.Client.Sync.Internal.EditMode
 
             SyncedQuiz = quiz;
 
-            AddEventHandler(hubConnection.On<Guid, string>(nameof(IQuibbleHubClient.OnRoundTitleUpdatedAsync), HandleTitleUpdatedAsync));
+            AddFilteredEventHandler<string>(c => c.OnRoundTitleUpdatedAsync, HandleTitleUpdatedAsync);
 
-            AddEventHandler(hubConnection.On<QuestionDto>(nameof(IQuibbleHubClient.OnQuestionAddedAsync), HandleQuestionAddedAsync));
-            AddEventHandler(hubConnection.On<Guid>(nameof(IQuibbleHubClient.OnQuestionDeletedAsync), HandleQuestionDeletedAsync));
+            AddEventHandler<QuestionDto>(c => c.OnQuestionAddedAsync, HandleQuestionAddedAsync);
+            AddEventHandler<Guid>(c => c.OnQuestionDeletedAsync, HandleQuestionDeletedAsync);
         }
 
         public async Task UpdateTitleAsync(string newTitle)
@@ -52,11 +51,8 @@ namespace Quibble.Client.Sync.Internal.EditMode
         public Task AddQuestionAsync() =>
             HubConnection.InvokeAsync(Endpoints.CreateQuestion, Id, string.Empty, string.Empty, 1);
 
-        private Task HandleTitleUpdatedAsync(Guid roundId, string newTitle)
+        private Task HandleTitleUpdatedAsync(string newTitle)
         {
-            if (roundId != Id)
-                return Task.CompletedTask;
-
             Title = newTitle;
             return OnUpdatedAsync();
         }
