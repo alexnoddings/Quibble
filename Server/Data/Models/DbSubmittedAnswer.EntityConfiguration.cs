@@ -23,7 +23,8 @@ namespace Quibble.Server.Data.Models
 
             builder
                 .Property(answer => answer.AssignedPoints)
-                .HasPrecision(4, 2);
+                .HasPrecision(4, 2)
+                .HasDefaultValue(-1);
 
             builder.ToTable("SubmittedAnswers");
         }
