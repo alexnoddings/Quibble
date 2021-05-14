@@ -2,11 +2,13 @@
     <Authorized>
         <BarItem>
             <BarDropdown>
-                <BarDropdownToggle Class="text-light">
-                    @(context.User?.Identity?.Name ?? "Profile")
+                <BarDropdownToggle>
+                    <Text Color="TextColor.Light" Display="Display.Inline">
+                        @(context.User?.Identity?.Name ?? "Profile")
+                    </Text>
                 </BarDropdownToggle>
                 <BarDropdownMenu RightAligned="true">
-                    <BarDropdownItem Margin="Margin.Is1.OnY">
+                    <BarDropdownItem Padding="Padding.Is2.OnY">
                         <Text Padding="Padding.Is0">
                             Logged in as
                         </Text>
@@ -14,12 +16,10 @@
                             @context.User?.Identity?.Name
                         </Text>
                     </BarDropdownItem>
-                    <Divider Margin="Margin.Is2.OnY" />
-                    <BarDropdownItem To="/settings/user" Margin="Margin.Is1.OnY">
+                    <BarDropdownItem To="/settings/user" Padding="Padding.Is2.OnY">
                         Settings
                     </BarDropdownItem>
-                    <Divider Margin="Margin.Is2.OnY" />
-                    <BarDropdownItem To="/logout" Margin="Margin.Is1.OnY">
+                    <BarDropdownItem To="/logout" Padding="Padding.Is2.OnY">
                         Log out
                     </BarDropdownItem>
                 </BarDropdownMenu>
