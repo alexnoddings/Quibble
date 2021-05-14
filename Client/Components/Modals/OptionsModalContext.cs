@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Quibble.Client.Components.Confirmation
+namespace Quibble.Client.Components.Modals
 {
     public class OptionsModalContext<TValue>
     {

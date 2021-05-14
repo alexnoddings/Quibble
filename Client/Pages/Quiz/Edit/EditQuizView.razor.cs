@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Blazorise;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components;
-using Quibble.Client.Components.Confirmation;
+using Quibble.Client.Components.Modals;
 using Quibble.Client.Sync.Entities.EditMode;
 
 namespace Quibble.Client.Pages.Quiz.Edit

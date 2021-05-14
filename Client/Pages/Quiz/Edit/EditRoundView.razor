@@ -34,7 +34,7 @@
             </Fields>
         }
         @{
-            int questionIndex = 1;
+            int questionIndex = 0;
             foreach (var question in Round.Questions)
             {
                 <EditQuestionView Question="question" Index="questionIndex++" @key="question.Id" />

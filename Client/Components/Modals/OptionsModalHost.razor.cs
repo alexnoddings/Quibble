@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Blazorise;
 using Microsoft.AspNetCore.Components;
 
-namespace Quibble.Client.Components.Confirmation
+namespace Quibble.Client.Components.Modals
 {
     public partial class OptionsModalHost
     {
@@ -60,5 +60,5 @@ namespace Quibble.Client.Components.Confirmation
                 return value;
             return dismissValue;
         }
-	}
+    }
 }
