@@ -46,6 +46,12 @@ label.input-required::after {
     transform: translateY(-50%);
 }
 
+.text-clip {
+    overflow: hidden;
+    text-overflow: clip;
+    white-space: nowrap;
+}
+
 #blazor-error-ui {
     background: lightyellow;
     bottom: 0;
