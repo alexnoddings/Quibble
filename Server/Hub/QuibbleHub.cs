@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -19,10 +21,14 @@ namespace Quibble.Server.Hub
         private AppDbContext DbContext { get; }
         private IMapper Mapper { get; }
 
+        protected HubExecutionContext ExecutionContext => _executionContext.Value;
+        private readonly Lazy<HubExecutionContext> _executionContext;
+
         public QuibbleHub(AppDbContext dbContext, IMapper mapper)
         {
             DbContext = dbContext;
             Mapper = mapper;
+            _executionContext = new Lazy<HubExecutionContext>(BuildExecutionContext);
         }
 
         public override async Task OnConnectedAsync()
@@ -63,6 +69,16 @@ namespace Quibble.Server.Hub
             await Groups.AddToGroupAsync(Context.ConnectionId, GetQuizGroupName(dbQuiz.Id));
             if (dbQuiz.OwnerId == userId)
                 await Groups.AddToGroupAsync(Context.ConnectionId, GetQuizHostGroupName(dbQuiz.Id));
+        protected record HubExecutionContext(Guid UserId, Guid QuizId, string? ErrorCode = null);
+        private HubExecutionContext BuildExecutionContext()
+        {
+            if (GetUserId() is not { } userId)
+                return new HubExecutionContext(Guid.Empty, Guid.Empty, nameof(ErrorMessages.Unauthorised));
+
+            if (GetQuizId() is not { } quizId)
+                return new HubExecutionContext(Guid.Empty, Guid.Empty, nameof(ErrorMessages.QuizNotFound));
+
+            return new HubExecutionContext(userId, quizId);
         }
 
         private Guid? GetUserId()
@@ -82,23 +98,6 @@ namespace Quibble.Server.Hub
                 return null;
             return quizId;
         }
-
-        // ToDo: initialise in constructor
-        private HubExecutionContext ExecutionContext
-        {
-            get
-            {
-                if (GetUserId() is not { } userId)
-                    return new HubExecutionContext(Guid.Empty, Guid.Empty, nameof(ErrorMessages.Unauthorised));
-
-                if (GetQuizId() is not { } quizId)
-                    return new HubExecutionContext(Guid.Empty, Guid.Empty, nameof(ErrorMessages.QuizNotFound));
-
-                return new HubExecutionContext(userId, quizId);
-            }
-        }
-
-        private record HubExecutionContext(Guid UserId, Guid QuizId, string? ErrorCode = null);
 
         private static HubResponse Success() => HubResponse.FromSuccess();
         private static HubResponse<TValue> Success<TValue>(TValue value) => HubResponse.FromSuccess(value);
