@@ -12,7 +12,7 @@
                     @($"Round {Selection.RoundNumber + 1}. {Selection.Round.Title}")
                 </Heading>
                 <Heading Size="HeadingSize.Is5" Margin="Margin.IsAuto.OnX.Is0.OnY" Alignment="TextAlignment.Center">
-                    @($"Question {Selection.QuestionNumber + 1}")
+                    @($"Question {Selection.QuestionNumber + 1}: {Selection.Question.Points:G4} point{(Selection.Question.Points != 1 ? "s" : "")}")
                 </Heading>
             </Column>
             <Column ColumnSize="ColumnSize.Is3.Is2.OnWidescreen">
@@ -120,16 +120,15 @@
                         </Column>
                     }
                 </Row>
+                <Row>
+                    <Column ColumnSize="ColumnSize.IsFull">
+                        <Divider DividerType="DividerType.TextContent" Text="Answers" Margin="Margin.Is4.FromTop" />
+                    </Column>
+                </Row>
             </Column>
         </Row>
         <Row>
             <Column ColumnSize="ColumnSize.IsFull">
-                <Divider DividerType="DividerType.TextContent" Text="Answers" Margin="Margin.Is4.FromTop" />
-            </Column>
-            <Column>
-                <Column ColumnSize="ColumnSize.IsFull">
-                    @* ToDo: add answer view *@
-                </Column>
             </Column>
         </Row>
     </CardBody>
