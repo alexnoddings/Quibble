@@ -5,7 +5,14 @@
         </Heading>
     </CardHeader>
     <CardBody Padding="Padding.Is3.OnX.Is2.OnY">
-        @{
+        @if (Quiz.Participants.Count == 0)
+        {
+            <Blazorise.Text Alignment="TextAlignment.Left" Class="text-clip" Color="TextColor.Muted" Italic="true">
+                *tumbleweed*
+            </Blazorise.Text>
+        }
+        else
+        {
             int placeCounter = 1;
             foreach (var (points, participants) in GetParticipantScores())
             {
