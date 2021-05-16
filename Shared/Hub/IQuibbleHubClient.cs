@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Quibble.Shared.Entities;
 using Quibble.Shared.Models;
@@ -23,6 +24,6 @@ namespace Quibble.Shared.Hub
         public Task OnQuestionStateUpdatedAsync(Guid questionId, QuestionState newState);
         public Task OnQuestionDeletedAsync(Guid questionId);
 
-        public Task OnParticipantJoinedAsync(Guid id, string name);
+        public Task OnParticipantJoinedAsync(ParticipantDto participant, List<SubmittedAnswerDto> submittedAnswers);
     }
 }
