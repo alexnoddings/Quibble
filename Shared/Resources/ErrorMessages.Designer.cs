@@ -61,6 +61,15 @@ namespace Quibble.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You can&apos;t edit this answer as you aren&apos;t it&apos;s owner..
+        /// </summary>
+        public static string AnswerCantEditAsNotOwner {
+            get {
+                return ResourceManager.GetString("AnswerCantEditAsNotOwner", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You can&apos;t edit this quiz as it isn&apos;t in development..
         /// </summary>
         public static string CantEditAsQuizNotInDevelopment {
