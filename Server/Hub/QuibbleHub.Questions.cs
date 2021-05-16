@@ -198,10 +198,6 @@ namespace Quibble.Server.Hub
             if (dbQuestion.Round.Quiz.State != QuizState.Open)
                 return Failure(nameof(ErrorMessages.CantUpdateAsQuizNotOpen));
 
-            // Can't update the state to be locked
-            if (newState == QuestionState.Hidden)
-                return Failure(nameof(ErrorMessages.QuestionBadState));
-
             switch (dbQuestion.State)
             {
                 // The only valid state transitions
