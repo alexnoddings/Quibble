@@ -57,6 +57,12 @@ label.input-required::after {
     margin: -1px;
 }
 
+.dropdown-item.active.inactive,
+.dropdown-item.inactive:active {
+    background-color: unset !important;
+    color: unset !important;
+}
+
 #blazor-error-ui {
     background: lightyellow;
     bottom: 0;
