@@ -52,6 +52,11 @@ label.input-required::after {
     white-space: nowrap;
 }
 
+/* Margin flush - drops margin back by 1 pixel into the parent */
+.m-f {
+    margin: -1px;
+}
+
 #blazor-error-ui {
     background: lightyellow;
     bottom: 0;
