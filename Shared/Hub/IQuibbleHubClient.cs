@@ -25,5 +25,8 @@ namespace Quibble.Shared.Hub
         public Task OnQuestionDeletedAsync(Guid questionId);
 
         public Task OnParticipantJoinedAsync(ParticipantDto participant, List<SubmittedAnswerDto> submittedAnswers);
+
+        public Task OnSubmittedAnswerTextUpdatedAsync(Guid submittedAnswerId, string newText);
+        public Task OnSubmittedAnswerAssignedPointsUpdatedAsync(Guid submittedAnswerId, decimal newPoints);
     }
 }
