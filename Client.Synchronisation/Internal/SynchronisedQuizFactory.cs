@@ -5,8 +5,10 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.Logging;
 using Quibble.Client.Sync.Entities;
 using Quibble.Client.Sync.Internal.EditMode;
+using Quibble.Client.Sync.Internal.HostMode;
 using Quibble.Shared.Entities;
 using Quibble.Shared.Hub;
 using Quibble.Shared.Models;
@@ -16,11 +18,13 @@ namespace Quibble.Client.Sync.Internal
 {
     internal class SynchronisedQuizFactory : ISynchronisedQuizFactory
     {
+        private ILogger<SynchronisedEntity> EntityLogger { get; }
         private HttpClient HttpClient { get; }
         private NavigationManager NavigationManager { get; }
 
-        public SynchronisedQuizFactory(IHttpClientFactory httpClientFactory, NavigationManager navigationManager)
+        public SynchronisedQuizFactory(ILogger<SynchronisedEntity> entityLogger, IHttpClientFactory httpClientFactory, NavigationManager navigationManager)
         {
+            EntityLogger = entityLogger;
             HttpClient = httpClientFactory.CreateClient("QuizApi");
             NavigationManager = navigationManager;
         }
@@ -55,25 +59,37 @@ namespace Quibble.Client.Sync.Internal
             if (getQuizHubResponse.Value is null)
                 return HubResponse.FromError<ISynchronisedQuiz>(nameof(ErrorMessages.QuizNotFound));
 
-            var quiz = getQuizHubResponse.Value.Quiz;
-            var rounds = getQuizHubResponse.Value.Rounds;
-            var questions = getQuizHubResponse.Value.Questions;
-
+            var quizDto = getQuizHubResponse.Value;
             ISynchronisedQuiz synchronisedQuiz;
-            if (quizNegotiation.State == QuizState.InDevelopment)
+            switch (quizNegotiation.State)
             {
-                synchronisedQuiz =
-                    new SynchronisedEditModeQuizBuilder()
-                        .WithHubConnection(hubConnection)
-                        .WithQuiz(quiz)
-                        .WithRounds(rounds)
-                        .WithQuestions(questions)
-                        .Build();
-            }
-            else
-            {
-                // ToDo: add when other modes are added
-                return HubResponse.FromError<ISynchronisedQuiz>("NotImplemented");
+                case QuizState.InDevelopment:
+                    synchronisedQuiz =
+                        new SynchronisedEditModeQuizBuilder()
+                            .WithLoggerInstance(EntityLogger)
+                            .WithHubConnection(hubConnection)
+                            .WithQuiz(quizDto.Quiz)
+                            .WithRounds(quizDto.Rounds)
+                            .WithQuestions(quizDto.Questions)
+                            .Build();
+                    break;
+                case QuizState.Open when quizNegotiation.CanEdit:
+                    synchronisedQuiz =
+                        new SynchronisedHostModeQuizBuilder()
+                            .WithLoggerInstance(EntityLogger)
+                            .WithHubConnection(hubConnection)
+                            .WithQuiz(quizDto.Quiz)
+                            .WithParticipants(quizDto.Participants)
+                            .WithRounds(quizDto.Rounds)
+                            .WithQuestions(quizDto.Questions)
+                            .WithSubmittedAnswers(quizDto.SubmittedAnswers)
+                            .Build();
+                    break;
+                case QuizState.Open:
+                    // ToDo: implement
+                    return HubResponse.FromError<ISynchronisedQuiz>("NotImplemented");
+                default:
+                    return HubResponse.FromError<ISynchronisedQuiz>(nameof(ErrorMessages.UnknownError));
             }
 
             return HubResponse.FromSuccess(synchronisedQuiz);
