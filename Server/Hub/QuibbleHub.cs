@@ -104,11 +104,14 @@ namespace Quibble.Server.Hub
         private static HubResponse Failure(string errorCode) => HubResponse.FromError(errorCode);
         private static HubResponse<TValue> Failure<TValue>(string errorCode) => HubResponse.FromError<TValue>(errorCode);
 
-        private IQuibbleHubClient QuizGroup(Guid quizId) => Clients.Group(GetQuizGroupName(quizId));
-        private IQuibbleHubClient QuizGroupExcept(Guid quizId, string excludedConnection) => Clients.GroupExcept(GetQuizGroupName(quizId), excludedConnection);
-        private IQuibbleHubClient QuizGroupExceptCurrent(Guid quizId) => Clients.GroupExcept(GetQuizGroupName(quizId), Context.ConnectionId);
+        private IQuibbleHubClient AllQuizUsersGroup(Guid quizId) => Clients.Group(GetQuizGroupName(quizId));
+        private IQuibbleHubClient AllQuizParticipantsGroup(Guid quizId) => Clients.Group(GetQuizParticipantsGroupName(quizId));
+        private IQuibbleHubClient QuizHostGroup(Guid quizId) => Clients.Group(GetQuizHostGroupName(quizId));
+        private IQuibbleHubClient QuizParticipantGroup(Guid quizId, Guid participantId) => Clients.Group(GetQuizParticipantGroupName(quizId, participantId));
 
         public static string GetQuizGroupName(Guid quizId) => $"quiz::{quizId}";
-        public static string GetQuizHostGroupName(Guid quizId) => $"quiz::{quizId}::host";
+        public static string GetQuizHostGroupName(Guid quizId) => $"quiz::{quizId}::hosts";
+        public static string GetQuizParticipantsGroupName(Guid quizId) => $"quiz::{quizId}::participants";
+        public static string GetQuizParticipantGroupName(Guid quizId, Guid participantId) => $"quiz::{quizId}::participant::{participantId}";
     }
 }

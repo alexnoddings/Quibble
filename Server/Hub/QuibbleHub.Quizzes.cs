@@ -90,7 +90,7 @@ namespace Quibble.Server.Hub
             dbQuiz.Title = newTitle;
             await DbContext.SaveChangesAsync();
 
-            await QuizGroupExceptCurrent(quizId).OnQuizTitleUpdatedAsync(newTitle);
+            await AllQuizUsersGroup(quizId).OnQuizTitleUpdatedAsync(newTitle);
 
             return Success();
         }
@@ -136,7 +136,7 @@ namespace Quibble.Server.Hub
             dbQuiz.OpenedAt = DateTime.UtcNow;
             await DbContext.SaveChangesAsync();
 
-            await QuizGroup(quizId).OnQuizOpenedAsync();
+            await AllQuizUsersGroup(quizId).OnQuizOpenedAsync();
 
             return Success();
         }
@@ -161,7 +161,7 @@ namespace Quibble.Server.Hub
             DbContext.Quizzes.Remove(dbQuiz);
             await DbContext.SaveChangesAsync();
 
-            await QuizGroup(quizId).OnQuizDeletedAsync();
+            await AllQuizUsersGroup(quizId).OnQuizDeletedAsync();
 
             return Success();
         }

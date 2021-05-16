@@ -43,7 +43,7 @@ namespace Quibble.Server.Hub
             await DbContext.SaveChangesAsync();
 
             var round = Mapper.Map<RoundDto>(dbRound);
-            await QuizGroup(quizId).OnRoundAddedAsync(round);
+            await AllQuizUsersGroup(quizId).OnRoundAddedAsync(round);
 
             return Success();
         }
@@ -76,7 +76,7 @@ namespace Quibble.Server.Hub
             dbRound.Title = newTitle;
             await DbContext.SaveChangesAsync();
 
-            await QuizGroup(quizId).OnRoundTitleUpdatedAsync(dbRound.Id, newTitle);
+            await AllQuizUsersGroup(quizId).OnRoundTitleUpdatedAsync(dbRound.Id, newTitle);
 
             return Success();
         }
@@ -108,7 +108,7 @@ namespace Quibble.Server.Hub
             dbRound.State = RoundState.Open;
             await DbContext.SaveChangesAsync();
 
-            await QuizGroup(quizId).OnRoundOpenedAsync(dbRound.Id);
+            await AllQuizUsersGroup(quizId).OnRoundOpenedAsync(dbRound.Id);
 
             return Success();
         }
@@ -140,7 +140,7 @@ namespace Quibble.Server.Hub
             DbContext.Rounds.Remove(dbRound);
             await DbContext.SaveChangesAsync();
 
-            await QuizGroup(quizId).OnRoundDeletedAsync(dbRound.Id);
+            await AllQuizUsersGroup(quizId).OnRoundDeletedAsync(dbRound.Id);
 
             return Success();
         }

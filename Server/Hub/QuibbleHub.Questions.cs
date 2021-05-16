@@ -58,7 +58,7 @@ namespace Quibble.Server.Hub
             await DbContext.SaveChangesAsync();
 
             var question = Mapper.Map<QuestionDto>(dbQuestion);
-            await QuizGroup(quizId).OnQuestionAddedAsync(question);
+            await AllQuizUsersGroup(quizId).OnQuestionAddedAsync(question);
 
             return Success();
         }
@@ -92,7 +92,7 @@ namespace Quibble.Server.Hub
             dbQuestion.Text = newText;
             await DbContext.SaveChangesAsync();
 
-            await QuizGroup(quizId).OnQuestionTextUpdatedAsync(questionId, newText);
+            await AllQuizUsersGroup(quizId).OnQuestionTextUpdatedAsync(questionId, newText);
 
             return Success();
         }
@@ -126,7 +126,7 @@ namespace Quibble.Server.Hub
             dbQuestion.Answer = newAnswer;
             await DbContext.SaveChangesAsync();
 
-            await QuizGroup(quizId).OnQuestionAnswerUpdatedAsync(questionId, newAnswer);
+            await AllQuizUsersGroup(quizId).OnQuestionAnswerUpdatedAsync(questionId, newAnswer);
 
             return Success();
         }
@@ -168,7 +168,7 @@ namespace Quibble.Server.Hub
             dbQuestion.Points = newPoints;
             await DbContext.SaveChangesAsync();
 
-            await QuizGroup(quizId).OnQuestionPointsUpdatedAsync(questionId, newPoints);
+            await AllQuizUsersGroup(quizId).OnQuestionPointsUpdatedAsync(questionId, newPoints);
 
             return Success();
         }
@@ -217,7 +217,7 @@ namespace Quibble.Server.Hub
             dbQuestion.State = newState;
             await DbContext.SaveChangesAsync();
 
-            await QuizGroup(quizId).OnQuestionStateUpdatedAsync(questionId, newState);
+            await AllQuizUsersGroup(quizId).OnQuestionStateUpdatedAsync(questionId, newState);
 
             return Success();
         }
@@ -250,7 +250,7 @@ namespace Quibble.Server.Hub
             DbContext.Questions.Remove(dbQuestion);
             await DbContext.SaveChangesAsync();
 
-            await QuizGroup(quizId).OnQuestionDeletedAsync(questionId);
+            await AllQuizUsersGroup(quizId).OnQuestionDeletedAsync(questionId);
 
             return Success();
         }
