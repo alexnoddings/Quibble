@@ -42,23 +42,60 @@ namespace Quibble.Client.Sync.Internal
         private void AddEventHandler(IDisposable handler) => 
 	        EventHandlers.Add(handler);
 
-        protected void AddEventHandler(Expression<Func<IQuibbleHubClient, Func<Task>>> eventSelector, Func<Task> eventHandler) => 
-            AddEventHandler(HubConnection.On(GetMethodName(eventSelector), eventHandler));
+        protected void AddEventHandler(Expression<Func<IQuibbleHubClient, Func<Task>>> eventSelector, Func<Task> eventHandler)
+        {
+            string eventName = GetMethodName(eventSelector);
+            Task WrappedEventHandler() => Wrap(eventName, eventHandler);
+            AddEventHandler(HubConnection.On(GetMethodName(eventSelector), WrappedEventHandler));
+        }
 
-        protected void AddEventHandler<T1>(Expression<Func<IQuibbleHubClient, Func<T1, Task>>> eventSelector, Func<T1, Task> eventHandler) => 
-            AddEventHandler(HubConnection.On(GetMethodName(eventSelector), eventHandler));
+        protected void AddEventHandler<T1>(Expression<Func<IQuibbleHubClient, Func<T1, Task>>> eventSelector, Func<T1, Task> eventHandler)
+        {
+            string eventName = GetMethodName(eventSelector);
+            Task WrappedEventHandler(T1 t1) => Wrap(eventName, () => eventHandler(t1));
+            AddEventHandler(HubConnection.On(eventName, (Func<T1, Task>) WrappedEventHandler));
+        }
 
-        protected void AddEventHandler<T1, T2>(Expression<Func<IQuibbleHubClient, Func<T1, T2, Task>>> eventSelector, Func<T1, T2, Task> eventHandler) =>
-            AddEventHandler(HubConnection.On(GetMethodName(eventSelector), eventHandler));
+        protected void AddEventHandler<T1, T2>(Expression<Func<IQuibbleHubClient, Func<T1, T2, Task>>> eventSelector, Func<T1, T2, Task> eventHandler)
+        {
+            string eventName = GetMethodName(eventSelector);
+            Task WrappedEventHandler(T1 t1, T2 t2) => Wrap(eventName, () => eventHandler(t1, t2));
+            AddEventHandler(HubConnection.On<T1, T2>(eventName, WrappedEventHandler));
+        }
 
-        protected void AddFilteredEventHandler(Expression<Func<IQuibbleHubClient, Func<Guid, Task>>> eventSelector, Func<Task> eventHandler) =>
-            AddEventHandler(HubConnection.On<Guid>(GetMethodName(eventSelector), id => id == Id ? eventHandler() : Task.CompletedTask));
+        protected void AddFilteredEventHandler(Expression<Func<IQuibbleHubClient, Func<Guid, Task>>> eventSelector, Func<Task> eventHandler)
+        {
+            string eventName = GetMethodName(eventSelector);
+            Task WrappedEventHandler(Guid id) => Wrap(eventName, () => id == Id ? eventHandler() : Task.CompletedTask);
+            AddEventHandler(HubConnection.On<Guid>(eventName, WrappedEventHandler));
+        }
 
-        protected void AddFilteredEventHandler<T1>(Expression<Func<IQuibbleHubClient, Func<Guid, T1, Task>>> eventSelector, Func<T1, Task> eventHandler) =>
-            AddEventHandler(HubConnection.On<Guid, T1>(GetMethodName(eventSelector), (id, t1) => id == Id ? eventHandler(t1) : Task.CompletedTask));
+        protected void AddFilteredEventHandler<T1>(Expression<Func<IQuibbleHubClient, Func<Guid, T1, Task>>> eventSelector, Func<T1, Task> eventHandler)
+        {
+            string eventName = GetMethodName(eventSelector);
+            Task WrappedEventHandler(Guid id, T1 t1) => Wrap(eventName, () => id == Id ? eventHandler(t1) : Task.CompletedTask);
+            AddEventHandler(HubConnection.On<Guid, T1>(eventName, WrappedEventHandler));
+        }
 
-        protected void AddFilteredEventHandler<T1, T2>(Expression<Func<IQuibbleHubClient, Func<Guid, T1, Task>>> eventSelector, Func<T1, T2, Task> eventHandler) =>
-            AddEventHandler(HubConnection.On<Guid, T1, T2>(GetMethodName(eventSelector), (id, t1, t2) => id == Id ? eventHandler(t1, t2) : Task.CompletedTask));
+        protected void AddFilteredEventHandler<T1, T2>(Expression<Func<IQuibbleHubClient, Func<Guid, T1, Task>>> eventSelector, Func<T1, T2, Task> eventHandler)
+        {
+            string eventName = GetMethodName(eventSelector);
+            Task WrappedEventHandler(Guid id, T1 t1, T2 t2) => Wrap(eventName, () => id == Id ? eventHandler(t1, t2) : Task.CompletedTask);
+            AddEventHandler(HubConnection.On<Guid, T1, T2>(eventName, WrappedEventHandler));
+        }
+
+        private async Task Wrap(string eventName, Func<Task> eventTask)
+        {
+            try
+            {
+                await eventTask();
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, $"Exception occurred while handling event {eventName} in {GetType().Name}");
+                throw;
+            }
+        }
 
         private static string GetMethodName(LambdaExpression eventMethodSelector)
         {
