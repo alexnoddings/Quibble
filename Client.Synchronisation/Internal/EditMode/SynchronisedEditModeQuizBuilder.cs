@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.Logging;
 using Quibble.Shared.Models;
 
 namespace Quibble.Client.Sync.Internal.EditMode
 {
     internal class SynchronisedEditModeQuizBuilder
     {
+        public ILogger<SynchronisedEntity>? LoggerInstance { get; set; }
         public HubConnection? HubConnection { get; set; }
         public QuizDto? Quiz { get; set; }
         public List<RoundDto>? Rounds { get; set; }
@@ -15,6 +17,8 @@ namespace Quibble.Client.Sync.Internal.EditMode
 
         public SynchronisedEditModeQuiz Build()
         {
+            if (LoggerInstance is null)
+                throw new InvalidOperationException($"{nameof(LoggerInstance)} must be set.");
             if (HubConnection is null)
                 throw new InvalidOperationException($"{nameof(HubConnection)} must be set.");
             if (Quiz is null)
@@ -24,19 +28,25 @@ namespace Quibble.Client.Sync.Internal.EditMode
             if (Questions is null)
                 throw new InvalidOperationException($"{nameof(Questions)} must be set.");
 
-            var synchronisedQuiz = new SynchronisedEditModeQuiz(HubConnection, Quiz);
+            var synchronisedQuiz = new SynchronisedEditModeQuiz(LoggerInstance, HubConnection, Quiz);
             foreach (var round in Rounds)
             {
-                var synchronisedRound = new SynchronisedEditModeRound(HubConnection, round, synchronisedQuiz);
+                var synchronisedRound = new SynchronisedEditModeRound(LoggerInstance, HubConnection, round, synchronisedQuiz);
                 foreach (var question in Questions.Where(q => q.RoundId == round.Id))
                 {
-                    var synchronisedQuestion = new SynchronisedEditModeQuestion(HubConnection, question, synchronisedRound);
+                    var synchronisedQuestion = new SynchronisedEditModeQuestion(LoggerInstance, HubConnection, question, synchronisedRound);
                     synchronisedRound.SyncedQuestions.Add(synchronisedQuestion);
                 }
                 synchronisedQuiz.SyncedRounds.Add(synchronisedRound);
             }
 
             return synchronisedQuiz;
+        }
+
+        public SynchronisedEditModeQuizBuilder WithLoggerInstance(ILogger<SynchronisedEntity> loggerInstance)
+        {
+            LoggerInstance = loggerInstance;
+            return this;
         }
 
         public SynchronisedEditModeQuizBuilder WithHubConnection(HubConnection hubConnection)

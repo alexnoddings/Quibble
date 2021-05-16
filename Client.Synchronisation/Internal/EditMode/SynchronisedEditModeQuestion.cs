@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.Logging;
 using Quibble.Client.Sync.Entities.EditMode;
 using Quibble.Shared.Entities;
 using Quibble.Shared.Hub;
@@ -19,8 +20,8 @@ namespace Quibble.Client.Sync.Internal.EditMode
         internal SynchronisedEditModeRound SyncedRound { get; }
         public ISynchronisedEditModeRound Round => SyncedRound;
 
-        public SynchronisedEditModeQuestion(HubConnection hubConnection, IQuestion question, SynchronisedEditModeRound round)
-            : base(hubConnection)
+        public SynchronisedEditModeQuestion(ILogger<SynchronisedEntity> logger, HubConnection hubConnection, IQuestion question, SynchronisedEditModeRound round)
+            : base(logger, hubConnection)
         {
             Id = question.Id;
             RoundId = question.RoundId;

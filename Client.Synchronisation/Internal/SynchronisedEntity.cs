@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.Logging;
 using Quibble.Client.Sync.Entities;
 using Quibble.Shared.Hub;
 
@@ -11,6 +12,8 @@ namespace Quibble.Client.Sync.Internal
 {
     public abstract class SynchronisedEntity : ISynchronisedEntity, IDisposable
     {
+        protected ILogger<SynchronisedEntity> Logger { get; }
+
         public abstract Guid Id { get; }
 
         public event Func<Task>? Updated;
@@ -30,8 +33,9 @@ namespace Quibble.Client.Sync.Internal
 
         protected bool IsDisposed { get; private set; }
 
-        protected SynchronisedEntity(HubConnection hubConnection)
+        protected SynchronisedEntity(ILogger<SynchronisedEntity> logger, HubConnection hubConnection)
         {
+            Logger = logger;
             _hubConnection = hubConnection ?? throw new ArgumentNullException(nameof(hubConnection));
         }
 

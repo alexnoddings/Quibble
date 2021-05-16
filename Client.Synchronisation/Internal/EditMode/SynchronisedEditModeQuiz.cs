@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.Logging;
 using Quibble.Client.Sync.Entities.EditMode;
 using Quibble.Shared.Entities;
 using Quibble.Shared.Hub;
@@ -22,11 +23,10 @@ namespace Quibble.Client.Sync.Internal.EditMode
         public DateTime? OpenedAt { get; private set; }
 
         internal List<SynchronisedEditModeRound> SyncedRounds { get; } = new();
-        public IEnumerable<ISynchronisedEditModeRound> Rounds => SyncedRounds.AsEnumerable();
         public IReadOnlyList<ISynchronisedEditModeRound> Rounds => SyncedRounds.AsReadOnly();
 
-        public SynchronisedEditModeQuiz(HubConnection hubConnection, IQuiz quiz) 
-	        : base(hubConnection)
+        public SynchronisedEditModeQuiz(ILogger<SynchronisedEntity> logger, HubConnection hubConnection, IQuiz quiz) 
+	        : base(logger, hubConnection)
         {
             Id = quiz.Id;
             OwnerId = quiz.OwnerId;
@@ -81,7 +81,7 @@ namespace Quibble.Client.Sync.Internal.EditMode
 
         private Task HandleRoundAddedAsync(RoundDto round)
         {
-            var synchronisedRound = new SynchronisedEditModeRound(HubConnection, round, this);
+            var synchronisedRound = new SynchronisedEditModeRound(Logger, HubConnection, round, this);
             SyncedRounds.Add(synchronisedRound);
             return OnUpdatedAsync();
         }
