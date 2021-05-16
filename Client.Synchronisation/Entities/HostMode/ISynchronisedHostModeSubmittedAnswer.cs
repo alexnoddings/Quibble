@@ -8,6 +8,6 @@ namespace Quibble.Client.Sync.Entities.HostMode
         public ISynchronisedHostModeQuestion Question { get; }
         public ISynchronisedHostModeParticipant Submitter { get; }
 
-        public Task MarkAsync(double points);
+        public Task MarkAsync(decimal points);
     }
 }

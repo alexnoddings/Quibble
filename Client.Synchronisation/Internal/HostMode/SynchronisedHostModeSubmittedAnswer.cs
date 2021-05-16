@@ -38,9 +38,9 @@ namespace Quibble.Client.Sync.Internal.HostMode
             AddFilteredEventHandler<decimal>(c => c.OnSubmittedAnswerAssignedPointsUpdatedAsync, HandleAssignedPointsUpdatedAsync);
         }
 
-        public Task MarkAsync(double points)
+        public Task MarkAsync(decimal points)
         {
-            if (SyncedQuestion.State != QuestionState.Locked)
+            if (SyncedQuestion.State < QuestionState.Locked)
                 return Task.CompletedTask;
 
             return HubConnection.InvokeAsync(Endpoints.UpdateSubmittedAnswerAssignedPoints, Id, points);
