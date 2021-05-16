@@ -11,6 +11,7 @@ using Quibble.Server.Data.Models;
 using Quibble.Server.Extensions;
 using Quibble.Shared.Entities;
 using Quibble.Shared.Hub;
+using Quibble.Shared.Models;
 using Quibble.Shared.Resources;
 
 namespace Quibble.Server.Hub
@@ -39,14 +40,25 @@ namespace Quibble.Server.Hub
                 return;
             }
 
-            var dbQuiz = await DbContext.Quizzes.Include(quiz => quiz.Participants).FindAsync(quizId);
+            var dbQuiz = await DbContext.Quizzes
+                .Include(quiz => quiz.Participants)
+                .FindAsync(quizId);
+
             if (dbQuiz is null)
             {
                 Context.Abort();
                 return;
             }
 
-            if (dbQuiz.OwnerId != userId)
+            if (dbQuiz.OwnerId == userId)
+            {
+                await Groups.AddToGroupAsync(Context.ConnectionId, GetQuizHostGroupName(dbQuiz.Id));
+
+                DbContext.SubmittedAnswers.RemoveRange(DbContext.SubmittedAnswers);
+                DbContext.Participants.RemoveRange(DbContext.Participants);
+                await DbContext.SaveChangesAsync();
+            }
+            else
             {
                 if (dbQuiz.State != QuizState.Open)
                 {
@@ -54,21 +66,45 @@ namespace Quibble.Server.Hub
                     return;
                 }
 
-                if (dbQuiz.Participants.None(participant => participant.UserId == userId))
+                DbParticipant? dbParticipant = dbQuiz.Participants.FirstOrDefault(participant => participant.UserId == userId);
+                if (dbParticipant is null)
                 {
-                    var user = await DbContext.Users.FindAsync(userId);
-                    var participant = new DbParticipant { Quiz = dbQuiz, UserId = userId };
-                    dbQuiz.Participants.Add(participant);
+                    var dbUser = (await DbContext.Users.FindAsync(userId))!;
+                    dbParticipant = new DbParticipant { Quiz = dbQuiz, User = dbUser };
+                    dbQuiz.Participants.Add(dbParticipant);
                     await DbContext.SaveChangesAsync();
-                    await Clients.Group(GetQuizGroupName(quizId)).OnParticipantJoinedAsync(participant.Id, user!.UserName);
+
+                    // Only add answers for questions which haven't been locked yet
+                    var dbHiddenAndUnlockedQuestionIdsQueryable =
+                        from question in DbContext.Questions
+                        join round in DbContext.Rounds
+                            on question.RoundId equals round.Id
+                        where question.State < QuestionState.Locked
+                        select question.Id;
+                    var dbSubmittedAnswersQueryable =
+                        from questionId in dbHiddenAndUnlockedQuestionIdsQueryable
+                        select new DbSubmittedAnswer {QuestionId = questionId, Participant = dbParticipant, AssignedPoints = -1, Text = string.Empty};
+
+                    var dbSubmittedAnswers = await dbSubmittedAnswersQueryable.ToListAsync();
+                    DbContext.SubmittedAnswers.AddRange(dbSubmittedAnswers);
+                    await DbContext.SaveChangesAsync();
+
+                    var participantDto = Mapper.Map<ParticipantDto>(dbParticipant);
+                    var submittedAnswerDtos = Mapper.Map<List<SubmittedAnswerDto>>(dbSubmittedAnswers);
+
+                    await QuizHostGroup(quizId).OnParticipantJoinedAsync(participantDto, submittedAnswerDtos);
+                    await AllQuizParticipantsGroup(quizId).OnParticipantJoinedAsync(participantDto, new List<SubmittedAnswerDto>());
                 }
+
+                await Groups.AddToGroupAsync(Context.ConnectionId, GetQuizParticipantGroupName(dbQuiz.Id, dbParticipant.Id));
+                await Groups.AddToGroupAsync(Context.ConnectionId, GetQuizParticipantsGroupName(dbQuiz.Id));
             }
 
-            await base.OnConnectedAsync();
-
             await Groups.AddToGroupAsync(Context.ConnectionId, GetQuizGroupName(dbQuiz.Id));
-            if (dbQuiz.OwnerId == userId)
-                await Groups.AddToGroupAsync(Context.ConnectionId, GetQuizHostGroupName(dbQuiz.Id));
+
+            await base.OnConnectedAsync();
+        }
+
         protected record HubExecutionContext(Guid UserId, Guid QuizId, string? ErrorCode = null);
         private HubExecutionContext BuildExecutionContext()
         {
