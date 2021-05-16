@@ -8,7 +8,7 @@ namespace Quibble.Client.Sync.Entities.EditMode
     {
 	    public event Func<Task>? OnInvalidated;
 
-        public IEnumerable<ISynchronisedEditModeRound> Rounds { get; }
+        public IReadOnlyList<ISynchronisedEditModeRound> Rounds { get; }
 
         public Task UpdateTitleAsync(string newTitle);
         public Task OpenAsync();

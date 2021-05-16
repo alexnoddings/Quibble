@@ -23,6 +23,7 @@ namespace Quibble.Client.Sync.Internal.EditMode
 
         internal List<SynchronisedEditModeRound> SyncedRounds { get; } = new();
         public IEnumerable<ISynchronisedEditModeRound> Rounds => SyncedRounds.AsEnumerable();
+        public IReadOnlyList<ISynchronisedEditModeRound> Rounds => SyncedRounds.AsReadOnly();
 
         public SynchronisedEditModeQuiz(HubConnection hubConnection, IQuiz quiz) 
 	        : base(hubConnection)
