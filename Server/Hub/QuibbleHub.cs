@@ -53,9 +53,6 @@ namespace Quibble.Server.Hub
             if (dbQuiz.OwnerId == userId)
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, GetQuizHostGroupName(dbQuiz.Id));
-
-                DbContext.SubmittedAnswers.RemoveRange(DbContext.SubmittedAnswers);
-                DbContext.Participants.RemoveRange(DbContext.Participants);
                 await DbContext.SaveChangesAsync();
             }
             else
