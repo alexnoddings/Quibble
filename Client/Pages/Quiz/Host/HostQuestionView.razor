@@ -55,10 +55,10 @@
                                 bool canShowRound = isRoundHidden;
                                 bool canShowOtherRounds = Quiz.Rounds.Except(Selection.Round).Any(round => round.State == RoundState.Hidden);
                                 <Dropdown Display="Display.Flex" RightAligned="true" Disabled="!canShowOtherRounds">
-                                    <Button Block="true" Color="Color.Secondary" Clicked="Selection.Round.OpenAsync" Outline="!canShowRound" Disabled="!canShowRound">
+                                    <Button Block="true" Color="canShowRound ? Color.Primary : Color.Secondary" Clicked="Selection.Round.OpenAsync" Outline="true" Disabled="!canShowRound">
                                         Show Round
                                     </Button>
-                                    <DropdownToggle Split="true" Color="Color.Secondary" Outline="!canShowOtherRounds" />
+                                    <DropdownToggle Split="true" Color="canShowOtherRounds ? Color.Primary : Color.Secondary" Outline="true" />
                                     <DropdownMenu>
                                         <DropdownItem Clicked="ShowAllRoundsAsync">
                                             Show all rounds in quiz
@@ -72,10 +72,10 @@
                                 bool canShowQuestion = !isRoundHidden && Selection.Question.State == QuestionState.Hidden;
                                 bool canShowOtherQuestions = !isRoundHidden && Selection.Round.Questions.Except(Selection.Question).Any(question => question.State == QuestionState.Hidden);
                                 <Dropdown Display="Display.Flex" RightAligned="true" Disabled="!canShowOtherQuestions">
-                                    <Button Block="true" Color="Color.Secondary" Clicked="Selection.Question.OpenAsync" Outline="!canShowQuestion" Disabled="!canShowQuestion">
+                                    <Button Block="true" Color="canShowQuestion ? Color.Primary : Color.Secondary" Clicked="Selection.Question.OpenAsync" Outline="true" Disabled="!canShowQuestion">
                                         Show Question
                                     </Button>
-                                    <DropdownToggle Split="true" Color="Color.Secondary" Outline="!canShowOtherQuestions" />
+                                    <DropdownToggle Split="true" Color="canShowOtherQuestions ? Color.Primary : Color.Secondary" Outline="true" />
                                     <DropdownMenu>
                                         <DropdownItem Clicked="ShowAllQuestionsInRoundAsync">
                                             Show all questions in round
@@ -89,10 +89,10 @@
                                 bool canLockQuestion = Selection.Question.State == QuestionState.Open;
                                 bool canLockOtherQuestions = Selection.Round.Questions.Except(Selection.Question).Any(question => question.State == QuestionState.Open);
                                 <Dropdown Display="Display.Flex" RightAligned="true" Disabled="!canLockOtherQuestions">
-                                    <Button Block="true" Color="Color.Secondary" Clicked="Selection.Question.LockAsync" Outline="!canLockQuestion" Disabled="!canLockQuestion">
+                                    <Button Block="true" Color="canLockQuestion ? Color.Primary : Color.Secondary" Clicked="Selection.Question.LockAsync" Outline="true" Disabled="!canLockQuestion">
                                         Lock Answers
                                     </Button>
-                                    <DropdownToggle Split="true" Color="Color.Secondary" Outline="!canLockOtherQuestions" />
+                                    <DropdownToggle Split="true" Color="canLockOtherQuestions ? Color.Primary : Color.Secondary" Outline="true" />
                                     <DropdownMenu>
                                         <DropdownItem Clicked="LockAllQuestionsInRoundAsync">
                                             Lock all questions in round
@@ -103,13 +103,25 @@
                         </Column>
                         <Column ColumnSize="ColumnSize.IsQuarter">
                             @{
-                                bool canShowAnswer = Selection.Question.State == QuestionState.Locked;
-                                bool canShowOtherAnswers = Selection.Round.Questions.Except(Selection.Question).Any(question => question.State == QuestionState.Locked);
+                                bool isQuestionLocked = Selection.Question.State == QuestionState.Locked;
+                                bool areAllAnswersMarked = Selection.Question.Answers.All(answer => answer.AssignedPoints >= 0);
+                                bool canShowAnswer = isQuestionLocked && areAllAnswersMarked;
+                                bool canShowOtherAnswers = Selection.Round
+                                                                    .Questions
+                                                                    .Except(Selection.Question)
+                                                                    .Any(question => question.State == QuestionState.Locked
+                                                                                     && question.Answers.All(answer => answer.AssignedPoints >= 0));
                                 <Dropdown Display="Display.Flex" RightAligned="true" Disabled="!canShowOtherAnswers">
-                                    <Button Block="true" Color="Color.Secondary" Clicked="Selection.Question.ShowAnswer" Outline="!canShowAnswer" Disabled="!canShowAnswer">
+                                    <Button Block="true" Color="isQuestionLocked ? Color.Primary : Color.Secondary" Clicked="Selection.Question.ShowAnswer" Outline="true" Disabled="!canShowAnswer">
                                         Show Answer
+                                        @if (isQuestionLocked && !areAllAnswersMarked)
+                                        {
+                                            <Blazorise.Text Display="Display.Inline" Color="TextColor.Warning">
+                                                <Icon Name="IconName.Lock" />
+                                            </Blazorise.Text>
+                                        }
                                     </Button>
-                                    <DropdownToggle Split="true" Color="Color.Secondary" Outline="!canShowOtherAnswers" />
+                                    <DropdownToggle Split="true" Color="canShowOtherAnswers ? Color.Primary : Color.Secondary" Outline="true" />
                                     <DropdownMenu>
                                         <DropdownItem Clicked="ShowAllQuestionAnswersInRoundAsync">
                                             Show all answers in round
@@ -129,43 +141,37 @@
         </Row>
         <Row>
             <Column ColumnSize="ColumnSize.IsFull">
-                @if (Selection.Question.State >= QuestionState.Locked)
+                @if (Quiz.Participants.Count == 0)
                 {
-                    if (Quiz.Participants.Count == 0)
+                    <Heading Size="HeadingSize.Is5" Alignment="TextAlignment.Center" Margin="Margin.Is2.FromTop" Color="TextColor.Muted">
+                        No participants present.
+                    </Heading>
+                }
+                else if (Selection.Question.Answers.Count == 0)
+                {
+                    if (Selection.Question.State > QuestionState.Locked)
                     {
                         <Heading Size="HeadingSize.Is5" Alignment="TextAlignment.Center" Margin="Margin.Is2.FromTop" Color="TextColor.Muted">
-                            No participants present.
+                            No participants present before question was locked.
                         </Heading>
-                    }
-                    else if (Selection.Question.Answers.Count == 0)
-                    {
-                        if (Selection.Question.State > QuestionState.Locked)
-                        {
-                            <Heading Size="HeadingSize.Is5" Alignment="TextAlignment.Center" Margin="Margin.Is2.FromTop" Color="TextColor.Muted">
-                                No participants present before question was locked.
-                            </Heading>
-                        }
-                        else
-                        {
-                            <Heading Size="HeadingSize.Is5" Alignment="TextAlignment.Center" Margin="Margin.Is2.FromTop" Color="TextColor.Muted">
-                                No submitted answers.
-                            </Heading>
-                        }
                     }
                     else
                     {
-                        <Row>
-                            @foreach (var submittedAnswer in Selection.Question.Answers)
-                            {
-                                @for (int i = 0; i < 6; i++)
-                                {
-                                    <Column ColumnSize="ColumnSize.Is6.Is4.OnDesktop.Is3.OnFullHD" Margin="Margin.Is3.OnY">
-                                        <HostSubmittedAnswerView SubmittedAnswer="submittedAnswer" @key="submittedAnswer.Id"/>
-                                    </Column>
-                                }
-                            }
-                        </Row>
+                        <Heading Size="HeadingSize.Is5" Alignment="TextAlignment.Center" Margin="Margin.Is2.FromTop" Color="TextColor.Muted">
+                            No submitted answers.
+                        </Heading>
                     }
+                }
+                else
+                {
+                    <Row>
+                        @foreach (var submittedAnswer in Selection.Question.Answers)
+                        {
+                            <Column ColumnSize="ColumnSize.Is6.Is4.OnDesktop.Is3.OnFullHD" Margin="Margin.Is3.OnY">
+                                <HostSubmittedAnswerView SubmittedAnswer="submittedAnswer" @key="submittedAnswer.Id" />
+                            </Column>
+                        }
+                    </Row>
                 }
             </Column>
         </Row>

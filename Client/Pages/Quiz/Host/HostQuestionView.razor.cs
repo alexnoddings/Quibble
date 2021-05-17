@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Quibble.Client.Sync.Entities.HostMode;
@@ -20,9 +21,11 @@ namespace Quibble.Client.Pages.Quiz.Host
         {
             base.OnInitialized();
 
-            Selection.Question.Round.Updated += OnUpdatedAsync;
-            Selection.Question.Updated += OnUpdatedAsync;
             LastQuestion = Selection.Question;
+            LastQuestion.Round.Updated += OnUpdatedAsync;
+            LastQuestion.Updated += OnUpdatedAsync;
+            foreach (var answer in LastQuestion.Answers)
+                answer.Updated += OnUpdatedAsync;
 
             Selection.Updated += OnQuestionChangedAsync;
         }
@@ -33,10 +36,15 @@ namespace Quibble.Client.Pages.Quiz.Host
         {
             LastQuestion.Round.Updated -= OnUpdatedAsync;
             LastQuestion.Updated -= OnUpdatedAsync;
+            foreach (var answer in LastQuestion.Answers)
+                answer.Updated -= OnUpdatedAsync;
 
-            Selection.Question.Updated += OnUpdatedAsync;
-            Selection.Question.Round.Updated += OnUpdatedAsync;
             LastQuestion = Selection.Question;
+
+            LastQuestion.Round.Updated += OnUpdatedAsync;
+            LastQuestion.Updated += OnUpdatedAsync;
+            foreach (var answer in LastQuestion.Answers)
+                answer.Updated += OnUpdatedAsync;
 
             return OnUpdatedAsync();
         }
@@ -65,7 +73,7 @@ namespace Quibble.Client.Pages.Quiz.Host
         private async Task ShowAllQuestionAnswersInRoundAsync()
         {
             foreach (var question in Selection.Round.Questions)
-                if (question.State == QuestionState.Locked)
+                if (question.State == QuestionState.Locked && question.Answers.All(answer => answer.AssignedPoints >= 0))
                     await question.ShowAnswer();
         }
 
@@ -73,6 +81,9 @@ namespace Quibble.Client.Pages.Quiz.Host
         {
             LastQuestion.Round.Updated -= OnUpdatedAsync;
             LastQuestion.Updated -= OnUpdatedAsync;
+            foreach (var answer in LastQuestion.Answers)
+                answer.Updated += OnUpdatedAsync;
+
             Selection.Updated -= OnQuestionChangedAsync;
         }
     }
