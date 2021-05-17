@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -212,6 +213,22 @@ namespace Quibble.Server.Hub
 
             dbQuestion.State = newState;
             await DbContext.SaveChangesAsync();
+
+            if (newState == QuestionState.Locked)
+            {
+                var emptySubmittedAnswers = await DbContext.SubmittedAnswers
+                    .Where(submittedAnswer => submittedAnswer.QuestionId == dbQuestion.Id)
+                    .Where(submittedAnswer => string.IsNullOrWhiteSpace(submittedAnswer.Text))
+                    .ToListAsync();
+
+                foreach (var submittedAnswer in emptySubmittedAnswers)
+                    submittedAnswer.AssignedPoints = 0;
+
+                await DbContext.SaveChangesAsync();
+
+                foreach (var submittedAnswer in emptySubmittedAnswers)
+                    await QuizHostGroup(quizId).OnSubmittedAnswerAssignedPointsUpdatedAsync(submittedAnswer.Id, 0);
+            }
 
             await AllQuizUsersGroup(quizId).OnQuestionStateUpdatedAsync(questionId, newState);
 
