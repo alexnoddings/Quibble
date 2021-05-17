@@ -54,6 +54,7 @@ namespace Quibble.Client.Sync.Internal.HostMode
                         var synchronisedParticipant = synchronisedParticipants[submittedAnswer.ParticipantId];
                         var synchronisedSubmittedAnswer = new SynchronisedHostModeSubmittedAnswer(LoggerInstance, HubConnection, submittedAnswer, synchronisedQuestion, synchronisedParticipant);
                         synchronisedQuestion.SyncedAnswers.Add(synchronisedSubmittedAnswer);
+                        synchronisedParticipant.SyncedAnswers.Add(synchronisedSubmittedAnswer);
                     }
                     synchronisedRound.SyncedQuestions.Add(synchronisedQuestion);
                 }
