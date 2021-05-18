@@ -149,7 +149,7 @@
                 }
                 else if (Selection.Question.Answers.Count == 0)
                 {
-                    if (Selection.Question.State > QuestionState.Locked)
+                    if (Selection.Question.State >= QuestionState.Locked)
                     {
                         <Heading Size="HeadingSize.Is5" Alignment="TextAlignment.Center" Margin="Margin.Is2.FromTop" Color="TextColor.Muted">
                             No participants present before question was locked.
