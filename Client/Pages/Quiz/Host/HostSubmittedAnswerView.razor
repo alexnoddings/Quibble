@@ -1,5 +1,4 @@
 ﻿@using Quibble.Client.Sync.Entities.HostMode
-@implements IDisposable
 
 <Card Class="@CardClass">
     <CardBody Padding="Padding.Is0">
@@ -80,10 +79,11 @@
                           <DropdownMenu Padding="Padding.Is0">
                               <DropdownItem Padding="Padding.Is0" Display="Display.Flex.Column">
                                   <TextEdit Role="TextRole.Text"
+                                            @bind-Text="LocalPointsString"
                                             Class="m-f"
                                             Margin="Margin.Is0.FromBottom"
-                                            Text="3"
                                             MaskType="MaskType.Numeric"
+                                            Blur="RoundAndUpdatePointsAsync"
                                             Style="border-bottom-left-radius: 0; border-bottom-right-radius: 0; width: unset;"/>
                               </DropdownItem>
                               <DropdownItem Class="inactive" Padding="Padding.Is0">
@@ -101,33 +101,3 @@
         </Buttons>
     </CardBody>
 </Card>
-
-@code {
-    [Parameter]
-    public ISynchronisedHostModeSubmittedAnswer SubmittedAnswer { get; set; } = default!;
-
-    private string CardClass
-    {
-        get
-        {
-            if (SubmittedAnswer.Question.State == QuestionState.Locked && SubmittedAnswer.AssignedPoints == -1)
-                return "border-warning";
-
-            return string.Empty;
-        }
-    }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-
-        SubmittedAnswer.Updated += OnUpdatedAsync;
-    }
-
-    private Task OnUpdatedAsync() => InvokeAsync(StateHasChanged);
-
-    public void Dispose()
-    {
-        SubmittedAnswer.Updated -= OnUpdatedAsync;
-    }
-}
