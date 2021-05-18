@@ -1,6 +1,5 @@
 <Project>
-
-  <!-- Project information -->
+  <!-- Project information. -->
   <PropertyGroup>
     <Product>Quibble</Product>
     <Authors>Alex Noddings</Authors>
@@ -8,40 +7,47 @@
     <StrongNameKeyId>AlexNoddingsQuibble</StrongNameKeyId>
   </PropertyGroup>
 
-  <!-- Default values -->
   <PropertyGroup>
-    <LangVersion>latest</LangVersion>
-
     <RepoRoot>$(MSBuildThisFileDirectory)</RepoRoot>
     <RepositoryUrl>https://github.com/alexnoddings/Quibble</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <!-- The SPDX name for the source license. See https://spdx.org/licenses/. -->
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
 
-    <!-- Enables Strict mode for Roslyn compiler -->
+    <!-- Misc project configuration. -->
+  <PropertyGroup>
+    <!-- Default target framework. -->
+      <DefaultTargetFramework>net6.0</DefaultTargetFramework>
+
+    <!-- Surface code style issues at build time. -->
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+
+    <!-- Strict mode prevents impossible scenarios (e.g. 5 is string). -->
     <Features>strict</Features>
-  </PropertyGroup>
 
-  <!-- Default package versions -->
-  <PropertyGroup>
-    <!-- Targets -->
-    <DefaultFramework>net6.0</DefaultFramework>
-  </PropertyGroup>
+    <!-- Use the latest language version by default. -->
+    <LangVersion>latest</LangVersion>
 
-  <!-- Warnings and errors -->
-  <PropertyGroup>
+    <!-- Always use nullable context where possible. -->
     <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!-- Warnings and errors. -->
+  <PropertyGroup>
+    <!-- Treat all warnings as errors. -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
     <!-- Warnings to ignore and not surface. -->
     <NoWarn>
       $(NoWarn);
     </NoWarn>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
     <!-- Warnings to not treat as errors but still surface. -->
     <WarningsNotAsErrors>
       $(WarningsNotAsErrors);
-      <!-- Don't make marking a method as async without performing an await a fatal build error as it makes some methods easier to read. -->
+      <!-- Don't make marking a method as async without performing an await an error. -->
       CS1998;
     </WarningsNotAsErrors>
   </PropertyGroup>
-
 </Project>

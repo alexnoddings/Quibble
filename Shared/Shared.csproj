@@ -1,9 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>$(DefaultFramework)</TargetFramework>
+    <TargetFramework>$(DefaultTargetFramework)</TargetFramework>
     <RootNamespace>Quibble.Shared</RootNamespace>
-    <Nullable>enable</Nullable>
     <NeutralLanguage>en-GB</NeutralLanguage>
   </PropertyGroup>
 
