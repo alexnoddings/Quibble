@@ -33,6 +33,9 @@ namespace Quibble.Server.Hub
             if (dbAnswer.Question.Round.Quiz.OwnerId != userId)
                 return Failure(nameof(ErrorMessages.QuizCantEditAsNotOwner));
 
+            if (dbAnswer.Question.State < QuestionState.Locked)
+                return Failure(nameof(ErrorMessages.QuestionBadState));
+
             if (points < 0)
                 return Failure(nameof(ErrorMessages.PointsTooLow));
 
