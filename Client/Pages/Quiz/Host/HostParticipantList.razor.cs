@@ -14,15 +14,40 @@ namespace Quibble.Client.Pages.Quiz.Host
 
         private int LastStateStamp { get; set; } = 0;
 
+        private List<ISynchronisedHostModeParticipant> KnownParticipants { get; } = new();
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
             Quiz.Updated += OnUpdatedAsync;
             LastStateStamp = GetStateStamp();
+
+            foreach (var participant in Quiz.Participants)
+            {
+                foreach (var answer in participant.Answers)
+                    answer.Updated += OnUpdatedAsync;
+
+                KnownParticipants.Add(participant);
+            }
         }
 
-        private Task OnUpdatedAsync() => InvokeAsync(StateHasChanged);
+        private Task OnUpdatedAsync()
+        {
+            foreach (var participant in Quiz.Participants)
+            {
+                if (KnownParticipants.Contains(participant))
+                    continue;
+
+                foreach (var answer in participant.Answers)
+                    answer.Updated += OnUpdatedAsync;
+
+                KnownParticipants.Add(participant);
+            }
+
+            return InvokeAsync(StateHasChanged);
+        } 
+
 
         protected override bool ShouldRender()
         {
@@ -59,6 +84,12 @@ namespace Quibble.Client.Pages.Quiz.Host
         public void Dispose()
         {
             Quiz.Updated -= OnUpdatedAsync;
+
+            foreach (var participant in KnownParticipants)
+            foreach (var answer in participant.Answers)
+                answer.Updated -= OnUpdatedAsync;
+
+            KnownParticipants.Clear();
         }
     }
 }
