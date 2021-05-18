@@ -80,7 +80,7 @@ namespace Quibble.Server.Hub
                         select question.Id;
                     var dbSubmittedAnswersQueryable =
                         from questionId in dbHiddenAndUnlockedQuestionIdsQueryable
-                        select new DbSubmittedAnswer {QuestionId = questionId, Participant = dbParticipant, AssignedPoints = -1, Text = string.Empty};
+                        select new DbSubmittedAnswer { QuestionId = questionId, Participant = dbParticipant, AssignedPoints = -1, Text = string.Empty };
 
                     var dbSubmittedAnswers = await dbSubmittedAnswersQueryable.ToListAsync();
                     DbContext.SubmittedAnswers.AddRange(dbSubmittedAnswers);

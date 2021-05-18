@@ -9,14 +9,14 @@ namespace Quibble.Client.Components
         private const string TitleSuffix = "Quibble";
         private const string TitleBreak = " · ";
 
-        [Parameter] 
+        [Parameter]
         public string? Value { get; set; }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            string pageTitle = 
-                string.IsNullOrEmpty(Value) 
-                    ? TitleSuffix 
+            string pageTitle =
+                string.IsNullOrEmpty(Value)
+                    ? TitleSuffix
                     : Value + TitleBreak + TitleSuffix;
 
             builder.OpenComponent<Title>(0);

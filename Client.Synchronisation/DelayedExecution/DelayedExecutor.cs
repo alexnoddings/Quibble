@@ -16,7 +16,7 @@ namespace Quibble.Client.Sync.DelayedExecution
 
         public DelayedExecutor(double intervalMs, bool shouldDebounce)
         {
-            _timer = new Timer(intervalMs) {AutoReset = false};
+            _timer = new Timer(intervalMs) { AutoReset = false };
             _timer.Elapsed += OnTimerElapsed;
 
             _shouldDebounce = shouldDebounce;

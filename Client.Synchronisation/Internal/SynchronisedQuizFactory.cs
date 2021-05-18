@@ -43,7 +43,7 @@ namespace Quibble.Client.Sync.Internal
                 return HubResponse.FromError<ISynchronisedQuiz>(nameof(ErrorMessages.QuizNotFound));
 
             if (quizNegotiation.State == QuizState.InDevelopment && !quizNegotiation.CanEdit)
-                    return HubResponse.FromError<ISynchronisedQuiz>(nameof(ErrorMessages.QuizNotOpen));
+                return HubResponse.FromError<ISynchronisedQuiz>(nameof(ErrorMessages.QuizNotOpen));
 
             var hubUrl = NavigationManager.ToAbsoluteUri($"Api/Quibble/{quizId}");
             var hubConnection =

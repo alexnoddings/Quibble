@@ -38,14 +38,13 @@ namespace Quibble.Server
                 .AddControllers()
                 .ConfigureApiBehaviorOptions(options =>
                     options.InvalidModelStateResponseFactory = context =>
-                    {
-                        var errors = context.ModelState
-                            .Where(kv => kv.Value is not null)
-                            .SelectMany(kv => kv.Value!.Errors)
-                            .Select(modelError => modelError.ErrorMessage)
-                            .ToList();
-                        return new BadRequestObjectResult(errors);
-                    });
+                        new BadRequestObjectResult(
+                            context.ModelState
+                                .Where(kv => kv.Value is not null)
+                                .SelectMany(kv => kv.Value!.Errors)
+                                .Select(modelError => modelError.ErrorMessage)
+                                .ToList()
+                        ));
 
             services.AddDbContext<AppDbContext>(options =>
             {
@@ -94,7 +93,7 @@ namespace Quibble.Server
             {
                 config.CreateMap<DbQuiz, QuizDto>();
                 config.CreateMap<DbParticipant, ParticipantDto>()
-                    .ForMember(dto => dto.UserName, 
+                    .ForMember(dto => dto.UserName,
                         options => options.MapFrom(dbParticipant => dbParticipant.User.UserName));
                 config.CreateMap<DbRound, RoundDto>();
                 config.CreateMap<DbQuestion, QuestionDto>();

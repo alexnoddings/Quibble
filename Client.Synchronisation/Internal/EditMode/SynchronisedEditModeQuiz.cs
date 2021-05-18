@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
@@ -25,8 +24,8 @@ namespace Quibble.Client.Sync.Internal.EditMode
         internal List<SynchronisedEditModeRound> SyncedRounds { get; } = new();
         public IReadOnlyList<ISynchronisedEditModeRound> Rounds => SyncedRounds.AsReadOnly();
 
-        public SynchronisedEditModeQuiz(ILogger<SynchronisedEntity> logger, HubConnection hubConnection, IQuiz quiz) 
-	        : base(logger, hubConnection)
+        public SynchronisedEditModeQuiz(ILogger<SynchronisedEntity> logger, HubConnection hubConnection, IQuiz quiz)
+            : base(logger, hubConnection)
         {
             Id = quiz.Id;
             OwnerId = quiz.OwnerId;
@@ -77,7 +76,7 @@ namespace Quibble.Client.Sync.Internal.EditMode
         }
 
         private Task HandleDeletedAsync() =>
-	        OnInvalidated?.Invoke() ?? Task.CompletedTask;
+            OnInvalidated?.Invoke() ?? Task.CompletedTask;
 
         private Task HandleRoundAddedAsync(RoundDto round)
         {
@@ -110,7 +109,7 @@ namespace Quibble.Client.Sync.Internal.EditMode
 
         public async ValueTask DisposeAsync()
         {
-	        if (IsDisposed) return;
+            if (IsDisposed) return;
 
             while (SyncedRounds.Count > 0)
             {

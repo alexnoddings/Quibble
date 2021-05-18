@@ -46,7 +46,7 @@ namespace Quibble.Client.Pages.Quiz.Host
             }
 
             return InvokeAsync(StateHasChanged);
-        } 
+        }
 
 
         protected override bool ShouldRender()
@@ -75,8 +75,8 @@ namespace Quibble.Client.Pages.Quiz.Host
         {
             var hashCode = new HashCode();
             foreach (var participant in Quiz.Participants)
-            foreach (var answer in participant.Answers)
-                hashCode.Add(answer.AssignedPoints);
+                foreach (var answer in participant.Answers)
+                    hashCode.Add(answer.AssignedPoints);
 
             return hashCode.ToHashCode();
         }
@@ -86,8 +86,8 @@ namespace Quibble.Client.Pages.Quiz.Host
             Quiz.Updated -= OnUpdatedAsync;
 
             foreach (var participant in KnownParticipants)
-            foreach (var answer in participant.Answers)
-                answer.Updated -= OnUpdatedAsync;
+                foreach (var answer in participant.Answers)
+                    answer.Updated -= OnUpdatedAsync;
 
             KnownParticipants.Clear();
         }

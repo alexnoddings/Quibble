@@ -6,7 +6,7 @@ namespace Quibble.Client.Sync.Entities.EditMode
 {
     public interface ISynchronisedEditModeQuiz : ISynchronisedQuiz
     {
-	    public event Func<Task>? OnInvalidated;
+        public event Func<Task>? OnInvalidated;
 
         public IReadOnlyList<ISynchronisedEditModeRound> Rounds { get; }
 

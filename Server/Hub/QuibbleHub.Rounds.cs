@@ -20,7 +20,7 @@ namespace Quibble.Server.Hub
             if (errorCode is not null)
                 return Failure(errorCode);
 
-            var dbQuiz = 
+            var dbQuiz =
                 await DbContext.Quizzes
                     .Include(quiz => quiz.Rounds)
                     .FindAsync(quizId);
@@ -55,7 +55,7 @@ namespace Quibble.Server.Hub
             if (errorCode is not null)
                 return Failure(errorCode);
 
-            var dbRound = 
+            var dbRound =
                 await DbContext.Rounds
                     .Include(round => round.Quiz)
                     .FindAsync(roundId);
@@ -88,7 +88,7 @@ namespace Quibble.Server.Hub
             if (errorCode is not null)
                 return Failure(errorCode);
 
-            var dbRound = 
+            var dbRound =
                 await DbContext.Rounds
                     .Include(round => round.Quiz)
                     .FindAsync(roundId);
@@ -120,7 +120,7 @@ namespace Quibble.Server.Hub
             if (errorCode is not null)
                 return Failure(errorCode);
 
-            var dbRound = 
+            var dbRound =
                 await DbContext.Rounds
                     .Include(round => round.Quiz)
                     .FindAsync(roundId);

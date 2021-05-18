@@ -21,7 +21,7 @@ namespace Quibble.Server.Hub
             if (errorCode is not null)
                 return Failure(errorCode);
 
-            var dbRound = 
+            var dbRound =
                 await DbContext.Rounds
                     .Include(round => round.Quiz)
                     .Include(round => round.Questions)
@@ -71,7 +71,7 @@ namespace Quibble.Server.Hub
             if (errorCode is not null)
                 return Failure(errorCode);
 
-            var dbQuestion = 
+            var dbQuestion =
                 await DbContext.Questions
                     .Include(question => question.Round)
                         .ThenInclude(round => round.Quiz)
@@ -105,7 +105,7 @@ namespace Quibble.Server.Hub
             if (errorCode is not null)
                 return Failure(errorCode);
 
-            var dbQuestion = 
+            var dbQuestion =
                 await DbContext.Questions
                     .Include(question => question.Round)
                         .ThenInclude(round => round.Quiz)
@@ -139,7 +139,7 @@ namespace Quibble.Server.Hub
             if (errorCode is not null)
                 return Failure(errorCode);
 
-            var dbQuestion = 
+            var dbQuestion =
                 await DbContext.Questions
                     .Include(question => question.Round)
                         .ThenInclude(round => round.Quiz)
@@ -181,7 +181,7 @@ namespace Quibble.Server.Hub
             if (errorCode is not null)
                 return Failure(errorCode);
 
-            var dbQuestion = 
+            var dbQuestion =
                 await DbContext.Questions
                     .Include(question => question.Round)
                         .ThenInclude(round => round.Quiz)
@@ -242,7 +242,7 @@ namespace Quibble.Server.Hub
             if (errorCode is not null)
                 return Failure(errorCode);
 
-            var dbQuestion = 
+            var dbQuestion =
                 await DbContext.Questions
                     .Include(question => question.Round)
                         .ThenInclude(round => round.Quiz)

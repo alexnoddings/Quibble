@@ -66,7 +66,7 @@ namespace Quibble.Server.Controllers
             }
 
             Response.StatusCode = StatusCodes.Status200OK;
-            return new QuizNegotiationDto {CanEdit = userId == dbQuiz.OwnerId, State = dbQuiz.State};
+            return new QuizNegotiationDto { CanEdit = userId == dbQuiz.OwnerId, State = dbQuiz.State };
         }
     }
 }

@@ -32,7 +32,7 @@ namespace Quibble.Client.Services.Authentication
             PerformPostAsync<RegisterRequest, UserInfo>("Register", new RegisterRequest { UserName = username, Email = email, Password = password });
 
         public Task<AuthenticationOperation<UserInfo>> LoginAsync(string username, string password) =>
-            PerformPostAsync<LoginRequest, UserInfo>("Login", new LoginRequest { UserName = username, Password = password});
+            PerformPostAsync<LoginRequest, UserInfo>("Login", new LoginRequest { UserName = username, Password = password });
 
         public Task LogoutAsync() =>
             _httpClient.PostAsync("Logout", null);

@@ -21,7 +21,7 @@ namespace Quibble.Server.Hub
             if (errorCode is not null)
                 return Failure<FullQuizDto>(errorCode);
 
-            var dbQuiz = 
+            var dbQuiz =
                 await DbContext.Quizzes
                     .Include(q => q.Participants)
                         .ThenInclude(pt => pt.User)
@@ -141,7 +141,7 @@ namespace Quibble.Server.Hub
 
             if (await quizQuestions.AnyAsync(question => string.IsNullOrWhiteSpace(question.Text) || string.IsNullOrWhiteSpace(question.Answer)))
                 return Failure(nameof(ErrorMessages.QuestionMissingContent));
-            
+
             dbQuiz.State = QuizState.Open;
             dbQuiz.OpenedAt = DateTime.UtcNow;
             await DbContext.SaveChangesAsync();

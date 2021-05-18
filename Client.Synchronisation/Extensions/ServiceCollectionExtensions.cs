@@ -5,7 +5,7 @@ namespace Quibble.Client.Sync.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddSynchronisedQuizFactory(this IServiceCollection services) => 
+        public static IServiceCollection AddSynchronisedQuizFactory(this IServiceCollection services) =>
             services.AddScoped<ISynchronisedQuizFactory, SynchronisedQuizFactory>();
     }
 }

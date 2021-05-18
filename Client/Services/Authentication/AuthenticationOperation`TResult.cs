@@ -13,9 +13,9 @@ namespace Quibble.Client.Services.Authentication
         }
 
         public static AuthenticationOperation<TResult> FromSuccess(TResult? result) =>
-            new (true, null, result);
+            new(true, null, result);
 
         public new static AuthenticationOperation<TResult> FromError(IEnumerable<string> errors) =>
-            new (false, errors.ToList(), default);
+            new(false, errors.ToList(), default);
     }
 }

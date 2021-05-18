@@ -34,7 +34,7 @@ namespace Quibble.Client.Sync.Internal.HostMode
             State = quiz.State;
             CreatedAt = quiz.CreatedAt;
             OpenedAt = quiz.OpenedAt;
-            
+
             AddEventHandler<ParticipantDto, List<SubmittedAnswerDto>>(c => c.OnParticipantJoinedAsync, HandleParticipantJoinedAsync);
         }
 

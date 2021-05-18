@@ -39,8 +39,8 @@ namespace Quibble.Client.Sync.Internal
             _hubConnection = hubConnection ?? throw new ArgumentNullException(nameof(hubConnection));
         }
 
-        private void AddEventHandler(IDisposable handler) => 
-	        EventHandlers.Add(handler);
+        private void AddEventHandler(IDisposable handler) =>
+            EventHandlers.Add(handler);
 
         protected void AddEventHandler(Expression<Func<IQuibbleHubClient, Func<Task>>> eventSelector, Func<Task> eventHandler)
         {
@@ -53,7 +53,7 @@ namespace Quibble.Client.Sync.Internal
         {
             string eventName = GetMethodName(eventSelector);
             Task WrappedEventHandler(T1 t1) => Wrap(eventName, () => eventHandler(t1));
-            AddEventHandler(HubConnection.On(eventName, (Func<T1, Task>) WrappedEventHandler));
+            AddEventHandler(HubConnection.On(eventName, (Func<T1, Task>)WrappedEventHandler));
         }
 
         protected void AddEventHandler<T1, T2>(Expression<Func<IQuibbleHubClient, Func<T1, T2, Task>>> eventSelector, Func<T1, T2, Task> eventHandler)

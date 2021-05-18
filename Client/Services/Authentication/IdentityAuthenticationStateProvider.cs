@@ -57,7 +57,7 @@ namespace Quibble.Client.Services.Authentication
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
 
-        public Task<AuthenticationOperation> ForgotPasswordAsync(string email) => 
+        public Task<AuthenticationOperation> ForgotPasswordAsync(string email) =>
             _authenticationService.ForgotPasswordAsync(email);
 
         /// <remarks>
