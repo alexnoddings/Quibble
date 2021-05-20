@@ -77,5 +77,22 @@ namespace Quibble.Client.Sync.Internal.HostMode
                 hashCode.Add(answer.GetStateStamp());
             return hashCode.ToHashCode();
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (IsDisposed) return;
+
+            if (disposing)
+            {
+                while (SyncedAnswers.Count > 0)
+                {
+                    var answer = SyncedAnswers[0];
+                    answer.Dispose();
+                    SyncedAnswers.RemoveAt(0);
+                }
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }
