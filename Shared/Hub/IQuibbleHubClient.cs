@@ -23,6 +23,7 @@ namespace Quibble.Shared.Hub
         public Task OnQuestionPointsUpdatedAsync(Guid questionId, decimal newPoints);
         public Task OnQuestionStateUpdatedAsync(Guid questionId, QuestionState newState);
         public Task OnQuestionDeletedAsync(Guid questionId);
+        public Task OnQuestionRevealedAsync(QuestionDto question, SubmittedAnswerDto submittedAnswer);
 
         public Task OnParticipantJoinedAsync(ParticipantDto participant, List<SubmittedAnswerDto> submittedAnswers);
 

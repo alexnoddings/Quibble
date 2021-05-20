@@ -19,6 +19,7 @@
         public const string UpdateQuestionState = nameof(UpdateQuestionState);
         public const string DeleteQuestion = nameof(DeleteQuestion);
 
+        public const string PreviewUpdateSubmittedAnswerText = nameof(PreviewUpdateSubmittedAnswerText);
         public const string UpdateSubmittedAnswerText = nameof(UpdateSubmittedAnswerText);
         public const string UpdateSubmittedAnswerAssignedPoints = nameof(UpdateSubmittedAnswerAssignedPoints);
     }
