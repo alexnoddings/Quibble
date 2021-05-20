@@ -59,6 +59,8 @@ namespace Quibble.Client.Sync.Internal.HostMode
             var hashCode = new HashCode();
             foreach (var round in SyncedRounds)
                 hashCode.Add(round.GetStateStamp());
+            foreach (var participant in SyncedParticipants)
+                hashCode.Add(participant.GetStateStamp());
             return hashCode.ToHashCode();
         }
 
