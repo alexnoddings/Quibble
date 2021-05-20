@@ -16,7 +16,7 @@ namespace Quibble.Client.Sync.Internal.HostMode
         public string Text { get; }
         public string Answer { get; }
         public decimal Points { get; }
-        public QuestionState State { get; set; }
+        public QuestionState State { get; private set; }
 
         internal SynchronisedHostModeRound SyncedRound { get; }
         public ISynchronisedHostModeRound Round => SyncedRound;

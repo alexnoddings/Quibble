@@ -13,8 +13,8 @@ namespace Quibble.Client.Sync.Internal.HostMode
         public override Guid Id { get; }
         public Guid QuestionId { get; }
         public Guid ParticipantId { get; }
-        public string Text { get; set; }
-        public decimal AssignedPoints { get; set; }
+        public string Text { get; private set; }
+        public decimal AssignedPoints { get; private set; }
 
         internal SynchronisedHostModeQuestion SyncedQuestion { get; }
         public ISynchronisedHostModeQuestion Question => SyncedQuestion;
