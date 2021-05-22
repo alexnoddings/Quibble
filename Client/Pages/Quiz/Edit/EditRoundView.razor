@@ -2,7 +2,7 @@
     <CardBody>
         <Fields Margin="Margin.Is3.FromBottom">
             <Field ColumnSize="ColumnSize.Is10.Is11.OnFullHD" Margin="Margin.Is0.FromBottom">
-                <SynchronisedTextEdit Text="@Round.Title" SaveFunction="Round.UpdateTitleAsync" Size="Size.Large" />
+                <SynchronisedTextEdit Text="@Round.Title" SaveFunction="Round.UpdateTitleAsync" Size="Size.Large" MaxLength="100" />
             </Field>
             <Field ColumnSize="ColumnSize.Is2.Is1.OnFullHD" Margin="Margin.Is0.FromBottom">
                 <Button Block="true" Outline="true" Color="Color.Danger" @onclick="OnDeleteClickedAsync" Class="h-100">

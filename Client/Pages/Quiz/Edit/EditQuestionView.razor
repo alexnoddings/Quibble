@@ -4,11 +4,11 @@
             @(Index + 1).
         </Text>
         <div class="flex-fill">
-            <SynchronisedTextEdit Text="@Question.Text" SaveFunction="Question.UpdateTextAsync"/>
+            <SynchronisedTextEdit Text="@Question.Text" SaveFunction="Question.UpdateTextAsync" MaxLength="200"/>
         </div>
     </Field>
     <Field ColumnSize="ColumnSize.Is8.Is4.OnWidescreen">
-        <SynchronisedTextEdit Text="@Question.Answer" SaveFunction="Question.UpdateAnswerAsync"/>
+        <SynchronisedTextEdit Text="@Question.Answer" SaveFunction="Question.UpdateAnswerAsync" MaxLength="200"/>
     </Field>
     <Field ColumnSize="ColumnSize.Is2.Is1.OnFullHD">
         <SynchronisedPointsEdit Points="@Question.Points" SaveFunction="Question.UpdatePointsAsync"/>
