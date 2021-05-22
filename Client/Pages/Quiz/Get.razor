@@ -1,8 +1,10 @@
 ﻿@page "/quiz/{QuizId:guid}"
 @using Quibble.Client.Pages.Quiz.Edit
 @using Quibble.Client.Pages.Quiz.Host
+@using Quibble.Client.Pages.Quiz.Take
 @using Quibble.Client.Sync.Entities.EditMode
 @using Quibble.Client.Sync.Entities.HostMode
+@using Quibble.Client.Sync.Entities.TakeMode
 
 @if (GetQuizResult is null)
 {
@@ -24,10 +26,8 @@ else if (GetQuizResult.Value is ISynchronisedHostModeQuiz hostModeQuiz)
     <PageTitle Value="@($"Hosting {hostModeQuiz.Title}")" />
     <HostQuizView Quiz="hostModeQuiz" />
 }
-@*
-else if (GetQuizResult.Value is ISynchronisedParticipateModeQuiz participateModeQuiz)
+else if (GetQuizResult.Value is ISynchronisedTakeModeQuiz takeModeQuiz)
 {
-    <PageTitle Value="@hostModeQuiz.Title" />
-    <ParticipateQuizView Quiz="participateModeQuiz" />
+    <PageTitle Value="@takeModeQuiz.Title" />
+    <TakeQuizView Quiz="takeModeQuiz" />
 }
-*@

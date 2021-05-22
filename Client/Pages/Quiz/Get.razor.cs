@@ -10,7 +10,7 @@ using Quibble.Shared.Hub;
 namespace Quibble.Client.Pages.Quiz
 {
     [Authorize]
-    public partial class Get : IAsyncDisposable
+    public sealed partial class Get : IAsyncDisposable
     {
         [Parameter]
         public Guid QuizId { get; set; }
