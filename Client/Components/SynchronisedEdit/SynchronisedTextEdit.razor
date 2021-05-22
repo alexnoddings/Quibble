@@ -1,7 +1,18 @@
 ﻿<div class="q-synced-text-field @(IsSaveIconShown ? "q-synced-text-field-saved" : string.Empty)">
-    <TextEdit Role="TextRole.Text" 
-              Text="@LocalText" 
-              TextChanged="OnTextChanged" 
-              Blur="OnBlurAsync"
-              Size="Size" />
+    @{
+        bool shouldShowMaxLengthWarning = IsFocused
+                                          && MaxLength >= 8
+                                          && LocalText.Length >= MaxLength * 0.8;
+        <Tooltip Placement="Placement.Bottom"
+             AlwaysActive="shouldShowMaxLengthWarning"
+             Text="@(shouldShowMaxLengthWarning ? $"{LocalText.Length}/{MaxLength} characters" : null)">
+            <TextEdit Role="TextRole.Text"
+                  Text="@LocalText"
+                  TextChanged="OnTextChanged"
+                  Blur="OnBlurAsync"
+                  FocusIn="OnFocusIn"
+                  MaxLength="MaxLength"
+                  Size="Size" />
+        </Tooltip>
+    }
 </div>

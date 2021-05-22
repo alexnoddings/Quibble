@@ -28,6 +28,11 @@ namespace Quibble.Client.Components.SynchronisedEdit
         [Parameter]
         public Size Size { get; set; } = Size.None;
 
+        [Parameter]
+        public int MaxLength { get; set; } = int.MaxValue;
+
+        private bool IsFocused { get; set; }
+
         private bool IsSaveIconShown { get; set; }
 
         protected bool IsDisposed { get; private set; }
@@ -55,8 +60,14 @@ namespace Quibble.Client.Components.SynchronisedEdit
 
         private async Task OnBlurAsync()
         {
+            IsFocused = false;
             await PreviewThrottler.FlushAsync();
             await SaveDebouncer.FlushAsync();
+        }
+
+        private void OnFocusIn()
+        {
+            IsFocused = true;
         }
 
         private Task SaveAsync(string newValue)
@@ -70,6 +81,7 @@ namespace Quibble.Client.Components.SynchronisedEdit
                 IsSaveIconShown = false;
                 return InvokeAsync(StateHasChanged);
             });
+
             return SaveFunction(newValue);
         }
 
