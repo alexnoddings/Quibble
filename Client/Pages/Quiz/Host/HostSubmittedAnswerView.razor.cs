@@ -48,7 +48,7 @@ namespace Quibble.Client.Pages.Quiz.Host
 
             // Ensure points are a division of 0.25
             points = Math.Round(points * 4, MidpointRounding.ToEven) / 4;
-            points = Math.Clamp(points, 0.25m, 10m);
+            points = Math.Clamp(points, 0, 10m);
 
             LocalPointsString = points.ToString("G4");
             return SubmittedAnswer.MarkAsync(points);
