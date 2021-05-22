@@ -1,12 +1,12 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="cwrapper">
-    <Text Class="header" Alignment="TextAlignment.Center" Padding="Padding.Is5.FromTop.Is4.FromBottom">
-        <a href="/">
-            <QuibbleIcon/>
-        </a>
-    </Text>
-    <Container Class="auth-form" Fluid="true" Margin="Margin.IsAuto">
+<Text Class="header" Alignment="TextAlignment.Center" Padding="Padding.Is5.FromTop.Is4.FromBottom">
+    <a class="header" href="/">
+        <QuibbleIcon/>
+    </a>
+</Text>
+<Container Class="auth-form" Fluid="true" Margin="Margin.IsAuto">
+    <div class="auth-form">
         @Body
-    </Container>
-</div>
+    </div>
+</Container>

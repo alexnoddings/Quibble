@@ -8,12 +8,12 @@
 }
 
 ::deep .list-group-item:hover {
-    background-color: var(--light);
+    background-color: var(--b-theme-background-light);
     text-decoration: none;
 }
 
 ::deep .list-group-item.active {
-    background-color: var(--light);
+    background-color: var(--b-theme-background-light);
     border-color: rgba(0,0,0,.125);
 }
 
