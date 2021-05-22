@@ -23,6 +23,10 @@ namespace Quibble.Server.Data.Models
                 .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired();
 
+            builder
+                .Property(round => round.Title)
+                .HasMaxLength(100);
+
             builder.ToTable("Rounds");
         }
     }

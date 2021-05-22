@@ -34,9 +34,13 @@ namespace Quibble.Server.Hub
             if (dbQuiz.State != QuizState.InDevelopment)
                 return Failure(nameof(ErrorMessages.CantEditAsQuizNotInDevelopment));
 
+            title ??= string.Empty;
+            if (title.Length > 100)
+                return Failure(nameof(ErrorMessages.RoundMissingTitle));
+
             var dbRound = new DbRound
             {
-                Title = title ?? string.Empty,
+                Title = title,
                 State = RoundState.Hidden
             };
             dbQuiz.Rounds.Add(dbRound);
@@ -73,6 +77,9 @@ namespace Quibble.Server.Hub
                 return Failure(nameof(ErrorMessages.CantEditAsQuizNotInDevelopment));
 
             newTitle ??= string.Empty;
+            if (newTitle.Length > 200)
+                return Failure(nameof(ErrorMessages.RoundMissingTitle));
+
             dbRound.Title = newTitle;
             await DbContext.SaveChangesAsync();
 
@@ -108,7 +115,6 @@ namespace Quibble.Server.Hub
             dbRound.State = RoundState.Open;
             await DbContext.SaveChangesAsync();
 
-            await AllQuizUsersGroup(quizId).OnRoundOpenedAsync(dbRound.Id);
 
             return Success();
         }

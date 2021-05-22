@@ -29,6 +29,10 @@ namespace Quibble.Server.Data.Models
                 .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired();
 
+            builder
+                .Property(question => question.Title)
+                .HasMaxLength(100);
+
             builder.ToTable("Quizzes");
         }
     }

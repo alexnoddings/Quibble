@@ -22,6 +22,10 @@ namespace Quibble.Server.Data.Models
                 .IsRequired();
 
             builder
+                .Property(answer => answer.Text)
+                .HasMaxLength(200);
+
+            builder
                 .Property(answer => answer.AssignedPoints)
                 .HasPrecision(4, 2)
                 .HasDefaultValue(-1);

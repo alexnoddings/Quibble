@@ -39,6 +39,14 @@ namespace Quibble.Server.Hub
             if (dbRound.Quiz.State != QuizState.InDevelopment)
                 return Failure(nameof(ErrorMessages.CantEditAsQuizNotInDevelopment));
 
+            text ??= string.Empty;
+            if (text.Length > 200)
+                return Failure(nameof(ErrorMessages.QuestionBadState));
+
+            answer ??= string.Empty;
+            if (answer.Length > 200)
+                return Failure(nameof(ErrorMessages.QuestionBadState));
+
             if (points < 0.25m)
                 return Failure(nameof(ErrorMessages.PointsTooLow));
 
@@ -50,8 +58,8 @@ namespace Quibble.Server.Hub
 
             var dbQuestion = new DbQuestion
             {
-                Text = text ?? string.Empty,
-                Answer = answer ?? string.Empty,
+                Text = text,
+                Answer = answer,
                 Points = points,
                 State = QuestionState.Hidden
             };
@@ -90,6 +98,9 @@ namespace Quibble.Server.Hub
                 return Failure(nameof(ErrorMessages.CantEditAsQuizNotInDevelopment));
 
             newText ??= string.Empty;
+            if (newText.Length > 200)
+                return Failure(nameof(ErrorMessages.QuestionBadState));
+
             dbQuestion.Text = newText;
             await DbContext.SaveChangesAsync();
 
@@ -124,6 +135,9 @@ namespace Quibble.Server.Hub
                 return Failure(nameof(ErrorMessages.CantEditAsQuizNotInDevelopment));
 
             newAnswer ??= string.Empty;
+            if (newAnswer.Length > 200)
+                return Failure(nameof(ErrorMessages.QuestionBadState));
+
             dbQuestion.Answer = newAnswer;
             await DbContext.SaveChangesAsync();
 

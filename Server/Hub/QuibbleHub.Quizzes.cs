@@ -71,7 +71,6 @@ namespace Quibble.Server.Hub
                 var visibleDbQuestions = visibleDbRounds.SelectMany(r => r.Questions).Where(q => q.State != QuestionState.Hidden).ToList();
                 questions = Mapper.Map<List<QuestionDto>>(visibleDbQuestions);
 
-                // ToDo: filter to only return answers for visible questions
                 var userDbSubmittedAnswers = visibleDbQuestions.SelectMany(q => q.SubmittedAnswers).Where(sa => sa.ParticipantId == dbParticipant.Id).ToList();
                 submittedAnswers = Mapper.Map<List<SubmittedAnswerDto>>(userDbSubmittedAnswers);
             }
@@ -97,6 +96,9 @@ namespace Quibble.Server.Hub
                 return Failure(nameof(ErrorMessages.CantEditAsQuizNotInDevelopment));
 
             newTitle ??= string.Empty;
+            if (newTitle.Length > 100)
+                return Failure(nameof(ErrorMessages.QuizEmpty));
+
             dbQuiz.Title = newTitle;
             await DbContext.SaveChangesAsync();
 
