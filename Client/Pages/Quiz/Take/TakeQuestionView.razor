@@ -3,14 +3,17 @@
         <Text Color="TextColor.Muted" Margin="Margin.Is2.FromRight">
             @(Index + 1).
         </Text>
-        <Text>
+        <Text Class="@(Question.State == QuestionState.Open ? "user-select-none" : null)">
             @Question.Text
         </Text>
     </Field>
     <Field ColumnSize="ColumnSize.Is10.Is4.OnWidescreen" Display="Display.Flex.Column">
         @if (Question.State == QuestionState.Open)
         {
-            <TextEdit Text="@Question.SubmittedAnswer!.Text"/>
+            <SynchronisedTextEdit Text="@Question.SubmittedAnswer!.Text"
+                                  SaveFunction="Question.SubmittedAnswer.UpdateTextAsync"
+                                  PreviewFunction="Question.SubmittedAnswer.PreviewUpdateTextAsync"
+                                  MaxLength="200" />
         }
         else if (Question.State == QuestionState.Locked)
         {
