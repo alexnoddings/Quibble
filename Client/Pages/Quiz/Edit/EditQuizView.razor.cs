@@ -10,7 +10,7 @@ using Quibble.Client.Sync.Entities.EditMode;
 
 namespace Quibble.Client.Pages.Quiz.Edit
 {
-    public partial class EditQuizView : IDisposable
+    public sealed partial class EditQuizView : IDisposable
     {
         [Parameter]
         public ISynchronisedEditModeQuiz Quiz { get; set; } = default!;

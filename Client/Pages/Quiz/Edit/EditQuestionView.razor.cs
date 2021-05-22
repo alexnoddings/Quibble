@@ -7,7 +7,7 @@ using Quibble.Client.Sync.Entities.EditMode;
 
 namespace Quibble.Client.Pages.Quiz.Edit
 {
-    public partial class EditQuestionView : IDisposable
+    public sealed partial class EditQuestionView : IDisposable
     {
         [Parameter]
         public ISynchronisedEditModeQuestion Question { get; set; } = default!;
@@ -27,6 +27,7 @@ namespace Quibble.Client.Pages.Quiz.Edit
 
             Question.Updated += OnUpdatedAsync;
             LastStateStamp = Question.GetStateStamp();
+            PreviousIndex = Index;
         }
 
         private Task OnUpdatedAsync() =>

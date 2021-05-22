@@ -6,7 +6,7 @@ using Quibble.Shared.Entities;
 
 namespace Quibble.Client.Pages.Quiz.Host
 {
-    public partial class HostSubmittedAnswerView : IDisposable
+    public sealed partial class HostSubmittedAnswerView : IDisposable
     {
         [Parameter]
         public ISynchronisedHostModeSubmittedAnswer SubmittedAnswer { get; set; } = default!;

@@ -7,7 +7,7 @@ using Quibble.Client.Sync.Entities.HostMode;
 
 namespace Quibble.Client.Pages.Quiz.Host
 {
-    public partial class HostParticipantList : IDisposable
+    public sealed partial class HostParticipantList : IDisposable
     {
         [Parameter]
         public ISynchronisedHostModeQuiz Quiz { get; set; } = default!;

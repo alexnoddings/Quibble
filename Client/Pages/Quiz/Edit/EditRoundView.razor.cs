@@ -8,7 +8,7 @@ using Quibble.Client.Sync.Entities.EditMode;
 
 namespace Quibble.Client.Pages.Quiz.Edit
 {
-    public partial class EditRoundView : IDisposable
+    public sealed partial class EditRoundView : IDisposable
     {
         [Parameter]
         public ISynchronisedEditModeRound Round { get; set; } = default!;
