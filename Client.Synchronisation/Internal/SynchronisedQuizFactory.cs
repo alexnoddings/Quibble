@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Quibble.Client.Sync.Entities;
 using Quibble.Client.Sync.Internal.EditMode;
 using Quibble.Client.Sync.Internal.HostMode;
+using Quibble.Client.Sync.Internal.TakeMode;
 using Quibble.Shared.Entities;
 using Quibble.Shared.Hub;
 using Quibble.Shared.Models;
@@ -21,7 +22,7 @@ namespace Quibble.Client.Sync.Internal
         private ILogger<SynchronisedEntity> EntityLogger { get; }
         private HttpClient HttpClient { get; }
         private NavigationManager NavigationManager { get; }
-
+        
         public SynchronisedQuizFactory(ILogger<SynchronisedEntity> entityLogger, IHttpClientFactory httpClientFactory, NavigationManager navigationManager)
         {
             EntityLogger = entityLogger;
@@ -86,8 +87,17 @@ namespace Quibble.Client.Sync.Internal
                             .Build();
                     break;
                 case QuizState.Open:
-                    // ToDo: implement
-                    return HubResponse.FromError<ISynchronisedQuiz>("NotImplemented");
+                    synchronisedQuiz =
+                        new SynchronisedTakeModeQuizBuilder()
+                            .WithLoggerInstance(EntityLogger)
+                            .WithHubConnection(hubConnection)
+                            .WithQuiz(quizDto.Quiz)
+                            .WithParticipants(quizDto.Participants)
+                            .WithRounds(quizDto.Rounds)
+                            .WithQuestions(quizDto.Questions)
+                            .WithSubmittedAnswers(quizDto.SubmittedAnswers)
+                            .Build();
+                    break;
                 default:
                     return HubResponse.FromError<ISynchronisedQuiz>(nameof(ErrorMessages.UnknownError));
             }
