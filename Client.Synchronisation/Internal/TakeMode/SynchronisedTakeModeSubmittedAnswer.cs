@@ -42,7 +42,7 @@ namespace Quibble.Client.Sync.Internal.TakeMode
 
         public async Task UpdateTextAsync(string newText)
         {
-            await HubConnection.InvokeAsync(Endpoints.PreviewUpdateSubmittedAnswerText, Id, newText);
+            await HubConnection.InvokeAsync(Endpoints.UpdateSubmittedAnswerText, Id, newText);
             Text = newText;
         }
 
