@@ -213,6 +213,10 @@ namespace Quibble.Server.Hub
             if (dbQuestion.Round.Quiz.State != QuizState.Open)
                 return Failure(nameof(ErrorMessages.CantUpdateAsQuizNotOpen));
 
+            if (dbQuestion.Round.State != RoundState.Open)
+                return Failure(nameof(ErrorMessages.QuestionBadState));
+
+            // ToDo: split into multiple state-change functions
             switch (dbQuestion.State)
             {
                 // The only valid state transitions
@@ -225,8 +229,37 @@ namespace Quibble.Server.Hub
                     return Failure(nameof(ErrorMessages.QuestionBadState));
             }
 
+            if (newState == QuestionState.AnswerRevealed)
+            {
+                var areAnyAnswersUnmarked = await DbContext.SubmittedAnswers
+                    .Where(submittedAnswer => submittedAnswer.QuestionId == dbQuestion.Id)
+                    .AnyAsync(submittedAnswer => submittedAnswer.AssignedPoints == -1);
+
+                if (areAnyAnswersUnmarked)
+                    return Failure(nameof(ErrorMessages.QuestionBadState));
+            }
+
             dbQuestion.State = newState;
             await DbContext.SaveChangesAsync();
+
+            if (newState == QuestionState.Open)
+            {
+                await QuizHostGroup(quizId).OnQuestionStateUpdatedAsync(questionId, newState);
+
+                var questionDto = Mapper.Map<QuestionDto>(dbQuestion);
+
+                var submittedAnswers = await DbContext.SubmittedAnswers
+                    .Where(submittedAnswer => submittedAnswer.QuestionId == dbQuestion.Id)
+                    .ToListAsync();
+
+                foreach (var submittedAnswer in submittedAnswers)
+                {
+                    var submittedAnswerDto = Mapper.Map<SubmittedAnswerDto>(submittedAnswer);
+                    await QuizParticipantGroup(quizId, submittedAnswer.ParticipantId).OnQuestionRevealedAsync(questionDto, submittedAnswerDto);
+                }
+
+                return Success();
+            }
 
             if (newState == QuestionState.Locked)
             {
@@ -242,6 +275,16 @@ namespace Quibble.Server.Hub
 
                 foreach (var submittedAnswer in emptySubmittedAnswers)
                     await QuizHostGroup(quizId).OnSubmittedAnswerAssignedPointsUpdatedAsync(submittedAnswer.Id, 0);
+            }
+
+            if (newState == QuestionState.AnswerRevealed)
+            {
+                var submittedAnswers = await DbContext.SubmittedAnswers
+                    .Where(submittedAnswer => submittedAnswer.QuestionId == dbQuestion.Id)
+                    .ToListAsync();
+
+                foreach (var submittedAnswer in submittedAnswers)
+                    await QuizParticipantGroup(quizId, submittedAnswer.ParticipantId).OnSubmittedAnswerAssignedPointsUpdatedAsync(submittedAnswer.Id, submittedAnswer.AssignedPoints);
             }
 
             await AllQuizUsersGroup(quizId).OnQuestionStateUpdatedAsync(questionId, newState);
