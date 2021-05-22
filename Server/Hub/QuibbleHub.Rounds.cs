@@ -115,6 +115,10 @@ namespace Quibble.Server.Hub
             dbRound.State = RoundState.Open;
             await DbContext.SaveChangesAsync();
 
+            await QuizHostGroup(quizId).OnRoundOpenedAsync(dbRound.Id);
+
+            var round = Mapper.Map<RoundDto>(dbRound);
+            await AllQuizParticipantsGroup(quizId).OnRoundAddedAsync(round);
 
             return Success();
         }
