@@ -1,7 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>$(DefaultTargetFramework)</TargetFramework>
+    <AssemblyName>QuibbleServer</AssemblyName>
     <RootNamespace>Quibble.Server</RootNamespace>
   </PropertyGroup>
 
