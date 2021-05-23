@@ -1,0 +1,33 @@
+﻿@page "/quiz/{QuizId:guid}"
+@using Quibble.Client.Pages.Quiz.Edit
+@using Quibble.Client.Pages.Quiz.Host
+@using Quibble.Client.Pages.Quiz.Take
+@using Quibble.Client.Sync.Entities.EditMode
+@using Quibble.Client.Sync.Entities.HostMode
+@using Quibble.Client.Sync.Entities.TakeMode
+
+@if (GetQuizResult is null)
+{
+    <PageTitle Value="Loading quiz" />
+    <text>Loading</text>
+}
+else if (GetQuizResult.ErrorCode is not null)
+{
+    <PageTitle Value="Error loading quiz" />
+    @GetQuizResult.ErrorCode
+}
+else if (GetQuizResult.Value is ISynchronisedEditModeQuiz editModeQuiz)
+{
+    <PageTitle Value="@($"Editing {editModeQuiz.Title}")" />
+    <EditQuizView Quiz="editModeQuiz" />
+}
+else if (GetQuizResult.Value is ISynchronisedHostModeQuiz hostModeQuiz)
+{
+    <PageTitle Value="@($"Hosting {hostModeQuiz.Title}")" />
+    <HostQuizView Quiz="hostModeQuiz" />
+}
+else if (GetQuizResult.Value is ISynchronisedTakeModeQuiz takeModeQuiz)
+{
+    <PageTitle Value="@takeModeQuiz.Title" />
+    <TakeQuizView Quiz="takeModeQuiz" />
+}

@@ -1,0 +1,31 @@
+﻿.q-synced-text-field::after {
+    font-weight: 900;
+    font-family: "Font Awesome 5 Free";
+    position: absolute;
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--b-theme-info);
+    opacity: 0;
+}
+
+.q-synced-text-field-saved::after {
+    content: "\f0c7";
+    animation: 1s synced-text-field-saved;
+    animation-iteration-count: 1;
+}
+
+@keyframes synced-text-field-saved {
+    0% {
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}

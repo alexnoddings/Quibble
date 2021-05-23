@@ -1,62 +1,23 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-VisualStudioVersion = 16.0.30428.66
+VisualStudioVersion = 16.0.31025.218
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Solution Items", ".Solution Items", "{CAFB5BB8-D1E9-4189-A56E-75B376BCB95B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "Client\Client.csproj", "{CEF70DE1-71F7-41B3-AE7A-1D8A378D31C7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "Server\Server.csproj", "{44ECAB64-FBA0-474E-B336-5471C10E81F2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{41E9B231-842E-4BD1-9447-BAE1D66612FF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Solution Items", ".Solution Items", "{92475338-7CF9-48F0-A7D4-05000D345582}"
 	ProjectSection(SolutionItems) = preProject
-		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		Directory.Build.props = Directory.Build.props
-		LICENSE.txt = LICENSE.txt
-		NuGet.config = NuGet.config
+		LICENSE = LICENSE
+		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{5BB07AB1-6CBD-45F8-B918-B78D2B0F6104}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quibble.UI.Core", "UI.Core\Quibble.UI.Core.csproj", "{3F2682BB-79E9-46A2-8D70-F9FB5E3AC1C9}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quibble.UI.Identity", "UI.Identity\Quibble.UI.Identity.csproj", "{1E13721E-D30A-4DE1-A533-1ACEE8F9E899}"
-	ProjectSection(ProjectDependencies) = postProject
-		{3F2682BB-79E9-46A2-8D70-F9FB5E3AC1C9} = {3F2682BB-79E9-46A2-8D70-F9FB5E3AC1C9}
-	EndProjectSection
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quibble.UI", "UI\Quibble.UI.csproj", "{6799DD82-8CDE-4045-88BC-6CADE954E71A}"
-	ProjectSection(ProjectDependencies) = postProject
-		{3F2682BB-79E9-46A2-8D70-F9FB5E3AC1C9} = {3F2682BB-79E9-46A2-8D70-F9FB5E3AC1C9}
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Host", "Host", "{3DCB8EC1-BF6E-4363-B632-1AB118593A4E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quibble.Host.Common", "Host.Common\Quibble.Host.Common.csproj", "{5CB3664E-4DDD-4958-A89C-D0A0363E86F8}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quibble.Host.Hosted", "Host.Hosted\Quibble.Host.Hosted.csproj", "{B66DE740-4228-47F0-935F-E9224B185B95}"
-	ProjectSection(ProjectDependencies) = postProject
-		{1E13721E-D30A-4DE1-A533-1ACEE8F9E899} = {1E13721E-D30A-4DE1-A533-1ACEE8F9E899}
-		{6799DD82-8CDE-4045-88BC-6CADE954E71A} = {6799DD82-8CDE-4045-88BC-6CADE954E71A}
-	EndProjectSection
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quibble.Host.WASM.Server", "Host.WASM.Server\Quibble.Host.WASM.Server.csproj", "{6CA9AF6E-31D2-4E75-B045-5A8CD6D246DE}"
-	ProjectSection(ProjectDependencies) = postProject
-		{1E13721E-D30A-4DE1-A533-1ACEE8F9E899} = {1E13721E-D30A-4DE1-A533-1ACEE8F9E899}
-		{DF221355-78A4-4C8B-A819-C61E77A820FD} = {DF221355-78A4-4C8B-A819-C61E77A820FD}
-	EndProjectSection
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quibble.Host.WASM.Client", "Host.WASM.Client\Quibble.Host.WASM.Client.csproj", "{DF221355-78A4-4C8B-A819-C61E77A820FD}"
-	ProjectSection(ProjectDependencies) = postProject
-		{6799DD82-8CDE-4045-88BC-6CADE954E71A} = {6799DD82-8CDE-4045-88BC-6CADE954E71A}
-	EndProjectSection
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quibble.Core", "Core\Quibble.Core.csproj", "{DD1C2652-3BD5-46B0-9C2E-36EE6FAF0D50}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{900A7BCA-86C4-4AFE-972D-655B526BD1AF}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quibble.Tests.Host.Common", "Tests.Host.Common\Quibble.Tests.Host.Common.csproj", "{7BFB6F60-915C-43B3-93F9-A819E248474A}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Workflows", ".Workflows", "{2F73E67A-A2CC-47A8-9C02-1D12CE8E6659}"
-	ProjectSection(SolutionItems) = preProject
-		.github\workflows\dotnet-core.yml = .github\workflows\dotnet-core.yml
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client.Sync", "Client.Synchronisation\Client.Sync.csproj", "{A6AF647E-83EE-408E-BA37-7F04B286F051}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,57 +25,27 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3F2682BB-79E9-46A2-8D70-F9FB5E3AC1C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3F2682BB-79E9-46A2-8D70-F9FB5E3AC1C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3F2682BB-79E9-46A2-8D70-F9FB5E3AC1C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3F2682BB-79E9-46A2-8D70-F9FB5E3AC1C9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1E13721E-D30A-4DE1-A533-1ACEE8F9E899}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1E13721E-D30A-4DE1-A533-1ACEE8F9E899}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1E13721E-D30A-4DE1-A533-1ACEE8F9E899}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1E13721E-D30A-4DE1-A533-1ACEE8F9E899}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6799DD82-8CDE-4045-88BC-6CADE954E71A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6799DD82-8CDE-4045-88BC-6CADE954E71A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6799DD82-8CDE-4045-88BC-6CADE954E71A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6799DD82-8CDE-4045-88BC-6CADE954E71A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5CB3664E-4DDD-4958-A89C-D0A0363E86F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5CB3664E-4DDD-4958-A89C-D0A0363E86F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5CB3664E-4DDD-4958-A89C-D0A0363E86F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5CB3664E-4DDD-4958-A89C-D0A0363E86F8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B66DE740-4228-47F0-935F-E9224B185B95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B66DE740-4228-47F0-935F-E9224B185B95}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B66DE740-4228-47F0-935F-E9224B185B95}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B66DE740-4228-47F0-935F-E9224B185B95}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6CA9AF6E-31D2-4E75-B045-5A8CD6D246DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6CA9AF6E-31D2-4E75-B045-5A8CD6D246DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6CA9AF6E-31D2-4E75-B045-5A8CD6D246DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6CA9AF6E-31D2-4E75-B045-5A8CD6D246DE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DF221355-78A4-4C8B-A819-C61E77A820FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DF221355-78A4-4C8B-A819-C61E77A820FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DF221355-78A4-4C8B-A819-C61E77A820FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DF221355-78A4-4C8B-A819-C61E77A820FD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DD1C2652-3BD5-46B0-9C2E-36EE6FAF0D50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DD1C2652-3BD5-46B0-9C2E-36EE6FAF0D50}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DD1C2652-3BD5-46B0-9C2E-36EE6FAF0D50}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DD1C2652-3BD5-46B0-9C2E-36EE6FAF0D50}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7BFB6F60-915C-43B3-93F9-A819E248474A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7BFB6F60-915C-43B3-93F9-A819E248474A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7BFB6F60-915C-43B3-93F9-A819E248474A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7BFB6F60-915C-43B3-93F9-A819E248474A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEF70DE1-71F7-41B3-AE7A-1D8A378D31C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEF70DE1-71F7-41B3-AE7A-1D8A378D31C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEF70DE1-71F7-41B3-AE7A-1D8A378D31C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEF70DE1-71F7-41B3-AE7A-1D8A378D31C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44ECAB64-FBA0-474E-B336-5471C10E81F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44ECAB64-FBA0-474E-B336-5471C10E81F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44ECAB64-FBA0-474E-B336-5471C10E81F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44ECAB64-FBA0-474E-B336-5471C10E81F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41E9B231-842E-4BD1-9447-BAE1D66612FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41E9B231-842E-4BD1-9447-BAE1D66612FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41E9B231-842E-4BD1-9447-BAE1D66612FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41E9B231-842E-4BD1-9447-BAE1D66612FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6AF647E-83EE-408E-BA37-7F04B286F051}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6AF647E-83EE-408E-BA37-7F04B286F051}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6AF647E-83EE-408E-BA37-7F04B286F051}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6AF647E-83EE-408E-BA37-7F04B286F051}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{3F2682BB-79E9-46A2-8D70-F9FB5E3AC1C9} = {5BB07AB1-6CBD-45F8-B918-B78D2B0F6104}
-		{1E13721E-D30A-4DE1-A533-1ACEE8F9E899} = {5BB07AB1-6CBD-45F8-B918-B78D2B0F6104}
-		{6799DD82-8CDE-4045-88BC-6CADE954E71A} = {5BB07AB1-6CBD-45F8-B918-B78D2B0F6104}
-		{5CB3664E-4DDD-4958-A89C-D0A0363E86F8} = {3DCB8EC1-BF6E-4363-B632-1AB118593A4E}
-		{B66DE740-4228-47F0-935F-E9224B185B95} = {3DCB8EC1-BF6E-4363-B632-1AB118593A4E}
-		{6CA9AF6E-31D2-4E75-B045-5A8CD6D246DE} = {3DCB8EC1-BF6E-4363-B632-1AB118593A4E}
-		{DF221355-78A4-4C8B-A819-C61E77A820FD} = {3DCB8EC1-BF6E-4363-B632-1AB118593A4E}
-		{7BFB6F60-915C-43B3-93F9-A819E248474A} = {900A7BCA-86C4-4AFE-972D-655B526BD1AF}
-	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {9AE04BC9-F683-4D5E-80A3-BC6DECAF5F19}
+		SolutionGuid = {4DEEED4C-5A78-41D2-94A0-8526D23DF12C}
 	EndGlobalSection
 EndGlobal

@@ -1,0 +1,18 @@
+::deep h1 {
+    font-weight: lighter;
+    font-size: 2rem;
+}
+
+::deep .auth-form {
+    max-width: 330px;
+}
+
+::deep .auth-field-with-extra-label {
+    position: relative;
+}
+
+::deep .auth-extra-label {
+    top: 0;
+    right: 0;
+    position: absolute;
+}

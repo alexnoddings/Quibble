@@ -1,0 +1,43 @@
+﻿@page "/settings/email"
+@layout SettingsLayout
+@attribute [Authorize]
+
+<PageTitle Value="Email settings" />
+
+<AuthForm Errors="Errors" Model="Model" OnSubmit="RequestChangeEmailAsync" SubmitText="Request email change">
+    <Title>
+        Email Settings
+    </Title>
+    <Form>
+        <Field>
+            <FieldLabel for="currentEmail">
+                Current Email
+            </FieldLabel>
+            <TextEdit id="currentEmail" Text="@CurrentEmail" Disabled="true"/>
+        </Field>
+        <Field>
+            <FieldLabel For="newEmail">
+                New Email
+            </FieldLabel>
+            <TextEdit id="newEmail" @bind-Text="Model.NewEmail" Role="TextRole.Email" autocomplete="email" />
+            <ValidationMessage For="() => Model.NewEmail" />
+        </Field>
+        <Field>
+            <FieldLabel For="password">
+                Password
+            </FieldLabel>
+            <TextEdit id="password" @bind-Text="Model.Password" Role="TextRole.Password" autocomplete="current-password" />
+            <ValidationMessage For="() => Model.Password" />
+        </Field>
+    </Form>
+</AuthForm>
+
+@if (WasSuccessful)
+{
+    <Alert Color="Color.Success" Margin="Margin.Is3.OnY" Visible="true">
+        <AlertDescription>
+            Check @Model.NewEmail for your confirmation email.
+        </AlertDescription>
+        <CloseButton Class="close-alerts-center" />
+    </Alert>
+}

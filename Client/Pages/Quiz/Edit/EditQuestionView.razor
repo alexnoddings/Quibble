@@ -1,0 +1,51 @@
+﻿<Fields>
+    <Field ColumnSize="ColumnSize.Is12.Is5.OnWidescreen.Is6.OnFullHD" Display="Display.Flex">
+        <Text Color="TextColor.Muted" Display="Display.InlineFlex.Column" Alignment="TextAlignment.Center" Class="justify-content-center"  Margin="Margin.Is2.FromRight">
+            @(Index + 1).
+        </Text>
+        <div class="flex-fill">
+            <SynchronisedTextEdit Text="@Question.Text" SaveFunction="Question.UpdateTextAsync" MaxLength="200"/>
+        </div>
+    </Field>
+    <Field ColumnSize="ColumnSize.Is8.Is4.OnWidescreen">
+        <SynchronisedTextEdit Text="@Question.Answer" SaveFunction="Question.UpdateAnswerAsync" MaxLength="200"/>
+    </Field>
+    <Field ColumnSize="ColumnSize.Is2.Is1.OnFullHD">
+        <SynchronisedPointsEdit Points="@Question.Points" SaveFunction="Question.UpdatePointsAsync"/>
+    </Field>
+    <Field ColumnSize="ColumnSize.Is2.Is1.OnWidescreen">
+        <Button Block="true" Outline="true" Color="Color.Danger" @onclick="OnDeleteClickedAsync">
+            <Icon Name="IconName.Delete" Display="Display.None.InlineBlock.OnDesktop.None.OnWidescreen.InlineBlock.OnFullHD"/>
+            Delete
+        </Button>
+    </Field>
+</Fields>
+
+<OptionsModal TValue="bool" @ref="ConfirmDeleteModal" Title="Delete question">
+    <Body>
+        Are you sure you want to delete this question?
+        @if (!string.IsNullOrWhiteSpace(Question.Text))
+        {
+            <Blazorise.Text Margin="Margin.Is3.FromLeft.Is2.OnY">
+                @Question.Text
+            </Blazorise.Text>
+        }
+        @if (!string.IsNullOrWhiteSpace(Question.Answer))
+        {
+            <Blazorise.Text Margin="Margin.Is3.FromLeft.Is2.OnY">
+                @Question.Answer
+            </Blazorise.Text>
+        }
+        <Text Color="TextColor.Muted" Italic="true">
+            You can skip this confirmation by holding shift when you click delete.
+        </Text>
+    </Body>
+    <Footer Context="Options">
+        <Button Color="Color.Secondary" Clicked="() => Options.Choose(false)" Outline="true" Margin="Margin.Is2.FromRight">
+            Cancel
+        </Button>
+        <Button Color="Color.Danger" Clicked="() => Options.Choose(true)">
+            Delete
+        </Button>
+    </Footer>
+</OptionsModal>

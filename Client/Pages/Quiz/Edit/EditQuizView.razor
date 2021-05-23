@@ -1,0 +1,108 @@
+﻿@using Quibble.Client.Sync.Entities.EditMode
+
+<Alert @ref="ErrorMessagesAlert" Color="Color.Warning">
+    <AlertDescription>
+        @if (ErrorMessages is not null)
+        {
+            foreach (var message in ErrorMessages.Take(5))
+            {
+                @message
+                <br />
+            }
+            <AlertMessage>
+                @if (ErrorMessages.Count > 5)
+                {
+                    <text>+ @(ErrorMessages.Count - 5) more issues</text>
+                }
+            </AlertMessage>
+        }
+    </AlertDescription>
+    <CloseButton />
+</Alert>
+
+<Fields Margin="Margin.Is3.FromBottom">
+    <Field ColumnSize="ColumnSize.Is8.Is9.OnWidescreen" Margin="Margin.Is0.FromBottom">
+        <SynchronisedTextEdit Text="@Quiz.Title" SaveFunction="Quiz.UpdateTitleAsync" Size="Size.ExtraLarge" MaxLength="100" />
+    </Field>
+    <Field ColumnSize="ColumnSize.Is4.Is3.OnWidescreen" Margin="Margin.Is0.FromBottom">
+        <Row Class="h-100" Gutter="(10, 0)">
+            <Column ColumnSize="ColumnSize.Is6">
+                <Button Block="true" Outline="true" Color="Color.Primary" Clicked="PublishAsync" Class="h-100">
+                    <Icon Name="IconName.Share" Display="Display.None.InlineBlock.OnDesktop" />
+                    <Text Class="text-sm" Display="Display.InlineBlock">
+                        Publish
+                    </Text>
+                </Button>
+            </Column>
+            <Column ColumnSize="ColumnSize.Is6">
+                <Button Block="true" Outline="true" Color="Color.Danger" @onclick="OnDeleteClickedAsync" Class="h-100">
+                    <Icon Name="IconName.Delete" Display="Display.None.InlineBlock.OnDesktop" />
+                    <Text Class="text-sm" Display="Display.InlineBlock">
+                        Delete
+                    </Text>
+                </Button>
+            </Column>
+        </Row>
+    </Field>
+</Fields>
+
+@foreach (var round in Quiz.Rounds)
+{
+    <EditRoundView Round="round" @key="round.Id" />
+}
+
+<Fields>
+    <Field ColumnSize="ColumnSize.Is4.Is4.WithOffset.OnMobile.Is2.OnWidescreen.Is5.WithOffset.OnWidescreen" Margin="Margin.Is1.FromTop">
+        <Dropdown Class="w-100" Direction="Direction.Right">
+            <Button Block="true" Color="Color.Primary" Outline="true" Clicked="() => AddRoundsAsync(1)">
+                Add Round
+            </Button>
+            <DropdownToggle Color="Color.Primary" Outline="true" Split="true">
+                &nbsp;
+            </DropdownToggle>
+            <DropdownMenu>
+                <DropdownItem Clicked="() => AddRoundsAsync(5)">
+                    x5
+                </DropdownItem>
+                <DropdownItem Clicked="() => AddRoundsAsync(10)">
+                    x10
+                </DropdownItem>
+            </DropdownMenu>
+        </Dropdown>
+    </Field>
+</Fields>
+
+<OptionsModal TValue="bool" @ref="ConfirmPublishModal" Title="Publish quiz">
+    <Body>
+        Are you sure you want to publish this quiz? Once published,
+        <b>you will no longer be able to make any edits</b>.
+    </Body>
+    <Footer Context="Options">
+        <Button Color="Color.Secondary" Clicked="() => Options.Choose(false)" Outline="true" Margin="Margin.Is2.FromRight">
+            I still have changes to make
+        </Button>
+        <Button Color="Color.Primary" Clicked="() => Options.Choose(true)">
+            The quiz is complete
+        </Button>
+    </Footer>
+</OptionsModal>
+
+<OptionsModal TValue="bool" @ref="ConfirmDeleteModal" Title="Delete quiz">
+    <Body>
+        Are you sure you want to delete this quiz?
+        <Text Color="TextColor.Danger" Display="Display.Inline">
+            This action is irreversible.
+        </Text>
+        <Text Margin="Margin.Is3.FromLeft.Is2.OnY">
+            @Quiz.Title
+        </Text>
+    </Body>
+    <Footer Context="Options">
+        <Button Color="Color.Secondary" Clicked="() => Options.Choose(false)" Outline="true" Margin="Margin.Is2.FromRight">
+            Cancel
+        </Button>
+        <Button Color="Color.Danger" Clicked="() => Options.Choose(true)">
+            I am sure
+        </Button>
+    </Footer>
+</OptionsModal>

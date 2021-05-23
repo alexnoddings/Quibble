@@ -1,0 +1,44 @@
+﻿<Card Background="Background.Transparent">
+    <CardHeader Class="bg-transparent" Padding="Padding.Is3.OnX.Is2.OnY">
+        <Heading Size="HeadingSize.Is5" Margin="Margin.Is0">
+            Participants
+        </Heading>
+    </CardHeader>
+    <CardBody Padding="Padding.Is3.OnX.Is2.OnY">
+        @if (Quiz.Participants.Count == 0)
+        {
+            <Blazorise.Text Alignment="TextAlignment.Left" Class="text-clip" Color="TextColor.Muted" Italic="true">
+                *tumbleweed*
+            </Blazorise.Text>
+        }
+        else
+        {
+            int placeCounter = 1;
+            foreach (var (points, participants) in GetParticipantScores())
+            {
+                int place = placeCounter;
+                <Addons Class="flex-nowrap">
+                    <Addon AddonType="AddonType.Start" Display="Display.Block" Padding="Margin.Is1.FromRight">
+                        @($"{place}.")
+                    </Addon>
+                    <Addon AddonType="AddonType.Body">
+                        <Text Class="text-clip">
+                            @foreach (var participant in participants)
+                            {
+                                <Blazorise.Text Alignment="TextAlignment.Left" Class="text-clip">
+                                    <span class="participant-name">
+                                        @participant.UserName
+                                    </span>
+                                </Blazorise.Text>
+                            }
+                        </Text>
+                    </Addon>
+                    <Addon AddonType="AddonType.End" Display="Display.Block" Margin="Margin.IsAuto.FromLeft" Padding="Padding.Is1.FromLeft">
+                        @($"{points:G4}")
+                    </Addon>
+                </Addons>
+                placeCounter += participants.Count;
+            }
+        }
+    </CardBody>
+</Card>

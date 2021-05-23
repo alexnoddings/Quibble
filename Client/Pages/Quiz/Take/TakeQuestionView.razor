@@ -1,0 +1,83 @@
+﻿<Fields Class="align-items-center">
+    <Field ColumnSize="ColumnSize.Is12.Is7.OnWidescreen" Display="Display.Flex">
+        <Text Color="TextColor.Muted" Margin="Margin.Is2.FromRight">
+            @(Index + 1).
+        </Text>
+        <Text Class="@(Question.State == QuestionState.Open ? "user-select-none" : null)">
+            @Question.Text
+        </Text>
+    </Field>
+    <Field ColumnSize="ColumnSize.Is10.Is4.OnWidescreen" Display="Display.Flex.Column">
+        @if (Question.State == QuestionState.Open)
+        {
+            <SynchronisedTextEdit Text="@Question.SubmittedAnswer!.Text"
+                                  SaveFunction="Question.SubmittedAnswer.UpdateTextAsync"
+                                  PreviewFunction="Question.SubmittedAnswer.PreviewUpdateTextAsync"
+                                  MaxLength="200" />
+        }
+        else if (Question.State == QuestionState.Locked)
+        {
+            bool wasEmptyAnswer = string.IsNullOrEmpty(Question.SubmittedAnswer?.Text);
+            <Blazorise.Text Italic="wasEmptyAnswer" Color="TextColor.Muted">
+                <Icon Name="IconName.Lock" Margin="Margin.Is1.FromRight"/>
+                @(wasEmptyAnswer ? "No answer" : Question.SubmittedAnswer?.Text)
+            </Blazorise.Text>
+        }
+        else
+        {
+            bool wasEmptyAnswer = string.IsNullOrEmpty(Question.SubmittedAnswer?.Text);
+            <Blazorise.Text Italic="wasEmptyAnswer" Display="Display.Flex">
+                @if (Question.SubmittedAnswer is not null && Question.SubmittedAnswer.AssignedPoints >= Question.Points)
+                {
+                    <Blazorise.Text Color="TextColor.Success">
+                        <Icon Name="IconName.Check" Margin="Margin.Is1.FromRight"/>
+                    </Blazorise.Text>
+                }
+                else if (Question.SubmittedAnswer is not null && Question.SubmittedAnswer.AssignedPoints > 0)
+                {
+                    <Blazorise.Text Color="TextColor.Warning">
+                        <Icon Name="IconName.MoreHorizontal" Margin="Margin.Is1.FromRight"/>
+                    </Blazorise.Text>
+                }
+                else
+                {
+                    <Blazorise.Text Color="TextColor.Danger">
+                        <Icon Name="IconName.Times" Margin="Margin.Is1.FromRight"/>
+                    </Blazorise.Text>
+                }
+                @(wasEmptyAnswer ? "No answer" : Question.SubmittedAnswer?.Text)
+            </Blazorise.Text>
+            <Blazorise.Text Color="TextColor.Muted" Display="Display.Flex">
+                <Blazorise.Text>
+                    <Icon Name="IconName.AngleRight" Margin="Margin.Is1.FromRight"/>
+                </Blazorise.Text>
+                @Question.Answer
+            </Blazorise.Text>
+        }
+    </Field>
+    <Field ColumnSize="ColumnSize.Is2.Is1.OnWidescreen">
+        @{
+            var questionPoints = Question.Points;
+            if (Question.State < QuestionState.AnswerRevealed)
+            {
+                <Blazorise.Text Alignment="TextAlignment.Center">
+                    @($"{questionPoints:G4}")
+                </Blazorise.Text>
+            }
+            else
+            {
+                var assignedPoints = Question.SubmittedAnswer?.AssignedPoints ?? 0;
+                TextColor textColour;
+                if (assignedPoints == 0)
+                    textColour = TextColor.Danger;
+                else if (assignedPoints < questionPoints)
+                    textColour = TextColor.Warning;
+                else
+                    textColour = TextColor.Success;
+                <Blazorise.Text Alignment="TextAlignment.Center" Color="textColour">
+                    @($"{assignedPoints:G4}/{questionPoints:G4}")
+                </Blazorise.Text>
+            }
+        }
+    </Field>
+</Fields>

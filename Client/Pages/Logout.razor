@@ -1,0 +1,13 @@
+﻿@page "/logout"
+
+<PageTitle Value="Log out" />
+
+<AuthorizeView>
+    <Authorized>
+        Logging out...
+    </Authorized>
+    <NotAuthorized>
+        <RedirectTo Url="/" After="TimeSpan.FromMilliseconds(1500)" />
+        Logged out. Redirecting you to the home page.
+    </NotAuthorized>
+</AuthorizeView>
