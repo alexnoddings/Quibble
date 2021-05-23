@@ -275,6 +275,21 @@ namespace Quibble.Server.Hub
 
                 foreach (var submittedAnswer in emptySubmittedAnswers)
                     await QuizHostGroup(quizId).OnSubmittedAnswerAssignedPointsUpdatedAsync(submittedAnswer.Id, 0);
+
+                var answerLowerTrimmed = dbQuestion.Answer.Trim().ToLower();
+                var correctSubmittedAnswers = await DbContext.SubmittedAnswers
+                    .Where(submittedAnswer => submittedAnswer.QuestionId == dbQuestion.Id)
+                    .Where(submittedAnswer => submittedAnswer.Text.Trim().ToLower() == answerLowerTrimmed)
+                    .ToListAsync();
+
+
+                foreach (var submittedAnswer in correctSubmittedAnswers)
+                    submittedAnswer.AssignedPoints = dbQuestion.Points;
+
+                await DbContext.SaveChangesAsync();
+
+                foreach (var submittedAnswer in correctSubmittedAnswers)
+                    await QuizHostGroup(quizId).OnSubmittedAnswerAssignedPointsUpdatedAsync(submittedAnswer.Id, submittedAnswer.AssignedPoints);
             }
 
             if (newState == QuestionState.AnswerRevealed)
