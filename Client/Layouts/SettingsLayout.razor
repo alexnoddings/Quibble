@@ -2,21 +2,19 @@
 @layout MainLayout
 
 <Container Margin="Margin.IsAuto">
-    <div class="profile-form">
-        <Row>
-            <Column ColumnSize="ColumnSize.Is12.Is4.OnDesktop.Is3.OnWidescreen.Is2.WithOffset.OnWidescreen.Is2.OnFullHD.Is3.WithOffset.OnFullHD" Margin="Margin.Is3.FromBottom">
-                <ListGroup>
-                    <ListGroupItem Disabled="true">
-                        Account Settings
-                    </ListGroupItem>
-                    <NavLink class="list-group-item" href="/settings/user" Match="NavLinkMatch.Prefix">Username</NavLink>
-                    <NavLink class="list-group-item" href="/settings/email" Match="NavLinkMatch.Prefix">Email</NavLink>
-                    <NavLink class="list-group-item" href="/settings/security" Match="NavLinkMatch.Prefix">Password</NavLink>
-                </ListGroup>
-            </Column>
-            <Column ColumnSize="ColumnSize.Is12.Is8.OnDesktop.Is4.OnWidescreen">
-                @Body
-            </Column>
-        </Row>
-    </div>
+    <Row>
+        <Column ColumnSize="ColumnSize.Is12.Is4.OnDesktop.Is3.OnWidescreen.Is2.WithOffset.OnWidescreen.Is2.OnFullHD.Is3.WithOffset.OnFullHD" Margin="Margin.Is3.FromBottom">
+            <ListGroup>
+                <ListGroupItem Disabled="true">
+                    Account Settings
+                </ListGroupItem>
+                <NavLink class="list-group-item" href="/settings/user" Match="NavLinkMatch.Prefix">Username</NavLink>
+                <NavLink class="list-group-item" href="/settings/email" Match="NavLinkMatch.Prefix">Email</NavLink>
+                <NavLink class="list-group-item" href="/settings/security" Match="NavLinkMatch.Prefix">Password</NavLink>
+            </ListGroup>
+        </Column>
+        <Column ColumnSize="ColumnSize.Is12.Is8.OnDesktop.Is4.OnWidescreen">
+            @Body
+        </Column>
+    </Row>
 </Container>

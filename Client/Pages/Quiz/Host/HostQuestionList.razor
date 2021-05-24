@@ -1,4 +1,4 @@
-﻿<Card Background="Background.Transparent">
+﻿<Card Background="Background.Light">
     <CardHeader Class="bg-transparent" Padding="Padding.Is3.OnX.Is2.OnY">
         <Heading Size="HeadingSize.Is5" Margin="Margin.Is0">
             Questions
@@ -12,7 +12,7 @@
                 var roundNumber = roundIndex;
                 var isHighlightedRound = roundNumber == HighlightedRoundNumber;
 
-                <Button Padding="Padding.Is2.OnX" Block="true" Color="Color.None" Margin="Margin.Is2.FromTop" Clicked="() => HighlightedRoundNumber = roundNumber">
+                <Button Class="text-reset" Padding="Padding.Is2.OnX" Block="true" Color="Color.None" Margin="Margin.Is2.FromTop" Clicked="() => HighlightedRoundNumber = roundNumber">
                     <Addons Class="flex-nowrap">
                         <Addon AddonType="AddonType.Start">
                             <Text Margin="Margin.Is1.FromRight" Color="Selection.RoundNumber == roundNumber ? TextColor.Primary : TextColor.None">
@@ -41,7 +41,7 @@
                     foreach (var question in round.Questions)
                     {
                         var questionNumber = questionIndex;
-                        <Button Padding="Padding.Is3.FromLeft.Is2.FromRight" Block="true" Color="Color.None" Margin="Margin.Is1.OnY" Clicked="() => Selection.UpdateSelectionAsync(roundNumber, questionNumber)">
+                        <Button Class="text-reset" Padding="Padding.Is3.FromLeft.Is2.FromRight" Block="true" Margin="Margin.Is1.OnY" Clicked="() => Selection.UpdateSelectionAsync(roundNumber, questionNumber)">
                             <Addons Class="flex-nowrap">
                                 <Addon AddonType="AddonType.Start">
                                     <Text Margin="Margin.Is1.FromRight" Color="Selection.RoundNumber == roundNumber && Selection.QuestionNumber == questionNumber ? TextColor.Primary : TextColor.None">

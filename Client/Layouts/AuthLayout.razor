@@ -1,12 +1,17 @@
 ﻿@inherits LayoutComponentBase
 
-<Text Class="header" Alignment="TextAlignment.Center" Padding="Padding.Is5.FromTop.Is4.FromBottom">
-    <a class="header" href="/">
+<Heading Size="HeadingSize.Is1" Alignment="TextAlignment.Center" Padding="Padding.Is5.FromTop.Is4.FromBottom">
+    <Blazorise.Link To="/" Class="text-reset">
         <QuibbleIcon/>
-    </a>
-</Text>
-<Container Class="auth-form" Fluid="true" Margin="Margin.IsAuto">
-    <div class="auth-form">
-        @Body
-    </div>
+    </Blazorise.Link>
+</Heading>
+
+<Container Class="auth-form" Margin="Margin.IsAuto">
+    <Row>
+        <Column ColumnSize="ColumnSize.Is8.Is2.WithOffset.OnMobile.Is6.OnDesktop.Is3.WithOffset.OnDesktop.Is4.OnWidescreen.Is4.WithOffset.OnWidescreen">
+            <div class="auth-form">
+                @Body
+            </div>
+        </Column>
+    </Row>
 </Container>
