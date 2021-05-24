@@ -1,0 +1,87 @@
+﻿html, body {
+    color: var(--b-theme-text-body);
+    background-color: var(--b-theme-white);
+}
+
+.divider.divider-text::before {
+    /* Fix for text dividers having a white background for the text */
+    background-color: var(--b-theme-background-light) !important;
+}
+
+.modal-content {
+    background-color: var(--b-theme-white) !important;
+}
+
+button.close span {
+    color: var(--b-theme-text-body);
+    text-shadow: 0 1px 0 var(--b-theme-white);
+}
+
+.list-group {
+    color: var(--b-theme-text-body);
+    background-color: var(--b-theme-light);
+}
+
+.list-group-item {
+    color: var(--b-theme-text-info);
+    background-color: var(--b-theme-light);
+}
+
+    .list-group-item.disabled {
+        color: var(--b-theme-text-dark);
+        background-color: var(--b-theme-light);
+    }
+
+    .list-group-item.active {
+        color: var(--b-theme-light);
+        background-color: var(--b-theme-text-info);
+        border-color: var(--b-theme-text-info);
+    }
+
+.dropdown-menu {
+    color: var(--b-theme-text-body);
+    background-color: var(--b-theme-light);
+}
+
+.dropdown-item {
+    color: var(--b-theme-text-body);
+    background-color: var(--b-theme-light);
+}
+
+    .dropdown-item:active,
+    .dropdown-item:hover {
+        color: var(--b-theme-text-primary);
+        background-color: var(--b-theme-light);
+    }
+
+
+.form-control {
+    color: var(--b-theme-text-body);
+    background-color: var(--b-theme-white);
+}
+
+    .form-control:focus {
+        color: var(--b-theme-text-body);
+        background-color: var(--b-theme-white);
+        border-color: var(--b-theme-info);
+        outline: 0;
+        box-shadow: 0 0 0.25rem 0.5px var(--b-theme-info);
+    }
+
+    .form-control:disabled {
+        color: var(--b-theme-text-body);
+        background-color: var(--b-theme-light);
+    }
+
+.btn.focus, .btn:focus {
+    color: var(--b-theme-text-body);
+    background-color: var(--b-theme-light);
+    border-color: var(--b-theme-info);
+    outline: 0;
+    box-shadow: 0 0 0.25rem 0.5px var(--b-theme-info);
+}
+
+.btn-outline-dark:not([disabled]):hover,
+.btn-outline-dark:not([disabled]):active {
+    color: var(--b-theme-text-light) !important;
+}

@@ -4,7 +4,6 @@
     max-width: 100%;
     font-family: 'Lato', sans-serif;
     font-size: 14px;
-    color: #333;
 }
 
 body::-webkit-scrollbar {
@@ -12,7 +11,7 @@ body::-webkit-scrollbar {
 }
 
 body::-webkit-scrollbar-track {
-    background: #28232D;
+    background: var(--b-theme-secondary);
 }
 
 body::-webkit-scrollbar-thumb {
@@ -21,7 +20,7 @@ body::-webkit-scrollbar-thumb {
     border: 4px solid #28232D;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
     font-family: 'Open Sans', sans-serif;
 }
 
@@ -33,10 +32,6 @@ label.input-required::after {
 .quicon {
     stroke: currentColor;
     fill: currentColor;
-}
-
-.header .quicon {
-    color: rgb(40, 35, 45);
 }
 
 .alert .close-alerts-center {
