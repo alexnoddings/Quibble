@@ -1,6 +1,6 @@
 ﻿<AuthorizeView>
     <Authorized>
-        <BarItem>
+        <BarItem Margin="Margin.Is2.FromLeft">
             <BarDropdown>
                 <BarDropdownToggle>
                     <Text Color="TextColor.White" Display="Display.Inline">
@@ -27,19 +27,19 @@
         </BarItem>
     </Authorized>
     <NotAuthorized>
-        <BarItem Margin="Margin.Is2.OnX">
-            <a class="q-login-link" href="/login" @onclick="RedirectToLogin" @onclick:preventDefault>
-                <Text Color="TextColor.White">
+        <BarItem Margin="Margin.Is2.FromLeft">
+            <Text Color="TextColor.White">
+                <a class="nav-link text-reset" href="/login" @onclick="RedirectToLogin" @onclick:preventDefault>
                     Log in
-                </Text>
-            </a>
+                </a>
+            </Text>
         </BarItem>
-        <BarItem Margin="Margin.Is2.OnX">
-            <a class="q-login-link" href="/register" @onclick="RedirectToRegister" @onclick:preventDefault>
-                <Text Color="TextColor.White">
+        <BarItem Margin="Margin.Is2.FromLeft">
+            <Text Color="TextColor.White">
+                <a class="nav-link text-reset" href="/register" @onclick="RedirectToRegister" @onclick:preventDefault>
                     Register
-                </Text>
-            </a>
+                </a>
+            </Text>
         </BarItem>
     </NotAuthorized>
 </AuthorizeView>
