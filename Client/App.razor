@@ -1,7 +1,6 @@
-
 <PageTitle />
 <CascadingAuthenticationState>
-	<ThemeProvider Theme="@_theme">
+	<ThemeProvider Theme="@ThemeService.Theme">
 		<OptionsModalHost>
 			<Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
 				<Found Context="routeData">
@@ -27,17 +26,3 @@
 		</OptionsModalHost>
 	</ThemeProvider>
 </CascadingAuthenticationState>
-
-@code{
-	private readonly Theme _theme = new Theme
-	{
-		ColorOptions = new ThemeColorOptions
-		{
-			Dark = "#28232D"
-		},
-		BackgroundOptions = new ThemeBackgroundOptions
-		{
-			Dark = "#28232D"
-		}
-	};
-}
