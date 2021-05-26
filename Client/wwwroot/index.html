@@ -17,12 +17,32 @@
     <link rel="icon" href="/icon.svg" />
 </head>
 <body>
-    <div id="app">Loading...</div>
-    <div id="blazor-error-ui">
-        An unhandled error has occurred.
-        <a href="" class="reload">Reload</a>
-        <a class="dismiss">🗙</a>
+<div id="app">
+    <div id="app-loading-screen">
+        <div class="app-loading-header"></div>
+        <div class="app-loading-content">
+            <svg class="quicon" width="64" height="64" viewBox="0 0 8 8" aria-hidden="true" stroke-width="1">
+                <circle cx="4" cy="4" r="3.5" fill="none" />
+                <line x1="5.5" y1="5.5" x2="7.5" y2="7.5" stroke-linecap="round" />
+            </svg>
+            <h1 class="mt-3">
+                Loading
+            </h1>
+        </div>
     </div>
+</div>
+<div id="blazor-error-ui">
+    An unhandled error has occurred.
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+</div>
+    <script>
+        window.onload = function () {
+            if (localStorage.getItem('q-theme') === '1') {
+                document.getElementById('app-loading-screen').classList.add("dark");
+            }
+        };
+    </script>
     <script src="_framework/blazor.webassembly.js"></script>
     <script src="_content/Microsoft.AspNetCore.Components.Web.Extensions/headManager.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
