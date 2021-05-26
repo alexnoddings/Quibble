@@ -13,7 +13,6 @@ using Quibble.Client.Sync.Internal.TakeMode;
 using Quibble.Shared.Entities;
 using Quibble.Shared.Hub;
 using Quibble.Shared.Models;
-using Quibble.Shared.Resources;
 
 namespace Quibble.Client.Sync.Internal
 {
@@ -33,18 +32,18 @@ namespace Quibble.Client.Sync.Internal
         public async Task<HubResponse<ISynchronisedQuiz>> GetQuizAsync(Guid quizId)
         {
             if (quizId == Guid.Empty)
-                return HubResponse.FromError<ISynchronisedQuiz>(nameof(ErrorMessages.QuizNotFound));
+                return HubResponse.FromError<ISynchronisedQuiz>(HubErrors.QuizNotFound);
 
             var quizNegotiationResponse = await HttpClient.GetAsync($"{quizId}/negotiate");
             if (quizNegotiationResponse.StatusCode == HttpStatusCode.NotFound)
-                return HubResponse.FromError<ISynchronisedQuiz>(nameof(ErrorMessages.QuizNotFound));
+                return HubResponse.FromError<ISynchronisedQuiz>(HubErrors.QuizNotFound);
 
             var quizNegotiation = await quizNegotiationResponse.Content.ReadFromJsonAsync<QuizNegotiationDto>();
             if (quizNegotiation is null)
-                return HubResponse.FromError<ISynchronisedQuiz>(nameof(ErrorMessages.QuizNotFound));
+                return HubResponse.FromError<ISynchronisedQuiz>(HubErrors.QuizNotFound);
 
             if (quizNegotiation.State == QuizState.InDevelopment && !quizNegotiation.CanEdit)
-                return HubResponse.FromError<ISynchronisedQuiz>(nameof(ErrorMessages.QuizNotOpen));
+                return HubResponse.FromError<ISynchronisedQuiz>(HubErrors.QuizNotOpen);
 
             var hubUrl = NavigationManager.ToAbsoluteUri($"Api/Quibble/{quizId}");
             var hubConnection =
@@ -56,9 +55,9 @@ namespace Quibble.Client.Sync.Internal
             await hubConnection.StartAsync();
             var getQuizHubResponse = await hubConnection.InvokeAsync<HubResponse<FullQuizDto>>(Endpoints.GetQuiz);
             if (!getQuizHubResponse.WasSuccessful)
-                return HubResponse.FromError<ISynchronisedQuiz>(getQuizHubResponse.ErrorCode);
+                return HubResponse.FromError<ISynchronisedQuiz>(getQuizHubResponse.Error);
             if (getQuizHubResponse.Value is null)
-                return HubResponse.FromError<ISynchronisedQuiz>(nameof(ErrorMessages.QuizNotFound));
+                return HubResponse.FromError<ISynchronisedQuiz>(HubErrors.QuizNotFound);
 
             var quizDto = getQuizHubResponse.Value;
             ISynchronisedQuiz synchronisedQuiz;
@@ -99,7 +98,7 @@ namespace Quibble.Client.Sync.Internal
                             .Build();
                     break;
                 default:
-                    return HubResponse.FromError<ISynchronisedQuiz>(nameof(ErrorMessages.UnknownError));
+                    return HubResponse.FromError<ISynchronisedQuiz>(HubErrors.UnknownError);
             }
 
             return HubResponse.FromSuccess(synchronisedQuiz);

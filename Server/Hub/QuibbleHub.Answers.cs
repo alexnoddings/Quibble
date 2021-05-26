@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Quibble.Server.Extensions;
 using Quibble.Shared.Entities;
 using Quibble.Shared.Hub;
-using Quibble.Shared.Resources;
 
 namespace Quibble.Server.Hub
 {
@@ -13,9 +12,9 @@ namespace Quibble.Server.Hub
     {
         private async Task<HubResponse> UpdateSubmittedAnswerTextCoreAsync(Guid answerId, string newText, bool shouldPersist)
         {
-            (Guid userId, Guid quizId, string? errorCode) = ExecutionContext;
-            if (errorCode is not null)
-                return Failure(errorCode);
+            (Guid userId, Guid quizId, ApiError? error) = ExecutionContext;
+            if (error is not null)
+                return Failure(error);
 
             var dbAnswer =
                 await DbContext.SubmittedAnswers
@@ -26,20 +25,20 @@ namespace Quibble.Server.Hub
                     .FindAsync(answerId);
 
             if (dbAnswer is null)
-                return Failure(nameof(ErrorMessages.QuestionParentRoundNotFound));
+                return Failure(HubErrors.AnswerNotFound);
 
             if (dbAnswer.Question.Round.QuizId != quizId)
-                return Failure(nameof(ErrorMessages.QuestionParentRoundNotFound));
+                return Failure(HubErrors.QuestionParentRoundNotFound);
 
             if (dbAnswer.Participant.UserId != userId)
-                return Failure(nameof(ErrorMessages.QuizCantEditAsNotOwner));
+                return Failure(HubErrors.CantEditAsNotOwner);
 
             if (dbAnswer.Question.State != QuestionState.Open)
-                return Failure(nameof(ErrorMessages.QuestionBadState));
+                return Failure(HubErrors.QuestionBadState);
 
             newText ??= string.Empty;
             if (newText.Length > 200)
-                return Failure(nameof(ErrorMessages.QuestionBadState));
+                return Failure(HubErrors.TextTooLong);
 
             if (shouldPersist)
             {
@@ -63,9 +62,9 @@ namespace Quibble.Server.Hub
         [HubMethodName(Endpoints.UpdateSubmittedAnswerAssignedPoints)]
         public async Task<HubResponse> UpdateSubmittedAnswerAssignedPointsAsync(Guid answerId, decimal points)
         {
-            (Guid userId, Guid quizId, string? errorCode) = ExecutionContext;
-            if (errorCode is not null)
-                return Failure(errorCode);
+            (Guid userId, Guid quizId, ApiError? error) = ExecutionContext;
+            if (error is not null)
+                return Failure(error);
 
             var dbAnswer =
                 await DbContext.SubmittedAnswers
@@ -76,22 +75,22 @@ namespace Quibble.Server.Hub
                     .FindAsync(answerId);
 
             if (dbAnswer is null)
-                return Failure(nameof(ErrorMessages.QuestionParentRoundNotFound));
+                return Failure(HubErrors.AnswerNotFound);
 
             if (dbAnswer.Question.Round.QuizId != quizId)
-                return Failure(nameof(ErrorMessages.QuestionParentRoundNotFound));
+                return Failure(HubErrors.QuestionParentRoundNotFound);
 
             if (dbAnswer.Question.Round.Quiz.OwnerId != userId)
-                return Failure(nameof(ErrorMessages.QuizCantEditAsNotOwner));
+                return Failure(HubErrors.CantEditAsNotOwner);
 
             if (dbAnswer.Question.State < QuestionState.Locked)
-                return Failure(nameof(ErrorMessages.QuestionBadState));
+                return Failure(HubErrors.QuestionBadState);
 
             if (points < 0)
-                return Failure(nameof(ErrorMessages.PointsTooLow));
+                return Failure(HubErrors.PointsTooLow);
 
             if (points > 10m)
-                return Failure(nameof(ErrorMessages.PointsTooHigh));
+                return Failure(HubErrors.PointsTooHigh);
 
             // Ensure points are a division of 0.25
             points = Math.Round(points * 4, MidpointRounding.ToEven) / 4;
