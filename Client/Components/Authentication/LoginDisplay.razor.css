@@ -1,9 +1,0 @@
-﻿.q-login-link {
-    color: #f8f9fa;
-    text-decoration: none;
-}
-
-    .q-login-link:hover {
-        color: var(--b-theme-primary);
-        text-decoration: none;
-    }

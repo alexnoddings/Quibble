@@ -1,9 +1,9 @@
 ﻿<AuthorizeView>
     <Authorized>
-        <BarItem>
+        <BarItem Margin="Margin.Is2.FromLeft">
             <BarDropdown>
                 <BarDropdownToggle>
-                    <Text Color="TextColor.Light" Display="Display.Inline">
+                    <Text Color="TextColor.White" Display="Display.Inline">
                         @(context.User?.Identity?.Name ?? "Profile")
                     </Text>
                 </BarDropdownToggle>
@@ -27,13 +27,19 @@
         </BarItem>
     </Authorized>
     <NotAuthorized>
-        <BarItem Margin="Margin.Is2.OnX">
-            <a class="q-login-link" href="/login" @onclick="RedirectToLogin" @onclick:preventDefault>
-                Log in
-            </a>
+        <BarItem Margin="Margin.Is2.FromLeft">
+            <Text Color="TextColor.White">
+                <a class="nav-link text-reset" href="/login" @onclick="RedirectToLogin" @onclick:preventDefault>
+                    Log in
+                </a>
+            </Text>
         </BarItem>
-        <BarItem Margin="Margin.Is2.OnX">
-            <a class="q-login-link" href="/register" @onclick="RedirectToRegister" @onclick:preventDefault>Register</a>
+        <BarItem Margin="Margin.Is2.FromLeft">
+            <Text Color="TextColor.White">
+                <a class="nav-link text-reset" href="/register" @onclick="RedirectToRegister" @onclick:preventDefault>
+                    Register
+                </a>
+            </Text>
         </BarItem>
     </NotAuthorized>
 </AuthorizeView>

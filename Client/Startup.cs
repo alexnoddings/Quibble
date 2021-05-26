@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.Json;
+using Blazored.LocalStorage;
 using Blazorise;
 using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Quibble.Client.Services.Authentication;
+using Quibble.Client.Services.Themeing;
 using Quibble.Client.Sync.Extensions;
 
 namespace Quibble.Client
@@ -47,6 +49,9 @@ namespace Quibble.Client
                 })
                 .AddBootstrapProviders()
                 .AddFontAwesomeIcons();
+
+            services.AddBlazoredLocalStorage();
+            services.AddScoped<ThemeService>();
         }
     }
 }

@@ -1,22 +1,24 @@
-
 <PageTitle />
 <CascadingAuthenticationState>
-	<ThemeProvider Theme="@_theme">
+	<ThemeProvider Theme="@ThemeService.Theme">
 		<OptionsModalHost>
 			<Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
 				<Found Context="routeData">
-					<AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" Context="authState">
-						<NotAuthorized>
-							@if (authState.User.Identity?.IsAuthenticated == true)
-								{
-							<Heading Size="HeadingSize.Is1">Unauthorised.</Heading>
-							}
-								else
-								{
-							<RedirectToLogin />
-							}
-						</NotAuthorized>
-					</AuthorizeRouteView>
+                    <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" Context="authState">
+                        <Authorizing>
+                            @* Usually fast enough that showing any content will just flash it *@
+                        </Authorizing>
+                        <NotAuthorized>
+                            @if (authState.User.Identity?.IsAuthenticated == true)
+                            {
+                                <Heading Size="HeadingSize.Is1">Unauthorised.</Heading>
+                            }
+                            else
+                            {
+                                <RedirectToLogin/>
+                            }
+                        </NotAuthorized>
+                    </AuthorizeRouteView>
 				</Found>
 				<NotFound>
 					<LayoutView Layout="@typeof(MainLayout)">
@@ -27,17 +29,3 @@
 		</OptionsModalHost>
 	</ThemeProvider>
 </CascadingAuthenticationState>
-
-@code{
-	private readonly Theme _theme = new Theme
-	{
-		ColorOptions = new ThemeColorOptions
-		{
-			Dark = "#28232D"
-		},
-		BackgroundOptions = new ThemeBackgroundOptions
-		{
-			Dark = "#28232D"
-		}
-	};
-}

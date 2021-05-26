@@ -1,6 +1,6 @@
-﻿<Card>
+﻿<Card Background="Background.Light">
     <CardBody Padding="Padding.Is2.FromBottom">
-        <Fields Class="border-bottom" Margin="Margin.Is3.FromBottom">
+        <Fields Margin="Margin.Is3.FromBottom">
             <Field ColumnSize="ColumnSize.Is10.Is11.OnWidescreen" Margin="Margin.Is0.FromBottom">
                 <Heading Size="HeadingSize.Is5" Display="Display.Flex">
                     <Text Color="TextColor.Muted" Margin="Margin.Is2.FromRight">
@@ -35,6 +35,7 @@
             int questionIndex = 0;
             @foreach (var question in Round.Questions)
             {
+                <Divider Margin="Margin.Is0.FromTop.Is2.FromBottom" Display="Display.Block.None.OnWidescreen" />
                 <TakeQuestionView Question="question" Index="questionIndex++" @key="question.Id" />
             }
         }

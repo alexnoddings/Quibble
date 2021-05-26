@@ -1,4 +1,4 @@
-﻿<Card Background="Background.Transparent">
+﻿<Card Background="Background.Light">
     <CardHeader Class="bg-transparent" Padding="Padding.Is3.OnX.Is2.OnY">
         <Heading Size="HeadingSize.Is5" Margin="Margin.Is0">
             Participants
@@ -17,7 +17,7 @@
             foreach (var (points, participants) in GetParticipantScores())
             {
                 int place = placeCounter;
-                <Addons Class="flex-nowrap">
+                <Addons Class="flex-nowrap" Margin="Margin.Is1.OnY">
                     <Addon AddonType="AddonType.Start" Display="Display.Block" Padding="Margin.Is1.FromRight">
                         @($"{place}.")
                     </Addon>

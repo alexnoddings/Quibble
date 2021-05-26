@@ -12,7 +12,6 @@ using Quibble.Server.Extensions;
 using Quibble.Shared.Entities;
 using Quibble.Shared.Hub;
 using Quibble.Shared.Models;
-using Quibble.Shared.Resources;
 
 namespace Quibble.Server.Hub
 {
@@ -102,14 +101,14 @@ namespace Quibble.Server.Hub
             await base.OnConnectedAsync();
         }
 
-        protected record HubExecutionContext(Guid UserId, Guid QuizId, string? ErrorCode = null);
+        protected record HubExecutionContext(Guid UserId, Guid QuizId, ApiError? Error = null);
         private HubExecutionContext BuildExecutionContext()
         {
             if (GetUserId() is not { } userId)
-                return new HubExecutionContext(Guid.Empty, Guid.Empty, nameof(ErrorMessages.Unauthorised));
+                return new HubExecutionContext(Guid.Empty, Guid.Empty, HubErrors.Unauthorised);
 
             if (GetQuizId() is not { } quizId)
-                return new HubExecutionContext(Guid.Empty, Guid.Empty, nameof(ErrorMessages.QuizNotFound));
+                return new HubExecutionContext(Guid.Empty, Guid.Empty, HubErrors.QuizNotFound);
 
             return new HubExecutionContext(userId, quizId);
         }
@@ -134,8 +133,8 @@ namespace Quibble.Server.Hub
 
         private static HubResponse Success() => HubResponse.FromSuccess();
         private static HubResponse<TValue> Success<TValue>(TValue value) => HubResponse.FromSuccess(value);
-        private static HubResponse Failure(string errorCode) => HubResponse.FromError(errorCode);
-        private static HubResponse<TValue> Failure<TValue>(string errorCode) => HubResponse.FromError<TValue>(errorCode);
+        private static HubResponse Failure(ApiError error) => HubResponse.FromError(error);
+        private static HubResponse<TValue> Failure<TValue>(ApiError error) => HubResponse.FromError<TValue>(error);
 
         private IQuibbleHubClient AllQuizUsersGroup(Guid quizId) => Clients.Group(GetQuizGroupName(quizId));
         private IQuibbleHubClient AllQuizParticipantsGroup(Guid quizId) => Clients.Group(GetQuizParticipantsGroupName(quizId));

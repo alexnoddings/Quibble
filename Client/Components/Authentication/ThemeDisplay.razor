@@ -1,0 +1,35 @@
+﻿@using Blazorise.Icons.FontAwesome
+@using Quibble.Client.Services.Themeing
+
+<BarItem Margin="Margin.Is2.FromLeft">
+    <BarDropdown>
+        <BarDropdownToggle>
+            <Text Color="TextColor.White" Display="Display.Inline">
+                @{
+                    var icon = ThemeService.UserTheme switch
+                    {
+                        UserTheme.Light => FontAwesomeIcons.Sun,
+                        UserTheme.Dark => FontAwesomeIcons.Moon,
+                        UserTheme.Contrast => FontAwesomeIcons.Adjust,
+                        _ => FontAwesomeIcons.Sun,
+                    };
+                    <Blazorise.Icons.FontAwesome.Icon Name="icon" />
+                }
+            </Text>
+        </BarDropdownToggle>
+        <BarDropdownMenu RightAligned="true">
+            <BarDropdownItem Padding="Padding.Is2.OnY" Clicked="() => ThemeService.UpdateAsync(UserTheme.Light)">
+                <Blazorise.Icons.FontAwesome.Icon Name="FontAwesomeIcons.Sun" />
+                Light
+            </BarDropdownItem>
+            <BarDropdownItem Padding="Padding.Is2.OnY" Clicked="() => ThemeService.UpdateAsync(UserTheme.Dark)">
+                <Blazorise.Icons.FontAwesome.Icon Name="FontAwesomeIcons.Moon" />
+                Dark
+            </BarDropdownItem>
+            <BarDropdownItem Padding="Padding.Is2.OnY" Clicked="() => ThemeService.UpdateAsync(UserTheme.Contrast)">
+                <Blazorise.Icons.FontAwesome.Icon Name="FontAwesomeIcons.Adjust" />
+                Contrast
+            </BarDropdownItem>
+        </BarDropdownMenu>
+    </BarDropdown>
+</BarItem>

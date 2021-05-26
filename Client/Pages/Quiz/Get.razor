@@ -11,10 +11,10 @@
     <PageTitle Value="Loading quiz" />
     <text>Loading</text>
 }
-else if (GetQuizResult.ErrorCode is not null)
+else if (GetQuizResult.Error is not null)
 {
     <PageTitle Value="Error loading quiz" />
-    @GetQuizResult.ErrorCode
+    @GetQuizResult.Error
 }
 else if (GetQuizResult.Value is ISynchronisedEditModeQuiz editModeQuiz)
 {

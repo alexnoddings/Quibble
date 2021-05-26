@@ -1,6 +1,6 @@
 ﻿@using Quibble.Client.Sync.Entities.HostMode
 
-<Card Class="@CardClass">
+<Card Class="@CardClass" Background="Background.Transparent">
     <CardBody Padding="Padding.Is0">
         @if (SubmittedAnswer.Question.State == QuestionState.Hidden)
         {
@@ -49,19 +49,12 @@
                         Clicked="() => SubmittedAnswer.MarkAsync(0)">
                     0pts
                 </Button>
-                <Button Outline="SubmittedAnswer.AssignedPoints != SubmittedAnswer.Question.Points"
-                        Color="Color.Success"
-                        Class="text-clip align-items-center"
-                        Display="Display.Flex.Column"
-                        Clicked="() => SubmittedAnswer.MarkAsync(SubmittedAnswer.Question.Points)">
-                    @($"{SubmittedAnswer.Question.Points:G4}pts")
-                </Button>
                 <Dropdown RightAligned="true">
                     @{
                         bool isAssignedCustomPoints = SubmittedAnswer.AssignedPoints > 0
                                                       && SubmittedAnswer.AssignedPoints != SubmittedAnswer.Question.Points;
                           <DropdownToggle Outline="!isAssignedCustomPoints"
-                                          Color="Color.Secondary"
+                                          Color="Color.Warning"
                                           Style="border-top-right-radius: 0;"
                                           Class="justify-content-center"
                                           Display="Display.Flex.Column"
@@ -81,22 +74,30 @@
                                   <TextEdit Role="TextRole.Text"
                                             @bind-Text="LocalPointsString"
                                             Class="m-f"
+                                            Style="border-bottom-right-radius: 0; border-bottom-left-radius: 0; width: calc(100% + 2px);"
                                             Margin="Margin.Is0.FromBottom"
                                             MaskType="MaskType.Numeric"
-                                            Blur="RoundAndUpdatePointsAsync"
-                                            Style="border-bottom-left-radius: 0; border-bottom-right-radius: 0; width: unset;"/>
+                                            Blur="RoundAndUpdatePointsAsync"/>
                               </DropdownItem>
                               <DropdownItem Class="inactive" Padding="Padding.Is0">
                                   <Buttons Display="Display.Flex" Class="m-f">
-                                      <Button Color="Color.Secondary" Outline="true" Clicked="() => SubmittedAnswer.MarkAsync(0.25m)" Style="border-top-left-radius: 0;">&#188;pts</Button>
-                                      <Button Color="Color.Secondary" Outline="true" Clicked="() => SubmittedAnswer.MarkAsync(0.5m)">&#189;pts</Button>
-                                      <Button Color="Color.Secondary" Outline="true" Clicked="() => SubmittedAnswer.MarkAsync(1m)">1pts</Button>
-                                      <Button Color="Color.Secondary" Outline="true" Clicked="() => SubmittedAnswer.MarkAsync(2m)" Style="border-top-right-radius: 0;">2pts</Button>
+                                      <Button Color="Color.Warning" Outline="true" Clicked="() => SubmittedAnswer.MarkAsync(0.25m)" Style="border-top-left-radius: 0;">&#188;pts</Button>
+                                      <Button Color="Color.Warning" Outline="true" Clicked="() => SubmittedAnswer.MarkAsync(0.5m)">&#189;pts</Button>
+                                      <Button Color="Color.Warning" Outline="true" Clicked="() => SubmittedAnswer.MarkAsync(1m)">1pts</Button>
+                                      <Button Color="Color.Warning" Outline="true" Clicked="() => SubmittedAnswer.MarkAsync(2m)" Style="border-top-right-radius: 0;">2pts</Button>
                                   </Buttons>
                               </DropdownItem>
                           </DropdownMenu>
                     }
                 </Dropdown>
+                <Button Outline="SubmittedAnswer.AssignedPoints != SubmittedAnswer.Question.Points"
+                        Color="Color.Success"
+                        Style="border-top-right-radius: 0;"
+                        Class="text-clip align-items-center"
+                        Display="Display.Flex.Column"
+                        Clicked="() => SubmittedAnswer.MarkAsync(SubmittedAnswer.Question.Points)">
+                    @($"{SubmittedAnswer.Question.Points:G4}pts")
+                </Button>
             }
         </Buttons>
     </CardBody>
