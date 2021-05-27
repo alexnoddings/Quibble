@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Quibble.Shared.Models
+namespace Quibble.Shared.Models.Dtos
 {
     public class FullQuizDto
     {

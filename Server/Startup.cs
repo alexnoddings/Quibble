@@ -17,6 +17,7 @@ using Quibble.Server.Data.Models;
 using Quibble.Server.Hub;
 using Quibble.Server.Services.EmailSender;
 using Quibble.Shared.Models;
+using Quibble.Shared.Models.Dtos;
 
 namespace Quibble.Server
 {

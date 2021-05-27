@@ -1,6 +1,6 @@
 ﻿using Quibble.Shared.Entities;
 
-namespace Quibble.Shared.Models
+namespace Quibble.Shared.Models.Dtos
 {
     public class QuizNegotiationDto
     {

@@ -8,6 +8,7 @@ using Quibble.Server.Extensions;
 using Quibble.Shared.Entities;
 using Quibble.Shared.Hub;
 using Quibble.Shared.Models;
+using Quibble.Shared.Models.Dtos;
 
 namespace Quibble.Server.Hub
 {

@@ -13,6 +13,7 @@ using Quibble.Client.Sync.Internal.TakeMode;
 using Quibble.Shared.Entities;
 using Quibble.Shared.Hub;
 using Quibble.Shared.Models;
+using Quibble.Shared.Models.Dtos;
 
 namespace Quibble.Client.Sync.Internal
 {

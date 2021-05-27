@@ -1,7 +1,7 @@
 ﻿using System;
 using Quibble.Shared.Entities;
 
-namespace Quibble.Shared.Models
+namespace Quibble.Shared.Models.Dtos
 {
     public class ParticipantDto : IParticipant
     {

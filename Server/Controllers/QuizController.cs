@@ -11,6 +11,7 @@ using Quibble.Server.Data.Models;
 using Quibble.Server.Extensions;
 using Quibble.Shared.Entities;
 using Quibble.Shared.Models;
+using Quibble.Shared.Models.Dtos;
 
 namespace Quibble.Server.Controllers
 {
