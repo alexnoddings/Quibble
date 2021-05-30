@@ -2,30 +2,18 @@
 
 <PageTitle />
 
-<Heading Size="HeadingSize.Is1" Alignment="TextAlignment.Center" Margin="Margin.Is5.FromBottom">
-    Quibble 2: Electric Boogaloo
-</Heading>
+<DisplayHeading Size="DisplayHeadingSize.Is3" Alignment="TextAlignment.Center" Margin="Margin.Is4.FromBottom">
+    Quibble
+</DisplayHeading>
 
-@{
-    var rng = new Random();
-    switch (rng.Next(0, 2))
-    {
-        case 0:
-            <blockquote class="blockquote text-center">
-                <p class="mb-0">That'll never get made.</p>
-                <footer class="blockquote-footer">
-                    SavingLiam
-                    <cite title="Source Title">(multiple occasions)</cite>
-                </footer>
-            </blockquote>
-            break;
-        case 1:
-            <Heading Size="HeadingSize.Is5" Alignment="TextAlignment.Center">
-                No, it still won't email you when you forget your password.
-            </Heading>
-            <Heading Size="HeadingSize.Is6" Alignment="TextAlignment.Center" Italic="true">
-                Email providers aren't cheap you know.
-            </Heading>
-            break;
-    }
-}
+<SiteStatsDisplay />
+
+<AuthorizeView>
+    <Authorized>
+        <UserQuizzesDisplay />
+    </Authorized>
+    <Authorizing>
+    </Authorizing>
+    <NotAuthorized>
+    </NotAuthorized>
+</AuthorizeView>

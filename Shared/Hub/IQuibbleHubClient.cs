@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Quibble.Shared.Entities;
-using Quibble.Shared.Models;
+using Quibble.Shared.Models.Dtos;
 
 namespace Quibble.Shared.Hub
 {

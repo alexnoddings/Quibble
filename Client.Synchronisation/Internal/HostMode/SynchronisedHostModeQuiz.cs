@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Quibble.Client.Sync.Entities.HostMode;
 using Quibble.Shared.Entities;
 using Quibble.Shared.Models;
+using Quibble.Shared.Models.Dtos;
 
 namespace Quibble.Client.Sync.Internal.HostMode
 {

@@ -7,6 +7,7 @@ using Quibble.Client.Sync.Entities.EditMode;
 using Quibble.Shared.Entities;
 using Quibble.Shared.Hub;
 using Quibble.Shared.Models;
+using Quibble.Shared.Models.Dtos;
 
 namespace Quibble.Client.Sync.Internal.EditMode
 {

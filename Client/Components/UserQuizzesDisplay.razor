@@ -1,0 +1,102 @@
+﻿@if (UserQuizzes is not null)
+{
+    <Row Class="justify-content-center" Margin="Margin.Is2.OnY">
+        @if (UserQuizzes.ParticipatedQuizzes.Count > 0)
+        {
+            <Column ColumnSize="ColumnSize.Is8.Is6.OnTablet.Is4.OnWidescreen" Margin="Margin.Is2.OnY">
+                <Card Background="Background.Light">
+                    <CardHeader Padding="Padding.Is0.OnY">
+                        <Heading Size="HeadingSize.Is5" Margin="Margin.Is3.OnY">
+                            Recently participated
+                        </Heading>
+                    </CardHeader>
+                    <CardBody Padding="Padding.Is3.OnX.Is2.OnY">
+                        @foreach (var quiz in UserQuizzes.ParticipatedQuizzes)
+                        {
+                            <Addons Class="flex-nowrap" Margin="Margin.Is1.OnY">
+                                <Addon AddonType="AddonType.Body">
+                                    <Blazorise.Link To="@($"/quiz/{quiz.Id}")" Class="text-truncate">
+                                        @quiz.Title
+                                    </Blazorise.Link>
+                                </Addon>
+                                <Addon AddonType="AddonType.End" Class="flex-shrink-0" Margin="Margin.IsAuto.FromLeft">
+                                    @quiz.CreatedAt.Humanize(true)
+                                </Addon>
+                            </Addons>
+                        }
+                    </CardBody>
+                </Card>
+            </Column>
+        }
+        @if (UserQuizzes.HostedQuizzes.Count > 0)
+        {
+            <Column ColumnSize="ColumnSize.Is8.Is6.OnTablet.Is4.OnWidescreen" Margin="Margin.Is2.OnY">
+                <Card Background="Background.Light">
+                    <CardHeader Padding="Padding.Is0.OnY">
+                        <Heading Size="HeadingSize.Is5" Margin="Margin.Is3.OnY">
+                            Recently hosted
+                        </Heading>
+                    </CardHeader>
+                    <CardBody Padding="Padding.Is3.OnX.Is2.OnY">
+                        @foreach (var quiz in UserQuizzes.HostedQuizzes)
+                        {
+                            <Addons>
+                                <Addon AddonType="AddonType.Body">
+                                    <Blazorise.Link To="@($"/quiz/{quiz.Id}")">
+                                        @quiz.Title
+                                    </Blazorise.Link>
+                                </Addon>
+                                <Addon AddonType="AddonType.End" Class="flex-shrink-0" Margin="Margin.IsAuto.FromLeft">
+                                    @quiz.CreatedAt.Humanize(true)
+                                </Addon>
+                            </Addons>
+                        }
+                    </CardBody>
+                </Card>
+            </Column>
+        }
+        <Column ColumnSize="ColumnSize.Is8.Is6.OnTablet.Is4.OnWidescreen" Margin="Margin.Is2.OnY">
+            <Card Background="Background.Light">
+                <CardHeader Padding="Padding.Is0.OnY" Display="Display.Flex">
+                    <Heading Size="HeadingSize.Is5" Margin="Margin.Is3.OnY">
+                        Recently made
+                    </Heading>
+                    @if (UserQuizzes.InDevelopmentQuizzes.Count > 0)
+                    {
+                        <Button Color="Color.Primary" Margin="Margin.IsAuto.FromLeft.IsAuto.OnY" Padding="Padding.Is4.OnX" Clicked="CreateNewQuizAsync">
+                            New
+                        </Button>
+                    }
+                </CardHeader>
+                <CardBody Padding="Padding.Is3.OnX.Is2.OnY">
+                    @if (UserQuizzes.InDevelopmentQuizzes.Count > 0)
+                    {
+                        foreach (var quiz in UserQuizzes.InDevelopmentQuizzes)
+                        {
+                            <Addons>
+                                <Addon AddonType="AddonType.Body">
+                                    <Blazorise.Link To="@($"/quiz/{quiz.Id}")">
+                                        @quiz.Title
+                                    </Blazorise.Link>
+                                </Addon>
+                                <Addon AddonType="AddonType.End" Class="flex-shrink-0" Margin="Margin.IsAuto.FromLeft">
+                                    @quiz.CreatedAt.Humanize(true)
+                                </Addon>
+                            </Addons>
+                        }
+                    }
+                    else
+                    {
+                        <Blazorise.Text Padding="Padding.Is2.OnX" Alignment="TextAlignment.Center">
+                            Looks like you don't have any quizzes in progress.
+                            <Button Display="Display.Block" Color="Color.Primary" Margin="Margin.IsAuto.OnX.Is2.FromTop" Clicked="CreateNewQuizAsync">
+                                Why not create one?
+                            </Button>
+                        </Blazorise.Text>
+                    }
+                </CardBody>
+            </Card>
+        </Column>
+    </Row>
+}
+
