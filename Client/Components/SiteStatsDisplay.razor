@@ -1,0 +1,17 @@
+﻿@using Humanizer
+@if (SiteStats is not null)
+{
+    <Row Margin="Margin.Is2.OnY">
+        <Column Display="Display.Flex" Class="justify-content-center">
+            <Heading Size="HeadingSize.Is3" Margin="Margin.Is4.OnX">
+                @($"{SiteStats.QuizCount.ToMetric(null, 1)} Quizzes")
+            </Heading>
+            <Heading Size="HeadingSize.Is3" Margin="Margin.Is4.OnX">
+                @($"{SiteStats.SubmittedAnswerCount.ToMetric(null, 1)} Answers")
+            </Heading>
+            <Heading Size="HeadingSize.Is3" Margin="Margin.Is4.OnX">
+                @($"{(SiteStats.AveragePercent * 100):G2}% Average")
+            </Heading>
+        </Column>
+    </Row>
+}

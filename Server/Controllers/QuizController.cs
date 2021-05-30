@@ -69,5 +69,40 @@ namespace Quibble.Server.Controllers
             Response.StatusCode = StatusCodes.Status200OK;
             return new QuizNegotiationDto { CanEdit = userId == dbQuiz.OwnerId, State = dbQuiz.State };
         }
+
+        [AllowAnonymous]
+        [HttpGet("stats")]
+        public async Task<SiteStats> GetSiteStatsAsync()
+        {
+            var openQuizzesWithParticipants =
+                from quiz in DbContext.Quizzes
+                where quiz.State == QuizState.Open
+                where quiz.Participants.Any()
+                select quiz;
+
+            var quizCount = await openQuizzesWithParticipants.CountAsync();
+
+            var markedSubmittedAnswers =
+                from submittedAnswer in DbContext.SubmittedAnswers
+                where submittedAnswer.AssignedPoints >= 0
+                select submittedAnswer;
+
+            var submittedAnswerCount = await markedSubmittedAnswers.CountAsync();
+
+            var submittedAnswersPercents =
+                from question in DbContext.Questions
+                join submittedAnswer in markedSubmittedAnswers
+                    on question.Id equals submittedAnswer.QuestionId
+                select submittedAnswer.AssignedPoints / question.Points;
+
+            var averagePercent = await submittedAnswersPercents.AverageAsync();
+
+            return new SiteStats
+            {
+                QuizCount = quizCount,
+                SubmittedAnswerCount = submittedAnswerCount,
+                AveragePercent = averagePercent
+            };
+        }
     }
 }
