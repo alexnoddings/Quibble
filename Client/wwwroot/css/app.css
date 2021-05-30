@@ -6,6 +6,11 @@
     font-size: 14px;
 }
 
+html {
+    scrollbar-color: var(--b-theme-secondary) #fff;
+    scrollbar-width: 12px;
+}
+
 body::-webkit-scrollbar {
     width: 12px;
 }
@@ -14,11 +19,11 @@ body::-webkit-scrollbar-track {
     background: var(--b-theme-secondary);
 }
 
-body::-webkit-scrollbar-thumb {
-    background-color: #fff;
-    border-radius: 60px;
-    border: 4px solid #28232D;
-}
+    body::-webkit-scrollbar-thumb {
+        background-color: #fff;
+        border-radius: 60px;
+        border: 4px solid var(--b-theme-secondary);
+    }
 
 h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
     font-family: 'Open Sans', sans-serif;
