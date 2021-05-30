@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +22,9 @@ namespace Quibble.Server.Controllers
     [Route("Api/[controller]")]
     public class QuizController : ControllerBase
     {
+        private static MapperConfiguration QuizDtoMapping { get; } =
+            new(config => config.CreateMap<DbQuiz, QuizDto>());
+
         private AppDbContext DbContext { get; }
 
         public QuizController(AppDbContext dbContext)
@@ -68,6 +73,45 @@ namespace Quibble.Server.Controllers
 
             Response.StatusCode = StatusCodes.Status200OK;
             return new QuizNegotiationDto { CanEdit = userId == dbQuiz.OwnerId, State = dbQuiz.State };
+        }
+
+        [HttpGet]
+        public async Task<UserQuizzes> GetUserQuizzesAsync()
+        {
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var inDevelopmentQuizzesQueryable =
+                (from quiz in DbContext.Quizzes
+                 where quiz.OwnerId == userId
+                 where quiz.State == QuizState.InDevelopment
+                 orderby quiz.CreatedAt descending
+                 select quiz)
+                .ProjectTo<QuizDto>(QuizDtoMapping);
+
+
+            var participatedQuizzesQueryable =
+                (from quiz in DbContext.Quizzes
+                 join participant in DbContext.Participants
+                     on quiz.Id equals participant.QuizId
+                 where participant.UserId == userId
+                 orderby quiz.OpenedAt descending
+                 select quiz)
+                .ProjectTo<QuizDto>(QuizDtoMapping);
+
+            var hostedQuizzesQueryable =
+                (from quiz in DbContext.Quizzes
+                 where quiz.OwnerId == userId
+                 where quiz.State == QuizState.Open
+                 orderby quiz.OpenedAt descending
+                 select quiz)
+                .ProjectTo<QuizDto>(QuizDtoMapping);
+
+            return new UserQuizzes
+            {
+                InDevelopmentQuizzes = await inDevelopmentQuizzesQueryable.Take(5).ToListAsync(),
+                ParticipatedQuizzes = await participatedQuizzesQueryable.Take(5).ToListAsync(),
+                HostedQuizzes = await hostedQuizzesQueryable.Take(5).ToListAsync(),
+            };
         }
 
         [AllowAnonymous]
