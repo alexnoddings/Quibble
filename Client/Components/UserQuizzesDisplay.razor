@@ -40,7 +40,7 @@
                     <CardBody Padding="Padding.Is3.OnX.Is2.OnY">
                         @foreach (var quiz in UserQuizzes.HostedQuizzes)
                         {
-                            <Addons>
+                            <Addons Class="flex-nowrap" Margin="Margin.Is1.OnY">
                                 <Addon AddonType="AddonType.Body">
                                     <Blazorise.Link To="@($"/quiz/{quiz.Id}")">
                                         @quiz.Title
@@ -73,7 +73,7 @@
                     {
                         foreach (var quiz in UserQuizzes.InDevelopmentQuizzes)
                         {
-                            <Addons>
+                            <Addons Class="flex-nowrap" Margin="Margin.Is1.OnY">
                                 <Addon AddonType="AddonType.Body">
                                     <Blazorise.Link To="@($"/quiz/{quiz.Id}")">
                                         @quiz.Title
