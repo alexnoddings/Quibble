@@ -63,7 +63,7 @@
                     </Heading>
                     @if (UserQuizzes.InDevelopmentQuizzes.Count > 0)
                     {
-                        <Button Color="Color.Primary" Margin="Margin.IsAuto.FromLeft.IsAuto.OnY" Padding="Padding.Is4.OnX">
+                        <Button Color="Color.Primary" Margin="Margin.IsAuto.FromLeft.IsAuto.OnY" Padding="Padding.Is4.OnX" Clicked="CreateNewQuizAsync">
                             New
                         </Button>
                     }
@@ -89,7 +89,7 @@
                     {
                         <Blazorise.Text Padding="Padding.Is2.OnX" Alignment="TextAlignment.Center">
                             Looks like you don't have any quizzes in progress.
-                            <Button Display="Display.Block" Color="Color.Primary" Margin="Margin.IsAuto.OnX.Is2.FromTop">
+                            <Button Display="Display.Block" Color="Color.Primary" Margin="Margin.IsAuto.OnX.Is2.FromTop" Clicked="CreateNewQuizAsync">
                                 Why not create one?
                             </Button>
                         </Blazorise.Text>
