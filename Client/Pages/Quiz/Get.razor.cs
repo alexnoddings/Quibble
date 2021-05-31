@@ -18,7 +18,7 @@ namespace Quibble.Client.Pages.Quiz
         [Inject]
         private ISynchronisedQuizFactory QuizFactory { get; set; } = default!;
 
-        private HubResponse<ISynchronisedQuiz>? GetQuizResult { get; set; } = default!;
+        private HubResponse<ISynchronisedQuiz>? GetQuizResult { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
