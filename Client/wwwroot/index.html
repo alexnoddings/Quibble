@@ -17,25 +17,40 @@
     <link rel="icon" href="/icon.svg" />
 </head>
 <body>
-<div id="app">
-    <div id="app-loading-screen">
-        <div class="app-loading-header"></div>
-        <div class="app-loading-content">
-            <svg class="quicon" width="64" height="64" viewBox="0 0 8 8" aria-hidden="true" stroke-width="1">
-                <circle cx="4" cy="4" r="3.5" fill="none" />
-                <line x1="5.5" y1="5.5" x2="7.5" y2="7.5" stroke-linecap="round" />
-            </svg>
-            <h1 class="mt-3">
-                Loading
-            </h1>
+    <div id="app">
+        <div id="app-loading-screen">
+            <div class="app-loading-header"></div>
+            <div class="app-loading-content">
+                <div class="row mt-3">
+                    <div class="col d-flex flex-column align-items-center">
+                        <svg width="64" height="64" viewBox="0 0 8 8" aria-hidden="true" stroke-width="1">
+                            <circle class="circle-dark" cx="4" cy="4" r="3.5" fill="none" />
+                            <line class="circle-dark" x1="5.5" y1="5.5" x2="7.5" y2="7.5" stroke-linecap="round" />
+                            <circle class="circle-light" cx="4" cy="4" r="3.5" fill="none" stroke-linecap="round" stroke-dasharray="0 22" stroke-dashoffset="0" stroke-width="0.75">
+                                <animate attributeName="stroke-dasharray" repeatCount="indefinite" dur="1s" values="0 22;4 22;0 22;0 22" keyTimes="0;0.4;0.8;1" />
+                                <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" values="45 4 4;405 4 4;405 4 4" keyTimes="0;0.8;1" />
+                            </circle>
+                            <line class="circle-light" x1="6.5" y1="6.5" x2="6.5" y2="6.5" stroke-linecap="round" stroke-width="0.75">
+                                <animate attributeName="x1" repeatCount="indefinite" dur="1s" values="6.5;6.5;5.5;5.5;6.5" keyTimes="0;0.8;0.875;0.925;1" />
+                                <animate attributeName="y1" repeatCount="indefinite" dur="1s" values="6.5;6.5;5.5;5.5;6.5" keyTimes="0;0.8;0.875;0.925;1" />
+                                <animate attributeName="x2" repeatCount="indefinite" dur="1s" values="6.5;6.5;7.5;7.5;6.5" keyTimes="0;0.8;0.875;0.925;1" />
+                                <animate attributeName="y2" repeatCount="indefinite" dur="1s" values="6.5;6.5;7.5;7.5;6.5" keyTimes="0;0.8;0.875;0.925;1" />
+                                <animate attributeName="opacity" repeatCount="indefinite" dur="1s" values="0;0;1;1;0" keyTimes="0;0.799;0.8;0.999;1" />
+                            </line>
+                        </svg>
+                        <h2 class="h2 mt-2">
+                            Loading
+                        </h2>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-<div id="blazor-error-ui">
-    An unhandled error has occurred.
-    <a href="" class="reload">Reload</a>
-    <a class="dismiss">🗙</a>
-</div>
+    <div id="blazor-error-ui">
+        An error has occurred.
+        <a href="" class="ml-2 reload">Reload</a>
+        <a class="dismiss">Dismiss 🗙</a>
+    </div>
     <script>
         window.onload = function () {
             if (localStorage.getItem('q-theme') === '1') {
