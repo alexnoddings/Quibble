@@ -76,7 +76,8 @@ namespace Quibble.Server.Hub
                         from question in DbContext.Questions
                         join round in DbContext.Rounds
                             on question.RoundId equals round.Id
-                        where question.State < QuestionState.Locked
+                        where round.QuizId == dbQuiz.Id
+                              && question.State < QuestionState.Locked
                         select question.Id;
                     var dbSubmittedAnswersQueryable =
                         from questionId in dbHiddenAndUnlockedQuestionIdsQueryable
