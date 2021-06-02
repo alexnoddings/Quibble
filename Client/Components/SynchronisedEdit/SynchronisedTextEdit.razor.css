@@ -7,6 +7,10 @@
     transform: translateY(-50%);
     color: var(--b-theme-info);
     opacity: 0;
+    border: 1px solid var(--b-theme-info);
+    background: var(--b-theme-white);
+    padding: 0px 4px;
+    border-radius: 4px;
 }
 
 .q-synced-text-field-saved::after {
