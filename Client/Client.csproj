@@ -4,6 +4,7 @@
     <TargetFramework>$(DefaultTargetFramework)</TargetFramework>
     <AssemblyName>QuibbleClient</AssemblyName>
     <RootNamespace>Quibble.Client</RootNamespace>
+    <RunAOTCompilation>true</RunAOTCompilation>
   </PropertyGroup>
 
   <ItemGroup>
