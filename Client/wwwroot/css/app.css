@@ -52,6 +52,10 @@ label.input-required::after {
     white-space: nowrap;
 }
 
+.text-break {
+    word-break: break-word;
+}
+
 /* Margin flush - drops margin back by 1 pixel into the parent */
 .m-f {
     margin: -1px;
