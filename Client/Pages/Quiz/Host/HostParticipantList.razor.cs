@@ -21,18 +21,18 @@ namespace Quibble.Client.Pages.Quiz.Host
             base.OnInitialized();
 
             Quiz.Updated += OnUpdatedAsync;
+            RegisterUpdateEvents();
+
             LastStateStamp = GetStateStamp();
-
-            foreach (var participant in Quiz.Participants)
-            {
-                foreach (var answer in participant.Answers)
-                    answer.Updated += OnUpdatedAsync;
-
-                KnownParticipants.Add(participant);
-            }
         }
 
         private Task OnUpdatedAsync()
+        {
+            RegisterUpdateEvents();
+            return InvokeAsync(StateHasChanged);
+        }
+
+        private void RegisterUpdateEvents()
         {
             foreach (var participant in Quiz.Participants)
             {
@@ -44,10 +44,7 @@ namespace Quibble.Client.Pages.Quiz.Host
 
                 KnownParticipants.Add(participant);
             }
-
-            return InvokeAsync(StateHasChanged);
         }
-
 
         protected override bool ShouldRender()
         {

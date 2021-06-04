@@ -41,7 +41,6 @@ namespace Quibble.Client.Pages.Quiz.Take
         private Task OnQuestionAddedAsync(ISynchronisedTakeModeQuestion question)
         {
             question.Updated += OnUpdatedAsync;
-            Console.WriteLine($"TQS: OQA: {question.SubmittedAnswer?.AssignedPoints}");
             if (question.SubmittedAnswer is not null)
                 question.SubmittedAnswer.Updated += OnUpdatedAsync;
             return Task.CompletedTask;

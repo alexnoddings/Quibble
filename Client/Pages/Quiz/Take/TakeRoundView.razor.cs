@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Quibble.Client.Sync.Entities.TakeMode;
@@ -17,24 +18,39 @@ namespace Quibble.Client.Pages.Quiz.Take
 
         private int LastStateStamp { get; set; } = 0;
 
+        private List<ISynchronisedTakeModeQuestion> KnownQuestions { get; } = new();
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
             Round.Updated += OnUpdatedAsync;
-            foreach (var question in Round.Questions)
-            {
-                question.Updated += OnUpdatedAsync;
-                if (question.SubmittedAnswer is not null)
-                    question.SubmittedAnswer.Updated += OnUpdatedAsync;
-            }
+            RegisterUpdateEvents();
 
             LastStateStamp = Round.GetStateStamp();
             PreviousIndex = Index;
         }
 
-        private Task OnUpdatedAsync() =>
-            InvokeAsync(StateHasChanged);
+        private Task OnUpdatedAsync()
+        {
+            RegisterUpdateEvents();
+            return InvokeAsync(StateHasChanged);
+        }
+
+        private void RegisterUpdateEvents()
+        {
+            foreach (var question in Round.Questions)
+            {
+                if (KnownQuestions.Contains(question))
+                    continue;
+                
+                question.Updated += OnUpdatedAsync;
+                if (question.SubmittedAnswer is not null)
+                    question.SubmittedAnswer.Updated += OnUpdatedAsync;
+
+                KnownQuestions.Add(question);
+            }
+        }
 
         protected override bool ShouldRender()
         {
@@ -47,7 +63,7 @@ namespace Quibble.Client.Pages.Quiz.Take
             var currentStateStamp = Round.GetStateStamp();
             if (currentStateStamp == LastStateStamp)
                 return false;
-
+            
             LastStateStamp = currentStateStamp;
             return true;
         }

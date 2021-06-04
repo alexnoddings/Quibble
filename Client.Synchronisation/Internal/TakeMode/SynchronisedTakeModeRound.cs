@@ -48,8 +48,7 @@ namespace Quibble.Client.Sync.Internal.TakeMode
             synchronisedQuestion.SyncedSubmittedAnswer = synchronisedAnswer;
 
             SyncedQuestions.Add(synchronisedQuestion);
-
-            Console.WriteLine($"HQRA: {QuestionAdded is not null}");
+            
             if (QuestionAdded is not null)
                 await QuestionAdded.Invoke(synchronisedQuestion);
 

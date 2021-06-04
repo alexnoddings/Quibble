@@ -3,7 +3,7 @@
         <Text Color="TextColor.Muted" Margin="Margin.Is2.FromRight">
             @(Index + 1).
         </Text>
-        <Text Class="@(Question.State == QuestionState.Open ? "user-select-none" : null)">
+        <Text Class="@("text-break" + (Question.State == QuestionState.Open ? " user-select-none" : null))">
             @Question.Text
         </Text>
     </Field>
@@ -26,7 +26,7 @@
         else
         {
             bool wasEmptyAnswer = string.IsNullOrEmpty(Question.SubmittedAnswer?.Text);
-            <Blazorise.Text Italic="wasEmptyAnswer" Display="Display.Flex">
+            <Blazorise.Text Italic="wasEmptyAnswer" Display="Display.Flex" Class="text-break">
                 @if (Question.SubmittedAnswer is not null && Question.SubmittedAnswer.AssignedPoints >= Question.Points)
                 {
                     <Blazorise.Text Color="TextColor.Success">
@@ -47,9 +47,9 @@
                 }
                 @(wasEmptyAnswer ? "No answer" : Question.SubmittedAnswer?.Text)
             </Blazorise.Text>
-            <Blazorise.Text Color="TextColor.Muted" Display="Display.Flex">
+            <Blazorise.Text Color="TextColor.Muted" Display="Display.Flex" Class="text-break">
                 <Blazorise.Text>
-                    <Icon Name="IconName.AngleRight" Margin="Margin.Is1.FromRight"/>
+                    <Icon Name="IconName.AngleRight" Margin="Margin.Is1.FromLeft.Is2.FromRight"/>
                 </Blazorise.Text>
                 @Question.Answer
             </Blazorise.Text>
