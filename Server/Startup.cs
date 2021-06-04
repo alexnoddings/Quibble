@@ -104,7 +104,7 @@ namespace Quibble.Server
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //app.UseResponseCompression();
+            app.UseResponseCompression();
 
             if (env.IsDevelopment())
             {
