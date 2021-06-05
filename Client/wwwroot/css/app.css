@@ -69,7 +69,7 @@ label.input-required::after {
 
 #blazor-error-ui {
     background: var(--b-theme-white, #28232D);
-    color: var(--b-theme-text-light, #FBFBFB);
+    color: var(--b-theme-text-dark, #FBFBFB);
     border-top: 1px solid var(--b-theme-text-danger, #CC4433);
     bottom: 0;
     display: none;
