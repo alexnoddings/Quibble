@@ -85,3 +85,7 @@ button.close span {
 .btn-outline-dark:not([disabled]):active {
     color: var(--b-theme-text-light) !important;
 }
+
+.border-darken {
+    border-color: rgba(0, 0, 0, .15)!important;
+}

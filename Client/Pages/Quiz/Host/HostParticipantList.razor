@@ -17,6 +17,10 @@
             foreach (var (points, participants) in GetParticipantScores())
             {
                 int place = placeCounter;
+                if (place > 1)
+                {
+                    <Divider Margin="Margin.Is0.OnY" Display="Display.None.Block.OnFullHD" Class="border-darken" />
+                }
                 <Addons Class="flex-nowrap" Margin="Margin.Is1.OnY">
                     <Addon AddonType="AddonType.Start" Display="Display.Block" Padding="Margin.Is1.FromRight">
                         @($"{place}.")
