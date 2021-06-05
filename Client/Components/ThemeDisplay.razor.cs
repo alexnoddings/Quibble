@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Quibble.Client.Services.Themeing;
 
-namespace Quibble.Client.Components.Authentication
+namespace Quibble.Client.Components
 {
     public partial class ThemeDisplay
     {
