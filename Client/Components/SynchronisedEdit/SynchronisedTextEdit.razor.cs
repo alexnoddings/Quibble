@@ -23,7 +23,7 @@ namespace Quibble.Client.Components.SynchronisedEdit
         [Parameter]
         public Func<string, Task>? PreviewFunction { get; set; }
 
-        private Throttler<string> PreviewThrottler { get; } = new(333);
+        private Throttler<string> PreviewThrottler { get; } = new(250);
 
         [Parameter]
         public Size Size { get; set; } = Size.None;
