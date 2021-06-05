@@ -4,7 +4,7 @@
     <TargetFramework>$(DefaultTargetFramework)</TargetFramework>
     <AssemblyName>QuibbleServer</AssemblyName>
     <RootNamespace>Quibble.Server</RootNamespace>
-    <UserSecretsId>ec71a938-7dd3-4da6-a9f1-42e729504917</UserSecretsId>
+    <UserSecretsId>Quibble</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
