@@ -2,18 +2,20 @@
 
 <PageTitle />
 
-<DisplayHeading Size="DisplayHeadingSize.Is3" Alignment="TextAlignment.Center" Margin="Margin.Is4.FromBottom">
-    Quibble
-</DisplayHeading>
+<Container Class="container-lg">
+    <DisplayHeading Size="DisplayHeadingSize.Is3" Alignment="TextAlignment.Center" Margin="Margin.Is4.FromBottom">
+        Quibble
+    </DisplayHeading>
 
-<SiteStatsDisplay />
+    <SiteStatsDisplay />
 
-<AuthorizeView>
-    <Authorized>
-        <UserQuizzesDisplay />
-    </Authorized>
-    <Authorizing>
-    </Authorizing>
-    <NotAuthorized>
-    </NotAuthorized>
-</AuthorizeView>
+    <AuthorizeView>
+        <Authorized>
+            <UserQuizzesDisplay />
+        </Authorized>
+        <Authorizing>
+        </Authorizing>
+        <NotAuthorized>
+        </NotAuthorized>
+    </AuthorizeView>
+</Container>
