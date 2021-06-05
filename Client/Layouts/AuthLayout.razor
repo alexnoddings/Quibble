@@ -6,12 +6,15 @@
     </Blazorise.Link>
 </Heading>
 
-<Container Class="auth-form" Margin="Margin.IsAuto">
-    <Row>
-        <Column ColumnSize="ColumnSize.Is8.Is2.WithOffset.OnMobile.Is6.OnDesktop.Is3.WithOffset.OnDesktop.Is4.OnWidescreen.Is4.WithOffset.OnWidescreen">
-            <div class="auth-form">
-                @Body
-            </div>
-        </Column>
-    </Row>
-</Container>
+@* Outer div is required so the scoped CSS is associated with this component *@ 
+<div>
+    <Container Margin="Margin.IsAuto">
+        <Row>
+            <Column>
+                <div class="auth-form">
+                    @Body
+                </div>
+            </Column>
+        </Row>
+    </Container>
+</div>

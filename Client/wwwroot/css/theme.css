@@ -85,3 +85,37 @@ button.close span {
 .btn-outline-dark:not([disabled]):active {
     color: var(--b-theme-text-light) !important;
 }
+
+.border-darken {
+    border-color: rgba(0, 0, 0, .15)!important;
+}
+
+@media (min-width: 768px) {
+    .container {
+        max-width: 720px;
+    }
+}
+
+@media (min-width: 992px) {
+    .container {
+        max-width: 960px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1140px;
+    }
+}
+
+@media (min-width: 1400px) {
+    .container {
+        max-width: 1320px;
+    }
+}
+
+@media (min-width: 1600px) {
+    .container {
+        max-width: 1520px;
+    }
+}

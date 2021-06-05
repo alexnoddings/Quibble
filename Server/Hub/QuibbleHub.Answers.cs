@@ -46,7 +46,8 @@ namespace Quibble.Server.Hub
                 await DbContext.SaveChangesAsync();
             }
             await QuizHostGroup(quizId).OnSubmittedAnswerTextUpdatedAsync(answerId, newText);
-            await QuizParticipantGroup(quizId, dbAnswer.ParticipantId).OnSubmittedAnswerTextUpdatedAsync(answerId, newText);
+            var quizParticipantExceptConnection = Clients.OthersInGroup(GetQuizParticipantGroupName(quizId, dbAnswer.ParticipantId));
+            await quizParticipantExceptConnection.OnSubmittedAnswerTextUpdatedAsync(answerId, newText);
 
             return Success();
         }

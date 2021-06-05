@@ -2,7 +2,7 @@
 
 namespace Quibble.Client.Services.Themeing
 {
-    public class Themes
+    public static class Themes
     {
         public const string Primary = "#9966CC";
         public const string Secondary = "#28232D";
@@ -21,6 +21,51 @@ namespace Quibble.Client.Services.Themeing
         public const string RadiusSmall = "4px";
         public const string RadiusMedium = "6px";
         public const string RadiusLarge = "8px";
+
+        private static ThemeButtonOptions DefaultButtonOptions { get; } = new()
+        {
+            SmallBorderRadius = RadiusSmall,
+            BorderRadius = RadiusMedium,
+            LargeBorderRadius = RadiusLarge
+        };
+
+        private static ThemeCardOptions DefaultCardOptions { get; } = new()
+        {
+            BorderRadius = RadiusMedium
+        };
+
+        private static ThemeDividerOptions DefaultDividerOptions { get; } = new()
+        {
+            Thickness = "1px"
+        };
+
+        private static ThemeInputOptions DefaultInputOptions { get; } = new()
+        {
+            BorderRadius = RadiusMedium
+        };
+
+        private static ThemeModalOptions DefaultModalOptions { get; } = new()
+        {
+            BorderRadius = RadiusLarge
+        };
+
+        private static ThemeContainerMaxWidthOptions DefaultContainerMaxWidthOptions { get; } = new()
+        {
+            Mobile = "720px",
+            Tablet = "960px",
+            Desktop = "1140px",
+            Widescreen = "1320px",
+            FullHD = "1520px"
+        };
+
+        private static ThemeBreakpointOptions DefaultBreakpointOptions { get; } = new()
+        {
+            Mobile = "768px",
+            Tablet = "992px",
+            Desktop = "1200px",
+            Widescreen = "1400px",
+            FullHD = "1600px",
+        };
 
         public static Theme LightTheme { get; } = new()
         {
@@ -65,28 +110,13 @@ namespace Quibble.Client.Services.Themeing
                 White50 = White50,
                 Muted = "#777777"
             },
-            ButtonOptions = new ThemeButtonOptions
-            {
-                SmallBorderRadius = RadiusSmall,
-                BorderRadius = RadiusMedium,
-                LargeBorderRadius = RadiusLarge
-            },
-            CardOptions = new ThemeCardOptions
-            {
-                BorderRadius = RadiusMedium
-            },
-            DividerOptions = new ThemeDividerOptions
-            {
-                Thickness = "1px"
-            },
-            InputOptions = new ThemeInputOptions
-            {
-                BorderRadius = RadiusMedium
-            },
-            ModalOptions = new ThemeModalOptions
-            {
-                BorderRadius = RadiusLarge
-            }
+            BreakpointOptions = DefaultBreakpointOptions,
+            ButtonOptions = DefaultButtonOptions,
+            CardOptions = DefaultCardOptions,
+            ContainerMaxWidthOptions = DefaultContainerMaxWidthOptions,
+            DividerOptions = DefaultDividerOptions,
+            InputOptions = DefaultInputOptions,
+            ModalOptions = DefaultModalOptions,
         };
 
         public static Theme DarkTheme { get; } = new()
@@ -132,28 +162,13 @@ namespace Quibble.Client.Services.Themeing
                 White50 = White50,
                 Muted = "#AAAAAA"
             },
-            ButtonOptions = new ThemeButtonOptions
-            {
-                SmallBorderRadius = RadiusSmall,
-                BorderRadius = RadiusMedium,
-                LargeBorderRadius = RadiusLarge
-            },
-            CardOptions = new ThemeCardOptions
-            {
-                BorderRadius = RadiusMedium
-            },
-            DividerOptions = new ThemeDividerOptions
-            {
-                Thickness = "1px"
-            },
-            InputOptions = new ThemeInputOptions
-            {
-                BorderRadius = RadiusMedium
-            },
-            ModalOptions = new ThemeModalOptions
-            {
-                BorderRadius = RadiusLarge
-            }
+            BreakpointOptions = DefaultBreakpointOptions,
+            ButtonOptions = DefaultButtonOptions,
+            CardOptions = DefaultCardOptions,
+            ContainerMaxWidthOptions = DefaultContainerMaxWidthOptions,
+            DividerOptions = DefaultDividerOptions,
+            InputOptions = DefaultInputOptions,
+            ModalOptions = DefaultModalOptions,
         };
 
         public static Theme ContrastTheme { get; } = new()
@@ -198,28 +213,13 @@ namespace Quibble.Client.Services.Themeing
                 Black50 = "#000000",
                 White50 = "#FFFFFF"
             },
-            ButtonOptions = new ThemeButtonOptions
-            {
-                SmallBorderRadius = RadiusSmall,
-                BorderRadius = RadiusMedium,
-                LargeBorderRadius = RadiusLarge
-            },
-            CardOptions = new ThemeCardOptions
-            {
-                BorderRadius = RadiusMedium
-            },
-            DividerOptions = new ThemeDividerOptions
-            {
-                Thickness = "1px"
-            },
-            InputOptions = new ThemeInputOptions
-            {
-                BorderRadius = RadiusMedium
-            },
-            ModalOptions = new ThemeModalOptions
-            {
-                BorderRadius = RadiusLarge
-            }
+            BreakpointOptions = DefaultBreakpointOptions,
+            ButtonOptions = DefaultButtonOptions,
+            CardOptions = DefaultCardOptions,
+            ContainerMaxWidthOptions = DefaultContainerMaxWidthOptions,
+            DividerOptions = DefaultDividerOptions,
+            InputOptions = DefaultInputOptions,
+            ModalOptions = DefaultModalOptions,
         };
     }
 }
