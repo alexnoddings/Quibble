@@ -12,8 +12,6 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-      
-      # .NET
     - name: dotnet setup
       uses: actions/setup-dotnet@v1
       with:
@@ -25,16 +23,3 @@ jobs:
       run: dotnet build --no-restore
     - name: dotnet test
       run: dotnet test --no-build --verbosity normal
-      
-      # Docker
-    - name: docker login
-      uses: docker/login-action@v1 
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-    - name: docker build/push
-      uses: docker/build-push-action@v2
-      with:
-        push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/quibble:latest
-        
