@@ -7,5 +7,6 @@ namespace Quibble.Shared.Entities
         public Guid QuizId { get; }
         public string Title { get; }
         public RoundState State { get; }
+        public int Order { get; }
     }
 }

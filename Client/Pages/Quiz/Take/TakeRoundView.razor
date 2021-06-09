@@ -33,7 +33,7 @@
         </Fields>
         @{
             int questionIndex = 0;
-            @foreach (var question in Round.Questions)
+            @foreach (var question in Round.Questions.OrderBy(question => question.Order))
             {
                 <Divider Margin="Margin.Is0.FromTop.Is2.FromBottom" Display="Display.Block.None.OnWidescreen" />
                 <TakeQuestionView Question="question" Index="questionIndex++" @key="question.Id" />

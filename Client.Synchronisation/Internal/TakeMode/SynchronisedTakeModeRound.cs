@@ -16,6 +16,7 @@ namespace Quibble.Client.Sync.Internal.TakeMode
         public Guid QuizId { get; }
         public string Title { get; }
         public RoundState State { get; }
+        public int Order { get; }
 
         public event Func<ISynchronisedTakeModeQuestion, Task>? QuestionAdded;
 
@@ -32,6 +33,7 @@ namespace Quibble.Client.Sync.Internal.TakeMode
             QuizId = round.QuizId;
             Title = round.Title;
             State = round.State;
+            Order = round.Order;
 
             SyncedQuiz = quiz;
 

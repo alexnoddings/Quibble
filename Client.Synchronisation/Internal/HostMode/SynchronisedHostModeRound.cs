@@ -15,6 +15,7 @@ namespace Quibble.Client.Sync.Internal.HostMode
         public Guid QuizId { get; }
         public string Title { get; }
         public RoundState State { get; private set; }
+        public int Order { get; }
 
         internal SynchronisedHostModeQuiz SyncedQuiz { get; }
         public ISynchronisedHostModeQuiz Quiz => SyncedQuiz;
@@ -29,6 +30,7 @@ namespace Quibble.Client.Sync.Internal.HostMode
             QuizId = round.QuizId;
             Title = round.Title;
             State = round.State;
+            Order = round.Order;
 
             SyncedQuiz = quiz;
 

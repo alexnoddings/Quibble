@@ -14,6 +14,7 @@ namespace Quibble.Server.Data.Models
         public string Answer { get; set; } = string.Empty;
         public decimal Points { get; set; }
         public QuestionState State { get; set; }
+        public int Order { get; set; }
 
         public List<DbSubmittedAnswer> SubmittedAnswers { get; set; } = new();
     }

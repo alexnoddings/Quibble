@@ -11,12 +11,13 @@ using Quibble.Shared.Models.Dtos;
 
 namespace Quibble.Client.Sync.Internal.EditMode
 {
-    internal sealed class SynchronisedEditModeRound : SynchronisedEntity, ISynchronisedEditModeRound, IDisposable
+    internal sealed class SynchronisedEditModeRound : SynchronisedEntity, ISynchronisedEditModeRound
     {
         public override Guid Id { get; }
         public Guid QuizId { get; }
         public string Title { get; private set; }
         public RoundState State { get; }
+        public int Order { get; } = 0;
 
         internal SynchronisedEditModeQuiz SyncedQuiz { get; }
         public ISynchronisedEditModeQuiz Quiz => SyncedQuiz;

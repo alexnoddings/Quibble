@@ -13,7 +13,7 @@
 @if (Quiz.Rounds.Any(round => round.State == RoundState.Open))
 {
     int roundIndex = 0;
-    @foreach (var round in Quiz.Rounds)
+    @foreach (var round in Quiz.Rounds.OrderBy(round => round.Order))
     {
         <Row Margin="Margin.Is3.OnY">
             <Column ColumnSize="ColumnSize.Is12">

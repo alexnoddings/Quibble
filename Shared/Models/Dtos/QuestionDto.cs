@@ -11,5 +11,6 @@ namespace Quibble.Shared.Models.Dtos
         public string Answer { get; set; } = string.Empty;
         public decimal Points { get; set; }
         public QuestionState State { get; set; }
+        public int Order { get; set; }
     }
 }

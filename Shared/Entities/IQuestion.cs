@@ -9,5 +9,6 @@ namespace Quibble.Shared.Entities
         public string Answer { get; }
         public decimal Points { get; }
         public QuestionState State { get; }
+        public int Order { get; }
     }
 }
