@@ -8,7 +8,7 @@ using Quibble.Shared.Hub;
 
 namespace Quibble.Client.Sync.Internal.EditMode
 {
-    internal sealed class SynchronisedEditModeQuestion : SynchronisedEntity, ISynchronisedEditModeQuestion, IDisposable
+    internal sealed class SynchronisedEditModeQuestion : SynchronisedEntity, ISynchronisedEditModeQuestion
     {
         public override Guid Id { get; }
         public Guid RoundId { get; }
@@ -16,6 +16,7 @@ namespace Quibble.Client.Sync.Internal.EditMode
         public string Answer { get; private set; }
         public decimal Points { get; private set; }
         public QuestionState State { get; }
+        public int Order { get; } = 0;
 
         internal SynchronisedEditModeRound SyncedRound { get; }
         public ISynchronisedEditModeRound Round => SyncedRound;

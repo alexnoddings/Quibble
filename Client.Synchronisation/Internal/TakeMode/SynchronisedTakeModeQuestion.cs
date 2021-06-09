@@ -15,6 +15,7 @@ namespace Quibble.Client.Sync.Internal.TakeMode
         public string Answer { get; private set; }
         public decimal Points { get; }
         public QuestionState State { get; private set; }
+        public int Order { get; }
 
         internal SynchronisedTakeModeRound SyncedRound { get; }
         public ISynchronisedTakeModeRound Round => SyncedRound;
@@ -31,6 +32,7 @@ namespace Quibble.Client.Sync.Internal.TakeMode
             Answer = question.Answer;
             Points = question.Points;
             State = question.State;
+            Order = question.Order;
 
             SyncedRound = round;
 

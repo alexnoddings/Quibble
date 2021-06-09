@@ -17,6 +17,7 @@ namespace Quibble.Client.Sync.Internal.HostMode
         public string Answer { get; }
         public decimal Points { get; }
         public QuestionState State { get; private set; }
+        public int Order { get; }
 
         internal SynchronisedHostModeRound SyncedRound { get; }
         public ISynchronisedHostModeRound Round => SyncedRound;
@@ -33,6 +34,7 @@ namespace Quibble.Client.Sync.Internal.HostMode
             Answer = question.Answer;
             Points = question.Points;
             State = question.State;
+            Order = question.Order;
 
             SyncedRound = round;
 

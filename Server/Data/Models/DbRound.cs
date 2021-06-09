@@ -12,6 +12,7 @@ namespace Quibble.Server.Data.Models
 
         public string Title { get; set; } = string.Empty;
         public RoundState State { get; set; }
+        public int Order { get; set; }
 
         public List<DbQuestion> Questions { get; set; } = new();
     }

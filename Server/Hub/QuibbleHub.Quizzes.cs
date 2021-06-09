@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Quibble.Server.Extensions;
 using Quibble.Shared.Entities;
 using Quibble.Shared.Hub;
-using Quibble.Shared.Models;
 using Quibble.Shared.Models.Dtos;
 
 namespace Quibble.Server.Hub
@@ -114,7 +113,12 @@ namespace Quibble.Server.Hub
             if (error is not null)
                 return Failure(error);
 
-            var dbQuiz = await DbContext.Quizzes.FindAsync(quizId);
+            var dbQuiz =
+                await DbContext.Quizzes
+                    .Include(q => q.Rounds)
+                        .ThenInclude(r => r.Questions)
+                    .FindAsync(quizId);
+            
             if (dbQuiz is null)
                 return Failure(HubErrors.QuizNotFound);
 
@@ -124,31 +128,32 @@ namespace Quibble.Server.Hub
             if (dbQuiz.State == QuizState.Open)
                 return Failure(HubErrors.QuizAlreadyOpen);
 
-            var quizRounds =
-                from round in DbContext.Rounds
-                where round.QuizId == quizId
-                select round;
-
-            var quizQuestions =
-                from round in quizRounds
-                join question in DbContext.Questions
-                    on round.Id equals question.RoundId
-                select question;
-
-            if (!await quizQuestions.AnyAsync())
+            if (!dbQuiz.Rounds.SelectMany(round => round.Questions).Any())
                 return Failure(HubErrors.QuizEmpty);
 
-            if (await quizRounds.AnyAsync(round => string.IsNullOrWhiteSpace(round.Title)))
+            if (dbQuiz.Rounds.Any(round => string.IsNullOrWhiteSpace(round.Title)))
                 return Failure(HubErrors.RoundMissingTitle);
 
-            if (await quizQuestions.AnyAsync(question => string.IsNullOrWhiteSpace(question.Text)))
+            if (dbQuiz.Rounds.SelectMany(round => round.Questions).Any(question => string.IsNullOrWhiteSpace(question.Text)))
                 return Failure(HubErrors.QuestionMissingText);
 
-            if (await quizQuestions.AnyAsync(question => string.IsNullOrWhiteSpace(question.Answer)))
+            if (dbQuiz.Rounds.SelectMany(round => round.Questions).Any(question => string.IsNullOrWhiteSpace(question.Answer)))
                 return Failure(HubErrors.QuestionMissingAnswer);
 
             dbQuiz.State = QuizState.Open;
             dbQuiz.OpenedAt = DateTime.UtcNow;
+
+            int roundIndex = 0;
+            foreach (var round in dbQuiz.Rounds)
+            {
+                round.Order = roundIndex++;
+                int questionIndex = 0;
+                foreach (var question in round.Questions)
+                {
+                    question.Order = questionIndex++;
+                }
+            }
+
             await DbContext.SaveChangesAsync();
 
             await AllQuizUsersGroup(quizId).OnQuizOpenedAsync();
