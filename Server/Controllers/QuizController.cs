@@ -133,13 +133,21 @@ namespace Quibble.Server.Controllers
 
             var submittedAnswerCount = await markedSubmittedAnswers.CountAsync();
 
-            var submittedAnswersPercents =
-                from question in DbContext.Questions
-                join submittedAnswer in markedSubmittedAnswers
-                    on question.Id equals submittedAnswer.QuestionId
-                select submittedAnswer.AssignedPoints / question.Points;
+            decimal averagePercent;
+            if (submittedAnswerCount == 0)
+            {
+                averagePercent = 0;
+            }
+            else
+            {
+                var submittedAnswersPercents =
+                    from question in DbContext.Questions
+                    join submittedAnswer in markedSubmittedAnswers
+                        on question.Id equals submittedAnswer.QuestionId
+                    select submittedAnswer.AssignedPoints / question.Points;
 
-            var averagePercent = await submittedAnswersPercents.AverageAsync();
+                averagePercent = await submittedAnswersPercents.AverageAsync();
+            }
 
             return new SiteStats
             {
