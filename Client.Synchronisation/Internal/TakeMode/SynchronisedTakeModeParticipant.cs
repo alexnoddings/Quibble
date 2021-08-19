@@ -1,8 +1,6 @@
-﻿using System;
-using Microsoft.AspNetCore.SignalR.Client;
+﻿using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
 using Quibble.Client.Sync.Entities.TakeMode;
-using Quibble.Shared.Models;
 using Quibble.Shared.Models.Dtos;
 
 namespace Quibble.Client.Sync.Internal.TakeMode

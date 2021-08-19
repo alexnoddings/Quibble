@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace Quibble.Client.Sync.Entities.TakeMode
+﻿namespace Quibble.Client.Sync.Entities.TakeMode
 {
     public interface ISynchronisedTakeModeQuiz : ISynchronisedQuiz
     {

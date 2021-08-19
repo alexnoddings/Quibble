@@ -1,5 +1,4 @@
-﻿using System;
-using Quibble.Shared.Entities;
+﻿using Quibble.Shared.Entities;
 
 namespace Quibble.Client.Sync.Entities
 {

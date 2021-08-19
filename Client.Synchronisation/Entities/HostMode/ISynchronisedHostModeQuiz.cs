@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Quibble.Client.Sync.Entities.HostMode
+﻿namespace Quibble.Client.Sync.Entities.HostMode
 {
     public interface ISynchronisedHostModeQuiz : ISynchronisedQuiz
     {

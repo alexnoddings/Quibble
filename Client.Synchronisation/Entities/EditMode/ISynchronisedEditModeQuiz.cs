@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace Quibble.Client.Sync.Entities.EditMode
+﻿namespace Quibble.Client.Sync.Entities.EditMode
 {
     public interface ISynchronisedEditModeQuiz : ISynchronisedQuiz
     {
