@@ -8,7 +8,7 @@
 
 @if (GetQuizResult is null)
 {
-    <PageTitle Value="Loading quiz" />
+    <FullPageTitle Value="Loading quiz" />
     <Row Margin="Margin.Is3.FromTop">
         <Column Display="Display.Flex.Column" Class="align-items-center">
             <svg width="64" height="64" viewBox="0 0 8 8" aria-hidden="true" stroke-width="1">
@@ -34,21 +34,21 @@
 }
 else if (GetQuizResult.Error is not null)
 {
-    <PageTitle Value="Error loading quiz" />
+    <FullPageTitle Value="Error loading quiz" />
     @($"{GetQuizResult.Error.StatusCode}: {GetQuizResult.Error.ErrorKey}")
 }
 else if (GetQuizResult.Value is ISynchronisedEditModeQuiz editModeQuiz)
 {
-    <PageTitle Value="@($"Editing {editModeQuiz.Title}")" />
+    <FullPageTitle Value="@($"Editing {editModeQuiz.Title}")" />
     <EditQuizView Quiz="editModeQuiz" />
 }
 else if (GetQuizResult.Value is ISynchronisedHostModeQuiz hostModeQuiz)
 {
-    <PageTitle Value="@($"Hosting {hostModeQuiz.Title}")" />
+    <FullPageTitle Value="@($"Hosting {hostModeQuiz.Title}")" />
     <HostQuizView Quiz="hostModeQuiz" />
 }
 else if (GetQuizResult.Value is ISynchronisedTakeModeQuiz takeModeQuiz)
 {
-    <PageTitle Value="@takeModeQuiz.Title" />
+    <FullPageTitle Value="@takeModeQuiz.Title" />
     <TakeQuizView Quiz="takeModeQuiz" />
 }

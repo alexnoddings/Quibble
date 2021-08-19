@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.Web.Extensions.Head;
 
 namespace Quibble.Client.Components
 {
-    public class PageTitle : ComponentBase
+    public class FullPageTitle : ComponentBase
     {
         private const string TitleSuffix = "Quibble";
         private const string TitleBreak = " · ";
@@ -14,14 +15,18 @@ namespace Quibble.Client.Components
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
+            builder.OpenComponent<PageTitle>(0);
+            builder.AddAttribute(1, nameof(PageTitle.ChildContent), (RenderFragment)BuildFullPageTitleRenderTree);
+            builder.CloseComponent();
+        }
+
+        private void BuildFullPageTitleRenderTree(RenderTreeBuilder builder)
+        {
             string pageTitle =
                 string.IsNullOrEmpty(Value)
                     ? TitleSuffix
                     : Value + TitleBreak + TitleSuffix;
-
-            builder.OpenComponent<Title>(0);
-            builder.AddAttribute(1, "Value", pageTitle);
-            builder.CloseComponent();
+            builder.AddContent(0, pageTitle);
         }
     }
 }
