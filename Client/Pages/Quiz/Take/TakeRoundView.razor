@@ -23,7 +23,7 @@
                         .Sum(question => question.SubmittedAnswer?.AssignedPoints ?? 0);
                 var percent = totalPossiblePoints == 0 ? 0 : (assignedPoints / totalPossiblePoints) * 100;
                 <Field ColumnSize="ColumnSize.Is2.Is1.OnWidescreen" Margin="Margin.Is0.FromBottom">
-                    <Tooltip Text="@($"{percent:G4}%")" Placement="Placement.Bottom">
+                    <Tooltip Text="@($"{percent:G4}%")" Placement="TooltipPlacement.Bottom">
                         <Heading Size="HeadingSize.Is5" Alignment="TextAlignment.Center">
                             @($"{assignedPoints:G4}/{totalPossiblePoints:G4}")
                         </Heading>

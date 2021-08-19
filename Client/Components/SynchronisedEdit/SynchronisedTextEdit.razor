@@ -3,7 +3,7 @@
         bool shouldShowMaxLengthWarning = IsFocused
                                           && MaxLength >= 8
                                           && LocalText.Length >= MaxLength * 0.8;
-        <Tooltip Placement="Placement.Bottom"
+        <Tooltip Placement="TooltipPlacement.Bottom"
              AlwaysActive="shouldShowMaxLengthWarning"
              Text="@(shouldShowMaxLengthWarning ? $"{LocalText.Length}/{MaxLength} characters" : null)">
             <TextEdit Role="TextRole.Text"

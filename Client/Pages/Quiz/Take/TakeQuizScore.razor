@@ -12,7 +12,7 @@
     if (Quiz.Rounds.Any(round => round.State == RoundState.Open))
     {
         var percent = totalPossiblePoints == 0 ? 0 : (assignedPoints / totalPossiblePoints) * 100;
-        <Tooltip Text="@($"{percent:G4}%")" Placement="Placement.Bottom">
+        <Tooltip Text="@($"{percent:G4}%")" Placement="TooltipPlacement.Bottom">
             <Heading Size="HeadingSize.Is5">
                 @($"{assignedPoints:G4}/{totalPossiblePoints:G4}")
             </Heading>
