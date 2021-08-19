@@ -11,9 +11,8 @@ using Quibble.Shared.Models.Dtos;
 
 namespace Quibble.Client.Sync.Internal.EditMode
 {
-    internal sealed class SynchronisedEditModeRound : SynchronisedEntity, ISynchronisedEditModeRound
+    internal sealed class SynchronisedEditModeRound : SignalrSynchronisedEntity, ISynchronisedEditModeRound
     {
-        public override Guid Id { get; }
         public Guid QuizId { get; }
         public string Title { get; private set; }
         public RoundState State { get; }
@@ -25,7 +24,7 @@ namespace Quibble.Client.Sync.Internal.EditMode
         internal List<SynchronisedEditModeQuestion> SyncedQuestions { get; } = new();
         public IReadOnlyList<ISynchronisedEditModeQuestion> Questions => SyncedQuestions.AsReadOnly();
 
-        public SynchronisedEditModeRound(ILogger<SynchronisedEntity> logger, HubConnection hubConnection, IRound round, SynchronisedEditModeQuiz quiz)
+        public SynchronisedEditModeRound(ILogger<BaseSynchronisedEntity> logger, HubConnection hubConnection, IRound round, SynchronisedEditModeQuiz quiz)
             : base(logger, hubConnection)
         {
             Id = round.Id;
@@ -80,14 +79,8 @@ namespace Quibble.Client.Sync.Internal.EditMode
             return OnUpdatedAsync();
         }
 
-        public override int GetStateStamp()
-        {
-            var hashCode = new HashCode();
-            hashCode.Add(Title);
-            foreach (var question in SyncedQuestions)
-                hashCode.Add(question.GetStateStamp());
-            return hashCode.ToHashCode();
-        }
+        public override int GetStateStamp() =>
+            GenerateStateStamp(Title, SyncedQuestions);
 
         protected override void Dispose(bool disposing)
         {

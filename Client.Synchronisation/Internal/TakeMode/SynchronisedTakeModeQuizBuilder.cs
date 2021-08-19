@@ -10,7 +10,7 @@ namespace Quibble.Client.Sync.Internal.TakeMode
 {
     internal class SynchronisedTakeModeQuizBuilder
     {
-        public ILogger<SynchronisedEntity>? LoggerInstance { get; set; }
+        public ILogger<SignalrSynchronisedEntity>? LoggerInstance { get; set; }
         private HubConnection? HubConnection { get; set; }
         public QuizDto? Quiz { get; set; }
         public List<ParticipantDto>? Participants { get; set; }
@@ -61,7 +61,7 @@ namespace Quibble.Client.Sync.Internal.TakeMode
             return synchronisedQuiz;
         }
 
-        public SynchronisedTakeModeQuizBuilder WithLoggerInstance(ILogger<SynchronisedEntity> loggerInstance)
+        public SynchronisedTakeModeQuizBuilder WithLoggerInstance(ILogger<SignalrSynchronisedEntity> loggerInstance)
         {
             LoggerInstance = loggerInstance;
             return this;

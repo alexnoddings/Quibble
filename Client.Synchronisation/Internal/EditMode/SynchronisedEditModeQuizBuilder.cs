@@ -10,7 +10,7 @@ namespace Quibble.Client.Sync.Internal.EditMode
 {
     internal class SynchronisedEditModeQuizBuilder
     {
-        public ILogger<SynchronisedEntity>? LoggerInstance { get; set; }
+        public ILogger<SignalrSynchronisedEntity>? LoggerInstance { get; set; }
         public HubConnection? HubConnection { get; set; }
         public QuizDto? Quiz { get; set; }
         public List<RoundDto>? Rounds { get; set; }
@@ -44,7 +44,7 @@ namespace Quibble.Client.Sync.Internal.EditMode
             return synchronisedQuiz;
         }
 
-        public SynchronisedEditModeQuizBuilder WithLoggerInstance(ILogger<SynchronisedEntity> loggerInstance)
+        public SynchronisedEditModeQuizBuilder WithLoggerInstance(ILogger<SignalrSynchronisedEntity> loggerInstance)
         {
             LoggerInstance = loggerInstance;
             return this;

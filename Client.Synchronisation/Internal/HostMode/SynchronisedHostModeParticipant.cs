@@ -8,9 +8,8 @@ using Quibble.Shared.Models.Dtos;
 
 namespace Quibble.Client.Sync.Internal.HostMode
 {
-    internal sealed class SynchronisedHostModeParticipant : SynchronisedEntity, ISynchronisedHostModeParticipant
+    internal sealed class SynchronisedHostModeParticipant : SignalrSynchronisedEntity, ISynchronisedHostModeParticipant
     {
-        public override Guid Id { get; }
         public Guid QuizId { get; }
         public string UserName { get; }
 
@@ -20,7 +19,7 @@ namespace Quibble.Client.Sync.Internal.HostMode
         internal List<SynchronisedHostModeSubmittedAnswer> SyncedAnswers = new();
         public IReadOnlyList<ISynchronisedHostModeSubmittedAnswer> Answers => SyncedAnswers.AsReadOnly();
 
-        public SynchronisedHostModeParticipant(ILogger<SynchronisedEntity> logger, HubConnection hubConnection, ParticipantDto participant, SynchronisedHostModeQuiz quiz)
+        public SynchronisedHostModeParticipant(ILogger<BaseSynchronisedEntity> logger, HubConnection hubConnection, ParticipantDto participant, SynchronisedHostModeQuiz quiz)
             : base(logger, hubConnection)
         {
             Id = participant.Id;
@@ -30,12 +29,7 @@ namespace Quibble.Client.Sync.Internal.HostMode
             SyncedQuiz = quiz;
         }
 
-        public override int GetStateStamp()
-        {
-            var hashCode = new HashCode();
-            foreach (var answer in SyncedAnswers)
-                hashCode.Add(answer.GetStateStamp());
-            return hashCode.ToHashCode();
-        }
+        public override int GetStateStamp() =>
+            GenerateStateStamp(SyncedAnswers);
     }
 }

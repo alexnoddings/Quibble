@@ -10,7 +10,7 @@ namespace Quibble.Client.Sync.Internal.HostMode
 {
     internal class SynchronisedHostModeQuizBuilder
     {
-        public ILogger<SynchronisedEntity>? LoggerInstance { get; set; }
+        public ILogger<SignalrSynchronisedEntity>? LoggerInstance { get; set; }
         private HubConnection? HubConnection { get; set; }
         public QuizDto? Quiz { get; set; }
         public List<ParticipantDto>? Participants { get; set; }
@@ -65,7 +65,7 @@ namespace Quibble.Client.Sync.Internal.HostMode
             return synchronisedQuiz;
         }
 
-        public SynchronisedHostModeQuizBuilder WithLoggerInstance(ILogger<SynchronisedEntity> loggerInstance)
+        public SynchronisedHostModeQuizBuilder WithLoggerInstance(ILogger<SignalrSynchronisedEntity> loggerInstance)
         {
             LoggerInstance = loggerInstance;
             return this;

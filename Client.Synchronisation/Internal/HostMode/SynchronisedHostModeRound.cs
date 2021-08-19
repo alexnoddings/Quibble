@@ -9,9 +9,8 @@ using Quibble.Shared.Hub;
 
 namespace Quibble.Client.Sync.Internal.HostMode
 {
-    internal sealed class SynchronisedHostModeRound : SynchronisedEntity, ISynchronisedHostModeRound
+    internal sealed class SynchronisedHostModeRound : SignalrSynchronisedEntity, ISynchronisedHostModeRound
     {
-        public override Guid Id { get; }
         public Guid QuizId { get; }
         public string Title { get; }
         public RoundState State { get; private set; }
@@ -23,7 +22,7 @@ namespace Quibble.Client.Sync.Internal.HostMode
         internal List<SynchronisedHostModeQuestion> SyncedQuestions { get; } = new();
         public IReadOnlyList<ISynchronisedHostModeQuestion> Questions => SyncedQuestions.AsReadOnly();
 
-        public SynchronisedHostModeRound(ILogger<SynchronisedEntity> logger, HubConnection hubConnection, IRound round, SynchronisedHostModeQuiz quiz)
+        public SynchronisedHostModeRound(ILogger<BaseSynchronisedEntity> logger, HubConnection hubConnection, IRound round, SynchronisedHostModeQuiz quiz)
             : base(logger, hubConnection)
         {
             Id = round.Id;
@@ -51,14 +50,8 @@ namespace Quibble.Client.Sync.Internal.HostMode
             return OnUpdatedAsync();
         }
 
-        public override int GetStateStamp()
-        {
-            var hashCode = new HashCode();
-            hashCode.Add(State);
-            foreach (var question in SyncedQuestions)
-                hashCode.Add(question.GetStateStamp());
-            return hashCode.ToHashCode();
-        }
+        public override int GetStateStamp() =>
+            GenerateStateStamp(State, SyncedQuestions);
 
         protected override void Dispose(bool disposing)
         {

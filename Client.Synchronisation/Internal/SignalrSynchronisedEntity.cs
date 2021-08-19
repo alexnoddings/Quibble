@@ -1,23 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Reflection;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
-using Quibble.Client.Sync.Entities;
 using Quibble.Shared.Hub;
 
 namespace Quibble.Client.Sync.Internal
 {
-    public abstract class SynchronisedEntity : ISynchronisedEntity, IDisposable
+    public abstract class SignalrSynchronisedEntity : BaseSynchronisedEntity, IDisposable
     {
-        protected ILogger<SynchronisedEntity> Logger { get; }
-
-        public abstract Guid Id { get; }
-
-        public event Func<Task>? Updated;
-
         private HubConnection? _hubConnection;
         protected HubConnection HubConnection
         {
@@ -33,9 +23,9 @@ namespace Quibble.Client.Sync.Internal
 
         protected bool IsDisposed { get; private set; }
 
-        protected SynchronisedEntity(ILogger<SynchronisedEntity> logger, HubConnection hubConnection)
+        protected SignalrSynchronisedEntity(ILogger<BaseSynchronisedEntity> logger, HubConnection hubConnection)
+               : base(logger)
         {
-            Logger = logger;
             _hubConnection = hubConnection ?? throw new ArgumentNullException(nameof(hubConnection));
         }
 
@@ -114,13 +104,6 @@ namespace Quibble.Client.Sync.Internal
 
             return methodInfo;
         }
-
-        protected Task OnUpdatedAsync() =>
-            Updated?.Invoke() is null
-                ? Task.CompletedTask
-                : Updated.Invoke();
-
-        public abstract int GetStateStamp();
 
         protected virtual void Dispose(bool disposing)
         {

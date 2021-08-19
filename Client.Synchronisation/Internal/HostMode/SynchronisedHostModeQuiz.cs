@@ -11,9 +11,8 @@ using Quibble.Shared.Models.Dtos;
 
 namespace Quibble.Client.Sync.Internal.HostMode
 {
-    internal sealed class SynchronisedHostModeQuiz : SynchronisedEntity, ISynchronisedHostModeQuiz
+    internal sealed class SynchronisedHostModeQuiz : SignalrSynchronisedEntity, ISynchronisedHostModeQuiz
     {
-        public override Guid Id { get; }
         public Guid OwnerId { get; }
         public string Title { get; }
         public QuizState State { get; }
@@ -26,7 +25,7 @@ namespace Quibble.Client.Sync.Internal.HostMode
         internal List<SynchronisedHostModeParticipant> SyncedParticipants { get; } = new();
         public IReadOnlyList<ISynchronisedHostModeParticipant> Participants => SyncedParticipants.AsReadOnly();
 
-        public SynchronisedHostModeQuiz(ILogger<SynchronisedEntity> logger, HubConnection hubConnection, IQuiz quiz)
+        public SynchronisedHostModeQuiz(ILogger<BaseSynchronisedEntity> logger, HubConnection hubConnection, IQuiz quiz)
             : base(logger, hubConnection)
         {
             Id = quiz.Id;
@@ -55,15 +54,8 @@ namespace Quibble.Client.Sync.Internal.HostMode
             return OnUpdatedAsync();
         }
 
-        public override int GetStateStamp()
-        {
-            var hashCode = new HashCode();
-            foreach (var round in SyncedRounds)
-                hashCode.Add(round.GetStateStamp());
-            foreach (var participant in SyncedParticipants)
-                hashCode.Add(participant.GetStateStamp());
-            return hashCode.ToHashCode();
-        }
+        public override int GetStateStamp() =>
+            GenerateStateStamp(SyncedRounds, SyncedParticipants);
 
         public async ValueTask DisposeAsync()
         {

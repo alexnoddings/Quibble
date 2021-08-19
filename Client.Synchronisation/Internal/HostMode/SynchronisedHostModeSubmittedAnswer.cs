@@ -8,9 +8,8 @@ using Quibble.Shared.Hub;
 
 namespace Quibble.Client.Sync.Internal.HostMode
 {
-    internal sealed class SynchronisedHostModeSubmittedAnswer : SynchronisedEntity, ISynchronisedHostModeSubmittedAnswer
+    internal sealed class SynchronisedHostModeSubmittedAnswer : SignalrSynchronisedEntity, ISynchronisedHostModeSubmittedAnswer
     {
-        public override Guid Id { get; }
         public Guid QuestionId { get; }
         public Guid ParticipantId { get; }
         public string Text { get; private set; }
@@ -22,7 +21,7 @@ namespace Quibble.Client.Sync.Internal.HostMode
         internal SynchronisedHostModeParticipant SyncedSubmitter { get; }
         public ISynchronisedHostModeParticipant Submitter => SyncedSubmitter;
 
-        public SynchronisedHostModeSubmittedAnswer(ILogger<SynchronisedEntity> logger, HubConnection hubConnection, ISubmittedAnswer submittedAnswer, SynchronisedHostModeQuestion question, SynchronisedHostModeParticipant participant)
+        public SynchronisedHostModeSubmittedAnswer(ILogger<BaseSynchronisedEntity> logger, HubConnection hubConnection, ISubmittedAnswer submittedAnswer, SynchronisedHostModeQuestion question, SynchronisedHostModeParticipant participant)
             : base(logger, hubConnection)
         {
             Id = submittedAnswer.Id;
@@ -58,12 +57,7 @@ namespace Quibble.Client.Sync.Internal.HostMode
             return OnUpdatedAsync();
         }
 
-        public override int GetStateStamp()
-        {
-            var hashCode = new HashCode();
-            hashCode.Add(Text);
-            hashCode.Add(AssignedPoints);
-            return hashCode.ToHashCode();
-        }
+        public override int GetStateStamp() =>
+            GenerateStateStamp(Text, AssignedPoints);
     }
 }

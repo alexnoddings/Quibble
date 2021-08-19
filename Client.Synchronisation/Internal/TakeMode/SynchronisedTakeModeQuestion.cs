@@ -7,9 +7,8 @@ using Quibble.Shared.Entities;
 
 namespace Quibble.Client.Sync.Internal.TakeMode
 {
-    internal sealed class SynchronisedTakeModeQuestion : SynchronisedEntity, ISynchronisedTakeModeQuestion
+    internal sealed class SynchronisedTakeModeQuestion : SignalrSynchronisedEntity, ISynchronisedTakeModeQuestion
     {
-        public override Guid Id { get; }
         public Guid RoundId { get; }
         public string Text { get; }
         public string Answer { get; private set; }
@@ -23,7 +22,7 @@ namespace Quibble.Client.Sync.Internal.TakeMode
         internal SynchronisedTakeModeSubmittedAnswer? SyncedSubmittedAnswer { get; set; }
         public ISynchronisedTakeModeSubmittedAnswer? SubmittedAnswer => SyncedSubmittedAnswer;
 
-        public SynchronisedTakeModeQuestion(ILogger<SynchronisedEntity> logger, HubConnection hubConnection, IQuestion question, SynchronisedTakeModeRound round)
+        public SynchronisedTakeModeQuestion(ILogger<BaseSynchronisedEntity> logger, HubConnection hubConnection, IQuestion question, SynchronisedTakeModeRound round)
             : base(logger, hubConnection)
         {
             Id = question.Id;
@@ -52,13 +51,7 @@ namespace Quibble.Client.Sync.Internal.TakeMode
             return OnUpdatedAsync();
         }
 
-        public override int GetStateStamp()
-        {
-            var hashCode = new HashCode();
-            hashCode.Add(Answer);
-            hashCode.Add(State);
-            hashCode.Add(SyncedSubmittedAnswer?.GetStateStamp() ?? 0);
-            return hashCode.ToHashCode();
-        }
+        public override int GetStateStamp() =>
+            GenerateStateStamp(Answer, State, SyncedSubmittedAnswer);
     }
 }

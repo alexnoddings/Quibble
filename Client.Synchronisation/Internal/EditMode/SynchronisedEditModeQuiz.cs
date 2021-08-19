@@ -11,11 +11,10 @@ using Quibble.Shared.Models.Dtos;
 
 namespace Quibble.Client.Sync.Internal.EditMode
 {
-    internal sealed class SynchronisedEditModeQuiz : SynchronisedEntity, ISynchronisedEditModeQuiz
+    internal sealed class SynchronisedEditModeQuiz : SignalrSynchronisedEntity, ISynchronisedEditModeQuiz
     {
         public event Func<Task>? OnInvalidated;
 
-        public override Guid Id { get; }
         public Guid OwnerId { get; }
         public string Title { get; private set; }
         public QuizState State { get; private set; }
@@ -25,7 +24,7 @@ namespace Quibble.Client.Sync.Internal.EditMode
         internal List<SynchronisedEditModeRound> SyncedRounds { get; } = new();
         public IReadOnlyList<ISynchronisedEditModeRound> Rounds => SyncedRounds.AsReadOnly();
 
-        public SynchronisedEditModeQuiz(ILogger<SynchronisedEntity> logger, HubConnection hubConnection, IQuiz quiz)
+        public SynchronisedEditModeQuiz(ILogger<BaseSynchronisedEntity> logger, HubConnection hubConnection, IQuiz quiz)
             : base(logger, hubConnection)
         {
             Id = quiz.Id;
@@ -97,16 +96,8 @@ namespace Quibble.Client.Sync.Internal.EditMode
             return OnUpdatedAsync();
         }
 
-        public override int GetStateStamp()
-        {
-            var hashCode = new HashCode();
-            hashCode.Add(Title);
-            hashCode.Add(State);
-            hashCode.Add(OpenedAt);
-            foreach (var round in SyncedRounds)
-                hashCode.Add(round.GetStateStamp());
-            return hashCode.ToHashCode();
-        }
+        public override int GetStateStamp() =>
+            GenerateStateStamp(Title, State, OpenedAt, SyncedRounds);
 
         public async ValueTask DisposeAsync()
         {

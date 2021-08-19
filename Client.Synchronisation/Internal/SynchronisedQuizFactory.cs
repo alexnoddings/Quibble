@@ -19,11 +19,11 @@ namespace Quibble.Client.Sync.Internal
 {
     internal class SynchronisedQuizFactory : ISynchronisedQuizFactory
     {
-        private ILogger<SynchronisedEntity> EntityLogger { get; }
+        private ILogger<SignalrSynchronisedEntity> EntityLogger { get; }
         private HttpClient HttpClient { get; }
         private NavigationManager NavigationManager { get; }
         
-        public SynchronisedQuizFactory(ILogger<SynchronisedEntity> entityLogger, IHttpClientFactory httpClientFactory, NavigationManager navigationManager)
+        public SynchronisedQuizFactory(ILogger<SignalrSynchronisedEntity> entityLogger, IHttpClientFactory httpClientFactory, NavigationManager navigationManager)
         {
             EntityLogger = entityLogger;
             HttpClient = httpClientFactory.CreateClient("QuizApi");

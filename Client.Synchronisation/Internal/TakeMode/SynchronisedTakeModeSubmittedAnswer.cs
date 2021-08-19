@@ -8,9 +8,8 @@ using Quibble.Shared.Hub;
 
 namespace Quibble.Client.Sync.Internal.TakeMode
 {
-    internal sealed class SynchronisedTakeModeSubmittedAnswer : SynchronisedEntity, ISynchronisedTakeModeSubmittedAnswer
+    internal sealed class SynchronisedTakeModeSubmittedAnswer : SignalrSynchronisedEntity, ISynchronisedTakeModeSubmittedAnswer
     {
-        public override Guid Id { get; }
         public Guid QuestionId { get; }
         public Guid ParticipantId { get; }
         public string Text { get; set; }
@@ -19,7 +18,7 @@ namespace Quibble.Client.Sync.Internal.TakeMode
         internal SynchronisedTakeModeQuestion SyncedQuestion { get; }
         public ISynchronisedTakeModeQuestion Question => SyncedQuestion;
 
-        public SynchronisedTakeModeSubmittedAnswer(ILogger<SynchronisedEntity> logger, HubConnection hubConnection, ISubmittedAnswer submittedAnswer, SynchronisedTakeModeQuestion question)
+        public SynchronisedTakeModeSubmittedAnswer(ILogger<BaseSynchronisedEntity> logger, HubConnection hubConnection, ISubmittedAnswer submittedAnswer, SynchronisedTakeModeQuestion question)
             : base(logger, hubConnection)
         {
             Id = submittedAnswer.Id;
@@ -58,12 +57,7 @@ namespace Quibble.Client.Sync.Internal.TakeMode
             return OnUpdatedAsync();
         }
 
-        public override int GetStateStamp()
-        {
-            var hashCode = new HashCode();
-            hashCode.Add(Text);
-            hashCode.Add(AssignedPoints);
-            return hashCode.ToHashCode();
-        }
+        public override int GetStateStamp() =>
+            GenerateStateStamp(Text, AssignedPoints);
     }
 }

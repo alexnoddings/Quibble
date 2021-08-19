@@ -8,9 +8,8 @@ using Quibble.Shared.Hub;
 
 namespace Quibble.Client.Sync.Internal.EditMode
 {
-    internal sealed class SynchronisedEditModeQuestion : SynchronisedEntity, ISynchronisedEditModeQuestion
+    internal sealed class SynchronisedEditModeQuestion : SignalrSynchronisedEntity, ISynchronisedEditModeQuestion
     {
-        public override Guid Id { get; }
         public Guid RoundId { get; }
         public string Text { get; private set; }
         public string Answer { get; private set; }
@@ -21,7 +20,7 @@ namespace Quibble.Client.Sync.Internal.EditMode
         internal SynchronisedEditModeRound SyncedRound { get; }
         public ISynchronisedEditModeRound Round => SyncedRound;
 
-        public SynchronisedEditModeQuestion(ILogger<SynchronisedEntity> logger, HubConnection hubConnection, IQuestion question, SynchronisedEditModeRound round)
+        public SynchronisedEditModeQuestion(ILogger<BaseSynchronisedEntity> logger, HubConnection hubConnection, IQuestion question, SynchronisedEditModeRound round)
             : base(logger, hubConnection)
         {
             Id = question.Id;
@@ -74,13 +73,7 @@ namespace Quibble.Client.Sync.Internal.EditMode
             return OnUpdatedAsync();
         }
 
-        public override int GetStateStamp()
-        {
-            var hashCode = new HashCode();
-            hashCode.Add(Text);
-            hashCode.Add(Answer);
-            hashCode.Add(Points);
-            return hashCode.ToHashCode();
-        }
+        public override int GetStateStamp() =>
+            GenerateStateStamp(Text, Answer, Points);
     }
 }

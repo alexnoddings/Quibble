@@ -10,9 +10,8 @@ using Quibble.Shared.Models.Dtos;
 
 namespace Quibble.Client.Sync.Internal.TakeMode
 {
-    internal sealed class SynchronisedTakeModeRound : SynchronisedEntity, ISynchronisedTakeModeRound
+    internal sealed class SynchronisedTakeModeRound : SignalrSynchronisedEntity, ISynchronisedTakeModeRound
     {
-        public override Guid Id { get; }
         public Guid QuizId { get; }
         public string Title { get; }
         public RoundState State { get; }
@@ -26,7 +25,7 @@ namespace Quibble.Client.Sync.Internal.TakeMode
         internal List<SynchronisedTakeModeQuestion> SyncedQuestions { get; } = new();
         public IReadOnlyList<ISynchronisedTakeModeQuestion> Questions => SyncedQuestions.AsReadOnly();
 
-        public SynchronisedTakeModeRound(ILogger<SynchronisedEntity> logger, HubConnection hubConnection, IRound round, SynchronisedTakeModeQuiz quiz)
+        public SynchronisedTakeModeRound(ILogger<BaseSynchronisedEntity> logger, HubConnection hubConnection, IRound round, SynchronisedTakeModeQuiz quiz)
             : base(logger, hubConnection)
         {
             Id = round.Id;
@@ -57,14 +56,8 @@ namespace Quibble.Client.Sync.Internal.TakeMode
             await OnUpdatedAsync();
         }
 
-        public override int GetStateStamp()
-        {
-            var hashCode = new HashCode();
-            hashCode.Add(State);
-            foreach (var question in SyncedQuestions)
-                hashCode.Add(question.GetStateStamp());
-            return hashCode.ToHashCode();
-        }
+        public override int GetStateStamp() =>
+            GenerateStateStamp(State, SyncedQuestions);
 
         protected override void Dispose(bool disposing)
         {
