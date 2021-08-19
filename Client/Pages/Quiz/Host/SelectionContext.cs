@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Quibble.Client.Sync.Entities.HostMode;
+﻿using Quibble.Client.Sync.Entities.HostMode;
 
 namespace Quibble.Client.Pages.Quiz.Host
 {

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Quibble.Shared.Api.Authentication;
+﻿using Quibble.Shared.Api.Authentication;
 
 namespace Quibble.Client.Services.Authentication
 {

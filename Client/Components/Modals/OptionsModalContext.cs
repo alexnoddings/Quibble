@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Quibble.Client.Components.Modals
+﻿namespace Quibble.Client.Components.Modals
 {
     public class OptionsModalContext<TValue>
     {

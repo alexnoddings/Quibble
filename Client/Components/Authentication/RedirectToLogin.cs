@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Quibble.Client.Extensions;
 
 namespace Quibble.Client.Components.Authentication

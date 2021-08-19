@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Blazored.LocalStorage;
+﻿using Blazored.LocalStorage;
 using Blazorise;
 
 namespace Quibble.Client.Services.Themeing

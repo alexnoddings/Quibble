@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Quibble.Client.Extensions
+﻿namespace Quibble.Client.Extensions
 {
     public static class EnumerableExtensions
     {
