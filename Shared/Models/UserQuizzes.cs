@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Quibble.Shared.Models.Dtos;
+﻿using Quibble.Shared.Models.Dtos;
 
 namespace Quibble.Shared.Models
 {

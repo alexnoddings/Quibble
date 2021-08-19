@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Quibble.Shared.Entities
+﻿namespace Quibble.Shared.Entities
 {
     public interface ISubmittedAnswer : IEntity
     {

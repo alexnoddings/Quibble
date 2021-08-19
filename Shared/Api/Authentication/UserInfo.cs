@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Quibble.Shared.Api.Authentication
+﻿namespace Quibble.Shared.Api.Authentication
 {
     public class UserInfo
     {
