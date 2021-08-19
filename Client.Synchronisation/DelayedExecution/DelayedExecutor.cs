@@ -1,6 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Timers;
+﻿using System.Timers;
+using Timer = System.Timers.Timer;
 
 namespace Quibble.Client.Sync.DelayedExecution
 {
@@ -50,7 +49,7 @@ namespace Quibble.Client.Sync.DelayedExecution
             return Task.CompletedTask;
         }
 
-        private async void OnTimerElapsed(object sender, ElapsedEventArgs args)
+        private async void OnTimerElapsed(object? sender, ElapsedEventArgs args)
         {
             if (IsDisposed)
                 throw new ObjectDisposedException(nameof(DelayedExecutor<TValue>));
