@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
-
-namespace Quibble.Server
+﻿namespace Quibble.Server
 {
     public class Program
     {

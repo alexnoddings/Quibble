@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-
-namespace Quibble.Server.Services.EmailSender
+﻿namespace Quibble.Server.Services.EmailSender
 {
     public class DebugToLogEmailSender : IEmailSender
     {

@@ -1,12 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Quibble.Server.Data.Models;
 using Quibble.Server.Extensions;
 using Quibble.Shared.Entities;
 using Quibble.Shared.Hub;
-using Quibble.Shared.Models;
 using Quibble.Shared.Models.Dtos;
 
 namespace Quibble.Server.Hub

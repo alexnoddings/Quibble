@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +7,6 @@ using Quibble.Server.Data.Models;
 using Quibble.Server.Extensions;
 using Quibble.Shared.Entities;
 using Quibble.Shared.Hub;
-using Quibble.Shared.Models;
 using Quibble.Shared.Models.Dtos;
 
 namespace Quibble.Server.Hub
