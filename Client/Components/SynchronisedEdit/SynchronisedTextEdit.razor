@@ -1,18 +1,14 @@
 ﻿<div class="q-synced-text-field @(IsSaveIconShown ? "q-synced-text-field-saved" : string.Empty)">
-    @{
-        bool shouldShowMaxLengthWarning = IsFocused
-                                          && MaxLength >= 8
-                                          && LocalText.Length >= MaxLength * 0.8;
-        <Tooltip Placement="TooltipPlacement.Bottom"
-             AlwaysActive="shouldShowMaxLengthWarning"
-             Text="@(shouldShowMaxLengthWarning ? $"{LocalText.Length}/{MaxLength} characters" : null)">
-            <TextEdit Role="TextRole.Text"
-                  Text="@LocalText"
-                  TextChanged="OnTextChanged"
-                  Blur="OnBlurAsync"
-                  FocusIn="OnFocusIn"
-                  MaxLength="MaxLength"
-                  Size="Size" />
-        </Tooltip>
-    }
+    <ConditionalTooltip Enabled="ShouldShowMaxLengthWarning"
+                        Text="@($"{LocalText.Length}/{MaxLength} characters")"
+                        Placement="TooltipPlacement.Bottom"
+                        AlwaysActive="true">
+        <TextEdit Role="TextRole.Text"
+                Text="@LocalText"
+                TextChanged="OnTextChanged"
+                Blur="OnBlurAsync"
+                FocusIn="OnFocusIn"
+                MaxLength="MaxLength"
+                Size="Size" />
+    </ConditionalTooltip>
 </div>

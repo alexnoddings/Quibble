@@ -29,6 +29,9 @@ namespace Quibble.Client.Components.SynchronisedEdit
         [Parameter]
         public int MaxLength { get; set; } = int.MaxValue;
 
+        private bool ShouldShowMaxLengthWarning =>
+            IsFocused && MaxLength >= 8 && LocalText.Length >= MaxLength * 0.8;
+
         private bool IsFocused { get; set; }
 
         private bool IsSaveIconShown { get; set; }
