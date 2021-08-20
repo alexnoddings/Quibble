@@ -1,13 +1,13 @@
 <Project>
-  <!-- Project information. -->
-  <PropertyGroup>
+
+	<PropertyGroup Label="Project Info">
     <Product>Quibble</Product>
     <Authors>Alex Noddings</Authors>
     <Company>Alex Noddings</Company>
     <StrongNameKeyId>AlexNoddingsQuibble</StrongNameKeyId>
   </PropertyGroup>
 
-  <PropertyGroup>
+  <PropertyGroup Label="Repository Info">
     <RepoRoot>$(MSBuildThisFileDirectory)</RepoRoot>
     <RepositoryUrl>https://github.com/alexnoddings/Quibble</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -15,8 +15,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
-    <!-- Misc project configuration. -->
-  <PropertyGroup>
+  <PropertyGroup Label="Conventions">
     <!-- Default target framework. -->
       <DefaultTargetFramework>net6.0</DefaultTargetFramework>
 
@@ -31,10 +30,14 @@
 
     <!-- Always use nullable context where possible. -->
     <Nullable>enable</Nullable>
+    
+		<!-- Mark unit test projects. -->
+		<IsUnitTestProject Condition=" '$(IsUnitTestProject)' == '' ">false</IsUnitTestProject>
+		<IsUnitTestProject Condition=" $(MSBuildProjectName.StartsWith('Tests.')) ">true</IsUnitTestProject>
+		<IsPackable Condition=" '$(IsUnitTestProject)' == 'true' ">false</IsPackable>
   </PropertyGroup>
 
-  <!-- Warnings and errors. -->
-  <PropertyGroup>
+	<PropertyGroup Label="Warnings and Errors">
     <!-- Treat all warnings as errors. -->
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
@@ -50,4 +53,5 @@
       CS1998;
     </WarningsNotAsErrors>
   </PropertyGroup>
+
 </Project>
