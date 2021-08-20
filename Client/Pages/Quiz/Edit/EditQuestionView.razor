@@ -7,10 +7,10 @@
             <SynchronisedTextEdit Text="@Question.Text" SaveFunction="Question.UpdateTextAsync" MaxLength="200"/>
         </div>
     </Field>
-    <Field ColumnSize="ColumnSize.Is8.Is4.OnWidescreen">
+    <Field ColumnSize="ColumnSize.Is7.Is8.OnDesktop.Is4.OnWidescreen">
         <SynchronisedTextEdit Text="@Question.Answer" SaveFunction="Question.UpdateAnswerAsync" MaxLength="200"/>
     </Field>
-    <Field ColumnSize="ColumnSize.Is2.Is1.OnFullHD">
+    <Field ColumnSize="ColumnSize.Is3.Is2.OnDesktop.Is1.OnFullHD">
         <SynchronisedPointsEdit Points="@Question.Points" SaveFunction="Question.UpdatePointsAsync"/>
     </Field>
     <Field ColumnSize="ColumnSize.Is2.Is1.OnWidescreen">

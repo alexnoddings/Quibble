@@ -7,7 +7,7 @@ namespace Quibble.Client.Components.SynchronisedEdit
         [Parameter]
         public decimal Points { get; set; }
 
-        private string LocalPointsString { get; set; } = string.Empty;
+        private decimal LocalPoints { get; set; }
 
         [Parameter]
         public Func<decimal, Task> SaveFunction { get; set; } = default!;
@@ -15,23 +15,24 @@ namespace Quibble.Client.Components.SynchronisedEdit
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
-            LocalPointsString = Points.ToString("G4");
+            LocalPoints = Points;
         }
 
-        private Task RoundAndUpdatePointsAsync()
+        private Task UpdatePointsAsync()
         {
-            if (!decimal.TryParse(LocalPointsString, out decimal points))
-            {
-                LocalPointsString = Points.ToString("G4");
-                return Task.CompletedTask;
-            }
+            LocalPoints = RoundPoints(LocalPoints);
 
+            if (LocalPoints == Points)
+                return Task.CompletedTask;
+
+            return SaveFunction(LocalPoints);
+        }
+
+        private decimal RoundPoints(decimal points)
+        {
             // Ensure points are a division of 0.25
             points = Math.Round(points * 4, MidpointRounding.ToEven) / 4;
-            points = Math.Clamp(points, 0.25m, 10m);
-
-            LocalPointsString = points.ToString("G4");
-            return SaveFunction(points);
+            return Math.Clamp(points, 0.25m, 10m);
         }
     }
 }
