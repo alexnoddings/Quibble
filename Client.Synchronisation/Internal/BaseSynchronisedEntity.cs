@@ -17,9 +17,7 @@ namespace Quibble.Client.Sync.Internal
         }
 
         protected Task OnUpdatedAsync() =>
-            Updated?.Invoke() is null
-                ? Task.CompletedTask
-                : Updated.Invoke();
+            Updated?.Invoke() ?? Task.CompletedTask;
 
         public abstract int GetStateStamp();
 
@@ -28,11 +26,12 @@ namespace Quibble.Client.Sync.Internal
             var hashCode = new HashCode();
             foreach (var property in stateProperties)
                 if (property is not null)
-                    BuildStateStamp(hashCode, property);
+                    BuildStateStamp(ref hashCode, property);
+
             return hashCode.ToHashCode();
         }
 
-        private static void BuildStateStamp(HashCode hashCode, object obj)
+        private static void BuildStateStamp(ref HashCode hashCode, object obj)
         {
             if (obj is BaseSynchronisedEntity synchronisedEntity)
             {
@@ -45,7 +44,7 @@ namespace Quibble.Client.Sync.Internal
                 // Lists don't have their contents checked when added, need to add their items instead
                 foreach (var listObj in list)
                 {
-                    BuildStateStamp(hashCode, listObj);
+                    BuildStateStamp(ref hashCode, listObj);
                 }
             }
             else if (obj is IEnumerable<object> enumerable)
@@ -53,7 +52,7 @@ namespace Quibble.Client.Sync.Internal
                 // Enumerables don't have their contents checked when added, need to add their items instead
                 foreach (var enumerableObj in enumerable)
                 {
-                    BuildStateStamp(hashCode, enumerableObj);
+                    BuildStateStamp(ref hashCode, enumerableObj);
                 }
             }
             else
