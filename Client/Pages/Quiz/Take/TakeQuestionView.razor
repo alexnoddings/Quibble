@@ -1,7 +1,7 @@
 ﻿<Fields Class="align-items-center">
     <Field ColumnSize="ColumnSize.Is12.Is7.OnWidescreen" Display="Display.Flex">
         <Text Color="TextColor.Muted" Margin="Margin.Is2.FromRight">
-            @(Index + 1).
+            @(Question.Order + 1).
         </Text>
         <Text Class="@("text-break" + (Question.State == QuestionState.Open ? " user-select-none" : null))">
             @Question.Text

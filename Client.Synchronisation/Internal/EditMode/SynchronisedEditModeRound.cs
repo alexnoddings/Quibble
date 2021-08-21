@@ -12,7 +12,7 @@ namespace Quibble.Client.Sync.Internal.EditMode
         public Guid QuizId { get; }
         public string Title { get; private set; }
         public RoundState State { get; }
-        public int Order { get; } = 0;
+        public int Order { get; private set; }
 
         internal SynchronisedEditModeQuiz SyncedQuiz { get; }
         public ISynchronisedEditModeQuiz Quiz => SyncedQuiz;
@@ -27,10 +27,12 @@ namespace Quibble.Client.Sync.Internal.EditMode
             QuizId = round.QuizId;
             Title = round.Title;
             State = round.State;
+            Order = round.Order;
 
             SyncedQuiz = quiz;
 
             AddFilteredEventHandler<string>(c => c.OnRoundTitleUpdatedAsync, HandleTitleUpdatedAsync);
+            AddFilteredEventHandler<int>(c => c.OnRoundOrderUpdatedAsync, HandleRoundOrderUpdatedAsync);
 
             AddEventHandler<QuestionDto>(c => c.OnQuestionAddedAsync, HandleQuestionAddedAsync);
             AddEventHandler<Guid>(c => c.OnQuestionDeletedAsync, HandleQuestionDeletedAsync);
@@ -51,6 +53,13 @@ namespace Quibble.Client.Sync.Internal.EditMode
         private Task HandleTitleUpdatedAsync(string newTitle)
         {
             Title = newTitle;
+            return OnUpdatedAsync();
+        }
+
+        private Task HandleRoundOrderUpdatedAsync(int newOrder)
+        {
+            Order = newOrder;
+            Console.WriteLine(Title + " now " + newOrder.ToString());
             return OnUpdatedAsync();
         }
 
@@ -76,7 +85,7 @@ namespace Quibble.Client.Sync.Internal.EditMode
         }
 
         public override int GetStateStamp() =>
-            GenerateStateStamp(Title, SyncedQuestions);
+            GenerateStateStamp(Title, Order, SyncedQuestions);
 
         protected override void Dispose(bool disposing)
         {

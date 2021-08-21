@@ -10,14 +10,14 @@
         </Heading>
     </Column>
 </Row>
+
 @if (Quiz.Rounds.Any(round => round.State == RoundState.Open))
 {
-    int roundIndex = 0;
-    @foreach (var round in Quiz.Rounds.OrderBy(round => round.Order))
+    foreach (var round in Quiz.Rounds.OrderBy(round => round.Order))
     {
         <Row Margin="Margin.Is3.OnY">
             <Column ColumnSize="ColumnSize.Is12">
-                <TakeRoundView Round="round" Index="roundIndex++" @key="round.Id" />
+                <TakeRoundView Round="round" @key="round.Id" />
             </Column>
         </Row>
     }

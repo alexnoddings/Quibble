@@ -1,8 +1,13 @@
 ﻿<Card Background="Background.Light" Margin="Margin.Is3.OnY">
     <CardBody>
         <Fields Margin="Margin.Is3.FromBottom">
-            <Field ColumnSize="ColumnSize.Is10.Is11.OnFullHD" Margin="Margin.Is0.FromBottom">
-                <SynchronisedTextEdit Text="@Round.Title" SaveFunction="Round.UpdateTitleAsync" Size="Size.Large" MaxLength="100" />
+            <Field ColumnSize="ColumnSize.Is10.Is11.OnFullHD" Margin="Margin.Is0.FromBottom" Display="Display.Flex">
+                <Text Color="TextColor.Muted" Display="Display.InlineFlex.Column" Alignment="TextAlignment.Center" Class="justify-content-center"  Margin="Margin.Is2.FromRight">
+                    @(Round.Order + 1).
+                </Text>
+                <div class="flex-fill">
+                    <SynchronisedTextEdit Text="@Round.Title" SaveFunction="Round.UpdateTitleAsync" Size="Size.Large" MaxLength="100" />
+                </div>
             </Field>
             <Field ColumnSize="ColumnSize.Is2.Is1.OnFullHD" Margin="Margin.Is0.FromBottom">
                 <Button Block="true" Outline="true" Color="Color.Danger" @onclick="OnDeleteClickedAsync" Class="h-100">
@@ -34,10 +39,9 @@
             </Fields>
         }
         @{
-            int questionIndex = 0;
             foreach (var question in Round.Questions)
             {
-                <EditQuestionView Question="question" Index="questionIndex++" @key="question.Id" />
+                <EditQuestionView Question="question" @key="question.Id" />
             }
         }
         <Fields>

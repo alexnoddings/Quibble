@@ -13,7 +13,7 @@ namespace Quibble.Client.Sync.Internal.EditMode
         public string Answer { get; private set; }
         public decimal Points { get; private set; }
         public QuestionState State { get; }
-        public int Order { get; } = 0;
+        public int Order { get; private set; }
 
         internal SynchronisedEditModeRound SyncedRound { get; }
         public ISynchronisedEditModeRound Round => SyncedRound;
@@ -27,12 +27,14 @@ namespace Quibble.Client.Sync.Internal.EditMode
             Answer = question.Answer;
             Points = question.Points;
             State = question.State;
+            Order = question.Order;
 
             SyncedRound = round;
 
             AddFilteredEventHandler<string>(c => c.OnQuestionTextUpdatedAsync, HandleTextUpdatedAsync);
             AddFilteredEventHandler<string>(c => c.OnQuestionAnswerUpdatedAsync, HandleAnswerUpdatedAsync);
             AddFilteredEventHandler<decimal>(c => c.OnQuestionPointsUpdatedAsync, HandlePointsUpdatedAsync);
+            AddFilteredEventHandler<int>(c => c.OnQuestionOrderUpdatedAsync, HandleOrderUpdatedAsync);
         }
 
         public async Task UpdateTextAsync(string newText)
@@ -71,7 +73,13 @@ namespace Quibble.Client.Sync.Internal.EditMode
             return OnUpdatedAsync();
         }
 
+        private Task HandleOrderUpdatedAsync(int newOrder)
+        {
+            Order = newOrder;
+            return OnUpdatedAsync();
+        }
+
         public override int GetStateStamp() =>
-            GenerateStateStamp(Text, Answer, Points);
+            GenerateStateStamp(Text, Answer, Points, Order);
     }
 }

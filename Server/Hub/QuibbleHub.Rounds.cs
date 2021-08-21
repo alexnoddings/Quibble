@@ -38,7 +38,8 @@ namespace Quibble.Server.Hub
             var dbRound = new DbRound
             {
                 Title = title,
-                State = RoundState.Hidden
+                State = RoundState.Hidden,
+                Order = dbQuiz.Rounds.Count
             };
             dbQuiz.Rounds.Add(dbRound);
             await DbContext.SaveChangesAsync();
@@ -130,6 +131,7 @@ namespace Quibble.Server.Hub
             var dbRound =
                 await DbContext.Rounds
                     .Include(round => round.Quiz)
+                        .ThenInclude(quiz => quiz.Rounds)
                     .FindAsync(roundId);
 
             if (dbRound is null)
@@ -145,9 +147,25 @@ namespace Quibble.Server.Hub
                 return Failure(HubErrors.CantDeleteAsNotInDevelopment);
 
             DbContext.Rounds.Remove(dbRound);
+            dbRound.Quiz.Rounds.Remove(dbRound);
+
+            List<DbRound> modifiedRounds = new(dbRound.Quiz.Rounds.Count);
+            int roundCount = 0;
+            foreach (var quizRound in dbRound.Quiz.Rounds.OrderBy(round => round.Order))
+            {
+                if (quizRound.Order != roundCount)
+                {
+                    quizRound.Order = roundCount;
+                    modifiedRounds.Add(quizRound);
+                }
+                roundCount++;
+            }
             await DbContext.SaveChangesAsync();
 
-            await AllQuizUsersGroup(quizId).OnRoundDeletedAsync(dbRound.Id);
+            var allQuizUsersGroup = AllQuizUsersGroup(quizId);
+            await allQuizUsersGroup.OnRoundDeletedAsync(dbRound.Id);
+            foreach (var modifiedRound in modifiedRounds)
+                await allQuizUsersGroup.OnRoundOrderUpdatedAsync(modifiedRound.Id, modifiedRound.Order);
 
             return Success();
         }

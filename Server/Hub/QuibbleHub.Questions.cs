@@ -57,7 +57,8 @@ namespace Quibble.Server.Hub
                 Text = text,
                 Answer = answer,
                 Points = points,
-                State = QuestionState.Hidden
+                State = QuestionState.Hidden,
+                Order = dbRound.Questions.Count
             };
             dbRound.Questions.Add(dbQuestion);
             await DbContext.SaveChangesAsync();
@@ -314,6 +315,8 @@ namespace Quibble.Server.Hub
                 await DbContext.Questions
                     .Include(question => question.Round)
                         .ThenInclude(round => round.Quiz)
+                    .Include(question => question.Round)
+                        .ThenInclude(round => round.Questions)
                     .FindAsync(questionId);
 
             if (dbQuestion is null)
@@ -329,9 +332,25 @@ namespace Quibble.Server.Hub
                 return Failure(HubErrors.CantDeleteAsNotInDevelopment);
 
             DbContext.Questions.Remove(dbQuestion);
+            dbQuestion.Round.Questions.Remove(dbQuestion);
+
+            List<DbQuestion> modifiedQuestions = new(dbQuestion.Round.Questions.Count);
+            int questionCount = 0;
+            foreach (var roundQuestion in dbQuestion.Round.Questions.OrderBy(round => round.Order))
+            {
+                if (roundQuestion.Order != questionCount)
+                {
+                    roundQuestion.Order = questionCount;
+                    modifiedQuestions.Add(roundQuestion);
+                }
+                questionCount++;
+            }
             await DbContext.SaveChangesAsync();
 
-            await AllQuizUsersGroup(quizId).OnQuestionDeletedAsync(questionId);
+            var allQuizUsersGroup = AllQuizUsersGroup(quizId);
+            await allQuizUsersGroup.OnQuestionDeletedAsync(dbQuestion.Id);
+            foreach (var modifiedQuestion in modifiedQuestions)
+                await allQuizUsersGroup.OnQuestionOrderUpdatedAsync(modifiedQuestion.Id, modifiedQuestion.Order);
 
             return Success();
         }

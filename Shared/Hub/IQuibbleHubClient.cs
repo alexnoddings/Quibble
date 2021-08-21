@@ -11,6 +11,7 @@ namespace Quibble.Shared.Hub
 
         public Task OnRoundAddedAsync(RoundDto round);
         public Task OnRoundTitleUpdatedAsync(Guid roundId, string newTitle);
+        public Task OnRoundOrderUpdatedAsync(Guid roundId, int newOrder);
         public Task OnRoundOpenedAsync(Guid roundId);
         public Task OnRoundDeletedAsync(Guid roundId);
 
@@ -19,6 +20,7 @@ namespace Quibble.Shared.Hub
         public Task OnQuestionAnswerUpdatedAsync(Guid questionId, string newAnswer);
         public Task OnQuestionPointsUpdatedAsync(Guid questionId, decimal newPoints);
         public Task OnQuestionStateUpdatedAsync(Guid questionId, QuestionState newState);
+        public Task OnQuestionOrderUpdatedAsync(Guid questionId, int newOrder);
         public Task OnQuestionDeletedAsync(Guid questionId);
         public Task OnQuestionRevealedAsync(QuestionDto question, SubmittedAnswerDto submittedAnswer);
 

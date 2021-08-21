@@ -12,11 +12,6 @@ namespace Quibble.Client.Pages.Quiz.Edit
 
         private OptionsModal<bool> ConfirmDeleteModal { get; set; } = default!;
 
-        [Parameter]
-        public int Index { get; set; }
-
-        private int PreviousIndex { get; set; }
-
         private int LastStateStamp { get; set; } = 0;
 
         protected override void OnInitialized()
@@ -25,7 +20,6 @@ namespace Quibble.Client.Pages.Quiz.Edit
 
             Question.Updated += OnUpdatedAsync;
             LastStateStamp = Question.GetStateStamp();
-            PreviousIndex = Index;
         }
 
         private Task OnUpdatedAsync() =>
@@ -43,12 +37,6 @@ namespace Quibble.Client.Pages.Quiz.Edit
 
         protected override bool ShouldRender()
         {
-            if (Index != PreviousIndex)
-            {
-                PreviousIndex = Index;
-                return true;
-            }
-
             var currentStateStamp = Question.GetStateStamp();
             if (currentStateStamp == LastStateStamp)
                 return false;

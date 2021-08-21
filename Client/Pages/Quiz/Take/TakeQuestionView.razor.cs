@@ -8,11 +8,6 @@ namespace Quibble.Client.Pages.Quiz.Take
         [Parameter]
         public ISynchronisedTakeModeQuestion Question { get; set; } = default!;
 
-        [Parameter]
-        public int Index { get; set; }
-
-        private int PreviousIndex { get; set; }
-
         private int LastStateStamp { get; set; } = 0;
 
         protected override void OnInitialized()
@@ -23,7 +18,6 @@ namespace Quibble.Client.Pages.Quiz.Take
             if (Question.SubmittedAnswer is not null)
                 Question.SubmittedAnswer.Updated += OnUpdatedAsync;
             LastStateStamp = Question.GetStateStamp();
-            PreviousIndex = Index;
         }
 
         private Task OnUpdatedAsync() =>
@@ -31,12 +25,6 @@ namespace Quibble.Client.Pages.Quiz.Take
 
         protected override bool ShouldRender()
         {
-            if (Index != PreviousIndex)
-            {
-                PreviousIndex = Index;
-                return true;
-            }
-
             var currentStateStamp = Question.GetStateStamp();
             if (currentStateStamp == LastStateStamp)
                 return false;
