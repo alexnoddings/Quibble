@@ -6,11 +6,11 @@ namespace Quibble.Client.Pages.Quiz.Host
     public sealed partial class HostParticipantList : IDisposable
     {
         [Parameter]
-        public ISynchronisedHostModeQuiz Quiz { get; set; } = default!;
+        public ISyncedHostModeQuiz Quiz { get; set; } = default!;
 
         private int LastStateStamp { get; set; } = 0;
 
-        private List<ISynchronisedHostModeParticipant> KnownParticipants { get; } = new();
+        private List<ISyncedHostModeParticipant> KnownParticipants { get; } = new();
 
         protected override void OnInitialized()
         {
@@ -52,7 +52,7 @@ namespace Quibble.Client.Pages.Quiz.Host
             return true;
         }
 
-        private IEnumerable<(decimal, List<ISynchronisedHostModeParticipant>)> GetParticipantScores() =>
+        private IEnumerable<(decimal, List<ISyncedHostModeParticipant>)> GetParticipantScores() =>
             from participant in Quiz.Participants
             let score = participant
                 .Answers

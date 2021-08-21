@@ -33,7 +33,7 @@ namespace Quibble.Client.Pages.Quiz
 
             GetQuizResult = await QuizFactory.GetQuizAsync(QuizId);
 
-            if (GetQuizResult.Value is ISynchronisedEditModeQuiz editModeQuiz)
+            if (GetQuizResult.Value is ISyncedEditModeQuiz editModeQuiz)
                 editModeQuiz.OnInvalidated += OnQuizInvalidated;
 
             await InvokeAsync(StateHasChanged);
@@ -44,7 +44,7 @@ namespace Quibble.Client.Pages.Quiz
             var syncedQuiz = GetQuizResult?.Value;
             if (syncedQuiz is null) return;
 
-            if (syncedQuiz is ISynchronisedEditModeQuiz editModeQuiz)
+            if (syncedQuiz is ISyncedEditModeQuiz editModeQuiz)
                 editModeQuiz.OnInvalidated -= OnQuizInvalidated;
 
             await syncedQuiz.DisposeAsync();

@@ -37,17 +37,17 @@ else if (GetQuizResult.Error is not null)
     <FullPageTitle Value="Error loading quiz" />
     @($"{GetQuizResult.Error.StatusCode}: {GetQuizResult.Error.ErrorKey}")
 }
-else if (GetQuizResult.Value is ISynchronisedEditModeQuiz editModeQuiz)
+else if (GetQuizResult.Value is ISyncedEditModeQuiz editModeQuiz)
 {
     <FullPageTitle Value="@($"Editing {editModeQuiz.Title}")" />
     <EditQuizView Quiz="editModeQuiz" />
 }
-else if (GetQuizResult.Value is ISynchronisedHostModeQuiz hostModeQuiz)
+else if (GetQuizResult.Value is ISyncedHostModeQuiz hostModeQuiz)
 {
     <FullPageTitle Value="@($"Hosting {hostModeQuiz.Title}")" />
     <HostQuizView Quiz="hostModeQuiz" />
 }
-else if (GetQuizResult.Value is ISynchronisedTakeModeQuiz takeModeQuiz)
+else if (GetQuizResult.Value is ISyncedTakeModeQuiz takeModeQuiz)
 {
     <FullPageTitle Value="@takeModeQuiz.Title" />
     <TakeQuizView Quiz="takeModeQuiz" />

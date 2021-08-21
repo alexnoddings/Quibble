@@ -6,7 +6,7 @@ namespace Quibble.Client.Pages.Quiz.Host
     public sealed partial class HostQuestionList : IDisposable
     {
         [Parameter]
-        public ISynchronisedHostModeQuiz Quiz { get; set; } = default!;
+        public ISyncedHostModeQuiz Quiz { get; set; } = default!;
 
         [Parameter]
         public SelectionContext Selection { get; set; } = default!;

@@ -6,11 +6,11 @@ namespace Quibble.Client.Pages.Quiz.Take
     public sealed partial class TakeRoundView : IDisposable
     {
         [Parameter]
-        public ISynchronisedTakeModeRound Round { get; set; } = default!;
+        public ISyncedTakeModeRound Round { get; set; } = default!;
 
         private int LastStateStamp { get; set; } = 0;
 
-        private List<ISynchronisedTakeModeQuestion> KnownQuestions { get; } = new();
+        private List<ISyncedTakeModeQuestion> KnownQuestions { get; } = new();
 
         protected override void OnInitialized()
         {

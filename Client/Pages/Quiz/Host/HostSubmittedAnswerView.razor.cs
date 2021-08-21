@@ -7,7 +7,7 @@ namespace Quibble.Client.Pages.Quiz.Host
     public sealed partial class HostSubmittedAnswerView : IDisposable
     {
         [Parameter]
-        public ISynchronisedHostModeSubmittedAnswer SubmittedAnswer { get; set; } = default!;
+        public ISyncedHostModeSubmittedAnswer SubmittedAnswer { get; set; } = default!;
 
         private string LocalPointsString { get; set; } = string.Empty;
 

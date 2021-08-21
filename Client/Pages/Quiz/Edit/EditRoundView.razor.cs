@@ -8,7 +8,7 @@ namespace Quibble.Client.Pages.Quiz.Edit
     public sealed partial class EditRoundView : IDisposable
     {
         [Parameter]
-        public ISynchronisedEditModeRound Round { get; set; } = default!;
+        public ISyncedEditModeRound Round { get; set; } = default!;
 
         private OptionsModal<bool> ConfirmDeleteModal { get; set; } = default!;
 

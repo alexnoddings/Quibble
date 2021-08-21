@@ -4,9 +4,9 @@ namespace Quibble.Client.Pages.Quiz.Host
 {
     public class SelectionContext
     {
-        private ISynchronisedHostModeQuiz Quiz { get; }
-        public ISynchronisedHostModeRound Round => Quiz.Rounds[RoundNumber];
-        public ISynchronisedHostModeQuestion Question => Round.Questions[QuestionNumber];
+        private ISyncedHostModeQuiz Quiz { get; }
+        public ISyncedHostModeRound Round => Quiz.Rounds[RoundNumber];
+        public ISyncedHostModeQuestion Question => Round.Questions[QuestionNumber];
 
         public int RoundNumber { get; private set; }
         public int QuestionNumber { get; private set; }
@@ -16,7 +16,7 @@ namespace Quibble.Client.Pages.Quiz.Host
         public bool IsAtFirstQuestion => RoundNumber == 0 && QuestionNumber == 0;
         public bool IsAtLastQuestion => RoundNumber == Quiz.Rounds.Count - 1 && QuestionNumber == Round.Questions.Count - 1;
 
-        public SelectionContext(ISynchronisedHostModeQuiz quiz)
+        public SelectionContext(ISyncedHostModeQuiz quiz)
         {
             Quiz = quiz;
         }

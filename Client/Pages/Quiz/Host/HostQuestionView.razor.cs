@@ -7,12 +7,12 @@ namespace Quibble.Client.Pages.Quiz.Host
     public sealed partial class HostQuestionView : IDisposable
     {
         [Parameter]
-        public ISynchronisedHostModeQuiz Quiz { get; set; } = default!;
+        public ISyncedHostModeQuiz Quiz { get; set; } = default!;
 
         [Parameter]
         public SelectionContext Selection { get; set; } = default!;
 
-        private ISynchronisedHostModeQuestion LastQuestion { get; set; } = default!;
+        private ISyncedHostModeQuestion LastQuestion { get; set; } = default!;
 
         protected override void OnInitialized()
         {

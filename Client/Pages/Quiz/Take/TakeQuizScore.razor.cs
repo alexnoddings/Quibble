@@ -6,7 +6,7 @@ namespace Quibble.Client.Pages.Quiz.Take
     public sealed partial class TakeQuizScore : IDisposable
     {
         [Parameter]
-        public ISynchronisedTakeModeQuiz Quiz { get; set; } = default!;
+        public ISyncedTakeModeQuiz Quiz { get; set; } = default!;
 
         protected override void OnInitialized()
         {
@@ -29,14 +29,14 @@ namespace Quibble.Client.Pages.Quiz.Take
 
         private Task OnUpdatedAsync() => InvokeAsync(StateHasChanged);
 
-        private Task OnRoundAddedAsync(ISynchronisedTakeModeRound round)
+        private Task OnRoundAddedAsync(ISyncedTakeModeRound round)
         {
             round.Updated += OnUpdatedAsync;
             round.QuestionAdded += OnQuestionAddedAsync;
             return Task.CompletedTask;
         }
 
-        private Task OnQuestionAddedAsync(ISynchronisedTakeModeQuestion question)
+        private Task OnQuestionAddedAsync(ISyncedTakeModeQuestion question)
         {
             question.Updated += OnUpdatedAsync;
             if (question.SubmittedAnswer is not null)

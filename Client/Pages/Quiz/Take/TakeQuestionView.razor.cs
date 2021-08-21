@@ -6,7 +6,7 @@ namespace Quibble.Client.Pages.Quiz.Take
     public sealed partial class TakeQuestionView : IDisposable
     {
         [Parameter]
-        public ISynchronisedTakeModeQuestion Question { get; set; } = default!;
+        public ISyncedTakeModeQuestion Question { get; set; } = default!;
 
         private int LastStateStamp { get; set; } = 0;
 

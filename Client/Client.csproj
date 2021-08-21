@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Client.Synchronisation\Client.Sync.csproj" />
+    <ProjectReference Include="..\Client.Sync.SignalR\Client.Sync.SignalR.csproj" />
     <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Quibble.Client.Services.Authentication;
 using Quibble.Client.Services.Themeing;
-using Quibble.Client.Sync.Extensions;
+using Quibble.Client.Sync.SignalR.Extensions;
 
 namespace Quibble.Client
 {
@@ -36,7 +36,7 @@ namespace Quibble.Client
             services.AddScoped<AuthenticationStateProvider>(serviceProvider => serviceProvider.GetRequiredService<IdentityAuthenticationStateProvider>());
 
             services.AddHttpClient("QuizApi", httpClient => httpClient.BaseAddress = new Uri(baseAddress + "Api/Quiz/"));
-            services.AddSynchronisedQuizFactory();
+            services.AddSignalrSyncedQuizFactory();
 
             services
                 .AddBlazorise(options =>
