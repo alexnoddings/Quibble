@@ -15,9 +15,7 @@ namespace Quibble.Client.Pages.Quiz.Edit
 
         private OptionsModal<bool> ConfirmDeleteModal { get; set; } = default!;
 
-        private Alert ErrorMessagesAlert { get; set; } = default!;
-
-        private List<string>? ErrorMessages { get; set; }
+        private List<string> ErrorMessages { get; set; } = new();
 
         private int LastStateStamp { get; set; } = 0;
 
@@ -26,7 +24,7 @@ namespace Quibble.Client.Pages.Quiz.Edit
             base.OnInitialized();
 
             Quiz.Updated += OnUpdatedAsync;
-            LastStateStamp = Quiz.GetStateStamp();
+            LastStateStamp = GetStateStamp();
         }
 
         private Task OnUpdatedAsync() => InvokeAsync(StateHasChanged);
@@ -48,10 +46,14 @@ namespace Quibble.Client.Pages.Quiz.Edit
 
         private async Task PublishAsync()
         {
-            if (!Quiz.Rounds.SelectMany(round => round.Questions).Any())
-                return;
+            ErrorMessages.Clear();
 
-            ErrorMessages = new List<string>();
+            if (!Quiz.Rounds.SelectMany(round => round.Questions).Any())
+            {
+                ErrorMessages.Add("No questions present.");
+                return;
+            }
+
             var roundCount = 0;
             foreach (var round in Quiz.Rounds)
             {
@@ -71,15 +73,21 @@ namespace Quibble.Client.Pages.Quiz.Edit
                 }
             }
 
-            if (ErrorMessages.Any())
-                ErrorMessagesAlert.Show();
-            else if (await ConfirmPublishModal.ShowAsync(false))
+            if (await ConfirmPublishModal.ShowAsync(false))
                 await Quiz.OpenAsync();
         }
 
+        private int GetStateStamp() =>
+            // Don't bother hashing messages individually:
+            //   Can go from no errors to some (e.g. validating)
+            //   or from some to none (e.g. clearing messages)
+            //   but the errors can't change content without changing
+            //   some part of the quiz state
+            HashCode.Combine(Quiz.GetStateStamp(), ErrorMessages.Count);
+
         protected override bool ShouldRender()
         {
-            var currentStateStamp = Quiz.GetStateStamp();
+            var currentStateStamp = GetStateStamp();
             if (currentStateStamp == LastStateStamp)
                 return false;
 

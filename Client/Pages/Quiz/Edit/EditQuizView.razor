@@ -1,23 +1,21 @@
 ﻿@using Quibble.Client.Sync.Entities.EditMode
 
-<Alert @ref="ErrorMessagesAlert" Color="Color.Warning">
+<Alert Visible="ErrorMessages.Count > 0" Color="Color.Warning">
+    <CloseButton Clicked="() => ErrorMessages.Clear()" />
     <AlertDescription>
-        @if (ErrorMessages is not null)
+        @foreach (var message in ErrorMessages.Take(5))
         {
-            foreach (var message in ErrorMessages.Take(5))
-            {
+            <Paragraph Margin="Margin.Is1.OnY">
                 @message
-                <br />
-            }
-            <AlertMessage>
-                @if (ErrorMessages.Count > 5)
-                {
-                    <text>+ @(ErrorMessages.Count - 5) more issues</text>
-                }
-            </AlertMessage>
+            </Paragraph>
         }
     </AlertDescription>
-    <CloseButton />
+    @if (ErrorMessages.Count > 5)
+    {
+        <AlertMessage>
+            + @(ErrorMessages.Count - 5) more issues
+        </AlertMessage>
+    }
 </Alert>
 
 <Fields Margin="Margin.Is3.FromBottom">
@@ -90,12 +88,12 @@
 <OptionsModal TValue="bool" @ref="ConfirmDeleteModal" Title="Delete quiz">
     <Body>
         Are you sure you want to delete this quiz?
-        <Text Color="TextColor.Danger" Display="Display.Inline">
+        <Text Color="TextColor.Danger" Display="Display.Inline" Weight="TextWeight.Bold">
             This action is irreversible.
         </Text>
-        <Text Margin="Margin.Is3.FromLeft.Is2.OnY">
+        <Paragraph Margin="Margin.Is3.FromLeft.Is2.OnY">
             @Quiz.Title
-        </Text>
+        </Paragraph>
     </Body>
     <Footer Context="Options">
         <Button Color="Color.Dark" Clicked="() => Options.Choose(false)" Outline="true" Margin="Margin.Is2.FromRight">
