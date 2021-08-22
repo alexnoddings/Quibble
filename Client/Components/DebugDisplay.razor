@@ -3,6 +3,7 @@
 @using Microsoft.Extensions.Configuration
 @using Quibble.Client.Services.Themeing
 @using Config = Blazorise.Config
+@using System.Security.Claims
 
 @if (!HostEnvironment.IsProduction())
 {
@@ -52,6 +53,21 @@
                         <Text Display="Display.None.Inline.OnFullHD">
                             FullHD
                         </Text>
+                    </samp>
+                </BarDropdownItem>
+                <BarDropdownItem>
+                    <Text Weight="TextWeight.Bold">
+                        User:
+                    </Text>
+                    <samp>
+                        <AuthorizeView>
+                            <Authorized>
+                                @context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                            </Authorized>
+                            <NotAuthorized>
+                                N/A
+                            </NotAuthorized>
+                        </AuthorizeView>
                     </samp>
                 </BarDropdownItem>
             </BarDropdownMenu>
