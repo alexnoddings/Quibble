@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
 using Quibble.Client.Sync.Entities.EditMode;
+using Quibble.Shared.Api;
 using Quibble.Shared.Entities;
 using Quibble.Shared.Hub;
 using Quibble.Shared.Models.Dtos;
@@ -40,7 +41,7 @@ namespace Quibble.Client.Sync.SignalR.Entities.EditMode
 
         public async Task UpdateTitleAsync(string newTitle)
         {
-            var response = await HubConnection.InvokeAsync<HubResponse>(Endpoints.UpdateQuizTitle, newTitle);
+            var response = await HubConnection.InvokeAsync<ApiResponse>(Endpoints.UpdateQuizTitle, newTitle);
             if (response.WasSuccessful)
                 Title = newTitle;
         }

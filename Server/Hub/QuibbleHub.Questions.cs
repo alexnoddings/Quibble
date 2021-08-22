@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Quibble.Server.Data.Models;
 using Quibble.Server.Extensions;
+using Quibble.Shared.Api;
 using Quibble.Shared.Entities;
 using Quibble.Shared.Hub;
 using Quibble.Shared.Models.Dtos;
@@ -11,7 +12,7 @@ namespace Quibble.Server.Hub
     public partial class QuibbleHub
     {
         [HubMethodName(Endpoints.CreateQuestion)]
-        public async Task<HubResponse> CreateQuestionAsync(Guid roundId, string text, string answer, decimal points)
+        public async Task<ApiResponse> CreateQuestionAsync(Guid roundId, string text, string answer, decimal points)
         {
             (Guid userId, Guid quizId, ApiError? error) = ExecutionContext;
             if (error is not null)
@@ -70,7 +71,7 @@ namespace Quibble.Server.Hub
         }
 
         [HubMethodName(Endpoints.UpdateQuestionText)]
-        public async Task<HubResponse> UpdateQuestionTextAsync(Guid questionId, string newText)
+        public async Task<ApiResponse> UpdateQuestionTextAsync(Guid questionId, string newText)
         {
             (Guid userId, Guid quizId, ApiError? error) = ExecutionContext;
             if (error is not null)
@@ -107,7 +108,7 @@ namespace Quibble.Server.Hub
         }
 
         [HubMethodName(Endpoints.UpdateQuestionAnswer)]
-        public async Task<HubResponse> UpdateQuestionAnswerAsync(Guid questionId, string newAnswer)
+        public async Task<ApiResponse> UpdateQuestionAnswerAsync(Guid questionId, string newAnswer)
         {
             (Guid userId, Guid quizId, ApiError? error) = ExecutionContext;
             if (error is not null)
@@ -144,7 +145,7 @@ namespace Quibble.Server.Hub
         }
 
         [HubMethodName(Endpoints.UpdateQuestionPoints)]
-        public async Task<HubResponse> UpdateQuestionPointsAsync(Guid questionId, decimal newPoints)
+        public async Task<ApiResponse> UpdateQuestionPointsAsync(Guid questionId, decimal newPoints)
         {
             (Guid userId, Guid quizId, ApiError? error) = ExecutionContext;
             if (error is not null)
@@ -186,7 +187,7 @@ namespace Quibble.Server.Hub
         }
 
         [HubMethodName(Endpoints.UpdateQuestionState)]
-        public async Task<HubResponse> UpdateQuestionStateAsync(Guid questionId, QuestionState newState)
+        public async Task<ApiResponse> UpdateQuestionStateAsync(Guid questionId, QuestionState newState)
         {
             (Guid userId, Guid quizId, ApiError? error) = ExecutionContext;
             if (error is not null)
@@ -305,7 +306,7 @@ namespace Quibble.Server.Hub
         }
 
         [HubMethodName(Endpoints.DeleteQuestion)]
-        public async Task<HubResponse> DeleteQuestionAsync(Guid questionId)
+        public async Task<ApiResponse> DeleteQuestionAsync(Guid questionId)
         {
             (Guid userId, Guid quizId, ApiError? error) = ExecutionContext;
             if (error is not null)

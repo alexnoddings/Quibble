@@ -1,49 +1,52 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace Quibble.Shared.Hub
+namespace Quibble.Shared.Api
 {
-    public record HubResponse
+    public record ApiResponse
     {
         [MemberNotNullWhen(false, nameof(Error))]
         public virtual bool WasSuccessful { get; }
+
         public ApiError? Error { get; }
 
-        public HubResponse(bool wasSuccessful, ApiError? error)
+        public ApiResponse(bool wasSuccessful, ApiError? error)
         {
             if (!wasSuccessful && error is null)
                 throw new ArgumentException($"Cannot be null or whitespace when {nameof(wasSuccessful)} is false.", nameof(error));
+            if (wasSuccessful && error is not null)
+                throw new ArgumentException($"Must be null or whitespace when {nameof(wasSuccessful)} is true.", nameof(error));
 
             WasSuccessful = wasSuccessful;
             Error = error;
         }
 
-        public static HubResponse FromSuccess()
+        public static ApiResponse FromSuccess()
         {
-            return new HubResponse(true, null);
+            return new ApiResponse(true, null);
         }
 
-        public static HubResponse<TValue> FromSuccess<TValue>(TValue value)
+        public static ApiResponse<TValue> FromSuccess<TValue>(TValue value)
         {
             if (value is null)
                 throw new ArgumentNullException(nameof(value), "Cannot be null for a successful result.");
 
-            return new HubResponse<TValue>(true, null, value);
+            return new ApiResponse<TValue>(true, null, value);
         }
 
-        public static HubResponse FromError(ApiError error)
+        public static ApiResponse FromError(ApiError error)
         {
             if (error is null)
                 throw new ArgumentNullException(nameof(error));
 
-            return new HubResponse(false, error);
+            return new ApiResponse(false, error);
         }
 
-        public static HubResponse<TValue> FromError<TValue>(ApiError error)
+        public static ApiResponse<TValue> FromError<TValue>(ApiError error)
         {
             if (error is null)
                 throw new ArgumentNullException(nameof(error));
 
-            return new HubResponse<TValue>(false, error, default);
+            return new ApiResponse<TValue>(false, error, default);
         }
     }
 }

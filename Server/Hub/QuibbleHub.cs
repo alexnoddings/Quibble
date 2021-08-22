@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Quibble.Server.Data;
 using Quibble.Server.Data.Models;
 using Quibble.Server.Extensions;
+using Quibble.Shared.Api;
 using Quibble.Shared.Entities;
 using Quibble.Shared.Hub;
 using Quibble.Shared.Models.Dtos;
@@ -128,10 +129,10 @@ namespace Quibble.Server.Hub
             return quizId;
         }
 
-        private static HubResponse Success() => HubResponse.FromSuccess();
-        private static HubResponse<TValue> Success<TValue>(TValue value) => HubResponse.FromSuccess(value);
-        private static HubResponse Failure(ApiError error) => HubResponse.FromError(error);
-        private static HubResponse<TValue> Failure<TValue>(ApiError error) => HubResponse.FromError<TValue>(error);
+        private static ApiResponse Success() => ApiResponse.FromSuccess();
+        private static ApiResponse<TValue> Success<TValue>(TValue value) => ApiResponse.FromSuccess(value);
+        private static ApiResponse Failure(ApiError error) => ApiResponse.FromError(error);
+        private static ApiResponse<TValue> Failure<TValue>(ApiError error) => ApiResponse.FromError<TValue>(error);
 
         private IQuibbleHubClient AllQuizUsersGroup(Guid quizId) => Clients.Group(GetQuizGroupName(quizId));
         private IQuibbleHubClient AllQuizParticipantsGroup(Guid quizId) => Clients.Group(GetQuizParticipantsGroupName(quizId));

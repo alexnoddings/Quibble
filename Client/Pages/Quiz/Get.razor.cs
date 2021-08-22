@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components;
 using Quibble.Client.Sync.Entities.EditMode;
 using Quibble.Client.Sync.Entities;
 using Quibble.Client.Sync;
-using Quibble.Shared.Hub;
+using Quibble.Shared.Api;
 
 namespace Quibble.Client.Pages.Quiz
 {
@@ -16,7 +16,7 @@ namespace Quibble.Client.Pages.Quiz
         [Inject]
         private ISynchronisedQuizFactory QuizFactory { get; set; } = default!;
 
-        private HubResponse<ISynchronisedQuiz>? GetQuizResult { get; set; }
+        private ApiResponse<ISynchronisedQuiz>? GetQuizResult { get; set; }
 
         protected override async Task OnInitializedAsync()
         {

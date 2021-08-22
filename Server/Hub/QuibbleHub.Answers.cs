@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Quibble.Server.Extensions;
+using Quibble.Shared.Api;
 using Quibble.Shared.Entities;
 using Quibble.Shared.Hub;
 
@@ -8,7 +9,7 @@ namespace Quibble.Server.Hub
 {
     public partial class QuibbleHub
     {
-        private async Task<HubResponse> UpdateSubmittedAnswerTextCoreAsync(Guid answerId, string newText, bool shouldPersist)
+        private async Task<ApiResponse> UpdateSubmittedAnswerTextCoreAsync(Guid answerId, string newText, bool shouldPersist)
         {
             (Guid userId, Guid quizId, ApiError? error) = ExecutionContext;
             if (error is not null)
@@ -51,15 +52,15 @@ namespace Quibble.Server.Hub
         }
 
         [HubMethodName(Endpoints.PreviewUpdateSubmittedAnswerText)]
-        public Task<HubResponse> PreviewUpdateSubmittedAnswerTextAsync(Guid answerId, string newText) =>
+        public Task<ApiResponse> PreviewUpdateSubmittedAnswerTextAsync(Guid answerId, string newText) =>
             UpdateSubmittedAnswerTextCoreAsync(answerId, newText, false);
 
         [HubMethodName(Endpoints.UpdateSubmittedAnswerText)]
-        public Task<HubResponse> UpdateSubmittedAnswerTextAsync(Guid answerId, string newText) =>
+        public Task<ApiResponse> UpdateSubmittedAnswerTextAsync(Guid answerId, string newText) =>
             UpdateSubmittedAnswerTextCoreAsync(answerId, newText, true);
 
         [HubMethodName(Endpoints.UpdateSubmittedAnswerAssignedPoints)]
-        public async Task<HubResponse> UpdateSubmittedAnswerAssignedPointsAsync(Guid answerId, decimal points)
+        public async Task<ApiResponse> UpdateSubmittedAnswerAssignedPointsAsync(Guid answerId, decimal points)
         {
             (Guid userId, Guid quizId, ApiError? error) = ExecutionContext;
             if (error is not null)

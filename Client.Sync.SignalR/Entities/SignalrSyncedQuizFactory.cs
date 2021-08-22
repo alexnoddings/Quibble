@@ -7,6 +7,7 @@ using Quibble.Client.Sync.Entities;
 using Quibble.Client.Sync.SignalR.Entities.EditMode;
 using Quibble.Client.Sync.SignalR.Entities.HostMode;
 using Quibble.Client.Sync.SignalR.Entities.TakeMode;
+using Quibble.Shared.Api;
 using Quibble.Shared.Entities;
 using Quibble.Shared.Hub;
 using Quibble.Shared.Models.Dtos;
@@ -26,21 +27,21 @@ namespace Quibble.Client.Sync.SignalR.Entities
             NavigationManager = navigationManager;
         }
 
-        public async Task<HubResponse<ISynchronisedQuiz>> GetQuizAsync(Guid quizId)
+        public async Task<ApiResponse<ISynchronisedQuiz>> GetQuizAsync(Guid quizId)
         {
             if (quizId == Guid.Empty)
-                return HubResponse.FromError<ISynchronisedQuiz>(HubErrors.QuizNotFound);
+                return ApiResponse.FromError<ISynchronisedQuiz>(HubErrors.QuizNotFound);
 
             var quizNegotiationResponse = await HttpClient.GetAsync($"{quizId}/negotiate");
             if (quizNegotiationResponse.StatusCode == HttpStatusCode.NotFound)
-                return HubResponse.FromError<ISynchronisedQuiz>(HubErrors.QuizNotFound);
+                return ApiResponse.FromError<ISynchronisedQuiz>(HubErrors.QuizNotFound);
 
             var quizNegotiation = await quizNegotiationResponse.Content.ReadFromJsonAsync<QuizNegotiationDto>();
             if (quizNegotiation is null)
-                return HubResponse.FromError<ISynchronisedQuiz>(HubErrors.QuizNotFound);
+                return ApiResponse.FromError<ISynchronisedQuiz>(HubErrors.QuizNotFound);
 
             if (quizNegotiation.State == QuizState.InDevelopment && !quizNegotiation.CanEdit)
-                return HubResponse.FromError<ISynchronisedQuiz>(HubErrors.QuizNotOpen);
+                return ApiResponse.FromError<ISynchronisedQuiz>(HubErrors.QuizNotOpen);
 
             var hubUrl = NavigationManager.ToAbsoluteUri($"Api/Quibble/{quizId}");
             var hubConnection =
@@ -50,11 +51,11 @@ namespace Quibble.Client.Sync.SignalR.Entities
                     .Build();
 
             await hubConnection.StartAsync();
-            var getQuizHubResponse = await hubConnection.InvokeAsync<HubResponse<FullQuizDto>>(Endpoints.GetQuiz);
+            var getQuizHubResponse = await hubConnection.InvokeAsync<ApiResponse<FullQuizDto>>(Endpoints.GetQuiz);
             if (!getQuizHubResponse.WasSuccessful)
-                return HubResponse.FromError<ISynchronisedQuiz>(getQuizHubResponse.Error);
+                return ApiResponse.FromError<ISynchronisedQuiz>(getQuizHubResponse.Error);
             if (getQuizHubResponse.Value is null)
-                return HubResponse.FromError<ISynchronisedQuiz>(HubErrors.QuizNotFound);
+                return ApiResponse.FromError<ISynchronisedQuiz>(HubErrors.QuizNotFound);
 
             var quizDto = getQuizHubResponse.Value;
             ISynchronisedQuiz synchronisedQuiz;
@@ -95,10 +96,10 @@ namespace Quibble.Client.Sync.SignalR.Entities
                             .Build();
                     break;
                 default:
-                    return HubResponse.FromError<ISynchronisedQuiz>(HubErrors.UnknownError);
+                    return ApiResponse.FromError<ISynchronisedQuiz>(HubErrors.UnknownError);
             }
 
-            return HubResponse.FromSuccess(synchronisedQuiz);
+            return ApiResponse.FromSuccess(synchronisedQuiz);
         }
     }
 }

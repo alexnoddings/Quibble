@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
 using Quibble.Client.Sync.Entities.EditMode;
+using Quibble.Shared.Api;
 using Quibble.Shared.Entities;
 using Quibble.Shared.Hub;
 
@@ -39,14 +40,16 @@ namespace Quibble.Client.Sync.SignalR.Entities.EditMode
 
         public async Task UpdateTextAsync(string newText)
         {
-            await HubConnection.InvokeAsync(Endpoints.UpdateQuestionText, Id, newText);
-            Text = newText;
+            var response = await HubConnection.InvokeAsync<ApiResponse>(Endpoints.UpdateQuestionText, Id, newText);
+            if (response.WasSuccessful)
+                Text = newText;
         }
 
         public async Task UpdateAnswerAsync(string newAnswer)
         {
-            await HubConnection.InvokeAsync(Endpoints.UpdateQuestionAnswer, Id, newAnswer);
-            Answer = newAnswer;
+            var response = await HubConnection.InvokeAsync<ApiResponse>(Endpoints.UpdateQuestionAnswer, Id, newAnswer);
+            if (response.WasSuccessful)
+                Answer = newAnswer;
         }
 
         public Task UpdatePointsAsync(decimal newPoints) =>

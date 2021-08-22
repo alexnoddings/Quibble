@@ -1,10 +1,10 @@
 ﻿using Quibble.Client.Sync.Entities;
-using Quibble.Shared.Hub;
+using Quibble.Shared.Api;
 
 namespace Quibble.Client.Sync
 {
     public interface ISynchronisedQuizFactory
     {
-        Task<HubResponse<ISynchronisedQuiz>> GetQuizAsync(Guid quizId);
+        Task<ApiResponse<ISynchronisedQuiz>> GetQuizAsync(Guid quizId);
     }
 }

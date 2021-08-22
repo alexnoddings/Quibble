@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Quibble.Server.Extensions;
+using Quibble.Shared.Api;
 using Quibble.Shared.Entities;
 using Quibble.Shared.Hub;
 using Quibble.Shared.Models.Dtos;
@@ -10,7 +11,7 @@ namespace Quibble.Server.Hub
     public partial class QuibbleHub
     {
         [HubMethodName(Endpoints.GetQuiz)]
-        public async Task<HubResponse<FullQuizDto>> GetQuizAsync()
+        public async Task<ApiResponse<FullQuizDto>> GetQuizAsync()
         {
             (Guid userId, Guid quizId, ApiError? error) = ExecutionContext;
             if (error is not null)
@@ -74,7 +75,7 @@ namespace Quibble.Server.Hub
         }
 
         [HubMethodName(Endpoints.UpdateQuizTitle)]
-        public async Task<HubResponse> UpdateQuizTitleAsync(string newTitle)
+        public async Task<ApiResponse> UpdateQuizTitleAsync(string newTitle)
         {
             (Guid userId, Guid quizId, ApiError? error) = ExecutionContext;
             if (error is not null)
@@ -103,7 +104,7 @@ namespace Quibble.Server.Hub
         }
 
         [HubMethodName(Endpoints.OpenQuiz)]
-        public async Task<HubResponse> OpenQuizAsync()
+        public async Task<ApiResponse> OpenQuizAsync()
         {
             (Guid userId, Guid quizId, ApiError? error) = ExecutionContext;
             if (error is not null)
@@ -158,7 +159,7 @@ namespace Quibble.Server.Hub
         }
 
         [HubMethodName(Endpoints.DeleteQuiz)]
-        public async Task<HubResponse> DeleteQuizAsync()
+        public async Task<ApiResponse> DeleteQuizAsync()
         {
             (Guid userId, Guid quizId, ApiError? error) = ExecutionContext;
             if (error is not null)

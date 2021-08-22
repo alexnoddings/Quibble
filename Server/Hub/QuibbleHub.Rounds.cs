@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Quibble.Server.Data.Models;
 using Quibble.Server.Extensions;
+using Quibble.Shared.Api;
 using Quibble.Shared.Entities;
 using Quibble.Shared.Hub;
 using Quibble.Shared.Models.Dtos;
@@ -11,7 +12,7 @@ namespace Quibble.Server.Hub
     public partial class QuibbleHub
     {
         [HubMethodName(Endpoints.CreateRound)]
-        public async Task<HubResponse> CreateRoundAsync(string title)
+        public async Task<ApiResponse> CreateRoundAsync(string title)
         {
             (Guid userId, Guid quizId, ApiError? error) = ExecutionContext;
             if (error is not null)
@@ -51,7 +52,7 @@ namespace Quibble.Server.Hub
         }
 
         [HubMethodName(Endpoints.UpdateRoundTitle)]
-        public async Task<HubResponse> UpdateRoundTitleAsync(Guid roundId, string newTitle)
+        public async Task<ApiResponse> UpdateRoundTitleAsync(Guid roundId, string newTitle)
         {
             (Guid userId, Guid quizId, ApiError? error) = ExecutionContext;
             if (error is not null)
@@ -87,7 +88,7 @@ namespace Quibble.Server.Hub
         }
 
         [HubMethodName(Endpoints.OpenRound)]
-        public async Task<HubResponse> OpenRoundAsync(Guid roundId)
+        public async Task<ApiResponse> OpenRoundAsync(Guid roundId)
         {
             (Guid userId, Guid quizId, ApiError? error) = ExecutionContext;
             if (error is not null)
@@ -122,7 +123,7 @@ namespace Quibble.Server.Hub
         }
 
         [HubMethodName(Endpoints.DeleteRound)]
-        public async Task<HubResponse> DeleteRoundAsync(Guid roundId)
+        public async Task<ApiResponse> DeleteRoundAsync(Guid roundId)
         {
             (Guid userId, Guid quizId, ApiError? error) = ExecutionContext;
             if (error is not null)

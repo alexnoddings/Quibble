@@ -1,4 +1,6 @@
-﻿namespace Quibble.Shared.Hub
+﻿using Quibble.Shared.Api;
+
+namespace Quibble.Shared.Hub
 {
     public static class HubErrors
     {
