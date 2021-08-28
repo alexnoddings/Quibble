@@ -1,8 +1,6 @@
-﻿using Quibble.Shared.Api;
-
-namespace Quibble.Shared.Hub
+﻿namespace Quibble.Shared.Api
 {
-    public static class HubErrors
+    public static class ApiErrors
     {
         public static ApiError Unauthorised { get; } = new(401, nameof(Unauthorised));
         public static ApiError UnknownError { get; } = new(500, nameof(UnknownError));

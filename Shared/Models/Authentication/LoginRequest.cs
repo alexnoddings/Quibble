@@ -1,17 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Quibble.Shared.Api.Authentication
+namespace Quibble.Shared.Models.Authentication
 {
-    public class RegisterRequest
+    public class LoginRequest
     {
         [Required]
         [DataType("Username")]
         public string UserName { get; set; } = string.Empty;
-
-        [Required]
-        [EmailAddress]
-        [DataType(DataType.EmailAddress)]
-        public string Email { get; set; } = string.Empty;
 
         [Required]
         [DataType(DataType.Password)]

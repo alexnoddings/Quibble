@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Quibble.Shared.Api.Authentication
+namespace Quibble.Shared.Models.Authentication
 {
     public class ChangeEmailRequest
     {

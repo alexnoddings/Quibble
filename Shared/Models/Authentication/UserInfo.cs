@@ -1,4 +1,4 @@
-﻿namespace Quibble.Shared.Api.Authentication
+﻿namespace Quibble.Shared.Models.Authentication
 {
     public class UserInfo
     {
