@@ -1,6 +1,6 @@
-﻿namespace Quibble.Shared.Hub
+﻿namespace Quibble.Shared.Sync.SignalR
 {
-    public static class Endpoints
+    public static class SignalrEndpoints
     {
         public const string GetQuiz = nameof(GetQuiz);
         public const string UpdateQuizTitle = nameof(UpdateQuizTitle);

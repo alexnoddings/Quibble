@@ -1,9 +1,9 @@
 ﻿using Quibble.Shared.Entities;
 using Quibble.Shared.Models.Dtos;
 
-namespace Quibble.Shared.Hub
+namespace Quibble.Shared.Sync.SignalR
 {
-    public interface IQuibbleHubClient
+    public interface ISignalrEvents
     {
         public Task OnQuizTitleUpdatedAsync(string newTitle);
         public Task OnQuizOpenedAsync();
