@@ -9,7 +9,7 @@
                 @($"{SiteStats.SubmittedAnswerCount.ToMetric(null, 1)} Answers")
             </Heading>
             <Heading Size="HeadingSize.Is3" Margin="Margin.Is4.OnX" Alignment="TextAlignment.Center">
-                @($"{(SiteStats.AveragePercent * 100):G2}% Average")
+                @($"{(SiteStats.AveragePercent * 100):F0}% Average")
             </Heading>
         </Column>
     </Row>

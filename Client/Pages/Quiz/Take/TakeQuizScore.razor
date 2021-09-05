@@ -1,4 +1,6 @@
-﻿@{
+﻿@inherits SyncedEntityComponent
+
+@{
     var totalPossiblePoints =
         Quiz.Rounds
             .SelectMany(round => round.Questions)
@@ -8,7 +10,7 @@
         Quiz.Rounds
             .SelectMany(round => round.Questions)
             .Where(question => question.State == QuestionState.AnswerRevealed)
-            .Sum(question => question.SubmittedAnswer?.AssignedPoints ?? 0);
+            .Sum(question => question.TryGetMyAnswer()?.AssignedPoints ?? 0);
     if (Quiz.Rounds.Any(round => round.State == RoundState.Open))
     {
         var percent = totalPossiblePoints == 0 ? 0 : (assignedPoints / totalPossiblePoints) * 100;

@@ -1,57 +1,33 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Quibble.Client.Sync.Entities.TakeMode;
+using Quibble.Client.Sync;
+using Quibble.Client.Sync.Core;
 
 namespace Quibble.Client.Pages.Quiz.Take
 {
     public sealed partial class TakeRoundView : IDisposable
     {
         [Parameter]
-        public ISyncedTakeModeRound Round { get; set; } = default!;
-
-        private int LastStateStamp { get; set; } = 0;
-
-        private List<ISyncedTakeModeQuestion> KnownQuestions { get; } = new();
+        public ISyncedRound Round { get; set; } = default!;
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
             Round.Updated += OnUpdatedAsync;
-            RegisterUpdateEvents();
-
-            LastStateStamp = Round.GetStateStamp();
+            Round.Questions.Added += OnQuestionAddedAsync;
         }
 
-        private Task OnUpdatedAsync()
+        private Task OnQuestionAddedAsync(ISyncedQuestion question)
         {
-            RegisterUpdateEvents();
-            return InvokeAsync(StateHasChanged);
+            question.Updated += OnUpdatedAsync;
+            foreach (var submittedAnswers in question.SubmittedAnswers)
+                submittedAnswers.Updated += OnUpdatedAsync;
+
+            return Task.CompletedTask;
         }
 
-        private void RegisterUpdateEvents()
-        {
-            foreach (var question in Round.Questions)
-            {
-                if (KnownQuestions.Contains(question))
-                    continue;
-                
-                question.Updated += OnUpdatedAsync;
-                if (question.SubmittedAnswer is not null)
-                    question.SubmittedAnswer.Updated += OnUpdatedAsync;
-
-                KnownQuestions.Add(question);
-            }
-        }
-
-        protected override bool ShouldRender()
-        {
-            var currentStateStamp = Round.GetStateStamp();
-            if (currentStateStamp == LastStateStamp)
-                return false;
-            
-            LastStateStamp = currentStateStamp;
-            return true;
-        }
+        protected override int CalculateStateStamp() =>
+            StateStamp.ForProperties(Round);
 
         public void Dispose()
         {
@@ -59,8 +35,8 @@ namespace Quibble.Client.Pages.Quiz.Take
             foreach (var question in Round.Questions)
             {
                 question.Updated -= OnUpdatedAsync;
-                if (question.SubmittedAnswer is not null)
-                    question.SubmittedAnswer.Updated -= OnUpdatedAsync;
+                foreach (var submittedAnswers in question.SubmittedAnswers)
+                    submittedAnswers.Updated -= OnUpdatedAsync;
             }
         }
     }

@@ -33,7 +33,7 @@
     
 		<!-- Mark unit test projects. -->
 		<IsUnitTestProject Condition=" '$(IsUnitTestProject)' == '' ">false</IsUnitTestProject>
-		<IsUnitTestProject Condition=" $(MSBuildProjectName.StartsWith('Tests.')) ">true</IsUnitTestProject>
+		<IsUnitTestProject Condition=" $(MSBuildProjectName.EndsWith('.Tests')) ">true</IsUnitTestProject>
 		<IsPackable Condition=" '$(IsUnitTestProject)' == 'true' ">false</IsPackable>
   </PropertyGroup>
 
@@ -51,6 +51,7 @@
       $(WarningsNotAsErrors);
       <!-- Don't make marking a method as async without performing an await an error. -->
       CS1998;
+      CS0067;
     </WarningsNotAsErrors>
   </PropertyGroup>
 

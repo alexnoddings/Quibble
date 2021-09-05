@@ -1,6 +1,6 @@
 ﻿using System.Net.Http.Json;
 using System.Text.Json;
-using Quibble.Shared.Api.Authentication;
+using Quibble.Shared.Models.Authentication;
 
 namespace Quibble.Client.Services.Authentication
 {

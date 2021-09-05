@@ -1,104 +1,102 @@
-﻿@using Quibble.Client.Sync.Entities.HostMode
+﻿@inherits SyncedEntityComponent
 
-<Card Class="@CardClass" Background="Background.Transparent">
-    <CardBody Padding="Padding.Is0">
-        @if (SubmittedAnswer.Question.State == QuestionState.Hidden)
-        {
-            <Blazorise.Text Margin="Margin.Is2.FromTop.Is3.OnX">
-                &nbsp;
-            </Blazorise.Text>
-        }
-        else if (string.IsNullOrWhiteSpace(SubmittedAnswer.Text))
-        {
-            if (SubmittedAnswer.Question.State == QuestionState.Open)
+<Accordion>
+    <Collapse Class="@CardClass" Visible="@IsExpanded">
+        <CollapseHeader Padding="Padding.Is0" Background="Background.Transparent">
+            @if (SubmittedAnswer.Question.State == QuestionState.Hidden)
             {
-                <Blazorise.Text Color="TextColor.Muted" Margin="Margin.Is2.FromTop.Is3.OnX">
-                    *thinking noises*
-                </Blazorise.Text>
-            }
-            else
-            {
-                <Blazorise.Text Color="TextColor.Muted" Margin="Margin.Is2.FromTop.Is3.OnX" Italic="true">
-                    No answer provided
-                </Blazorise.Text>
-            }
-        }
-        else
-        {
-            <Blazorise.Text Margin="Margin.Is2.FromTop.Is3.OnX">
-                @SubmittedAnswer.Text
-            </Blazorise.Text>
-        }
-        <Text Color="TextColor.Muted" Alignment="TextAlignment.Right" Margin="Margin.Is1.FromTop.Is3.OnX.Is2.FromBottom">
-            - @SubmittedAnswer.Submitter.UserName
-        </Text>
-        <Buttons Class="m-f" Display="Display.Flex">
-            @if (SubmittedAnswer.Question.State < QuestionState.Locked)
-            {
-                <Button>
+                <Blazorise.Text Display="Display.Block" Margin="Margin.Is2.FromTop.Is3.OnX">
                     &nbsp;
-                </Button>
+                </Blazorise.Text>
+            }
+            else if (string.IsNullOrWhiteSpace(SubmittedAnswer.Text))
+            {
+                if (SubmittedAnswer.Question.State == QuestionState.Open)
+                {
+                    <Blazorise.Text Display="Display.Block" Color="TextColor.Muted" Margin="Margin.Is2.FromTop.Is3.OnX">
+                        *thinking*
+                    </Blazorise.Text>
+                }
+                else
+                {
+                    <Blazorise.Text Display="Display.Block" Color="TextColor.Muted" Margin="Margin.Is2.FromTop.Is3.OnX" Italic="true">
+                        No answer provided
+                    </Blazorise.Text>
+                }
             }
             else
             {
-                <Button Outline="SubmittedAnswer.AssignedPoints != 0"
+                <Blazorise.Text Display="Display.Block" Margin="Margin.Is2.FromTop.Is3.OnX">
+                    @SubmittedAnswer.Text
+                </Blazorise.Text>
+            }
+            <Text Color="TextColor.Muted" Alignment="TextAlignment.Right" Margin="Margin.Is1.FromTop.Is3.OnX">
+                - @SubmittedAnswer.Submitter.UserName
+            </Text>
+            <Buttons Class="m-f" Display="Display.Flex" Margin="Margin.Is2.FromTop">
+                @if (SubmittedAnswer.Question.State < QuestionState.Locked)
+                {
+                    <Button Disabled="true">
+                        &nbsp;
+                    </Button>
+                }
+                else
+                {
+                    <Button Outline="SubmittedAnswer.AssignedPoints != 0"
                         Color="Color.Danger"
                         Class="text-clip align-items-center"
                         Display="Display.Flex.Column"
-                        Style="border-top-left-radius: 0;"
+                        Style="@("border-top-left-radius: 0; " + (IsExpanded ? "border-bottom-left-radius: 0;" : string.Empty))"
                         Clicked="() => SubmittedAnswer.MarkAsync(0)">
-                    0pts
-                </Button>
-                <Dropdown RightAligned="true">
-                    @{
-                        bool isAssignedCustomPoints = SubmittedAnswer.AssignedPoints > 0
-                                                      && SubmittedAnswer.AssignedPoints != SubmittedAnswer.Question.Points;
-                          <DropdownToggle Outline="!isAssignedCustomPoints"
-                                          Color="Color.Warning"
-                                          Style="border-top-right-radius: 0;"
-                                          Class="justify-content-center"
-                                          Display="Display.Flex.Column"
-                                          ToggleIconVisible="false">
-                              @if (isAssignedCustomPoints)
-                              {
-                                  // Show points if a custom ammount is assigned
-                                  @($"{SubmittedAnswer.AssignedPoints:G4}pts")
-                              }
-                              else
-                              {
-                                  <Icon Name="IconName.MoreHorizontal"/>
-                              }
-                          </DropdownToggle>
-                          <DropdownMenu Padding="Padding.Is0">
-                              <DropdownItem Padding="Padding.Is0" Display="Display.Flex.Column">
-                                  <TextEdit Role="TextRole.Text"
-                                            @bind-Text="LocalPointsString"
-                                            Class="m-f"
-                                            Style="border-bottom-right-radius: 0; border-bottom-left-radius: 0; width: calc(100% + 2px);"
-                                            Margin="Margin.Is0.FromBottom"
-                                            MaskType="MaskType.Numeric"
-                                            Blur="RoundAndUpdatePointsAsync"/>
-                              </DropdownItem>
-                              <DropdownItem Class="inactive" Padding="Padding.Is0">
-                                  <Buttons Display="Display.Flex" Class="m-f">
-                                      <Button Color="Color.Warning" Outline="true" Clicked="() => SubmittedAnswer.MarkAsync(0.25m)" Style="border-top-left-radius: 0;">&#188;pts</Button>
-                                      <Button Color="Color.Warning" Outline="true" Clicked="() => SubmittedAnswer.MarkAsync(0.5m)">&#189;pts</Button>
-                                      <Button Color="Color.Warning" Outline="true" Clicked="() => SubmittedAnswer.MarkAsync(1m)">1pts</Button>
-                                      <Button Color="Color.Warning" Outline="true" Clicked="() => SubmittedAnswer.MarkAsync(2m)" Style="border-top-right-radius: 0;">2pts</Button>
-                                  </Buttons>
-                              </DropdownItem>
-                          </DropdownMenu>
-                    }
-                </Dropdown>
-                <Button Outline="SubmittedAnswer.AssignedPoints != SubmittedAnswer.Question.Points"
+                        0pts
+                    </Button>
+                    bool isAssignedCustomPoints = SubmittedAnswer.AssignedPoints > 0
+                            && SubmittedAnswer.AssignedPoints != SubmittedAnswer.Question.Points;
+                    <Button Outline="!isAssignedCustomPoints"
+                            Color="Color.Warning"
+                            Style="border-top-right-radius: 0;"
+                            Class="justify-content-center"
+                            Display="Display.Flex.Column"
+                            Clicked="() => IsExpanded = !IsExpanded">
+                        @if (isAssignedCustomPoints)
+                        {
+                            // Show points if a custom ammount is assigned
+                            @($"{SubmittedAnswer.AssignedPoints:G4}pts")
+                        }
+                        else
+                        {
+                            <Icon Name="IconName.MoreHorizontal" />
+                        }
+                    </Button>
+                    <Button Outline="SubmittedAnswer.AssignedPoints != SubmittedAnswer.Question.Points"
                         Color="Color.Success"
-                        Style="border-top-right-radius: 0;"
+                        Style="@("border-top-right-radius: 0;" + (IsExpanded ? "border-bottom-right-radius: 0;" : string.Empty))"
                         Class="text-clip align-items-center"
                         Display="Display.Flex.Column"
                         Clicked="() => SubmittedAnswer.MarkAsync(SubmittedAnswer.Question.Points)">
-                    @($"{SubmittedAnswer.Question.Points:G4}pts")
-                </Button>
-            }
-        </Buttons>
-    </CardBody>
-</Card>
+                        @($"{SubmittedAnswer.Question.Points:G4}pts")
+                    </Button>
+                }
+            </Buttons>
+        </CollapseHeader>
+        <CollapseBody Padding="Padding.Is0" Background="Background.Transparent">
+            <NumericEdit TValue="decimal"
+                         Value="LocalPoints"
+                         ValueChanged="RoundAndUpdatePointsAsync"
+                         Min="0m"
+                         Max="10m"
+                         Step="0.25m"
+                         Display="Display.Flex.Column"
+                         Style="border-radius: 0; width: calc(100% + 2px);"
+                         Margin="Margin.Is0.FromBottom"
+                         TextAlignment="TextAlignment.Center"
+                         Class="m-f" />
+            <Buttons Display="Display.Flex" Class="m-f">
+                <Button Color="Color.Warning" Outline="true" Clicked="() => SubmittedAnswer.MarkAsync(0.25m)" Style="border-top-left-radius: 0;">&#188;</Button>
+                <Button Color="Color.Warning" Outline="true" Clicked="() => SubmittedAnswer.MarkAsync(0.5m)">&#189;</Button>
+                <Button Color="Color.Warning" Outline="true" Clicked="() => SubmittedAnswer.MarkAsync(1m)">1</Button>
+                <Button Color="Color.Warning" Outline="true" Clicked="() => SubmittedAnswer.MarkAsync(2m)" Style="border-top-right-radius: 0;">2</Button>
+            </Buttons>
+        </CollapseBody>
+    </Collapse>
+</Accordion>

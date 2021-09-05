@@ -18,9 +18,9 @@ namespace Quibble.Client.Components.SynchronisedEdit
             LocalPoints = Points;
         }
 
-        private Task UpdatePointsAsync()
+        private Task UpdatePointsAsync(decimal newPoints)
         {
-            LocalPoints = RoundPoints(LocalPoints);
+            LocalPoints = RoundPoints(newPoints);
 
             if (LocalPoints == Points)
                 return Task.CompletedTask;

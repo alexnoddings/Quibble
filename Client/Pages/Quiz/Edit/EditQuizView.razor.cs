@@ -1,15 +1,15 @@
-﻿using Blazorise;
-using Microsoft.AspNetCore.Components.Web;
+﻿using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components;
 using Quibble.Client.Components.Modals;
-using Quibble.Client.Sync.Entities.EditMode;
+using Quibble.Client.Sync.Core;
+using Quibble.Client.Sync;
 
 namespace Quibble.Client.Pages.Quiz.Edit
 {
     public sealed partial class EditQuizView : IDisposable
     {
         [Parameter]
-        public ISyncedEditModeQuiz Quiz { get; set; } = default!;
+        public ISyncedQuiz Quiz { get; set; } = default!;
 
         private OptionsModal<bool> ConfirmPublishModal { get; set; } = default!;
 
@@ -17,17 +17,12 @@ namespace Quibble.Client.Pages.Quiz.Edit
 
         private List<string> ErrorMessages { get; set; } = new();
 
-        private int LastStateStamp { get; set; } = 0;
-
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
             Quiz.Updated += OnUpdatedAsync;
-            LastStateStamp = GetStateStamp();
         }
-
-        private Task OnUpdatedAsync() => InvokeAsync(StateHasChanged);
 
         private async Task OnDeleteClickedAsync(MouseEventArgs args)
         {
@@ -77,23 +72,8 @@ namespace Quibble.Client.Pages.Quiz.Edit
                 await Quiz.OpenAsync();
         }
 
-        private int GetStateStamp() =>
-            // Don't bother hashing messages individually:
-            //   Can go from no errors to some (e.g. validating)
-            //   or from some to none (e.g. clearing messages)
-            //   but the errors can't change content without changing
-            //   some part of the quiz state
-            HashCode.Combine(Quiz.GetStateStamp(), ErrorMessages.Count);
-
-        protected override bool ShouldRender()
-        {
-            var currentStateStamp = GetStateStamp();
-            if (currentStateStamp == LastStateStamp)
-                return false;
-
-            LastStateStamp = currentStateStamp;
-            return true;
-        }
+        protected override int CalculateStateStamp() =>
+            StateStamp.ForProperties(Quiz, ErrorMessages);
 
         public void Dispose()
         {

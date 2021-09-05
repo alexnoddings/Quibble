@@ -3,14 +3,14 @@ using Microsoft.EntityFrameworkCore;
 using Quibble.Server.Extensions;
 using Quibble.Shared.Api;
 using Quibble.Shared.Entities;
-using Quibble.Shared.Hub;
 using Quibble.Shared.Models.Dtos;
+using Quibble.Shared.Sync.SignalR;
 
 namespace Quibble.Server.Hub
 {
     public partial class QuibbleHub
     {
-        [HubMethodName(Endpoints.GetQuiz)]
+        [HubMethodName(SignalrEndpoints.GetQuiz)]
         public async Task<ApiResponse<FullQuizDto>> GetQuizAsync()
         {
             (Guid userId, Guid quizId, ApiError? error) = ExecutionContext;
@@ -27,10 +27,10 @@ namespace Quibble.Server.Hub
                     .FindAsync(quizId);
 
             if (dbQuiz is null)
-                return Failure<FullQuizDto>(HubErrors.QuizNotFound);
+                return Failure<FullQuizDto>(ApiErrors.QuizNotFound);
 
             if (dbQuiz.OwnerId != userId && dbQuiz.State != QuizState.Open)
-                return Failure<FullQuizDto>(HubErrors.QuizNotOpen);
+                return Failure<FullQuizDto>(ApiErrors.QuizNotOpen);
 
             var quiz = Mapper.Map<QuizDto>(dbQuiz);
             List<RoundDto> rounds;
@@ -63,6 +63,8 @@ namespace Quibble.Server.Hub
                 var visibleDbRounds = dbQuiz.Rounds.Where(r => r.State == RoundState.Open).ToList();
                 rounds = Mapper.Map<List<RoundDto>>(visibleDbRounds);
                 participants = Mapper.Map<List<ParticipantDto>>(dbQuiz.Participants);
+                // Mark that user's participant
+                participants.Single(participant => participant.Id == dbParticipant.Id).IsCurrentUser = true;
 
                 var visibleDbQuestions = visibleDbRounds.SelectMany(r => r.Questions).Where(q => q.State != QuestionState.Hidden).ToList();
                 questions = Mapper.Map<List<QuestionDto>>(visibleDbQuestions);
@@ -74,7 +76,7 @@ namespace Quibble.Server.Hub
             return Success(new FullQuizDto(quiz, participants, rounds, questions, submittedAnswers));
         }
 
-        [HubMethodName(Endpoints.UpdateQuizTitle)]
+        [HubMethodName(SignalrEndpoints.UpdateQuizTitle)]
         public async Task<ApiResponse> UpdateQuizTitleAsync(string newTitle)
         {
             (Guid userId, Guid quizId, ApiError? error) = ExecutionContext;
@@ -83,17 +85,17 @@ namespace Quibble.Server.Hub
 
             var dbQuiz = await DbContext.Quizzes.FindAsync(quizId);
             if (dbQuiz is null)
-                return Failure(HubErrors.QuizNotFound);
+                return Failure(ApiErrors.QuizNotFound);
 
             if (dbQuiz.OwnerId != userId)
-                return Failure(HubErrors.CantEditAsNotOwner);
+                return Failure(ApiErrors.CantEditAsNotOwner);
 
             if (dbQuiz.State != QuizState.InDevelopment)
-                return Failure(HubErrors.CantDeleteAsNotInDevelopment);
+                return Failure(ApiErrors.CantDeleteAsNotInDevelopment);
 
             newTitle ??= string.Empty;
             if (newTitle.Length > 100)
-                return Failure(HubErrors.QuizEmpty);
+                return Failure(ApiErrors.QuizEmpty);
 
             dbQuiz.Title = newTitle;
             await DbContext.SaveChangesAsync();
@@ -103,7 +105,7 @@ namespace Quibble.Server.Hub
             return Success();
         }
 
-        [HubMethodName(Endpoints.OpenQuiz)]
+        [HubMethodName(SignalrEndpoints.OpenQuiz)]
         public async Task<ApiResponse> OpenQuizAsync()
         {
             (Guid userId, Guid quizId, ApiError? error) = ExecutionContext;
@@ -117,25 +119,25 @@ namespace Quibble.Server.Hub
                     .FindAsync(quizId);
             
             if (dbQuiz is null)
-                return Failure(HubErrors.QuizNotFound);
+                return Failure(ApiErrors.QuizNotFound);
 
             if (dbQuiz.OwnerId != userId)
-                return Failure(HubErrors.CantEditAsNotOwner);
+                return Failure(ApiErrors.CantEditAsNotOwner);
 
             if (dbQuiz.State == QuizState.Open)
-                return Failure(HubErrors.QuizAlreadyOpen);
+                return Failure(ApiErrors.QuizAlreadyOpen);
 
             if (!dbQuiz.Rounds.SelectMany(round => round.Questions).Any())
-                return Failure(HubErrors.QuizEmpty);
+                return Failure(ApiErrors.QuizEmpty);
 
             if (dbQuiz.Rounds.Any(round => string.IsNullOrWhiteSpace(round.Title)))
-                return Failure(HubErrors.RoundMissingTitle);
+                return Failure(ApiErrors.RoundMissingTitle);
 
             if (dbQuiz.Rounds.SelectMany(round => round.Questions).Any(question => string.IsNullOrWhiteSpace(question.Text)))
-                return Failure(HubErrors.QuestionMissingText);
+                return Failure(ApiErrors.QuestionMissingText);
 
             if (dbQuiz.Rounds.SelectMany(round => round.Questions).Any(question => string.IsNullOrWhiteSpace(question.Answer)))
-                return Failure(HubErrors.QuestionMissingAnswer);
+                return Failure(ApiErrors.QuestionMissingAnswer);
 
             dbQuiz.State = QuizState.Open;
             dbQuiz.OpenedAt = DateTime.UtcNow;
@@ -158,7 +160,7 @@ namespace Quibble.Server.Hub
             return Success();
         }
 
-        [HubMethodName(Endpoints.DeleteQuiz)]
+        [HubMethodName(SignalrEndpoints.DeleteQuiz)]
         public async Task<ApiResponse> DeleteQuizAsync()
         {
             (Guid userId, Guid quizId, ApiError? error) = ExecutionContext;
@@ -167,13 +169,13 @@ namespace Quibble.Server.Hub
 
             var dbQuiz = await DbContext.Quizzes.FindAsync(quizId);
             if (dbQuiz is null)
-                return Failure(HubErrors.QuizNotFound);
+                return Failure(ApiErrors.QuizNotFound);
 
             if (dbQuiz.OwnerId != userId)
-                return Failure(HubErrors.CantEditAsNotOwner);
+                return Failure(ApiErrors.CantEditAsNotOwner);
 
             if (dbQuiz.State != QuizState.InDevelopment)
-                return Failure(HubErrors.CantDeleteAsNotInDevelopment);
+                return Failure(ApiErrors.CantDeleteAsNotInDevelopment);
 
             DbContext.Quizzes.Remove(dbQuiz);
             await DbContext.SaveChangesAsync();
