@@ -2,19 +2,25 @@
 @using Blazorise.Bootstrap
 @using Blazorise.Icons.FontAwesome
 @using Microsoft.AspNetCore.Components.WebAssembly.Hosting
-@inherits QuibbleTestContext
+@inherits TestContext
 
 @code
 {
+    private IRenderedComponent<DebugDisplay> RenderDebugDisplay(string environment)
+    {
+        this.AddBlazorise()
+            .AddEnvironment(environment);
+
+        var debugDisplay = RenderComponent<DebugDisplay>();
+
+        return debugDisplay;
+    }
+
     [Fact]
     public void InDevelopment_Renders()
     {
-        // Arrange
-        AddBlazorise();
-        AddEnvironment("Development");
-
-        // Act
-        var debugDisplay = RenderComponent<DebugDisplay>();
+        // Arrange & Act
+        var debugDisplay = RenderDebugDisplay("Development");
 
         // Assert
         Assert.Contains("Development", debugDisplay.Markup, StringComparison.OrdinalIgnoreCase);
@@ -23,12 +29,8 @@
     [Fact]
     public void InStaging_Renders()
     {
-        // Arrange
-        AddBlazorise();
-        AddEnvironment("Staging");
-
-        // Act
-        var debugDisplay = RenderComponent<DebugDisplay>();
+        // Arrange & Act
+        var debugDisplay = RenderDebugDisplay("Staging");
 
         // Assert
         Assert.Contains("Staging", debugDisplay.Markup, StringComparison.OrdinalIgnoreCase);
@@ -37,12 +39,8 @@
     [Fact]
     public void InProduction_DoesNotRender()
     {
-        // Arrange
-        AddBlazorise();
-        AddEnvironment("Production");
-
-        // Act
-        var debugDisplay = RenderComponent<DebugDisplay>();
+        // Arrange & Act
+        var debugDisplay = RenderDebugDisplay("Production");
 
         // Assert
         Assert.Equal("", debugDisplay.Markup);
