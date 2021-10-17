@@ -1,53 +1,55 @@
 <FullPageTitle />
 <CascadingAuthenticationState>
-	<ThemeProvider Theme="@ThemeService.Theme">
-		<OptionsModalHost>
-			<Router AppAssembly="@typeof(Program).Assembly">
-				<Found Context="routeData">
-                    <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)" Context="authState">
-                        <Authorizing>
-                            @* Same markup as on the loading screen. *@
-                            <Row Margin="Margin.Is3.FromTop">
-                                <Column Display="Display.Flex.Column" Class="align-items-center">
-                                    <svg width="64" height="64" viewBox="0 0 8 8" aria-hidden="true" stroke-width="1">
-                                        <circle cx="4" cy="4" r="3.5" fill="none" stroke="var(--b-theme-dark)"/>
-                                        <line x1="5.5" y1="5.5" x2="7.5" y2="7.5" stroke-linecap="round" stroke="var(--b-theme-dark)"/>
-                                        <circle cx="4" cy="4" r="3.5" fill="none" stroke-linecap="round" stroke-dasharray="0 22" stroke-dashoffset="0" stroke-width="0.75" stroke="var(--b-theme-light)">
-                                            <animate attributeName="stroke-dasharray" repeatCount="indefinite" dur="1s" values="0 22;4 22;0 22;0 22" keyTimes="0;0.4;0.8;1" />
-                                            <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" values="45 4 4;405 4 4;405 4 4" keyTimes="0;0.8;1" />
-                                        </circle>
-                                        <line x1="6.5" y1="6.5" x2="6.5" y2="6.5" stroke-linecap="round" stroke-width="0.75" stroke="var(--b-theme-light)">
-                                            <animate attributeName="x1" repeatCount="indefinite" dur="1s" values="6.5;6.5;5.5;5.5;6.5" keyTimes="0;0.8;0.875;0.925;1" />
-                                            <animate attributeName="y1" repeatCount="indefinite" dur="1s" values="6.5;6.5;5.5;5.5;6.5" keyTimes="0;0.8;0.875;0.925;1" />
-                                            <animate attributeName="x2" repeatCount="indefinite" dur="1s" values="6.5;6.5;7.5;7.5;6.5" keyTimes="0;0.8;0.875;0.925;1" />
-                                            <animate attributeName="y2" repeatCount="indefinite" dur="1s" values="6.5;6.5;7.5;7.5;6.5" keyTimes="0;0.8;0.875;0.925;1" />
-                                            <animate attributeName="opacity" repeatCount="indefinite" dur="1s" values="0;0;1;1;0" keyTimes="0;0.799;0.8;0.999;1" />
-                                        </line>
-                                    </svg>
-                                    <Heading Size="HeadingSize.Is2" Margin="Margin.Is2.FromTop">
-                                        Loading
-                                    </Heading>
-                                </Column>
-                            </Row>
-                        </Authorizing>
-                        <NotAuthorized>
-                            @if (authState.User.Identity?.IsAuthenticated == true)
-                            {
-                                <Heading Size="HeadingSize.Is1">Unauthorised.</Heading>
-                            }
-                            else
-                            {
-                                <RedirectToLogin/>
-                            }
-                        </NotAuthorized>
-                    </AuthorizeRouteView>
-				</Found>
-				<NotFound>
-					<LayoutView Layout="typeof(MainLayout)">
-						<p>Sorry, there's nothing at this address.</p>
-					</LayoutView>
-				</NotFound>
-			</Router>
-		</OptionsModalHost>
-	</ThemeProvider>
+	<CascadingUserId>
+		<ThemeProvider Theme="@ThemeService.Theme">
+			<OptionsModalHost>
+				<Router AppAssembly="@typeof(Program).Assembly">
+					<Found Context="routeData">
+						<AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)" Context="authState">
+							<Authorizing>
+								@* Same markup as on the loading screen. *@
+								<Row Margin="Margin.Is3.FromTop">
+									<Column Display="Display.Flex.Column" Class="align-items-center">
+										<svg width="64" height="64" viewBox="0 0 8 8" aria-hidden="true" stroke-width="1">
+											<circle cx="4" cy="4" r="3.5" fill="none" stroke="var(--b-theme-dark)" />
+											<line x1="5.5" y1="5.5" x2="7.5" y2="7.5" stroke-linecap="round" stroke="var(--b-theme-dark)" />
+											<circle cx="4" cy="4" r="3.5" fill="none" stroke-linecap="round" stroke-dasharray="0 22" stroke-dashoffset="0" stroke-width="0.75" stroke="var(--b-theme-light)">
+												<animate attributeName="stroke-dasharray" repeatCount="indefinite" dur="1s" values="0 22;4 22;0 22;0 22" keyTimes="0;0.4;0.8;1" />
+												<animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" values="45 4 4;405 4 4;405 4 4" keyTimes="0;0.8;1" />
+											</circle>
+											<line x1="6.5" y1="6.5" x2="6.5" y2="6.5" stroke-linecap="round" stroke-width="0.75" stroke="var(--b-theme-light)">
+												<animate attributeName="x1" repeatCount="indefinite" dur="1s" values="6.5;6.5;5.5;5.5;6.5" keyTimes="0;0.8;0.875;0.925;1" />
+												<animate attributeName="y1" repeatCount="indefinite" dur="1s" values="6.5;6.5;5.5;5.5;6.5" keyTimes="0;0.8;0.875;0.925;1" />
+												<animate attributeName="x2" repeatCount="indefinite" dur="1s" values="6.5;6.5;7.5;7.5;6.5" keyTimes="0;0.8;0.875;0.925;1" />
+												<animate attributeName="y2" repeatCount="indefinite" dur="1s" values="6.5;6.5;7.5;7.5;6.5" keyTimes="0;0.8;0.875;0.925;1" />
+												<animate attributeName="opacity" repeatCount="indefinite" dur="1s" values="0;0;1;1;0" keyTimes="0;0.799;0.8;0.999;1" />
+											</line>
+										</svg>
+										<Heading Size="HeadingSize.Is2" Margin="Margin.Is2.FromTop">
+											Loading
+										</Heading>
+									</Column>
+								</Row>
+							</Authorizing>
+							<NotAuthorized>
+								@if (authState.User.Identity?.IsAuthenticated == true)
+								{
+									<Heading Size="HeadingSize.Is1">Unauthorised.</Heading>
+								}
+								else
+								{
+									<RedirectToLogin />
+								}
+							</NotAuthorized>
+						</AuthorizeRouteView>
+					</Found>
+					<NotFound>
+						<LayoutView Layout="typeof(MainLayout)">
+							<p>Sorry, there's nothing at this address.</p>
+						</LayoutView>
+					</NotFound>
+				</Router>
+			</OptionsModalHost>
+		</ThemeProvider>
+	</CascadingUserId>
 </CascadingAuthenticationState>

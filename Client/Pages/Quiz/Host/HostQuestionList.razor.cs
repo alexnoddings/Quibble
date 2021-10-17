@@ -1,21 +1,24 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Quibble.Client.Sync.Entities.HostMode;
+using Quibble.Client.Sync;
+using Quibble.Client.Sync.Core;
 
 namespace Quibble.Client.Pages.Quiz.Host
 {
     public sealed partial class HostQuestionList : IDisposable
     {
         [Parameter]
-        public ISyncedHostModeQuiz Quiz { get; set; } = default!;
+        public ISyncedQuiz Quiz { get; set; } = default!;
 
-        [Parameter]
-        public SelectionContext Selection { get; set; } = default!;
+        [CascadingParameter]
+        private SelectionContext Selection { get; init; } = default!;
 
         private int HighlightedRoundNumber { get; set; }
 
         protected override void OnInitialized()
         {
-            Selection.Updated += OnSelectionUpdatedAsync;
+            base.OnInitialized();
+
+            Selection.OnUpdated += OnSelectionUpdatedAsync;
             foreach (var round in Quiz.Rounds)
             {
                 round.Updated += OnUpdatedAsync;
@@ -24,16 +27,18 @@ namespace Quibble.Client.Pages.Quiz.Host
             }
         }
 
-        private Task OnUpdatedAsync() => InvokeAsync(StateHasChanged);
-        private Task OnSelectionUpdatedAsync()
+        private Task OnSelectionUpdatedAsync(SelectionChangedEventArgs _)
         {
             HighlightedRoundNumber = Selection.RoundNumber;
             return OnUpdatedAsync();
         }
 
+        protected override int CalculateStateStamp() =>
+            StateStamp.ForProperties(Quiz, HighlightedRoundNumber, Selection.RoundNumber, Selection.QuestionNumber);
+
         public void Dispose()
         {
-            Selection.Updated -= OnSelectionUpdatedAsync;
+            Selection.OnUpdated -= OnSelectionUpdatedAsync;
             foreach (var round in Quiz.Rounds)
             {
                 round.Updated -= OnUpdatedAsync;

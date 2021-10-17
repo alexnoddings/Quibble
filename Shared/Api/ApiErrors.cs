@@ -16,6 +16,7 @@
         public static ApiError QuizNotOpen { get; } = new(403, nameof(QuizNotOpen));
         public static ApiError QuizUserNotParticipant { get; } = new(403, nameof(QuizUserNotParticipant));
 
+        public static ApiError RoundTitleTooLong { get; } = new(400, nameof(RoundTitleTooLong));
         public static ApiError RoundMissingTitle { get; } = new(400, nameof(RoundMissingTitle));
         public static ApiError RoundNotFound { get; } = new(404, nameof(RoundNotFound));
         public static ApiError RoundParentQuizNotFound { get; } = new(404, nameof(RoundParentQuizNotFound));

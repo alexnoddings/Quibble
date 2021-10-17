@@ -1,62 +1,68 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Quibble.Client.Sync.Entities.TakeMode;
+using Quibble.Client.Sync;
+using Quibble.Client.Sync.Core;
+using Quibble.Client.Sync.Extensions;
 
 namespace Quibble.Client.Pages.Quiz.Take
 {
     public sealed partial class TakeQuizScore : IDisposable
     {
         [Parameter]
-        public ISyncedTakeModeQuiz Quiz { get; set; } = default!;
+        public ISyncedQuiz Quiz { get; set; } = default!;
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
             Quiz.Updated += OnUpdatedAsync;
-            Quiz.RoundAdded += OnRoundAddedAsync;
+            Quiz.Rounds.Added += OnRoundAddedAsync;
             foreach (var round in Quiz.Rounds)
             {
                 round.Updated += OnUpdatedAsync;
-                round.QuestionAdded += OnQuestionAddedAsync;
+                round.Questions.Added += OnQuestionAddedAsync;
                 foreach (var question in round.Questions)
                 {
                     question.Updated += OnUpdatedAsync;
-                    if (question.SubmittedAnswer is not null)
-                        question.SubmittedAnswer.Updated += OnUpdatedAsync;
+                    var answer = question.TryGetMyAnswer();
+                    if (answer is not null)
+                        answer.Updated += OnUpdatedAsync;
                 }
             }
         }
 
-        private Task OnUpdatedAsync() => InvokeAsync(StateHasChanged);
-
-        private Task OnRoundAddedAsync(ISyncedTakeModeRound round)
+        private Task OnRoundAddedAsync(ISyncedRound round)
         {
             round.Updated += OnUpdatedAsync;
-            round.QuestionAdded += OnQuestionAddedAsync;
+            round.Questions.Added += OnQuestionAddedAsync;
             return Task.CompletedTask;
         }
 
-        private Task OnQuestionAddedAsync(ISyncedTakeModeQuestion question)
+        private Task OnQuestionAddedAsync(ISyncedQuestion question)
         {
             question.Updated += OnUpdatedAsync;
-            if (question.SubmittedAnswer is not null)
-                question.SubmittedAnswer.Updated += OnUpdatedAsync;
+            var answer = question.TryGetMyAnswer();
+            if (answer is not null)
+                answer.Updated += OnUpdatedAsync;
             return Task.CompletedTask;
         }
+
+        protected override int CalculateStateStamp() =>
+            StateStamp.ForProperties(Quiz);
 
         public void Dispose()
         {
             Quiz.Updated -= OnUpdatedAsync;
-            Quiz.RoundAdded -= OnRoundAddedAsync;
+            Quiz.Rounds.Added -= OnRoundAddedAsync;
             foreach (var round in Quiz.Rounds)
             {
                 round.Updated -= OnUpdatedAsync;
-                round.QuestionAdded -= OnQuestionAddedAsync;
+                round.Questions.Added -= OnQuestionAddedAsync;
                 foreach (var question in round.Questions)
                 {
                     question.Updated -= OnUpdatedAsync;
-                    if (question.SubmittedAnswer is not null)
-                        question.SubmittedAnswer.Updated -= OnUpdatedAsync;
+                    var answer = question.TryGetMyAnswer();
+                    if (answer is not null)
+                        answer.Updated += OnUpdatedAsync;
                 }
             }
         }

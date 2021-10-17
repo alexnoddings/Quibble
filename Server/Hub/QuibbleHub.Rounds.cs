@@ -4,15 +4,15 @@ using Quibble.Server.Data.Models;
 using Quibble.Server.Extensions;
 using Quibble.Shared.Api;
 using Quibble.Shared.Entities;
-using Quibble.Shared.Hub;
 using Quibble.Shared.Models.Dtos;
+using Quibble.Shared.Sync.SignalR;
 
 namespace Quibble.Server.Hub
 {
     public partial class QuibbleHub
     {
-        [HubMethodName(Endpoints.CreateRound)]
-        public async Task<ApiResponse> CreateRoundAsync(string title)
+        [HubMethodName(SignalrEndpoints.CreateRound)]
+        public async Task<ApiResponse> CreateRoundAsync()
         {
             (Guid userId, Guid quizId, ApiError? error) = ExecutionContext;
             if (error is not null)
@@ -24,21 +24,17 @@ namespace Quibble.Server.Hub
                     .FindAsync(quizId);
 
             if (dbQuiz is null)
-                return Failure(HubErrors.RoundParentQuizNotFound);
+                return Failure(ApiErrors.RoundParentQuizNotFound);
 
             if (dbQuiz.OwnerId != userId)
-                return Failure(HubErrors.CantEditAsNotOwner);
+                return Failure(ApiErrors.CantEditAsNotOwner);
 
             if (dbQuiz.State != QuizState.InDevelopment)
-                return Failure(HubErrors.CantDeleteAsNotInDevelopment);
-
-            title ??= string.Empty;
-            if (title.Length > 100)
-                return Failure(HubErrors.RoundMissingTitle);
+                return Failure(ApiErrors.CantDeleteAsNotInDevelopment);
 
             var dbRound = new DbRound
             {
-                Title = title,
+                Title = string.Empty,
                 State = RoundState.Hidden,
                 Order = dbQuiz.Rounds.Count
             };
@@ -51,7 +47,7 @@ namespace Quibble.Server.Hub
             return Success();
         }
 
-        [HubMethodName(Endpoints.UpdateRoundTitle)]
+        [HubMethodName(SignalrEndpoints.UpdateRoundTitle)]
         public async Task<ApiResponse> UpdateRoundTitleAsync(Guid roundId, string newTitle)
         {
             (Guid userId, Guid quizId, ApiError? error) = ExecutionContext;
@@ -64,20 +60,20 @@ namespace Quibble.Server.Hub
                     .FindAsync(roundId);
 
             if (dbRound is null)
-                return Failure(HubErrors.RoundNotFound);
+                return Failure(ApiErrors.RoundNotFound);
 
             if (dbRound.QuizId != quizId)
-                return Failure(HubErrors.RoundNotFound);
+                return Failure(ApiErrors.RoundNotFound);
 
             if (dbRound.Quiz.OwnerId != userId)
-                return Failure(HubErrors.CantEditAsNotOwner);
+                return Failure(ApiErrors.CantEditAsNotOwner);
 
             if (dbRound.Quiz.State != QuizState.InDevelopment)
-                return Failure(HubErrors.CantDeleteAsNotInDevelopment);
+                return Failure(ApiErrors.CantDeleteAsNotInDevelopment);
 
             newTitle ??= string.Empty;
-            if (newTitle.Length > 200)
-                return Failure(HubErrors.RoundMissingTitle);
+            if (newTitle.Length > 100)
+                return Failure(ApiErrors.RoundTitleTooLong);
 
             dbRound.Title = newTitle;
             await DbContext.SaveChangesAsync();
@@ -87,7 +83,7 @@ namespace Quibble.Server.Hub
             return Success();
         }
 
-        [HubMethodName(Endpoints.OpenRound)]
+        [HubMethodName(SignalrEndpoints.OpenRound)]
         public async Task<ApiResponse> OpenRoundAsync(Guid roundId)
         {
             (Guid userId, Guid quizId, ApiError? error) = ExecutionContext;
@@ -100,16 +96,16 @@ namespace Quibble.Server.Hub
                     .FindAsync(roundId);
 
             if (dbRound is null)
-                return Failure(HubErrors.RoundNotFound);
+                return Failure(ApiErrors.RoundNotFound);
 
             if (dbRound.QuizId != quizId)
-                return Failure(HubErrors.RoundNotFound);
+                return Failure(ApiErrors.RoundNotFound);
 
             if (dbRound.Quiz.OwnerId != userId)
-                return Failure(HubErrors.CantEditAsNotOwner);
+                return Failure(ApiErrors.CantEditAsNotOwner);
 
             if (dbRound.Quiz.State != QuizState.Open)
-                return Failure(HubErrors.CantUpdateAsNotOpen);
+                return Failure(ApiErrors.CantUpdateAsNotOpen);
 
             dbRound.State = RoundState.Open;
             await DbContext.SaveChangesAsync();
@@ -122,7 +118,7 @@ namespace Quibble.Server.Hub
             return Success();
         }
 
-        [HubMethodName(Endpoints.DeleteRound)]
+        [HubMethodName(SignalrEndpoints.DeleteRound)]
         public async Task<ApiResponse> DeleteRoundAsync(Guid roundId)
         {
             (Guid userId, Guid quizId, ApiError? error) = ExecutionContext;
@@ -136,16 +132,16 @@ namespace Quibble.Server.Hub
                     .FindAsync(roundId);
 
             if (dbRound is null)
-                return Failure(HubErrors.RoundNotFound);
+                return Failure(ApiErrors.RoundNotFound);
 
             if (dbRound.QuizId != quizId)
-                return Failure(HubErrors.RoundNotFound);
+                return Failure(ApiErrors.RoundNotFound);
 
             if (dbRound.Quiz.OwnerId != userId)
-                return Failure(HubErrors.CantEditAsNotOwner);
+                return Failure(ApiErrors.CantEditAsNotOwner);
 
             if (dbRound.Quiz.State != QuizState.InDevelopment)
-                return Failure(HubErrors.CantDeleteAsNotInDevelopment);
+                return Failure(ApiErrors.CantDeleteAsNotInDevelopment);
 
             DbContext.Rounds.Remove(dbRound);
             dbRound.Quiz.Rounds.Remove(dbRound);

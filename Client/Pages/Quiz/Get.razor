@@ -2,9 +2,6 @@
 @using Quibble.Client.Pages.Quiz.Edit
 @using Quibble.Client.Pages.Quiz.Host
 @using Quibble.Client.Pages.Quiz.Take
-@using Quibble.Client.Sync.Entities.EditMode
-@using Quibble.Client.Sync.Entities.HostMode
-@using Quibble.Client.Sync.Entities.TakeMode
 
 @if (GetQuizResult is null)
 {
@@ -37,18 +34,32 @@ else if (GetQuizResult.Error is not null)
     <FullPageTitle Value="Error loading quiz" />
     @($"{GetQuizResult.Error.StatusCode}: {GetQuizResult.Error.ErrorKey}")
 }
-else if (GetQuizResult.Value is ISyncedEditModeQuiz editModeQuiz)
+else if (GetQuizResult.Value is null)
 {
-    <FullPageTitle Value="@($"Editing {editModeQuiz.Title}")" />
-    <EditQuizView Quiz="editModeQuiz" />
+    <FullPageTitle Value="Error loading quiz" />
+    @($"No quiz loaded")
 }
-else if (GetQuizResult.Value is ISyncedHostModeQuiz hostModeQuiz)
+else if (GetQuizResult.Value.IsDeleted)
 {
-    <FullPageTitle Value="@($"Hosting {hostModeQuiz.Title}")" />
-    <HostQuizView Quiz="hostModeQuiz" />
+    <FullPageTitle Value="Quiz deleted" />
+    @("Quiz deleted")
 }
-else if (GetQuizResult.Value is ISyncedTakeModeQuiz takeModeQuiz)
+else
 {
-    <FullPageTitle Value="@takeModeQuiz.Title" />
-    <TakeQuizView Quiz="takeModeQuiz" />
+    var quiz = GetQuizResult.Value;
+    if (quiz.State == QuizState.InDevelopment)
+    {
+        <FullPageTitle Value="@($"Editing {quiz.Title}")" />
+        <EditQuizView Quiz="quiz" />
+    }
+    else if (quiz.OwnerId == UserId)
+    {
+        <FullPageTitle Value="@($"Hosting {quiz.Title}")" />
+        <HostQuizView Quiz="quiz" />
+    }
+    else
+    {
+        <FullPageTitle Value="@quiz.Title" />
+        <TakeQuizView Quiz="quiz" />
+    }
 }

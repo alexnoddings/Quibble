@@ -1,4 +1,4 @@
-﻿@using Quibble.Client.Sync.Entities.EditMode
+﻿@inherits SyncedEntityComponent
 
 <Alert Visible="ErrorMessages.Count > 0" Color="Color.Warning">
     <CloseButton Clicked="() => ErrorMessages.Clear()" />

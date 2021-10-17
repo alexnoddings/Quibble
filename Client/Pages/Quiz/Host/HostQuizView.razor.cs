@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Quibble.Client.Sync.Entities.HostMode;
+using Quibble.Client.Sync;
+using Quibble.Client.Sync.Core;
 
 namespace Quibble.Client.Pages.Quiz.Host
 {
     public sealed partial class HostQuizView : IDisposable
     {
         [Parameter]
-        public ISyncedHostModeQuiz Quiz { get; set; } = default!;
+        public ISyncedQuiz Quiz { get; set; } = default!;
 
         private SelectionContext Selection { get; set; } = default!;
 
@@ -16,15 +17,18 @@ namespace Quibble.Client.Pages.Quiz.Host
 
             Selection = new SelectionContext(Quiz);
             Quiz.Updated += OnUpdatedAsync;
-            Selection.Updated += OnUpdatedAsync;
+            Selection.OnUpdated += OnUpdatedAsync;
         }
 
-        private Task OnUpdatedAsync() => InvokeAsync(StateHasChanged);
+        private Task OnUpdatedAsync(SelectionChangedEventArgs _) => OnUpdatedAsync();
+
+        protected override int CalculateStateStamp() =>
+            StateStamp.ForProperties(Quiz, Selection.RoundNumber, Selection.QuestionNumber);
 
         public void Dispose()
         {
             Quiz.Updated -= OnUpdatedAsync;
-            Selection.Updated -= OnUpdatedAsync;
+            Selection.OnUpdated -= OnUpdatedAsync;
         }
     }
 }

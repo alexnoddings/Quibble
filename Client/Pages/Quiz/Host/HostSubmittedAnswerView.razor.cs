@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Quibble.Client.Sync.Entities.HostMode;
+using Quibble.Client.Sync;
+using Quibble.Client.Sync.Core;
 using Quibble.Shared.Entities;
 
 namespace Quibble.Client.Pages.Quiz.Host
@@ -7,50 +8,41 @@ namespace Quibble.Client.Pages.Quiz.Host
     public sealed partial class HostSubmittedAnswerView : IDisposable
     {
         [Parameter]
-        public ISyncedHostModeSubmittedAnswer SubmittedAnswer { get; set; } = default!;
+        public ISyncedSubmittedAnswer SubmittedAnswer { get; set; } = default!;
 
-        private string LocalPointsString { get; set; } = string.Empty;
+        private decimal LocalPoints { get; set; }
 
-        private string CardClass
-        {
-            get
-            {
-                if (SubmittedAnswer.Question.State == QuestionState.Locked && SubmittedAnswer.AssignedPoints == -1)
-                    return "border-warning";
+        private bool IsExpanded { get; set; }
 
-                return string.Empty;
-            }
-        }
+        private string CardClass =>
+            SubmittedAnswer.Question.State == QuestionState.Locked && SubmittedAnswer.AssignedPoints == -1
+            ? "border-warning"
+            : string.Empty;
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            LocalPointsString = SubmittedAnswer.AssignedPoints.ToString("G4");
+            LocalPoints = SubmittedAnswer.AssignedPoints;
 
             SubmittedAnswer.Updated += OnUpdatedAsync;
         }
 
-        private Task OnUpdatedAsync()
+        protected override void OnParametersSet()
         {
-            LocalPointsString = SubmittedAnswer.AssignedPoints.ToString("G4");
-            return InvokeAsync(StateHasChanged);
+            LocalPoints = SubmittedAnswer.AssignedPoints;
         }
 
-        private Task RoundAndUpdatePointsAsync()
+        private Task RoundAndUpdatePointsAsync(decimal newValue)
         {
-            if (!decimal.TryParse(LocalPointsString, out decimal points))
-            {
-                LocalPointsString = SubmittedAnswer.AssignedPoints.ToString("G4");
-                return Task.CompletedTask;
-            }
-
             // Ensure points are a division of 0.25
-            points = Math.Round(points * 4, MidpointRounding.ToEven) / 4;
-            points = Math.Clamp(points, 0, 10m);
+            newValue = Math.Round(newValue * 4, MidpointRounding.ToEven) / 4;
+            LocalPoints = Math.Clamp(newValue, 0, 10m);
 
-            LocalPointsString = points.ToString("G4");
-            return SubmittedAnswer.MarkAsync(points);
+            return SubmittedAnswer.MarkAsync(LocalPoints);
         }
+
+        protected override int CalculateStateStamp() =>
+            StateStamp.ForProperties(SubmittedAnswer, LocalPoints, IsExpanded);
 
         public void Dispose()
         {

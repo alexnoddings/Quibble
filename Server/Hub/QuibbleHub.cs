@@ -7,13 +7,13 @@ using Quibble.Server.Data.Models;
 using Quibble.Server.Extensions;
 using Quibble.Shared.Api;
 using Quibble.Shared.Entities;
-using Quibble.Shared.Hub;
 using Quibble.Shared.Models.Dtos;
+using Quibble.Shared.Sync.SignalR;
 
 namespace Quibble.Server.Hub
 {
     [Authorize]
-    public partial class QuibbleHub : Hub<IQuibbleHubClient>
+    public partial class QuibbleHub : Hub<ISignalrEvents>
     {
         private AppDbContext DbContext { get; }
         private IMapper Mapper { get; }
@@ -103,10 +103,10 @@ namespace Quibble.Server.Hub
         private HubExecutionContext BuildExecutionContext()
         {
             if (GetUserId() is not { } userId)
-                return new HubExecutionContext(Guid.Empty, Guid.Empty, HubErrors.Unauthorised);
+                return new HubExecutionContext(Guid.Empty, Guid.Empty, ApiErrors.Unauthorised);
 
             if (GetQuizId() is not { } quizId)
-                return new HubExecutionContext(Guid.Empty, Guid.Empty, HubErrors.QuizNotFound);
+                return new HubExecutionContext(Guid.Empty, Guid.Empty, ApiErrors.QuizNotFound);
 
             return new HubExecutionContext(userId, quizId);
         }
@@ -134,10 +134,10 @@ namespace Quibble.Server.Hub
         private static ApiResponse Failure(ApiError error) => ApiResponse.FromError(error);
         private static ApiResponse<TValue> Failure<TValue>(ApiError error) => ApiResponse.FromError<TValue>(error);
 
-        private IQuibbleHubClient AllQuizUsersGroup(Guid quizId) => Clients.Group(GetQuizGroupName(quizId));
-        private IQuibbleHubClient AllQuizParticipantsGroup(Guid quizId) => Clients.Group(GetQuizParticipantsGroupName(quizId));
-        private IQuibbleHubClient QuizHostGroup(Guid quizId) => Clients.Group(GetQuizHostGroupName(quizId));
-        private IQuibbleHubClient QuizParticipantGroup(Guid quizId, Guid participantId) => Clients.Group(GetQuizParticipantGroupName(quizId, participantId));
+        private ISignalrEvents AllQuizUsersGroup(Guid quizId) => Clients.Group(GetQuizGroupName(quizId));
+        private ISignalrEvents AllQuizParticipantsGroup(Guid quizId) => Clients.Group(GetQuizParticipantsGroupName(quizId));
+        private ISignalrEvents QuizHostGroup(Guid quizId) => Clients.Group(GetQuizHostGroupName(quizId));
+        private ISignalrEvents QuizParticipantGroup(Guid quizId, Guid participantId) => Clients.Group(GetQuizParticipantGroupName(quizId, participantId));
 
         public static string GetQuizGroupName(Guid quizId) => $"quiz::{quizId}";
         public static string GetQuizHostGroupName(Guid quizId) => $"quiz::{quizId}::hosts";

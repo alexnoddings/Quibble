@@ -26,7 +26,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client.Sync", "Client.Sync\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client.Sync.SignalR", "Client.Sync.SignalR\Client.Sync.SignalR.csproj", "{A392DB39-04ED-43C6-96AC-DC75F1D44FD0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Sync.SignalR", "Shared.Sync.SignalR\Shared.Sync.SignalR.csproj", "{0947C16B-43A5-495F-8B66-2A3A417BCA96}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared.Sync.SignalR", "Shared.Sync.SignalR\Shared.Sync.SignalR.csproj", "{0947C16B-43A5-495F-8B66-2A3A417BCA96}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

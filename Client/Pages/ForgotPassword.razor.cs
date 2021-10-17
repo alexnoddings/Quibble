@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Quibble.Client.Services.Authentication;
-using Quibble.Shared.Api.Authentication;
+using Quibble.Shared.Models.Authentication;
 
 namespace Quibble.Client.Pages
 {
