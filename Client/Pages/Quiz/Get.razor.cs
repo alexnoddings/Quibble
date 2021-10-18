@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
-using Quibble.Client.Sync.Entities.EditMode;
-using Quibble.Client.Sync.Entities;
+using Quibble.Client.Sync.Core;
 using Quibble.Client.Sync;
 using Quibble.Shared.Api;
 
@@ -14,46 +13,34 @@ namespace Quibble.Client.Pages.Quiz
         public Guid QuizId { get; set; }
 
         [Inject]
-        private ISynchronisedQuizFactory QuizFactory { get; set; } = default!;
+        private ISyncedQuizFactory QuizFactory { get; set; } = default!;
 
-        private ApiResponse<ISynchronisedQuiz>? GetQuizResult { get; set; }
+        [CascadingParameter]
+        private Task<Guid> UserIdTask { get; set; } = default!;
+
+        private Guid UserId { get; set; }
+
+        private ApiResponse<ISyncedQuiz>? GetQuizResult { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
-            await base.OnInitializedAsync();
-            await ReloadQuizAsync();
+            UserId = await UserIdTask;
+            GetQuizResult = await QuizFactory.GetSyncedQuizAsync(QuizId);
+
+            if (GetQuizResult.Value is not null)
+                GetQuizResult.Value.Updated += OnQuizUpdated;
         }
 
-        private Task OnQuizInvalidated() =>
-            ReloadQuizAsync();
+        private Task OnQuizUpdated() => InvokeAsync(StateHasChanged);
 
-        private async Task ReloadQuizAsync()
-        {
-            await DisposeQuizAsync();
-
-            GetQuizResult = await QuizFactory.GetQuizAsync(QuizId);
-
-            if (GetQuizResult.Value is ISyncedEditModeQuiz editModeQuiz)
-                editModeQuiz.OnInvalidated += OnQuizInvalidated;
-
-            await InvokeAsync(StateHasChanged);
-        }
-
-        private async Task DisposeQuizAsync()
+        public async ValueTask DisposeAsync()
         {
             var syncedQuiz = GetQuizResult?.Value;
             if (syncedQuiz is null) return;
 
-            if (syncedQuiz is ISyncedEditModeQuiz editModeQuiz)
-                editModeQuiz.OnInvalidated -= OnQuizInvalidated;
-
+            syncedQuiz.Updated -= OnQuizUpdated;
             await syncedQuiz.DisposeAsync();
             GetQuizResult = null;
-        }
-
-        public async ValueTask DisposeAsync()
-        {
-            await DisposeQuizAsync();
         }
     }
 }

@@ -1,16 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Quibble.Shared.Sync.SignalR;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Quibble.Client.Sync.SignalR.Extensions
 {
     internal static class LambdaExpressionExtensions
     {
-        public static string GetMethodName(this LambdaExpression eventMethodSelector)
+        public static string GetEventName(this Expression<Func<ISignalrEvents, Func<Task>>> eventMethodSelector) =>
+            GetMethodCallName(eventMethodSelector);
+
+        public static string GetEventName<T1>(this Expression<Func<ISignalrEvents, Func<T1, Task>>> eventMethodSelector) =>
+            GetMethodCallName(eventMethodSelector);
+
+        public static string GetEventName<T1, T2>(this Expression<Func<ISignalrEvents, Func<T1, T2, Task>>> eventMethodSelector) =>
+            GetMethodCallName(eventMethodSelector);
+
+        private static string GetMethodCallName(this LambdaExpression eventMethodSelector)
         {
             var methodInfo = TryGetMethodInfo(eventMethodSelector);
             if (methodInfo is null)

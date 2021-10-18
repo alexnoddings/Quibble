@@ -1,0 +1,48 @@
+﻿@using Blazorise
+@using Blazorise.Bootstrap
+@using Blazorise.Icons.FontAwesome
+@using Microsoft.AspNetCore.Components.WebAssembly.Hosting
+@inherits TestContext
+
+@code
+{
+    private IRenderedComponent<DebugDisplay> RenderDebugDisplay(string environment)
+    {
+        this.AddBlazorise()
+            .AddEnvironment(environment);
+
+        var debugDisplay = RenderComponent<DebugDisplay>();
+
+        return debugDisplay;
+    }
+
+    [Fact]
+    public void InDevelopment_Renders()
+    {
+        // Arrange & Act
+        var debugDisplay = RenderDebugDisplay("Development");
+
+        // Assert
+        Assert.Contains("Development", debugDisplay.Markup, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void InStaging_Renders()
+    {
+        // Arrange & Act
+        var debugDisplay = RenderDebugDisplay("Staging");
+
+        // Assert
+        Assert.Contains("Staging", debugDisplay.Markup, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void InProduction_DoesNotRender()
+    {
+        // Arrange & Act
+        var debugDisplay = RenderDebugDisplay("Production");
+
+        // Assert
+        Assert.Equal("", debugDisplay.Markup);
+    }
+}

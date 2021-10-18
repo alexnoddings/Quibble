@@ -4,19 +4,19 @@ namespace Quibble.Shared.Api
 {
     public record ApiResponse
     {
+        protected readonly bool _wasSuccessful;
         [MemberNotNullWhen(false, nameof(Error))]
-        public virtual bool WasSuccessful { get; }
+        public virtual bool WasSuccessful => _wasSuccessful;
 
         public ApiError? Error { get; }
 
         public ApiResponse(bool wasSuccessful, ApiError? error)
         {
-            if (!wasSuccessful && error is null)
-                throw new ArgumentException($"Cannot be null or whitespace when {nameof(wasSuccessful)} is false.", nameof(error));
-            if (wasSuccessful && error is not null)
-                throw new ArgumentException($"Must be null or whitespace when {nameof(wasSuccessful)} is true.", nameof(error));
+            _wasSuccessful = wasSuccessful;
 
-            WasSuccessful = wasSuccessful;
+            if (!wasSuccessful && error is null)
+                throw new ArgumentException($"Cannot be null when {nameof(wasSuccessful)} is false.", nameof(error));
+
             Error = error;
         }
 

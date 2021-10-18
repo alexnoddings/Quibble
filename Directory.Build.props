@@ -1,6 +1,6 @@
 <Project>
 
-	<PropertyGroup Label="Project Info">
+  <PropertyGroup Label="Project Info">
     <Product>Quibble</Product>
     <Authors>Alex Noddings</Authors>
     <Company>Alex Noddings</Company>
@@ -31,13 +31,16 @@
     <!-- Always use nullable context where possible. -->
     <Nullable>enable</Nullable>
     
-		<!-- Mark unit test projects. -->
-		<IsUnitTestProject Condition=" '$(IsUnitTestProject)' == '' ">false</IsUnitTestProject>
-		<IsUnitTestProject Condition=" $(MSBuildProjectName.StartsWith('Tests.')) ">true</IsUnitTestProject>
-		<IsPackable Condition=" '$(IsUnitTestProject)' == 'true' ">false</IsPackable>
+    <!-- Enable implicit usings. -->
+    <ImplicitUsings>true</ImplicitUsings>
+    
+	<!-- Mark unit test projects. -->
+	<IsUnitTestProject Condition=" '$(IsUnitTestProject)' == '' ">false</IsUnitTestProject>
+	<IsUnitTestProject Condition=" $(MSBuildProjectName.EndsWith('.Tests')) ">true</IsUnitTestProject>
+	<IsPackable Condition=" '$(IsUnitTestProject)' == 'true' ">false</IsPackable>
   </PropertyGroup>
 
-	<PropertyGroup Label="Warnings and Errors">
+  <PropertyGroup Label="Warnings and Errors">
     <!-- Treat all warnings as errors. -->
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
@@ -51,6 +54,7 @@
       $(WarningsNotAsErrors);
       <!-- Don't make marking a method as async without performing an await an error. -->
       CS1998;
+      CS0067;
     </WarningsNotAsErrors>
   </PropertyGroup>
 

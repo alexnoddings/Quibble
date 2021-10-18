@@ -4,15 +4,15 @@ using Quibble.Server.Data.Models;
 using Quibble.Server.Extensions;
 using Quibble.Shared.Api;
 using Quibble.Shared.Entities;
-using Quibble.Shared.Hub;
 using Quibble.Shared.Models.Dtos;
+using Quibble.Shared.Sync.SignalR;
 
 namespace Quibble.Server.Hub
 {
     public partial class QuibbleHub
     {
-        [HubMethodName(Endpoints.CreateQuestion)]
-        public async Task<ApiResponse> CreateQuestionAsync(Guid roundId, string text, string answer, decimal points)
+        [HubMethodName(SignalrEndpoints.CreateQuestion)]
+        public async Task<ApiResponse> CreateQuestionAsync(Guid roundId)
         {
             (Guid userId, Guid quizId, ApiError? error) = ExecutionContext;
             if (error is not null)
@@ -25,39 +25,22 @@ namespace Quibble.Server.Hub
                     .FindAsync(roundId);
 
             if (dbRound is null)
-                return Failure(HubErrors.QuestionParentRoundNotFound);
+                return Failure(ApiErrors.QuestionParentRoundNotFound);
 
             if (dbRound.QuizId != quizId)
-                return Failure(HubErrors.QuestionParentRoundNotFound);
+                return Failure(ApiErrors.QuestionParentRoundNotFound);
 
             if (dbRound.Quiz.OwnerId != userId)
-                return Failure(HubErrors.CantEditAsNotOwner);
+                return Failure(ApiErrors.CantEditAsNotOwner);
 
             if (dbRound.Quiz.State != QuizState.InDevelopment)
-                return Failure(HubErrors.CantDeleteAsNotInDevelopment);
-
-            text ??= string.Empty;
-            if (text.Length > 200)
-                return Failure(HubErrors.TextTooLong);
-
-            answer ??= string.Empty;
-            if (answer.Length > 200)
-                return Failure(HubErrors.TextTooLong);
-
-            if (points < 0.25m)
-                return Failure(HubErrors.PointsTooLow);
-
-            if (points > 10m)
-                return Failure(HubErrors.PointsTooHigh);
-
-            // Ensure points are a division of 0.25
-            points = Math.Round(points * 4, MidpointRounding.ToEven) / 4;
+                return Failure(ApiErrors.CantDeleteAsNotInDevelopment);
 
             var dbQuestion = new DbQuestion
             {
-                Text = text,
-                Answer = answer,
-                Points = points,
+                Text = string.Empty,
+                Answer = string.Empty,
+                Points = 1,
                 State = QuestionState.Hidden,
                 Order = dbRound.Questions.Count
             };
@@ -70,7 +53,7 @@ namespace Quibble.Server.Hub
             return Success();
         }
 
-        [HubMethodName(Endpoints.UpdateQuestionText)]
+        [HubMethodName(SignalrEndpoints.UpdateQuestionText)]
         public async Task<ApiResponse> UpdateQuestionTextAsync(Guid questionId, string newText)
         {
             (Guid userId, Guid quizId, ApiError? error) = ExecutionContext;
@@ -84,20 +67,20 @@ namespace Quibble.Server.Hub
                     .FindAsync(questionId);
 
             if (dbQuestion is null)
-                return Failure(HubErrors.QuestionNotFound);
+                return Failure(ApiErrors.QuestionNotFound);
 
             if (dbQuestion.Round.QuizId != quizId)
-                return Failure(HubErrors.QuestionNotFound);
+                return Failure(ApiErrors.QuestionNotFound);
 
             if (dbQuestion.Round.Quiz.OwnerId != userId)
-                return Failure(HubErrors.CantEditAsNotOwner);
+                return Failure(ApiErrors.CantEditAsNotOwner);
 
             if (dbQuestion.Round.Quiz.State != QuizState.InDevelopment)
-                return Failure(HubErrors.CantDeleteAsNotInDevelopment);
+                return Failure(ApiErrors.CantDeleteAsNotInDevelopment);
 
             newText ??= string.Empty;
             if (newText.Length > 200)
-                return Failure(HubErrors.TextTooLong);
+                return Failure(ApiErrors.TextTooLong);
 
             dbQuestion.Text = newText;
             await DbContext.SaveChangesAsync();
@@ -107,7 +90,7 @@ namespace Quibble.Server.Hub
             return Success();
         }
 
-        [HubMethodName(Endpoints.UpdateQuestionAnswer)]
+        [HubMethodName(SignalrEndpoints.UpdateQuestionAnswer)]
         public async Task<ApiResponse> UpdateQuestionAnswerAsync(Guid questionId, string newAnswer)
         {
             (Guid userId, Guid quizId, ApiError? error) = ExecutionContext;
@@ -121,20 +104,20 @@ namespace Quibble.Server.Hub
                     .FindAsync(questionId);
 
             if (dbQuestion is null)
-                return Failure(HubErrors.QuestionNotFound);
+                return Failure(ApiErrors.QuestionNotFound);
 
             if (dbQuestion.Round.QuizId != quizId)
-                return Failure(HubErrors.QuestionNotFound);
+                return Failure(ApiErrors.QuestionNotFound);
 
             if (dbQuestion.Round.Quiz.OwnerId != userId)
-                return Failure(HubErrors.CantEditAsNotOwner);
+                return Failure(ApiErrors.CantEditAsNotOwner);
 
             if (dbQuestion.Round.Quiz.State != QuizState.InDevelopment)
-                return Failure(HubErrors.CantDeleteAsNotInDevelopment);
+                return Failure(ApiErrors.CantDeleteAsNotInDevelopment);
 
             newAnswer ??= string.Empty;
             if (newAnswer.Length > 200)
-                return Failure(HubErrors.TextTooLong);
+                return Failure(ApiErrors.TextTooLong);
 
             dbQuestion.Answer = newAnswer;
             await DbContext.SaveChangesAsync();
@@ -144,7 +127,7 @@ namespace Quibble.Server.Hub
             return Success();
         }
 
-        [HubMethodName(Endpoints.UpdateQuestionPoints)]
+        [HubMethodName(SignalrEndpoints.UpdateQuestionPoints)]
         public async Task<ApiResponse> UpdateQuestionPointsAsync(Guid questionId, decimal newPoints)
         {
             (Guid userId, Guid quizId, ApiError? error) = ExecutionContext;
@@ -158,22 +141,22 @@ namespace Quibble.Server.Hub
                     .FindAsync(questionId);
 
             if (dbQuestion is null)
-                return Failure(HubErrors.QuestionNotFound);
+                return Failure(ApiErrors.QuestionNotFound);
 
             if (dbQuestion.Round.QuizId != quizId)
-                return Failure(HubErrors.QuestionNotFound);
+                return Failure(ApiErrors.QuestionNotFound);
 
             if (dbQuestion.Round.Quiz.OwnerId != userId)
-                return Failure(HubErrors.CantEditAsNotOwner);
+                return Failure(ApiErrors.CantEditAsNotOwner);
 
             if (dbQuestion.Round.Quiz.State != QuizState.InDevelopment)
-                return Failure(HubErrors.CantDeleteAsNotInDevelopment);
+                return Failure(ApiErrors.CantDeleteAsNotInDevelopment);
 
             if (newPoints < 0.25m)
-                return Failure(HubErrors.PointsTooLow);
+                return Failure(ApiErrors.PointsTooLow);
 
             if (newPoints > 10)
-                return Failure(HubErrors.PointsTooHigh);
+                return Failure(ApiErrors.PointsTooHigh);
 
             // Ensure points are a division of 0.25
             newPoints = Math.Round(newPoints * 4, MidpointRounding.ToEven) / 4;
@@ -186,7 +169,7 @@ namespace Quibble.Server.Hub
             return Success();
         }
 
-        [HubMethodName(Endpoints.UpdateQuestionState)]
+        [HubMethodName(SignalrEndpoints.UpdateQuestionState)]
         public async Task<ApiResponse> UpdateQuestionStateAsync(Guid questionId, QuestionState newState)
         {
             (Guid userId, Guid quizId, ApiError? error) = ExecutionContext;
@@ -200,19 +183,19 @@ namespace Quibble.Server.Hub
                     .FindAsync(questionId);
 
             if (dbQuestion is null)
-                return Failure(HubErrors.QuestionNotFound);
+                return Failure(ApiErrors.QuestionNotFound);
 
             if (dbQuestion.Round.QuizId != quizId)
-                return Failure(HubErrors.QuestionNotFound);
+                return Failure(ApiErrors.QuestionNotFound);
 
             if (dbQuestion.Round.Quiz.OwnerId != userId)
-                return Failure(HubErrors.CantEditAsNotOwner);
+                return Failure(ApiErrors.CantEditAsNotOwner);
 
             if (dbQuestion.Round.Quiz.State != QuizState.Open)
-                return Failure(HubErrors.CantUpdateAsNotOpen);
+                return Failure(ApiErrors.CantUpdateAsNotOpen);
 
             if (dbQuestion.Round.State != RoundState.Open)
-                return Failure(HubErrors.QuestionBadState);
+                return Failure(ApiErrors.QuestionBadState);
 
             // ToDo: split into multiple state-change functions
             switch (dbQuestion.State)
@@ -224,7 +207,7 @@ namespace Quibble.Server.Hub
                     break;
                 // Invalid new state value or invalid state transitions
                 default:
-                    return Failure(HubErrors.QuestionBadState);
+                    return Failure(ApiErrors.QuestionBadState);
             }
 
             if (newState == QuestionState.AnswerRevealed)
@@ -234,7 +217,7 @@ namespace Quibble.Server.Hub
                     .AnyAsync(submittedAnswer => submittedAnswer.AssignedPoints == -1);
 
                 if (areAnyAnswersUnmarked)
-                    return Failure(HubErrors.QuestionBadState);
+                    return Failure(ApiErrors.QuestionBadState);
             }
 
             dbQuestion.State = newState;
@@ -253,7 +236,7 @@ namespace Quibble.Server.Hub
                 foreach (var submittedAnswer in submittedAnswers)
                 {
                     var submittedAnswerDto = Mapper.Map<SubmittedAnswerDto>(submittedAnswer);
-                    await QuizParticipantGroup(quizId, submittedAnswer.ParticipantId).OnQuestionRevealedAsync(questionDto, submittedAnswerDto);
+                    await QuizParticipantGroup(quizId, submittedAnswer.ParticipantId).OnQuestionRevealedAsync(questionDto, new List<SubmittedAnswerDto> { submittedAnswerDto });
                 }
 
                 return Success();
@@ -305,7 +288,7 @@ namespace Quibble.Server.Hub
             return Success();
         }
 
-        [HubMethodName(Endpoints.DeleteQuestion)]
+        [HubMethodName(SignalrEndpoints.DeleteQuestion)]
         public async Task<ApiResponse> DeleteQuestionAsync(Guid questionId)
         {
             (Guid userId, Guid quizId, ApiError? error) = ExecutionContext;
@@ -321,16 +304,16 @@ namespace Quibble.Server.Hub
                     .FindAsync(questionId);
 
             if (dbQuestion is null)
-                return Failure(HubErrors.QuestionNotFound);
+                return Failure(ApiErrors.QuestionNotFound);
 
             if (dbQuestion.Round.QuizId != quizId)
-                return Failure(HubErrors.QuestionNotFound);
+                return Failure(ApiErrors.QuestionNotFound);
 
             if (dbQuestion.Round.Quiz.OwnerId != userId)
-                return Failure(HubErrors.CantEditAsNotOwner);
+                return Failure(ApiErrors.CantEditAsNotOwner);
 
             if (dbQuestion.Round.Quiz.State != QuizState.InDevelopment)
-                return Failure(HubErrors.CantDeleteAsNotInDevelopment);
+                return Failure(ApiErrors.CantDeleteAsNotInDevelopment);
 
             DbContext.Questions.Remove(dbQuestion);
             dbQuestion.Round.Questions.Remove(dbQuestion);

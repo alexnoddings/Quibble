@@ -55,21 +55,6 @@
                         </Text>
                     </samp>
                 </BarDropdownItem>
-                <BarDropdownItem>
-                    <Text Weight="TextWeight.Bold">
-                        User:
-                    </Text>
-                    <samp>
-                        <AuthorizeView>
-                            <Authorized>
-                                @context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                            </Authorized>
-                            <NotAuthorized>
-                                N/A
-                            </NotAuthorized>
-                        </AuthorizeView>
-                    </samp>
-                </BarDropdownItem>
             </BarDropdownMenu>
         </BarDropdown>
     </BarItem>

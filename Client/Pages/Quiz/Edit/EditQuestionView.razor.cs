@@ -1,29 +1,24 @@
 ﻿using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components;
 using Quibble.Client.Components.Modals;
-using Quibble.Client.Sync.Entities.EditMode;
+using Quibble.Client.Sync.Core;
+using Quibble.Client.Sync;
 
 namespace Quibble.Client.Pages.Quiz.Edit
 {
     public sealed partial class EditQuestionView : IDisposable
     {
         [Parameter]
-        public ISyncedEditModeQuestion Question { get; set; } = default!;
+        public ISyncedQuestion Question { get; set; } = default!;
 
         private OptionsModal<bool> ConfirmDeleteModal { get; set; } = default!;
-
-        private int LastStateStamp { get; set; } = 0;
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
             Question.Updated += OnUpdatedAsync;
-            LastStateStamp = Question.GetStateStamp();
         }
-
-        private Task OnUpdatedAsync() =>
-            InvokeAsync(StateHasChanged);
 
         private async Task OnDeleteClickedAsync(MouseEventArgs args)
         {
@@ -35,15 +30,8 @@ namespace Quibble.Client.Pages.Quiz.Edit
             }
         }
 
-        protected override bool ShouldRender()
-        {
-            var currentStateStamp = Question.GetStateStamp();
-            if (currentStateStamp == LastStateStamp)
-                return false;
-
-            LastStateStamp = currentStateStamp;
-            return true;
-        }
+        protected override int CalculateStateStamp() =>
+            StateStamp.ForProperties(Question);
 
         public void Dispose()
         {

@@ -1,7 +1,8 @@
 ﻿<Addons>
     <Addon AddonType="AddonType.Body">
-        <NumericEdit @bind-Value="LocalPoints"
-                     Blur="UpdatePointsAsync"
+        <NumericEdit TValue="decimal"
+                     Value="LocalPoints"
+                     ValueChanged="UpdatePointsAsync"
                      Step="0.25m"
                      Min="0.25m"
                      Max="10m"
@@ -13,10 +14,10 @@
                             Color="Color.Dark"
                             Outline="true" />
             <DropdownMenu>
-                <DropdownItem Clicked="() => SaveFunction(0.25m)">0.25</DropdownItem>
-                <DropdownItem Clicked="() => SaveFunction(0.5m)">0.5</DropdownItem>
-                <DropdownItem Clicked="() => SaveFunction(1m)">1</DropdownItem>
-                <DropdownItem Clicked="() => SaveFunction(2m)">2</DropdownItem>
+                <DropdownItem Clicked="() => SaveFunction(0.25m)">&#188;pts</DropdownItem>
+                <DropdownItem Clicked="() => SaveFunction(0.5m)">&#189;pts</DropdownItem>
+                <DropdownItem Clicked="() => SaveFunction(1m)">1pts</DropdownItem>
+                <DropdownItem Clicked="() => SaveFunction(2m)">2pts</DropdownItem>
             </DropdownMenu>
         </Dropdown>
     </Addon>

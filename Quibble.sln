@@ -14,8 +14,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Solution Items", ".Solutio
 		.gitignore = .gitignore
 		Directory.Build.props = Directory.Build.props
 		Dockerfile = Dockerfile
-		Dockerfile.AOT = Dockerfile.AOT
-		DockerNuGet.config = DockerNuGet.config
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection
@@ -26,7 +24,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client.Sync", "Client.Sync\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client.Sync.SignalR", "Client.Sync.SignalR\Client.Sync.SignalR.csproj", "{A392DB39-04ED-43C6-96AC-DC75F1D44FD0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Sync.SignalR", "Shared.Sync.SignalR\Shared.Sync.SignalR.csproj", "{0947C16B-43A5-495F-8B66-2A3A417BCA96}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared.Sync.SignalR", "Shared.Sync.SignalR\Shared.Sync.SignalR.csproj", "{0947C16B-43A5-495F-8B66-2A3A417BCA96}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client.Tests", "Client.Tests\Client.Tests.csproj", "{6693D8C6-6553-4A7F-BEC9-5F76404C602F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -58,6 +58,10 @@ Global
 		{0947C16B-43A5-495F-8B66-2A3A417BCA96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0947C16B-43A5-495F-8B66-2A3A417BCA96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0947C16B-43A5-495F-8B66-2A3A417BCA96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6693D8C6-6553-4A7F-BEC9-5F76404C602F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6693D8C6-6553-4A7F-BEC9-5F76404C602F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6693D8C6-6553-4A7F-BEC9-5F76404C602F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6693D8C6-6553-4A7F-BEC9-5F76404C602F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -90,6 +90,11 @@ button.close span {
     border-color: rgba(0, 0, 0, .15)!important;
 }
 
+.collapse.p-0 .card-body {
+    /* Fix for collapse bodies having padding when the collapse has none */
+    padding: 0;
+}
+
 @media (min-width: 768px) {
     .container {
         max-width: 720px;

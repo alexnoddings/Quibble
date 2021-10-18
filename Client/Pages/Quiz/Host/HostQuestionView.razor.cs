@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Quibble.Client.Sync.Entities.HostMode;
+using Quibble.Client.Sync;
+using Quibble.Client.Sync.Core;
 using Quibble.Shared.Entities;
 
 namespace Quibble.Client.Pages.Quiz.Host
@@ -7,40 +8,34 @@ namespace Quibble.Client.Pages.Quiz.Host
     public sealed partial class HostQuestionView : IDisposable
     {
         [Parameter]
-        public ISyncedHostModeQuiz Quiz { get; set; } = default!;
+        public ISyncedQuiz Quiz { get; set; } = default!;
 
-        [Parameter]
-        public SelectionContext Selection { get; set; } = default!;
-
-        private ISyncedHostModeQuestion LastQuestion { get; set; } = default!;
+        [CascadingParameter]
+        private SelectionContext Selection { get; init; } = default!;
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
-            LastQuestion = Selection.Question;
-            LastQuestion.Round.Updated += OnUpdatedAsync;
-            LastQuestion.Updated += OnUpdatedAsync;
-            foreach (var answer in LastQuestion.Answers)
+            var question = Selection.Question;
+            question.Round.Updated += OnUpdatedAsync;
+            question.Updated += OnUpdatedAsync;
+            foreach (var answer in question.SubmittedAnswers)
                 answer.Updated += OnUpdatedAsync;
 
-            Selection.Updated += OnQuestionChangedAsync;
+            Selection.OnUpdated += OnQuestionChangedAsync;
         }
 
-        private Task OnUpdatedAsync() => InvokeAsync(StateHasChanged);
-
-        private Task OnQuestionChangedAsync()
+        private Task OnQuestionChangedAsync(SelectionChangedEventArgs args)
         {
-            LastQuestion.Round.Updated -= OnUpdatedAsync;
-            LastQuestion.Updated -= OnUpdatedAsync;
-            foreach (var answer in LastQuestion.Answers)
+            args.PreviousQuestion.Round.Updated -= OnUpdatedAsync;
+            args.PreviousQuestion.Updated -= OnUpdatedAsync;
+            foreach (var answer in args.PreviousQuestion.SubmittedAnswers)
                 answer.Updated -= OnUpdatedAsync;
 
-            LastQuestion = Selection.Question;
-
-            LastQuestion.Round.Updated += OnUpdatedAsync;
-            LastQuestion.Updated += OnUpdatedAsync;
-            foreach (var answer in LastQuestion.Answers)
+            args.NewQuestion.Round.Updated += OnUpdatedAsync;
+            args.NewQuestion.Updated += OnUpdatedAsync;
+            foreach (var answer in args.NewQuestion.SubmittedAnswers)
                 answer.Updated += OnUpdatedAsync;
 
             return OnUpdatedAsync();
@@ -57,31 +52,35 @@ namespace Quibble.Client.Pages.Quiz.Host
         {
             foreach (var question in Selection.Round.Questions)
                 if (question.State == QuestionState.Hidden)
-                    await question.OpenAsync();
+                    await question.UpdateStateAsync(QuestionState.Open);
         }
 
         private async Task LockAllQuestionsInRoundAsync()
         {
             foreach (var question in Selection.Round.Questions)
                 if (question.State == QuestionState.Open)
-                    await question.LockAsync();
+                    await question.UpdateStateAsync(QuestionState.Locked);
         }
 
         private async Task ShowAllQuestionAnswersInRoundAsync()
         {
             foreach (var question in Selection.Round.Questions)
-                if (question.State == QuestionState.Locked && question.Answers.All(answer => answer.AssignedPoints >= 0))
-                    await question.ShowAnswer();
+                if (question.State == QuestionState.Locked && question.SubmittedAnswers.All(answer => answer.AssignedPoints >= 0))
+                    await question.UpdateStateAsync(QuestionState.AnswerRevealed);
         }
+
+        protected override int CalculateStateStamp() =>
+            StateStamp.ForProperties(Selection.RoundNumber, Selection.QuestionNumber, Selection.Question);
 
         public void Dispose()
         {
-            LastQuestion.Round.Updated -= OnUpdatedAsync;
-            LastQuestion.Updated -= OnUpdatedAsync;
-            foreach (var answer in LastQuestion.Answers)
-                answer.Updated += OnUpdatedAsync;
+            Selection.OnUpdated -= OnQuestionChangedAsync;
 
-            Selection.Updated -= OnQuestionChangedAsync;
+            var question = Selection.Question;
+            question.Round.Updated -= OnUpdatedAsync;
+            question.Updated -= OnUpdatedAsync;
+            foreach (var answer in question.SubmittedAnswers)
+                answer.Updated += OnUpdatedAsync;
         }
     }
 }

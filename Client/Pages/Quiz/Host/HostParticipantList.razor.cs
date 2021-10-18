@@ -1,58 +1,34 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Quibble.Client.Sync.Entities.HostMode;
+using Quibble.Client.Sync;
+using Quibble.Client.Sync.Core;
 
 namespace Quibble.Client.Pages.Quiz.Host
 {
     public sealed partial class HostParticipantList : IDisposable
     {
         [Parameter]
-        public ISyncedHostModeQuiz Quiz { get; set; } = default!;
-
-        private int LastStateStamp { get; set; } = 0;
-
-        private List<ISyncedHostModeParticipant> KnownParticipants { get; } = new();
+        public ISyncedQuiz Quiz { get; set; } = default!;
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
-            Quiz.Updated += OnUpdatedAsync;
-            RegisterUpdateEvents();
+            Quiz.Participants.Added += OnParticipantJoinedAsync;
 
-            LastStateStamp = GetStateStamp();
+            foreach (var participant in Quiz.Participants)
+                foreach (var answer in participant.Answers)
+                    answer.Updated += OnUpdatedAsync;
         }
 
-        private Task OnUpdatedAsync()
+        private Task OnParticipantJoinedAsync(ISyncedParticipant participant)
         {
-            RegisterUpdateEvents();
+            foreach (var answer in participant.Answers)
+                answer.Updated += OnUpdatedAsync;
+
             return InvokeAsync(StateHasChanged);
         }
 
-        private void RegisterUpdateEvents()
-        {
-            foreach (var participant in Quiz.Participants)
-            {
-                if (KnownParticipants.Contains(participant))
-                    continue;
-
-                foreach (var answer in participant.Answers)
-                    answer.Updated += OnUpdatedAsync;
-
-                KnownParticipants.Add(participant);
-            }
-        }
-
-        protected override bool ShouldRender()
-        {
-            var currentStateStamp = GetStateStamp();
-            if (currentStateStamp == LastStateStamp)
-                return false;
-
-            LastStateStamp = currentStateStamp;
-            return true;
-        }
-
-        private IEnumerable<(decimal, List<ISyncedHostModeParticipant>)> GetParticipantScores() =>
+        private IEnumerable<(decimal, List<ISyncedParticipant>)> GetParticipantScores() =>
             from participant in Quiz.Participants
             let score = participant
                 .Answers
@@ -64,25 +40,14 @@ namespace Quibble.Client.Pages.Quiz.Host
             orderby groupedParticipants.Key descending
             select (groupedParticipants.Key, groupedParticipants.ToList());
 
-        private int GetStateStamp()
-        {
-            var hashCode = new HashCode();
-            foreach (var participant in Quiz.Participants)
-                foreach (var answer in participant.Answers)
-                    hashCode.Add(answer.AssignedPoints);
-
-            return hashCode.ToHashCode();
-        }
+        protected override int CalculateStateStamp() =>
+            StateStamp.ForProperties(Quiz.Participants);
 
         public void Dispose()
         {
-            Quiz.Updated -= OnUpdatedAsync;
-
-            foreach (var participant in KnownParticipants)
+            foreach (var participant in Quiz.Participants)
                 foreach (var answer in participant.Answers)
                     answer.Updated -= OnUpdatedAsync;
-
-            KnownParticipants.Clear();
         }
     }
 }
