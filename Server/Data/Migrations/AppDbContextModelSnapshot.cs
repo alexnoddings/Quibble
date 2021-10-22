@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Quibble.Server.Data;
 
-namespace Quibble.Server.Data.Migrations
-{
+namespace Quibble.Server.Data.Migrations;
+
     [DbContext(typeof(AppDbContext))]
     partial class AppDbContextModelSnapshot : ModelSnapshot
     {
@@ -544,4 +544,3 @@ namespace Quibble.Server.Data.Migrations
 #pragma warning restore 612, 618
         }
     }
-}

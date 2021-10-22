@@ -1,10 +1,9 @@
-﻿namespace Quibble.Client.Sync.DelayedExecution
+﻿namespace Quibble.Client.Sync.DelayedExecution;
+
+public class Throttler<TValue> : DelayedExecutor<TValue>
 {
-    public class Throttler<TValue> : DelayedExecutor<TValue>
+    public Throttler(double intervalMs)
+        : base(intervalMs, false)
     {
-        public Throttler(double intervalMs)
-            : base(intervalMs, false)
-        {
-        }
     }
 }

@@ -1,8 +1,7 @@
-﻿namespace Quibble.Shared.Entities
+﻿namespace Quibble.Shared.Entities;
+
+public enum RoundState
 {
-    public enum RoundState
-    {
-        Hidden,
-        Open
-    }
+    Hidden,
+    Open
 }

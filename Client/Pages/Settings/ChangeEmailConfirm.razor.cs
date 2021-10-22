@@ -3,36 +3,35 @@ using Quibble.Client.Extensions;
 using Quibble.Client.Services.Authentication;
 using Quibble.Shared.Models.Authentication;
 
-namespace Quibble.Client.Pages.Settings
+namespace Quibble.Client.Pages.Settings;
+
+public partial class ChangeEmailConfirm
 {
-    public partial class ChangeEmailConfirm
+    [Inject]
+    private IdentityAuthenticationStateProvider AuthenticationProvider { get; set; } = default!;
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; } = default!;
+
+    private class ChangeEmailModel : ChangeEmailRequest
     {
-        [Inject]
-        private IdentityAuthenticationStateProvider AuthenticationProvider { get; set; } = default!;
+    }
 
-        [Inject]
-        private NavigationManager NavigationManager { get; set; } = default!;
+    private ChangeEmailModel Model { get; } = new();
 
-        private class ChangeEmailModel : ChangeEmailRequest
-        {
-        }
+    private IList<string>? Errors { get; set; }
 
-        private ChangeEmailModel Model { get; } = new();
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
 
-        private IList<string>? Errors { get; set; }
+        Model.NewEmail = NavigationManager.GetQueryParameter("email", string.Empty);
+        Model.Token = NavigationManager.GetQueryParameter("token", string.Empty, unEscape: true);
 
-        protected override async Task OnInitializedAsync()
-        {
-            await base.OnInitializedAsync();
-
-            Model.NewEmail = NavigationManager.GetQueryParameter("email", string.Empty);
-            Model.Token = NavigationManager.GetQueryParameter("token", string.Empty, unEscape: true);
-
-            var result = await AuthenticationProvider.ChangeEmailAsync(Model.NewEmail, Model.Token);
-            if (result.WasSuccessful)
-                NavigationManager.NavigateTo("/settings/email");
-            else
-                Errors = result.Errors?.ToList() ?? new List<string>();
-        }
+        var result = await AuthenticationProvider.ChangeEmailAsync(Model.NewEmail, Model.Token);
+        if (result.WasSuccessful)
+            NavigationManager.NavigateTo("/settings/email");
+        else
+            Errors = result.Errors?.ToList() ?? new List<string>();
     }
 }

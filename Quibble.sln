@@ -18,8 +18,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Solution Items", ".Solutio
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sync", "Sync", "{EDF4BDC2-6A9C-4D12-8F6D-7EA713222A2F}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client.Sync", "Client.Sync\Client.Sync.csproj", "{FEEB2EA2-846F-4B81-8FE2-1953E5E8FB30}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client.Sync.SignalR", "Client.Sync.SignalR\Client.Sync.SignalR.csproj", "{A392DB39-04ED-43C6-96AC-DC75F1D44FD0}"
@@ -65,10 +63,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{FEEB2EA2-846F-4B81-8FE2-1953E5E8FB30} = {EDF4BDC2-6A9C-4D12-8F6D-7EA713222A2F}
-		{A392DB39-04ED-43C6-96AC-DC75F1D44FD0} = {EDF4BDC2-6A9C-4D12-8F6D-7EA713222A2F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4DEEED4C-5A78-41D2-94A0-8526D23DF12C}

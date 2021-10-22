@@ -1,83 +1,81 @@
 ﻿using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components;
 using Quibble.Client.Components.Modals;
-using Quibble.Client.Sync.Core;
 using Quibble.Client.Sync;
+using Quibble.Client.Sync.Core.Entities;
 
-namespace Quibble.Client.Pages.Quiz.Edit
+namespace Quibble.Client.Pages.Quiz.Edit;
+
+public sealed partial class EditQuizView : IDisposable
 {
-    public sealed partial class EditQuizView : IDisposable
+    [Parameter]
+    public ISyncedQuiz Quiz { get; set; } = default!;
+
+    private OptionsModal<bool> ConfirmPublishModal { get; set; } = default!;
+
+    private OptionsModal<bool> ConfirmDeleteModal { get; set; } = default!;
+
+    private List<string> ErrorMessages { get; set; } = new();
+
+    protected override void OnInitialized()
     {
-        [Parameter]
-        public ISyncedQuiz Quiz { get; set; } = default!;
+        base.OnInitialized();
 
-        private OptionsModal<bool> ConfirmPublishModal { get; set; } = default!;
+        Quiz.Updated += OnUpdatedAsync;
+    }
 
-        private OptionsModal<bool> ConfirmDeleteModal { get; set; } = default!;
-
-        private List<string> ErrorMessages { get; set; } = new();
-
-        protected override void OnInitialized()
+    private async Task OnDeleteClickedAsync(MouseEventArgs args)
+    {
+        if (!Quiz.Rounds.Any() || await ConfirmDeleteModal.ShowAsync(false))
         {
-            base.OnInitialized();
+            await Quiz.DeleteAsync();
+        }
+    }
 
-            Quiz.Updated += OnUpdatedAsync;
+    private async Task AddRoundsAsync(int count)
+    {
+        for (var i = 0; i < count; i++)
+            await Quiz.AddRoundAsync();
+    }
+
+    private async Task PublishAsync()
+    {
+        ErrorMessages.Clear();
+
+        if (!Quiz.Rounds.SelectMany(round => round.Questions).Any())
+        {
+            ErrorMessages.Add("No questions present.");
+            return;
         }
 
-        private async Task OnDeleteClickedAsync(MouseEventArgs args)
+        var roundCount = 0;
+        foreach (var round in Quiz.Rounds)
         {
-            if (!Quiz.Rounds.Any()
-                || await ConfirmDeleteModal.ShowAsync(false))
+            roundCount++;
+            if (string.IsNullOrWhiteSpace(round.Title))
+                ErrorMessages.Add($"Round #{roundCount} is missing a title.");
+
+            var questionCount = 0;
+            foreach (var question in round.Questions)
             {
-                await Quiz.DeleteAsync();
+                questionCount++;
+
+                if (string.IsNullOrWhiteSpace(question.Text))
+                    ErrorMessages.Add($"Question #{roundCount}.{questionCount} is missing text.");
+                if (string.IsNullOrWhiteSpace(question.Answer))
+                    ErrorMessages.Add($"Question #{roundCount}.{questionCount} is missing an answer.");
             }
         }
 
-        private async Task AddRoundsAsync(int count)
-        {
-            for (var i = 0; i < count; i++)
-                await Quiz.AddRoundAsync();
-        }
+        if (await ConfirmPublishModal.ShowAsync(false))
+            await Quiz.OpenAsync();
+    }
 
-        private async Task PublishAsync()
-        {
-            ErrorMessages.Clear();
+    protected override int CalculateStateStamp() =>
+        StateStamp.ForProperties(Quiz, ErrorMessages);
 
-            if (!Quiz.Rounds.SelectMany(round => round.Questions).Any())
-            {
-                ErrorMessages.Add("No questions present.");
-                return;
-            }
-
-            var roundCount = 0;
-            foreach (var round in Quiz.Rounds)
-            {
-                roundCount++;
-                if (string.IsNullOrWhiteSpace(round.Title))
-                    ErrorMessages.Add($"Round #{roundCount} is missing a title.");
-
-                var questionCount = 0;
-                foreach (var question in round.Questions)
-                {
-                    questionCount++;
-
-                    if (string.IsNullOrWhiteSpace(question.Text))
-                        ErrorMessages.Add($"Question #{roundCount}.{questionCount} is missing text.");
-                    if (string.IsNullOrWhiteSpace(question.Answer))
-                        ErrorMessages.Add($"Question #{roundCount}.{questionCount} is missing an answer.");
-                }
-            }
-
-            if (await ConfirmPublishModal.ShowAsync(false))
-                await Quiz.OpenAsync();
-        }
-
-        protected override int CalculateStateStamp() =>
-            StateStamp.ForProperties(Quiz, ErrorMessages);
-
-        public void Dispose()
-        {
-            Quiz.Updated -= OnUpdatedAsync;
-        }
+    public void Dispose()
+    {
+        Quiz.Updated -= OnUpdatedAsync;
     }
 }

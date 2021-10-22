@@ -1,9 +1,8 @@
-﻿namespace Quibble.Client.Services.Themeing
+﻿namespace Quibble.Client.Services.Themeing;
+
+public enum UserTheme
 {
-    public enum UserTheme
-    {
-        Light,
-        Dark,
-        Contrast
-    }
+    Light,
+    Dark,
+    Contrast
 }

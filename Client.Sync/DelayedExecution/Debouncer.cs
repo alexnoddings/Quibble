@@ -1,10 +1,9 @@
-﻿namespace Quibble.Client.Sync.DelayedExecution
+﻿namespace Quibble.Client.Sync.DelayedExecution;
+
+public class Debouncer<TValue> : DelayedExecutor<TValue>
 {
-    public class Debouncer<TValue> : DelayedExecutor<TValue>
+    public Debouncer(double intervalMs)
+        : base(intervalMs, true)
     {
-        public Debouncer(double intervalMs)
-            : base(intervalMs, true)
-        {
-        }
     }
 }

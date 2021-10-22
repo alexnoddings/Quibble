@@ -2,6 +2,7 @@
 using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
 using Bunit;
+using Microsoft.JSInterop.Infrastructure;
 
 namespace Quibble.Client.Extensions;
 
@@ -19,7 +20,7 @@ internal static class BlazoriseExtensions
             .AddBootstrapProviders()
             .AddFontAwesomeIcons();
 
-        context.JSInterop.SetupVoid("blazorise.unregisterClosableComponent", _ => true);
+        context.JSInterop.Setup<IJSVoidResult>("blazorise.unregisterClosableComponent", _ => true);
 
         return context;
     }

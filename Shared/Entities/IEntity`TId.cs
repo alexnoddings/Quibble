@@ -1,7 +1,6 @@
-﻿namespace Quibble.Shared.Entities
+﻿namespace Quibble.Shared.Entities;
+
+public interface IEntity<out TId>
 {
-    public interface IEntity<out TId>
-    {
-        public TId Id { get; }
-    }
+    public TId Id { get; }
 }

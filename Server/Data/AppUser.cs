@@ -2,14 +2,13 @@
 using Quibble.Server.Data.Models;
 using Quibble.Shared.Entities;
 
-namespace Quibble.Server.Data
-{
-    public class AppUser : IdentityUser<Guid>, IEntity
-    {
-        public static readonly Guid DeletedUserId = Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF");
+namespace Quibble.Server.Data;
 
-        public List<DbQuiz> Quizzes { get; set; } = new();
-        public List<DbParticipant> Participations { get; set; } = new();
-        public List<DbSubmittedAnswer> SubmittedAnswers { get; set; } = new();
-    }
+public class AppUser : IdentityUser<Guid>, IEntity
+{
+    public static readonly Guid DeletedUserId = Guid.Parse("FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF");
+
+    public List<DbQuiz> Quizzes { get; set; } = new();
+    public List<DbParticipant> Participations { get; set; } = new();
+    public List<DbSubmittedAnswer> SubmittedAnswers { get; set; } = new();
 }

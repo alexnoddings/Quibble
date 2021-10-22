@@ -6,247 +6,246 @@ using Quibble.Server.Data;
 using Quibble.Server.Services.EmailSender;
 using Quibble.Shared.Models.Authentication;
 
-namespace Quibble.Server.Controllers
+namespace Quibble.Server.Controllers;
+
+[Authorize]
+[ApiController]
+[Route("api/[controller]")]
+public class AuthenticationController : ControllerBase
 {
-    [Authorize]
-    [ApiController]
-    [Route("api/[controller]")]
-    public class AuthenticationController : ControllerBase
+    private static readonly string[] ExposedClaimTypes = { ClaimTypes.NameIdentifier, ClaimTypes.Name, ClaimTypes.Email };
+
+    private readonly UserManager<AppUser> _userManager;
+    private readonly SignInManager<AppUser> _signInManager;
+    private readonly IEmailSender _emailSender;
+
+    private List<string> ModelStateErrors =>
+        ModelState
+            .Where(kv => kv.Value is not null)
+            .SelectMany(kv => kv.Value!.Errors)
+            .Select(modelError => modelError.ErrorMessage)
+            .ToList();
+
+    public AuthenticationController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IEmailSender emailSender)
     {
-        private static readonly string[] ExposedClaimTypes = { ClaimTypes.NameIdentifier, ClaimTypes.Name, ClaimTypes.Email };
+        _userManager = userManager;
+        _signInManager = signInManager;
+        _emailSender = emailSender;
+    }
 
-        private readonly UserManager<AppUser> _userManager;
-        private readonly SignInManager<AppUser> _signInManager;
-        private readonly IEmailSender _emailSender;
+    [AllowAnonymous]
+    [HttpGet("User")]
+    public Task<IActionResult> GetUserAsync()
+    {
+        UserInfo userInfo =
+            User.Identity?.IsAuthenticated == true
+                ? new UserInfo
+                {
+                    IsAuthenticated = true,
+                    AuthenticationType = User.Identity.AuthenticationType ?? "Identity.Application",
+                    UserName = User.Identity?.Name ?? string.Empty,
+                    Claims = User.Claims.Where(claim => ExposedClaimTypes.Contains(claim.Type)).ToDictionary(claim => claim.Type, claim => claim.Value)
+                }
+                : UserInfo.Unauthenticated();
 
-        private List<string> ModelStateErrors =>
-            ModelState
-                .Where(kv => kv.Value is not null)
-                .SelectMany(kv => kv.Value!.Errors)
-                .Select(modelError => modelError.ErrorMessage)
-                .ToList();
+        IActionResult result = Ok(userInfo);
+        return Task.FromResult(result);
+    }
 
-        public AuthenticationController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IEmailSender emailSender)
+    [AllowAnonymous]
+    [HttpPost("Register")]
+    public async Task<IActionResult> RegisterAsync([FromBody] RegisterRequest register)
+    {
+        if (register is null || !ModelState.IsValid)
+            return BadRequest(ModelStateErrors);
+
+        var user = new AppUser { UserName = register.UserName, Email = register.Email };
+        var createUserResult = await _userManager.CreateAsync(user, register.Password);
+        if (!createUserResult.Succeeded)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _emailSender = emailSender;
+            foreach (var error in createUserResult.Errors)
+                ModelState.AddModelError(error.Code, error.Description);
+            return BadRequest(ModelStateErrors);
         }
 
-        [AllowAnonymous]
-        [HttpGet("User")]
-        public Task<IActionResult> GetUserAsync()
-        {
-            UserInfo userInfo =
-                User.Identity?.IsAuthenticated == true
-                    ? new UserInfo
-                    {
-                        IsAuthenticated = true,
-                        AuthenticationType = User.Identity.AuthenticationType ?? "Identity.Application",
-                        UserName = User.Identity?.Name ?? string.Empty,
-                        Claims = User.Claims.Where(claim => ExposedClaimTypes.Contains(claim.Type)).ToDictionary(claim => claim.Type, claim => claim.Value)
-                    }
-                    : UserInfo.Unauthenticated();
+        return await LoginAsync(new LoginRequest { UserName = register.UserName, Password = register.Password });
+    }
 
-            IActionResult result = Ok(userInfo);
-            return Task.FromResult(result);
+    [AllowAnonymous]
+    [HttpPost("Login")]
+    public async Task<IActionResult> LoginAsync([FromBody] LoginRequest login)
+    {
+        if (login is null || !ModelState.IsValid)
+            return BadRequest(ModelStateErrors);
+
+        var signInResult = await _signInManager.PasswordSignInAsync(login.UserName, login.Password, true, false);
+        if (!signInResult.Succeeded)
+        {
+            ModelState.AddModelError("BadRequest", "Invalid username or password.");
+            return BadRequest(ModelStateErrors);
         }
 
-        [AllowAnonymous]
-        [HttpPost("Register")]
-        public async Task<IActionResult> RegisterAsync([FromBody] RegisterRequest register)
+        var user = await _userManager.FindByNameAsync(login.UserName);
+        var claims = await _userManager.GetClaimsAsync(user);
+        var response = new UserInfo
         {
-            if (register is null || !ModelState.IsValid)
-                return BadRequest(ModelStateErrors);
+            IsAuthenticated = true,
+            UserName = user.UserName,
+            Claims = claims.ToDictionary(claim => claim.Type, claim => claim.Value)
+        };
+        return Ok(response);
+    }
 
-            var user = new AppUser { UserName = register.UserName, Email = register.Email };
-            var createUserResult = await _userManager.CreateAsync(user, register.Password);
-            if (!createUserResult.Succeeded)
-            {
-                foreach (var error in createUserResult.Errors)
-                    ModelState.AddModelError(error.Code, error.Description);
-                return BadRequest(ModelStateErrors);
-            }
+    [AllowAnonymous]
+    [HttpPost("Logout")]
+    public async Task<IActionResult> LogoutAsync()
+    {
+        if (User.Identity?.IsAuthenticated == true)
+            await _signInManager.SignOutAsync();
 
-            return await LoginAsync(new LoginRequest { UserName = register.UserName, Password = register.Password });
-        }
+        return Ok();
+    }
 
-        [AllowAnonymous]
-        [HttpPost("Login")]
-        public async Task<IActionResult> LoginAsync([FromBody] LoginRequest login)
-        {
-            if (login is null || !ModelState.IsValid)
-                return BadRequest(ModelStateErrors);
-
-            var signInResult = await _signInManager.PasswordSignInAsync(login.UserName, login.Password, true, false);
-            if (!signInResult.Succeeded)
-            {
-                ModelState.AddModelError("BadRequest", "Invalid username or password.");
-                return BadRequest(ModelStateErrors);
-            }
-
-            var user = await _userManager.FindByNameAsync(login.UserName);
-            var claims = await _userManager.GetClaimsAsync(user);
-            var response = new UserInfo
-            {
-                IsAuthenticated = true,
-                UserName = user.UserName,
-                Claims = claims.ToDictionary(claim => claim.Type, claim => claim.Value)
-            };
-            return Ok(response);
-        }
-
-        [AllowAnonymous]
-        [HttpPost("Logout")]
-        public async Task<IActionResult> LogoutAsync()
-        {
-            if (User.Identity?.IsAuthenticated == true)
-                await _signInManager.SignOutAsync();
-
+    [AllowAnonymous]
+    [HttpPost("ForgotPassword")]
+    public async Task<IActionResult> ForgotPasswordAsync(ForgotPasswordRequest forgotPassword)
+    {
+        var user = await _userManager.FindByEmailAsync(forgotPassword.Email);
+        if (user is null)
             return Ok();
-        }
 
-        [AllowAnonymous]
-        [HttpPost("ForgotPassword")]
-        public async Task<IActionResult> ForgotPasswordAsync(ForgotPasswordRequest forgotPassword)
+        string token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        string host = HttpContext.Request.Host.Value;
+
+        var url = $"https://{host}/reset_password?email={user.Email}&token={Uri.EscapeDataString(token)}";
+        await _emailSender.SendAsync(user.Email, url);
+        return Ok();
+    }
+
+    [AllowAnonymous]
+    [HttpPost("ResetPassword")]
+    public async Task<IActionResult> ResetPasswordAsync(ResetPasswordRequest resetPassword)
+    {
+        var user = await _userManager.FindByEmailAsync(resetPassword.Email);
+        if (user is null)
         {
-            var user = await _userManager.FindByEmailAsync(forgotPassword.Email);
-            if (user is null)
-                return Ok();
-
-            string token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            string host = HttpContext.Request.Host.Value;
-
-            var url = $"https://{host}/reset_password?email={user.Email}&token={Uri.EscapeDataString(token)}";
-            await _emailSender.SendAsync(user.Email, url);
-            return Ok();
+            ModelState.AddModelError("BadRequest", "Invalid email or token.");
+            return BadRequest(ModelStateErrors);
         }
 
-        [AllowAnonymous]
-        [HttpPost("ResetPassword")]
-        public async Task<IActionResult> ResetPasswordAsync(ResetPasswordRequest resetPassword)
+        var resetPasswordResult = await _userManager.ResetPasswordAsync(user, resetPassword.Token, resetPassword.NewPassword);
+        if (!resetPasswordResult.Succeeded)
         {
-            var user = await _userManager.FindByEmailAsync(resetPassword.Email);
-            if (user is null)
-            {
-                ModelState.AddModelError("BadRequest", "Invalid email or token.");
-                return BadRequest(ModelStateErrors);
-            }
-
-            var resetPasswordResult = await _userManager.ResetPasswordAsync(user, resetPassword.Token, resetPassword.NewPassword);
-            if (!resetPasswordResult.Succeeded)
-            {
-                foreach (var error in resetPasswordResult.Errors)
-                    ModelState.AddModelError(error.Code, error.Description);
-                return BadRequest(ModelStateErrors);
-            }
-
-            return await LoginAsync(new LoginRequest { UserName = user.UserName, Password = resetPassword.NewPassword });
+            foreach (var error in resetPasswordResult.Errors)
+                ModelState.AddModelError(error.Code, error.Description);
+            return BadRequest(ModelStateErrors);
         }
 
-        [Authorize]
-        [HttpPost("ChangePassword")]
-        public async Task<IActionResult> ChangePasswordAsync(ChangePasswordRequest changePassword)
+        return await LoginAsync(new LoginRequest { UserName = user.UserName, Password = resetPassword.NewPassword });
+    }
+
+    [Authorize]
+    [HttpPost("ChangePassword")]
+    public async Task<IActionResult> ChangePasswordAsync(ChangePasswordRequest changePassword)
+    {
+        var user = await _userManager.GetUserAsync(User);
+
+        var changePasswordResult = await _userManager.ChangePasswordAsync(user, changePassword.CurrentPassword, changePassword.NewPassword);
+        if (!changePasswordResult.Succeeded)
         {
-            var user = await _userManager.GetUserAsync(User);
-
-            var changePasswordResult = await _userManager.ChangePasswordAsync(user, changePassword.CurrentPassword, changePassword.NewPassword);
-            if (!changePasswordResult.Succeeded)
-            {
-                foreach (var error in changePasswordResult.Errors)
-                    ModelState.AddModelError(error.Code, error.Description);
-                return BadRequest(ModelStateErrors);
-            }
-
-            await _signInManager.RefreshSignInAsync(user);
-
-            return Ok();
+            foreach (var error in changePasswordResult.Errors)
+                ModelState.AddModelError(error.Code, error.Description);
+            return BadRequest(ModelStateErrors);
         }
 
-        [Authorize]
-        [HttpPost("RequestChangeEmail")]
-        public async Task<IActionResult> RequestChangeEmailAsync(RequestChangeEmailRequest requestChangeEmail)
+        await _signInManager.RefreshSignInAsync(user);
+
+        return Ok();
+    }
+
+    [Authorize]
+    [HttpPost("RequestChangeEmail")]
+    public async Task<IActionResult> RequestChangeEmailAsync(RequestChangeEmailRequest requestChangeEmail)
+    {
+        var user = await _userManager.GetUserAsync(User);
+
+        var isPasswordCorrect = await _userManager.CheckPasswordAsync(user, requestChangeEmail.Password);
+        if (!isPasswordCorrect)
         {
-            var user = await _userManager.GetUserAsync(User);
-
-            var isPasswordCorrect = await _userManager.CheckPasswordAsync(user, requestChangeEmail.Password);
-            if (!isPasswordCorrect)
-            {
-                ModelState.AddModelError("BadPassword", "Incorrect password.");
-                return BadRequest(ModelStateErrors);
-            }
-
-            if (user.Email.Equals(requestChangeEmail.NewEmail, StringComparison.InvariantCultureIgnoreCase))
-            {
-                ModelState.AddModelError("SameEmail", "New email is the same as your current.");
-                return BadRequest(ModelStateErrors);
-            }
-
-            var existingEmailUser = await _userManager.FindByEmailAsync(requestChangeEmail.NewEmail);
-            if (existingEmailUser is not null)
-            {
-                ModelState.AddModelError("BadEmail", "Another user is registered with that email.");
-                return BadRequest(ModelStateErrors);
-            }
-
-            var token = await _userManager.GenerateChangeEmailTokenAsync(user, requestChangeEmail.NewEmail);
-            string host = HttpContext.Request.Host.Value;
-
-            var url = $"https://{host}/settings/email_change?email={requestChangeEmail.NewEmail}&token={Uri.EscapeDataString(token)}";
-            await _emailSender.SendAsync(requestChangeEmail.NewEmail, url);
-            return Ok();
+            ModelState.AddModelError("BadPassword", "Incorrect password.");
+            return BadRequest(ModelStateErrors);
         }
 
-        [Authorize]
-        [HttpPost("ChangeEmail")]
-        public async Task<IActionResult> ChangeEmailAsync(ChangeEmailRequest changeEmail)
+        if (user.Email.Equals(requestChangeEmail.NewEmail, StringComparison.InvariantCultureIgnoreCase))
         {
-            var user = await _userManager.GetUserAsync(User);
-
-            var changeEmailResult = await _userManager.ChangeEmailAsync(user, changeEmail.NewEmail, changeEmail.Token);
-            if (!changeEmailResult.Succeeded)
-            {
-                foreach (var error in changeEmailResult.Errors)
-                    ModelState.AddModelError(error.Code, error.Description);
-                return BadRequest(ModelStateErrors);
-            }
-
-            await _signInManager.RefreshSignInAsync(user);
-
-            return Ok();
+            ModelState.AddModelError("SameEmail", "New email is the same as your current.");
+            return BadRequest(ModelStateErrors);
         }
 
-        [Authorize]
-        [HttpPost("ChangeUsername")]
-        public async Task<IActionResult> ChangeUsernameAsync(ChangeUsernameRequest changeUsername)
+        var existingEmailUser = await _userManager.FindByEmailAsync(requestChangeEmail.NewEmail);
+        if (existingEmailUser is not null)
         {
-            var user = await _userManager.GetUserAsync(User);
-
-            var isPasswordCorrect = await _userManager.CheckPasswordAsync(user, changeUsername.Password);
-            if (!isPasswordCorrect)
-            {
-                ModelState.AddModelError("BadPassword", "Incorrect password.");
-                return BadRequest(ModelStateErrors);
-            }
-
-            var existingUser = await _userManager.FindByNameAsync(changeUsername.NewUsername);
-            if (existingUser is not null)
-            {
-                ModelState.AddModelError("BadUsername", "Another user is registered with that username.");
-                return BadRequest(ModelStateErrors);
-            }
-
-            var changeEmailResult = await _userManager.SetUserNameAsync(user, changeUsername.NewUsername);
-            if (!changeEmailResult.Succeeded)
-            {
-                foreach (var error in changeEmailResult.Errors)
-                    ModelState.AddModelError(error.Code, error.Description);
-                return BadRequest(ModelStateErrors);
-            }
-
-            await _signInManager.RefreshSignInAsync(user);
-
-            return Ok();
+            ModelState.AddModelError("BadEmail", "Another user is registered with that email.");
+            return BadRequest(ModelStateErrors);
         }
+
+        var token = await _userManager.GenerateChangeEmailTokenAsync(user, requestChangeEmail.NewEmail);
+        string host = HttpContext.Request.Host.Value;
+
+        var url = $"https://{host}/settings/email_change?email={requestChangeEmail.NewEmail}&token={Uri.EscapeDataString(token)}";
+        await _emailSender.SendAsync(requestChangeEmail.NewEmail, url);
+        return Ok();
+    }
+
+    [Authorize]
+    [HttpPost("ChangeEmail")]
+    public async Task<IActionResult> ChangeEmailAsync(ChangeEmailRequest changeEmail)
+    {
+        var user = await _userManager.GetUserAsync(User);
+
+        var changeEmailResult = await _userManager.ChangeEmailAsync(user, changeEmail.NewEmail, changeEmail.Token);
+        if (!changeEmailResult.Succeeded)
+        {
+            foreach (var error in changeEmailResult.Errors)
+                ModelState.AddModelError(error.Code, error.Description);
+            return BadRequest(ModelStateErrors);
+        }
+
+        await _signInManager.RefreshSignInAsync(user);
+
+        return Ok();
+    }
+
+    [Authorize]
+    [HttpPost("ChangeUsername")]
+    public async Task<IActionResult> ChangeUsernameAsync(ChangeUsernameRequest changeUsername)
+    {
+        var user = await _userManager.GetUserAsync(User);
+
+        var isPasswordCorrect = await _userManager.CheckPasswordAsync(user, changeUsername.Password);
+        if (!isPasswordCorrect)
+        {
+            ModelState.AddModelError("BadPassword", "Incorrect password.");
+            return BadRequest(ModelStateErrors);
+        }
+
+        var existingUser = await _userManager.FindByNameAsync(changeUsername.NewUsername);
+        if (existingUser is not null)
+        {
+            ModelState.AddModelError("BadUsername", "Another user is registered with that username.");
+            return BadRequest(ModelStateErrors);
+        }
+
+        var changeEmailResult = await _userManager.SetUserNameAsync(user, changeUsername.NewUsername);
+        if (!changeEmailResult.Succeeded)
+        {
+            foreach (var error in changeEmailResult.Errors)
+                ModelState.AddModelError(error.Code, error.Description);
+            return BadRequest(ModelStateErrors);
+        }
+
+        await _signInManager.RefreshSignInAsync(user);
+
+        return Ok();
     }
 }

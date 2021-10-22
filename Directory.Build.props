@@ -17,7 +17,7 @@
 
   <PropertyGroup Label="Conventions">
     <!-- Default target framework. -->
-      <DefaultTargetFramework>net6.0</DefaultTargetFramework>
+    <DefaultTargetFramework>net6.0</DefaultTargetFramework>
 
     <!-- Surface code style issues at build time. -->
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
@@ -25,8 +25,8 @@
     <!-- Strict mode prevents impossible scenarios (e.g. 5 is string). -->
     <Features>strict</Features>
 
-    <!-- Use the latest language version by default. -->
-    <LangVersion>latest</LangVersion>
+    <!-- Use the preview language version by default. -->
+    <LangVersion>preview</LangVersion>
 
     <!-- Always use nullable context where possible. -->
     <Nullable>enable</Nullable>
@@ -34,10 +34,10 @@
     <!-- Enable implicit usings. -->
     <ImplicitUsings>true</ImplicitUsings>
     
-	<!-- Mark unit test projects. -->
-	<IsUnitTestProject Condition=" '$(IsUnitTestProject)' == '' ">false</IsUnitTestProject>
-	<IsUnitTestProject Condition=" $(MSBuildProjectName.EndsWith('.Tests')) ">true</IsUnitTestProject>
-	<IsPackable Condition=" '$(IsUnitTestProject)' == 'true' ">false</IsPackable>
+    <!-- Mark unit test projects. -->
+    <IsUnitTestProject Condition=" '$(IsUnitTestProject)' == '' ">false</IsUnitTestProject>
+    <IsUnitTestProject Condition=" $(MSBuildProjectName.EndsWith('.Tests')) ">true</IsUnitTestProject>
+    <IsPackable Condition=" '$(IsUnitTestProject)' == 'true' ">false</IsPackable>
   </PropertyGroup>
 
   <PropertyGroup Label="Warnings and Errors">

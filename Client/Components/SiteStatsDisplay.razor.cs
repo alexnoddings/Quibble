@@ -2,21 +2,20 @@
 using Microsoft.AspNetCore.Components;
 using Quibble.Shared.Models;
 
-namespace Quibble.Client.Components
+namespace Quibble.Client.Components;
+
+public partial class SiteStatsDisplay
 {
-    public partial class SiteStatsDisplay
+    [Inject]
+    private IHttpClientFactory HttpClientFactory { get; set; } = default!;
+
+    private SiteStats? SiteStats { get; set; }
+
+    protected override async Task OnInitializedAsync()
     {
-        [Inject]
-        private IHttpClientFactory HttpClientFactory { get; set; } = default!;
+        await base.OnInitializedAsync();
 
-        private SiteStats? SiteStats { get; set; }
-
-        protected override async Task OnInitializedAsync()
-        {
-            await base.OnInitializedAsync();
-
-            var httpClient = HttpClientFactory.CreateClient("QuizApi");
-            SiteStats = await httpClient.GetFromJsonAsync<SiteStats>("stats");
-        }
+        var httpClient = HttpClientFactory.CreateClient("QuizApi");
+        SiteStats = await httpClient.GetFromJsonAsync<SiteStats>("stats");
     }
 }

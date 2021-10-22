@@ -1,53 +1,52 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Quibble.Client.Sync;
-using Quibble.Client.Sync.Core;
+using Quibble.Client.Sync.Core.Entities;
 
-namespace Quibble.Client.Pages.Quiz.Host
+namespace Quibble.Client.Pages.Quiz.Host;
+
+public sealed partial class HostParticipantList : IDisposable
 {
-    public sealed partial class HostParticipantList : IDisposable
+    [Parameter]
+    public ISyncedQuiz Quiz { get; set; } = default!;
+
+    protected override void OnInitialized()
     {
-        [Parameter]
-        public ISyncedQuiz Quiz { get; set; } = default!;
+        base.OnInitialized();
 
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
+        Quiz.Participants.Added += OnParticipantJoinedAsync;
 
-            Quiz.Participants.Added += OnParticipantJoinedAsync;
-
-            foreach (var participant in Quiz.Participants)
-                foreach (var answer in participant.Answers)
-                    answer.Updated += OnUpdatedAsync;
-        }
-
-        private Task OnParticipantJoinedAsync(ISyncedParticipant participant)
-        {
+        foreach (var participant in Quiz.Participants)
             foreach (var answer in participant.Answers)
                 answer.Updated += OnUpdatedAsync;
+    }
 
-            return InvokeAsync(StateHasChanged);
-        }
+    private Task OnParticipantJoinedAsync(ISyncedParticipant participant)
+    {
+        foreach (var answer in participant.Answers)
+            answer.Updated += OnUpdatedAsync;
 
-        private IEnumerable<(decimal, List<ISyncedParticipant>)> GetParticipantScores() =>
-            from participant in Quiz.Participants
-            let score = participant
-                .Answers
-                .Select(answer => answer.AssignedPoints)
-                .Where(assignedPoints => assignedPoints >= 0)
-                .Sum()
-            group participant by score
-            into groupedParticipants
-            orderby groupedParticipants.Key descending
-            select (groupedParticipants.Key, groupedParticipants.ToList());
+        return InvokeAsync(StateHasChanged);
+    }
 
-        protected override int CalculateStateStamp() =>
-            StateStamp.ForProperties(Quiz.Participants);
+    private IEnumerable<(decimal, List<ISyncedParticipant>)> GetParticipantScores() =>
+        from participant in Quiz.Participants
+        let score = participant
+            .Answers
+            .Select(answer => answer.AssignedPoints)
+            .Where(assignedPoints => assignedPoints >= 0)
+            .Sum()
+        group participant by score
+        into groupedParticipants
+        orderby groupedParticipants.Key descending
+        select (groupedParticipants.Key, groupedParticipants.ToList());
 
-        public void Dispose()
-        {
-            foreach (var participant in Quiz.Participants)
-                foreach (var answer in participant.Answers)
-                    answer.Updated -= OnUpdatedAsync;
-        }
+    protected override int CalculateStateStamp() =>
+        StateStamp.ForProperties(Quiz.Participants);
+
+    public void Dispose()
+    {
+        foreach (var participant in Quiz.Participants)
+            foreach (var answer in participant.Answers)
+                answer.Updated -= OnUpdatedAsync;
     }
 }

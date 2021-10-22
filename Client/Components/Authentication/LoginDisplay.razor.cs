@@ -1,27 +1,26 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Quibble.Client.Extensions;
 
-namespace Quibble.Client.Components.Authentication
+namespace Quibble.Client.Components.Authentication;
+
+public partial class LoginDisplay
 {
-    public partial class LoginDisplay
+    [Inject]
+    private NavigationManager NavigationManager { get; set; } = default!;
+
+    private void RedirectToLogin() => RedirectTo("login");
+    private void RedirectToRegister() => RedirectTo("register");
+
+    private void RedirectTo(string page)
     {
-        [Inject]
-        private NavigationManager NavigationManager { get; set; } = default!;
+        var relativeUrl = NavigationManager.GetRelativeUrl();
 
-        private void RedirectToLogin() => RedirectTo("login");
-        private void RedirectToRegister() => RedirectTo("register");
+        if (string.IsNullOrEmpty(relativeUrl) || !Uri.IsWellFormedUriString(relativeUrl, UriKind.Relative))
+            relativeUrl = "/";
 
-        private void RedirectTo(string page)
-        {
-            var relativeUrl = NavigationManager.GetRelativeUrl();
+        if (relativeUrl == "logout")
+            relativeUrl = "/";
 
-            if (relativeUrl == string.Empty || !Uri.IsWellFormedUriString(relativeUrl, UriKind.Relative))
-                relativeUrl = "/";
-
-            if (relativeUrl == "logout")
-                relativeUrl = "/";
-
-            NavigationManager.NavigateTo("/" + page + "?returnUrl=" + Uri.EscapeDataString(relativeUrl));
-        }
+        NavigationManager.NavigateTo("/" + page + "?returnUrl=" + Uri.EscapeDataString(relativeUrl));
     }
 }

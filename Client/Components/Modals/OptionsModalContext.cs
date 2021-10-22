@@ -1,14 +1,13 @@
-﻿namespace Quibble.Client.Components.Modals
+﻿namespace Quibble.Client.Components.Modals;
+
+public class OptionsModalContext<TValue>
 {
-    public class OptionsModalContext<TValue>
+    private Action<TValue?> ChooseAction { get; }
+
+    public OptionsModalContext(Action<TValue?> chooseAction)
     {
-        private Action<TValue?> ChooseAction { get; }
-
-        public OptionsModalContext(Action<TValue?> chooseAction)
-        {
-            ChooseAction = chooseAction;
-        }
-
-        public void Choose(TValue? value) => ChooseAction(value);
+        ChooseAction = chooseAction;
     }
+
+    public void Choose(TValue? value) => ChooseAction(value);
 }

@@ -1,7 +1,6 @@
-﻿namespace Quibble.Server.Services.EmailSender
+﻿namespace Quibble.Server.Services.EmailSender;
+
+public interface IEmailSender
 {
-    public interface IEmailSender
-    {
-        public Task SendAsync(string address, string content);
-    }
+    public Task SendAsync(string address, string content);
 }

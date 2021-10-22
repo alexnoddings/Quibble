@@ -1,7 +1,6 @@
-﻿namespace Quibble.Shared.Entities
+﻿namespace Quibble.Shared.Entities;
+
+public interface IParticipant : IEntity
 {
-    public interface IParticipant : IEntity
-    {
-        public Guid QuizId { get; }
-    }
+    public Guid QuizId { get; }
 }

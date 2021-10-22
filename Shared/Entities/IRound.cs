@@ -1,10 +1,9 @@
-﻿namespace Quibble.Shared.Entities
+﻿namespace Quibble.Shared.Entities;
+
+public interface IRound : IEntity
 {
-    public interface IRound : IEntity
-    {
-        public Guid QuizId { get; }
-        public string Title { get; }
-        public RoundState State { get; }
-        public int Order { get; }
-    }
+    public Guid QuizId { get; }
+    public string Title { get; }
+    public RoundState State { get; }
+    public int Order { get; }
 }

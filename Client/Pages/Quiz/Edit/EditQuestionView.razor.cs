@@ -1,41 +1,40 @@
 ﻿using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components;
 using Quibble.Client.Components.Modals;
-using Quibble.Client.Sync.Core;
 using Quibble.Client.Sync;
+using Quibble.Client.Sync.Core.Entities;
 
-namespace Quibble.Client.Pages.Quiz.Edit
+namespace Quibble.Client.Pages.Quiz.Edit;
+
+public sealed partial class EditQuestionView : IDisposable
 {
-    public sealed partial class EditQuestionView : IDisposable
+    [Parameter]
+    public ISyncedQuestion Question { get; set; } = default!;
+
+    private OptionsModal<bool> ConfirmDeleteModal { get; set; } = default!;
+
+    protected override void OnInitialized()
     {
-        [Parameter]
-        public ISyncedQuestion Question { get; set; } = default!;
+        base.OnInitialized();
 
-        private OptionsModal<bool> ConfirmDeleteModal { get; set; } = default!;
+        Question.Updated += OnUpdatedAsync;
+    }
 
-        protected override void OnInitialized()
+    private async Task OnDeleteClickedAsync(MouseEventArgs args)
+    {
+        if (args.ShiftKey
+            || (string.IsNullOrWhiteSpace(Question.Text) && string.IsNullOrWhiteSpace(Question.Answer))
+            || await ConfirmDeleteModal.ShowAsync(false))
         {
-            base.OnInitialized();
-
-            Question.Updated += OnUpdatedAsync;
+            await Question.DeleteAsync();
         }
+    }
 
-        private async Task OnDeleteClickedAsync(MouseEventArgs args)
-        {
-            if (args.ShiftKey
-                || (string.IsNullOrWhiteSpace(Question.Text) && string.IsNullOrWhiteSpace(Question.Answer))
-                || await ConfirmDeleteModal.ShowAsync(false))
-            {
-                await Question.DeleteAsync();
-            }
-        }
+    protected override int CalculateStateStamp() =>
+        StateStamp.ForProperties(Question);
 
-        protected override int CalculateStateStamp() =>
-            StateStamp.ForProperties(Question);
-
-        public void Dispose()
-        {
-            Question.Updated -= OnUpdatedAsync;
-        }
+    public void Dispose()
+    {
+        Question.Updated -= OnUpdatedAsync;
     }
 }

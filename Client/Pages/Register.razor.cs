@@ -4,45 +4,44 @@ using Quibble.Client.Extensions;
 using Quibble.Client.Services.Authentication;
 using Quibble.Shared.Models.Authentication;
 
-namespace Quibble.Client.Pages
+namespace Quibble.Client.Pages;
+
+public partial class Register
 {
-    public partial class Register
+    [Inject]
+    private IdentityAuthenticationStateProvider AuthenticationProvider { get; set; } = default!;
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; } = default!;
+
+    private class RegisterModel : RegisterRequest
     {
-        [Inject]
-        private IdentityAuthenticationStateProvider AuthenticationProvider { get; set; } = default!;
+        [Required]
+        [Compare(nameof(Password), ErrorMessage = "Passwords do not match.")]
+        public string ConfirmPassword { get; set; } = string.Empty;
+    }
 
-        [Inject]
-        private NavigationManager NavigationManager { get; set; } = default!;
+    private RegisterModel Model { get; } = new();
 
-        private class RegisterModel : RegisterRequest
-        {
-            [Required]
-            [Compare(nameof(Password), ErrorMessage = "Passwords do not match.")]
-            public string ConfirmPassword { get; set; } = string.Empty;
-        }
+    private List<string>? Errors { get; set; }
 
-        private RegisterModel Model { get; } = new();
+    private string ReturnUrl { get; set; } = string.Empty;
 
-        private List<string>? Errors { get; set; }
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
 
-        private string ReturnUrl { get; set; } = string.Empty;
+        ReturnUrl = NavigationManager.GetQueryParameter("returnUrl", "/");
 
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
+        // Only return to a well-formed relative url
+        if (!Uri.IsWellFormedUriString(ReturnUrl, UriKind.Relative))
+            ReturnUrl = "/";
+    }
 
-            ReturnUrl = NavigationManager.GetQueryParameter("returnUrl", "/");
-
-            // Only return to a well-formed relative url
-            if (!Uri.IsWellFormedUriString(ReturnUrl, UriKind.Relative))
-                ReturnUrl = "/";
-        }
-
-        private async Task RegisterAsync()
-        {
-            var result = await AuthenticationProvider.RegisterAsync(Model.UserName, Model.Email, Model.Password);
-            if (!result.WasSuccessful)
-                Errors = result.Errors?.ToList() ?? new List<string>();
-        }
+    private async Task RegisterAsync()
+    {
+        var result = await AuthenticationProvider.RegisterAsync(Model.UserName, Model.Email, Model.Password);
+        if (!result.WasSuccessful)
+            Errors = result.Errors?.ToList() ?? new List<string>();
     }
 }

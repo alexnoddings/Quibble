@@ -10,50 +10,49 @@ using Quibble.Client.Services.Themeing;
 using Quibble.Client.Sync.Extensions;
 using Quibble.Client.Sync.SignalR.Extensions;
 
-namespace Quibble.Client
+namespace Quibble.Client;
+
+public class Startup
 {
-    public class Startup
+    private readonly IWebAssemblyHostEnvironment _environment;
+
+    public Startup(IWebAssemblyHostEnvironment environment)
     {
-        private readonly IWebAssemblyHostEnvironment _environment;
+        _environment = environment;
+    }
 
-        public Startup(IWebAssemblyHostEnvironment environment)
-        {
-            _environment = environment;
-        }
+    public void ConfigureServices(IServiceCollection services)
+    {
+        var baseAddress = _environment.BaseAddress;
+        if (!baseAddress.EndsWith('/'))
+            baseAddress += '/';
 
-        public void ConfigureServices(IServiceCollection services)
-        {
-            var baseAddress = _environment.BaseAddress;
-            if (!baseAddress.EndsWith('/'))
-                baseAddress += '/';
+        services.AddOptions();
+        services.AddOptions<JsonSerializerOptions>().Configure(o => o.PropertyNameCaseInsensitive = true);
 
-            services.AddOptions();
-            services.AddOptions<JsonSerializerOptions>().Configure(o => o.PropertyNameCaseInsensitive = true);
+        services.AddAuthorizationCore();
+        services.AddScoped<IIdentityAuthenticationService, IdentityAuthenticationService>();
+        services.AddHttpClient(nameof(IdentityAuthenticationService), httpClient => httpClient.BaseAddress = new Uri(baseAddress + "Api/Authentication/"));
+        services.AddScoped<IdentityAuthenticationStateProvider>();
+        services.AddScoped<AuthenticationStateProvider>(serviceProvider => serviceProvider.GetRequiredService<IdentityAuthenticationStateProvider>());
 
-            services.AddAuthorizationCore();
-            services.AddScoped<IIdentityAuthenticationService, IdentityAuthenticationService>();
-            services.AddHttpClient(nameof(IdentityAuthenticationService), httpClient => httpClient.BaseAddress = new Uri(baseAddress + "Api/Authentication/"));
-            services.AddScoped<IdentityAuthenticationStateProvider>();
-            services.AddScoped<AuthenticationStateProvider>(serviceProvider => serviceProvider.GetRequiredService<IdentityAuthenticationStateProvider>());
+        services.AddHttpClient("QuizApi", httpClient => httpClient.BaseAddress = new Uri(baseAddress + "Api/Quiz/"));
 
-            services.AddHttpClient("QuizApi", httpClient => httpClient.BaseAddress = new Uri(baseAddress + "Api/Quiz/"));
+        services
+            .AddSynchronisation()
+            .AddSignalrSynchronisation();
 
-            services
-                .AddSynchronisation()
-                .AddSignalrSynchronisation();
+        services
+            .AddBlazorise(options =>
+            {
+                options.ChangeTextOnKeyPress = true;
+                options.DelayTextOnKeyPress = true;
+                options.DelayTextOnKeyPressInterval = 80;
+            })
+            .AddBootstrapProviders()
+            .AddFontAwesomeIcons();
 
-            services
-                .AddBlazorise(options =>
-                {
-                    options.ChangeTextOnKeyPress = true;
-                    options.DelayTextOnKeyPress = true;
-                    options.DelayTextOnKeyPressInterval = 80;
-                })
-                .AddBootstrapProviders()
-                .AddFontAwesomeIcons();
-
-            services.AddBlazoredLocalStorage();
-            services.AddScoped<ThemeService>();
-        }
+        services.AddBlazoredLocalStorage();
+        services.AddScoped<ThemeService>();
     }
 }

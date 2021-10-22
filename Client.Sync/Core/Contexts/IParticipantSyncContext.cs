@@ -1,9 +1,8 @@
 ﻿using Quibble.Shared.Models.Dtos;
 
-namespace Quibble.Client.Sync.Contexts
+namespace Quibble.Client.Sync.Core.Contexts;
+
+public interface IParticipantSyncContext
 {
-    public interface IParticipantSyncContext
-    {
-        public event Func<ParticipantDto, List<SubmittedAnswerDto>, Task> OnParticipantJoinedAsync;
-    }
+    public event Func<ParticipantDto, List<SubmittedAnswerDto>, Task> OnParticipantJoinedAsync;
 }

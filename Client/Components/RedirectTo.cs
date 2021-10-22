@@ -1,47 +1,46 @@
 ﻿using Microsoft.AspNetCore.Components;
 
-namespace Quibble.Client.Components
+namespace Quibble.Client.Components;
+
+public class RedirectTo : ComponentBase, IDisposable
 {
-    public class RedirectTo : ComponentBase, IDisposable
+    [Parameter]
+    public string Url { get; set; } = string.Empty;
+
+    [Parameter]
+    public TimeSpan After { get; set; } = TimeSpan.Zero;
+
+    [Inject]
+    private NavigationManager NavigationManager { get; init; } = default!;
+
+    protected bool IsDisposed { get; private set; }
+
+    protected override async Task OnInitializedAsync()
     {
-        [Parameter]
-        public string Url { get; set; } = string.Empty;
+        if (IsDisposed)
+            return;
 
-        [Parameter]
-        public TimeSpan After { get; set; } = TimeSpan.Zero;
+        // Made local to prevent it changing while waiting
+        string url = Url;
+        if (string.IsNullOrEmpty(url))
+            throw new InvalidOperationException($"Parameter {nameof(Url)} is null or empty. Use \"/\" to navigate to the root.");
 
-        [Inject]
-        private NavigationManager NavigationManager { get; set; } = default!;
+        if (After > TimeSpan.Zero)
+            await Task.Delay(After);
 
-        protected bool IsDisposed { get; private set; }
+        NavigationManager.NavigateTo(url);
+    }
 
-        protected override async Task OnInitializedAsync()
-        {
-            if (IsDisposed)
-                return;
+    protected virtual void Dispose(bool isDisposing)
+    {
+        if (IsDisposed) return;
 
-            // Made local to prevent it changing while waiting
-            string url = Url;
-            if (string.IsNullOrEmpty(url))
-                throw new InvalidOperationException($"Parameter {nameof(Url)} is null or empty. Use \"/\" to navigate to the root.");
+        IsDisposed = true;
+    }
 
-            if (After > TimeSpan.Zero)
-                await Task.Delay(After);
-
-            NavigationManager.NavigateTo(url);
-        }
-
-        protected virtual void Dispose(bool isDisposing)
-        {
-            if (IsDisposed) return;
-
-            IsDisposed = true;
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
 }
