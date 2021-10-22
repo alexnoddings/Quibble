@@ -5,8 +5,8 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Quibble.Server.Data.Migrations
-{
+namespace Quibble.Server.Data.Migrations;
+
     [DbContext(typeof(AppDbContext))]
     [Migration("00000000000000_Initial")]
     partial class Initial
@@ -538,4 +538,3 @@ namespace Quibble.Server.Data.Migrations
 #pragma warning restore 612, 618
         }
     }
-}

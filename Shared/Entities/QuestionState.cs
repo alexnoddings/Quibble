@@ -1,10 +1,9 @@
-﻿namespace Quibble.Shared.Entities
+﻿namespace Quibble.Shared.Entities;
+
+public enum QuestionState
 {
-    public enum QuestionState
-    {
-        Hidden,
-        Open,
-        Locked,
-        AnswerRevealed
-    }
+    Hidden,
+    Open,
+    Locked,
+    AnswerRevealed
 }

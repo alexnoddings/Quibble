@@ -1,6 +1,5 @@
-﻿namespace Quibble.Shared.Entities
+﻿namespace Quibble.Shared.Entities;
+
+public interface IEntity : IEntity<Guid>
 {
-    public interface IEntity : IEntity<Guid>
-    {
-    }
 }

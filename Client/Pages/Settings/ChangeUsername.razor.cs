@@ -2,40 +2,39 @@
 using Quibble.Client.Services.Authentication;
 using Quibble.Shared.Models.Authentication;
 
-namespace Quibble.Client.Pages.Settings
+namespace Quibble.Client.Pages.Settings;
+
+public partial class ChangeUsername
 {
-    public partial class ChangeUsername
+    [Inject]
+    private IdentityAuthenticationStateProvider AuthenticationProvider { get; set; } = default!;
+
+    private class ChangeUsernameModel : ChangeUsernameRequest
     {
-        [Inject]
-        private IdentityAuthenticationStateProvider AuthenticationProvider { get; set; } = default!;
+    }
 
-        private class ChangeUsernameModel : ChangeUsernameRequest
-        {
-        }
+    private ChangeUsernameModel Model { get; } = new();
 
-        private ChangeUsernameModel Model { get; } = new();
+    private List<string>? Errors { get; set; }
 
-        private List<string>? Errors { get; set; }
+    private bool WasSuccessful { get; set; }
 
-        private bool WasSuccessful { get; set; }
+    private string CurrentUsername { get; set; } = string.Empty;
 
-        private string CurrentUsername { get; set; } = string.Empty;
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
 
-        protected override async Task OnInitializedAsync()
-        {
-            await base.OnInitializedAsync();
+        CurrentUsername = (await AuthenticationProvider.GetAuthenticationStateAsync()).User?.Identity?.Name ?? string.Empty;
+    }
 
-            CurrentUsername = (await AuthenticationProvider.GetAuthenticationStateAsync()).User?.Identity?.Name ?? string.Empty;
-        }
-
-        private async Task ChangeUsernameAsync()
-        {
-            var result = await AuthenticationProvider.ChangeUsernameAsync(Model.Password, Model.NewUsername);
-            WasSuccessful = result.WasSuccessful;
-            if (WasSuccessful)
-                Errors = null;
-            else
-                Errors = result.Errors?.ToList() ?? new List<string>();
-        }
+    private async Task ChangeUsernameAsync()
+    {
+        var result = await AuthenticationProvider.ChangeUsernameAsync(Model.Password, Model.NewUsername);
+        WasSuccessful = result.WasSuccessful;
+        if (WasSuccessful)
+            Errors = null;
+        else
+            Errors = result.Errors?.ToList() ?? new List<string>();
     }
 }

@@ -7,8 +7,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Quibble.Server.Data;
 
-namespace Quibble.Server.Data.Migrations
-{
+namespace Quibble.Server.Data.Migrations;
+
     [DbContext(typeof(AppDbContext))]
     [Migration("00000000000001_AddRoundQuestionOrder")]
     partial class AddRoundQuestionOrder
@@ -546,4 +546,3 @@ namespace Quibble.Server.Data.Migrations
 #pragma warning restore 612, 618
         }
     }
-}

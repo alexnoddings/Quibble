@@ -1,28 +1,27 @@
 ﻿using Microsoft.AspNetCore.Components;
 
-namespace Quibble.Client.Pages.Quiz
+namespace Quibble.Client.Pages.Quiz;
+
+public abstract class SyncedEntityComponent : ComponentBase
 {
-    public abstract class SyncedEntityComponent : ComponentBase
+    protected int LastStateStamp { get; set; } = 0;
+
+    protected override void OnAfterRender(bool firstRender)
     {
-        protected int LastStateStamp { get; set; } = 0;
+        LastStateStamp = CalculateStateStamp();
+    }
 
-        protected override void OnAfterRender(bool firstRender)
-        {
-            LastStateStamp = CalculateStateStamp();
-        }
+    protected Task OnUpdatedAsync() => InvokeAsync(StateHasChanged);
 
-        protected Task OnUpdatedAsync() => InvokeAsync(StateHasChanged);
+    protected abstract int CalculateStateStamp();
 
-        protected abstract int CalculateStateStamp();
+    protected override bool ShouldRender()
+    {
+        var currentStateStamp = CalculateStateStamp();
+        if (currentStateStamp == LastStateStamp)
+            return false;
 
-        protected override bool ShouldRender()
-        {
-            var currentStateStamp = CalculateStateStamp();
-            if (currentStateStamp == LastStateStamp)
-                return false;
-            
-            LastStateStamp = currentStateStamp;
-            return true;
-        }
+        LastStateStamp = currentStateStamp;
+        return true;
     }
 }

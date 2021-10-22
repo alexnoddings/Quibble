@@ -1,25 +1,25 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Quibble.Client.Services.Themeing;
 
-namespace Quibble.Client
+namespace Quibble.Client;
+
+public sealed partial class App : IDisposable
 {
-    public partial class App : IDisposable
+    [Inject]
+    private ThemeService ThemeService { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
     {
-        [Inject] private ThemeService ThemeService { get; set; } = default!;
+        await base.OnInitializedAsync();
 
-        protected override async Task OnInitializedAsync()
-        {
-            await base.OnInitializedAsync();
+        await ThemeService.InitialiseAsync();
+        ThemeService.ThemeUpdated += OnThemeUpdatedAsync;
+    }
 
-            await ThemeService.InitialiseAsync();
-            ThemeService.ThemeUpdated += OnThemeUpdatedAsync;
-        }
+    private Task OnThemeUpdatedAsync() => InvokeAsync(StateHasChanged);
 
-        private Task OnThemeUpdatedAsync() => InvokeAsync(StateHasChanged);
-
-        public void Dispose()
-        {
-            ThemeService.ThemeUpdated -= OnThemeUpdatedAsync;
-        }
+    public void Dispose()
+    {
+        ThemeService.ThemeUpdated -= OnThemeUpdatedAsync;
     }
 }

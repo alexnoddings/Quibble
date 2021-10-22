@@ -1,13 +1,12 @@
 ﻿using Quibble.Shared.Entities;
 
-namespace Quibble.Client.Sync.Core
-{
-    public interface ISyncedParticipant : ISyncedEntity, IParticipant
-    {
-        public ISyncedQuiz Quiz { get; }
-        public ISyncedEntities<ISyncedSubmittedAnswer> Answers { get; }
+namespace Quibble.Client.Sync.Core.Entities;
 
-        public string UserName { get; }
-        public bool IsCurrentUser { get; }
-    }
+public interface ISyncedParticipant : ISyncedEntity, IParticipant
+{
+    public ISyncedQuiz Quiz { get; }
+    public ISyncedEntities<ISyncedSubmittedAnswer> Answers { get; }
+
+    public string UserName { get; }
+    public bool IsCurrentUser { get; }
 }

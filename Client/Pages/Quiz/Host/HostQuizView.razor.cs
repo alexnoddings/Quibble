@@ -1,34 +1,33 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Quibble.Client.Sync;
-using Quibble.Client.Sync.Core;
+using Quibble.Client.Sync.Core.Entities;
 
-namespace Quibble.Client.Pages.Quiz.Host
+namespace Quibble.Client.Pages.Quiz.Host;
+
+public sealed partial class HostQuizView : IDisposable
 {
-    public sealed partial class HostQuizView : IDisposable
+    [Parameter]
+    public ISyncedQuiz Quiz { get; set; } = default!;
+
+    private SelectionContext Selection { get; set; } = default!;
+
+    protected override void OnInitialized()
     {
-        [Parameter]
-        public ISyncedQuiz Quiz { get; set; } = default!;
+        base.OnInitialized();
 
-        private SelectionContext Selection { get; set; } = default!;
+        Selection = new SelectionContext(Quiz);
+        Quiz.Updated += OnUpdatedAsync;
+        Selection.OnUpdated += OnUpdatedAsync;
+    }
 
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
+    private Task OnUpdatedAsync(SelectionChangedEventArgs _) => OnUpdatedAsync();
 
-            Selection = new SelectionContext(Quiz);
-            Quiz.Updated += OnUpdatedAsync;
-            Selection.OnUpdated += OnUpdatedAsync;
-        }
+    protected override int CalculateStateStamp() =>
+        StateStamp.ForProperties(Quiz, Selection.RoundNumber, Selection.QuestionNumber);
 
-        private Task OnUpdatedAsync(SelectionChangedEventArgs _) => OnUpdatedAsync();
-
-        protected override int CalculateStateStamp() =>
-            StateStamp.ForProperties(Quiz, Selection.RoundNumber, Selection.QuestionNumber);
-
-        public void Dispose()
-        {
-            Quiz.Updated -= OnUpdatedAsync;
-            Selection.OnUpdated -= OnUpdatedAsync;
-        }
+    public void Dispose()
+    {
+        Quiz.Updated -= OnUpdatedAsync;
+        Selection.OnUpdated -= OnUpdatedAsync;
     }
 }

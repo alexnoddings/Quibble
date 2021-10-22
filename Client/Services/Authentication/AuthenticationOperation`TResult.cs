@@ -1,18 +1,17 @@
-﻿namespace Quibble.Client.Services.Authentication
+﻿namespace Quibble.Client.Services.Authentication;
+
+public class AuthenticationOperation<TResult> : AuthenticationOperation
 {
-    public class AuthenticationOperation<TResult> : AuthenticationOperation
+    public TResult? Result { get; set; }
+
+    private AuthenticationOperation(bool wasSuccessful, List<string>? errors, TResult? result) : base(wasSuccessful, errors)
     {
-        public TResult? Result { get; set; }
-
-        private AuthenticationOperation(bool wasSuccessful, List<string>? errors, TResult? result) : base(wasSuccessful, errors)
-        {
-            Result = result;
-        }
-
-        public static AuthenticationOperation<TResult> FromSuccess(TResult? result) =>
-            new(true, null, result);
-
-        public new static AuthenticationOperation<TResult> FromError(IEnumerable<string> errors) =>
-            new(false, errors.ToList(), default);
+        Result = result;
     }
+
+    public static AuthenticationOperation<TResult> FromSuccess(TResult? result) =>
+        new(true, null, result);
+
+    public new static AuthenticationOperation<TResult> FromError(IEnumerable<string> errors) =>
+        new(false, errors.ToList(), default);
 }

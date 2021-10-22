@@ -1,8 +1,7 @@
-﻿namespace Quibble.Shared.Entities
+﻿namespace Quibble.Shared.Entities;
+
+public enum QuizState
 {
-    public enum QuizState
-    {
-        InDevelopment,
-        Open
-    }
+    InDevelopment,
+    Open
 }

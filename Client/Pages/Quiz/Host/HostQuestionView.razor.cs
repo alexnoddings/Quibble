@@ -1,86 +1,85 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Quibble.Client.Sync;
-using Quibble.Client.Sync.Core;
+using Quibble.Client.Sync.Core.Entities;
 using Quibble.Shared.Entities;
 
-namespace Quibble.Client.Pages.Quiz.Host
+namespace Quibble.Client.Pages.Quiz.Host;
+
+public sealed partial class HostQuestionView : IDisposable
 {
-    public sealed partial class HostQuestionView : IDisposable
+    [Parameter]
+    public ISyncedQuiz Quiz { get; set; } = default!;
+
+    [CascadingParameter]
+    private SelectionContext Selection { get; init; } = default!;
+
+    protected override void OnInitialized()
     {
-        [Parameter]
-        public ISyncedQuiz Quiz { get; set; } = default!;
+        base.OnInitialized();
 
-        [CascadingParameter]
-        private SelectionContext Selection { get; init; } = default!;
+        var question = Selection.Question;
+        question.Round.Updated += OnUpdatedAsync;
+        question.Updated += OnUpdatedAsync;
+        foreach (var answer in question.SubmittedAnswers)
+            answer.Updated += OnUpdatedAsync;
 
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
+        Selection.OnUpdated += OnQuestionChangedAsync;
+    }
 
-            var question = Selection.Question;
-            question.Round.Updated += OnUpdatedAsync;
-            question.Updated += OnUpdatedAsync;
-            foreach (var answer in question.SubmittedAnswers)
-                answer.Updated += OnUpdatedAsync;
+    private Task OnQuestionChangedAsync(SelectionChangedEventArgs args)
+    {
+        args.PreviousQuestion.Round.Updated -= OnUpdatedAsync;
+        args.PreviousQuestion.Updated -= OnUpdatedAsync;
+        foreach (var answer in args.PreviousQuestion.SubmittedAnswers)
+            answer.Updated -= OnUpdatedAsync;
 
-            Selection.OnUpdated += OnQuestionChangedAsync;
-        }
+        args.NewQuestion.Round.Updated += OnUpdatedAsync;
+        args.NewQuestion.Updated += OnUpdatedAsync;
+        foreach (var answer in args.NewQuestion.SubmittedAnswers)
+            answer.Updated += OnUpdatedAsync;
 
-        private Task OnQuestionChangedAsync(SelectionChangedEventArgs args)
-        {
-            args.PreviousQuestion.Round.Updated -= OnUpdatedAsync;
-            args.PreviousQuestion.Updated -= OnUpdatedAsync;
-            foreach (var answer in args.PreviousQuestion.SubmittedAnswers)
-                answer.Updated -= OnUpdatedAsync;
+        return OnUpdatedAsync();
+    }
 
-            args.NewQuestion.Round.Updated += OnUpdatedAsync;
-            args.NewQuestion.Updated += OnUpdatedAsync;
-            foreach (var answer in args.NewQuestion.SubmittedAnswers)
-                answer.Updated += OnUpdatedAsync;
+    private async Task ShowAllRoundsAsync()
+    {
+        foreach (var round in Quiz.Rounds)
+            if (round.State == RoundState.Hidden)
+                await round.OpenAsync();
+    }
 
-            return OnUpdatedAsync();
-        }
+    private async Task ShowAllQuestionsInRoundAsync()
+    {
+        foreach (var question in Selection.Round.Questions)
+            if (question.State == QuestionState.Hidden)
+                await question.UpdateStateAsync(QuestionState.Open);
+    }
 
-        private async Task ShowAllRoundsAsync()
-        {
-            foreach (var round in Quiz.Rounds)
-                if (round.State == RoundState.Hidden)
-                    await round.OpenAsync();
-        }
+    private async Task LockAllQuestionsInRoundAsync()
+    {
+        foreach (var question in Selection.Round.Questions)
+            if (question.State == QuestionState.Open)
+                await question.UpdateStateAsync(QuestionState.Locked);
+    }
 
-        private async Task ShowAllQuestionsInRoundAsync()
-        {
-            foreach (var question in Selection.Round.Questions)
-                if (question.State == QuestionState.Hidden)
-                    await question.UpdateStateAsync(QuestionState.Open);
-        }
+    private async Task ShowAllQuestionAnswersInRoundAsync()
+    {
+        foreach (var question in Selection.Round.Questions)
+            if (question.State == QuestionState.Locked && question.SubmittedAnswers.All(answer => answer.AssignedPoints >= 0))
+                await question.UpdateStateAsync(QuestionState.AnswerRevealed);
+    }
 
-        private async Task LockAllQuestionsInRoundAsync()
-        {
-            foreach (var question in Selection.Round.Questions)
-                if (question.State == QuestionState.Open)
-                    await question.UpdateStateAsync(QuestionState.Locked);
-        }
+    protected override int CalculateStateStamp() =>
+        StateStamp.ForProperties(Selection.RoundNumber, Selection.QuestionNumber, Selection.Question);
 
-        private async Task ShowAllQuestionAnswersInRoundAsync()
-        {
-            foreach (var question in Selection.Round.Questions)
-                if (question.State == QuestionState.Locked && question.SubmittedAnswers.All(answer => answer.AssignedPoints >= 0))
-                    await question.UpdateStateAsync(QuestionState.AnswerRevealed);
-        }
+    public void Dispose()
+    {
+        Selection.OnUpdated -= OnQuestionChangedAsync;
 
-        protected override int CalculateStateStamp() =>
-            StateStamp.ForProperties(Selection.RoundNumber, Selection.QuestionNumber, Selection.Question);
-
-        public void Dispose()
-        {
-            Selection.OnUpdated -= OnQuestionChangedAsync;
-
-            var question = Selection.Question;
-            question.Round.Updated -= OnUpdatedAsync;
-            question.Updated -= OnUpdatedAsync;
-            foreach (var answer in question.SubmittedAnswers)
-                answer.Updated += OnUpdatedAsync;
-        }
+        var question = Selection.Question;
+        question.Round.Updated -= OnUpdatedAsync;
+        question.Updated -= OnUpdatedAsync;
+        foreach (var answer in question.SubmittedAnswers)
+            answer.Updated += OnUpdatedAsync;
     }
 }

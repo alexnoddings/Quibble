@@ -1,16 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Quibble.Shared.Models.Authentication
-{
-    public class ChangeEmailRequest
-    {
-        [Required]
-        [DataType("Token")]
-        public string Token { get; set; } = string.Empty;
+namespace Quibble.Shared.Models.Authentication;
 
-        [Required]
-        [EmailAddress]
-        [DataType(DataType.EmailAddress)]
-        public string NewEmail { get; set; } = string.Empty;
-    }
+public class ChangeEmailRequest
+{
+    [Required]
+    [DataType("Token")]
+    public string Token { get; set; } = string.Empty;
+
+    [Required]
+    [EmailAddress]
+    [DataType(DataType.EmailAddress)]
+    public string NewEmail { get; set; } = string.Empty;
 }

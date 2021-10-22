@@ -1,62 +1,61 @@
 ﻿using Blazorise;
 using Microsoft.AspNetCore.Components;
 
-namespace Quibble.Client.Components.Modals
+namespace Quibble.Client.Components.Modals;
+
+public partial class OptionsModalHost
 {
-    public partial class OptionsModalHost
+    [Parameter]
+    public RenderFragment ChildContent { get; set; } = default!;
+
+    private string? Title { get; set; }
+    private RenderFragment? Body { get; set; }
+    private RenderFragment? Footer { get; set; }
+    private bool CanBeClosed { get; set; }
+    private object? DismissValue { get; set; }
+
+    private Modal Modal { get; set; } = default!;
+
+    // Allows ConfirmDeletionAsync to await a result from the modal
+    private TaskCompletionSource<object?>? TaskCompletionSource { get; set; }
+
+    private void OnModalClosing(ModalClosingEventArgs args)
     {
-        [Parameter]
-        public RenderFragment ChildContent { get; set; } = default!;
+        if (CanBeClosed)
+            TaskCompletionSource?.TrySetResult(DismissValue);
+        else
+            args.Cancel = true;
+    }
 
-        private string? Title { get; set; }
-        private RenderFragment? Body { get; set; }
-        private RenderFragment? Footer { get; set; }
-        private bool CanBeClosed { get; set; }
-        private object? DismissValue { get; set; }
+    private void Choose(object? obj)
+    {
+        CanBeClosed = true;
+        TaskCompletionSource?.TrySetResult(obj);
+        Modal.Hide();
+    }
 
-        private Modal Modal { get; set; } = default!;
+    public async Task<TValue?> ShowAsync<TValue>(string title, RenderFragment body, RenderFragment<OptionsModalContext<TValue?>> footer, bool canBeDismissed, TValue? dismissValue = default)
+    {
+        if (Modal.Visible)
+            throw new InvalidOperationException();
 
-        // Allows ConfirmDeletionAsync to await a result from the modal
-        private TaskCompletionSource<object?>? TaskCompletionSource { get; set; }
-
-        private void OnModalClosing(ModalClosingEventArgs args)
+        Title = title;
+        Body = body;
+        Footer = builder =>
         {
-            if (CanBeClosed)
-                TaskCompletionSource?.TrySetResult(DismissValue);
-            else
-                args.Cancel = true;
-        }
+            var context = new OptionsModalContext<TValue?>(choice => Choose(choice));
+            footer.Invoke(context).Invoke(builder);
+        };
+        CanBeClosed = canBeDismissed;
+        DismissValue = dismissValue;
 
-        private void Choose(object? obj)
-        {
-            CanBeClosed = true;
-            TaskCompletionSource?.TrySetResult(obj);
-            Modal.Hide();
-        }
+        TaskCompletionSource = new TaskCompletionSource<object?>();
+        Modal.Show();
+        object? returnValue = await TaskCompletionSource.Task;
+        TaskCompletionSource = null;
 
-        public async Task<TValue?> ShowAsync<TValue>(string title, RenderFragment body, RenderFragment<OptionsModalContext<TValue?>> footer, bool canBeDismissed, TValue? dismissValue = default)
-        {
-            if (Modal.Visible)
-                throw new InvalidOperationException();
-
-            Title = title;
-            Body = body;
-            Footer = builder =>
-            {
-                var context = new OptionsModalContext<TValue?>(choice => Choose(choice));
-                footer.Invoke(context).Invoke(builder);
-            };
-            CanBeClosed = canBeDismissed;
-            DismissValue = dismissValue;
-
-            TaskCompletionSource = new TaskCompletionSource<object?>();
-            Modal.Show();
-            object? returnValue = await TaskCompletionSource.Task;
-            TaskCompletionSource = null;
-
-            if (returnValue is TValue value)
-                return value;
-            return dismissValue;
-        }
+        if (returnValue is TValue value)
+            return value;
+        return dismissValue;
     }
 }
