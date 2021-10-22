@@ -263,7 +263,6 @@ public partial class QuibbleHub
                 .Where(submittedAnswer => submittedAnswer.Text.Trim().ToLower() == answerLowerTrimmed)
                 .ToListAsync();
 
-
             foreach (var submittedAnswer in correctSubmittedAnswers)
                 submittedAnswer.AssignedPoints = dbQuestion.Points;
 

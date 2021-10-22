@@ -15,7 +15,7 @@ public partial class LoginDisplay
     {
         var relativeUrl = NavigationManager.GetRelativeUrl();
 
-        if (relativeUrl == string.Empty || !Uri.IsWellFormedUriString(relativeUrl, UriKind.Relative))
+        if (string.IsNullOrEmpty(relativeUrl) || !Uri.IsWellFormedUriString(relativeUrl, UriKind.Relative))
             relativeUrl = "/";
 
         if (relativeUrl == "logout")

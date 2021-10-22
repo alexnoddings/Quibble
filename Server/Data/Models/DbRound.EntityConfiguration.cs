@@ -15,7 +15,6 @@ public class DbRoundEntityConfiguration : DbEntityConfiguration<DbRound>
             .HasForeignKey(round => round.QuizId)
             .IsRequired();
 
-
         builder
             .HasMany(round => round.Questions)
             .WithOne(question => question.Round)

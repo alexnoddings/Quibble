@@ -6,7 +6,6 @@ namespace Quibble.Client.Components;
 
 public partial class UserQuizzesDisplay
 {
-
     [Inject]
     private NavigationManager NavigationManager { get; set; } = default!;
 

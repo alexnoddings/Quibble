@@ -22,31 +22,29 @@ internal class BaseSignalrSyncContext : IDisposable
     protected void Bind(Expression<Func<ISignalrEvents, Func<Task>>> eventExpression, Func<Func<Task>?> eventHandlerGetter)
     {
         string eventName = eventExpression.GetEventName();
-        var executor = () => ExecuteEventHandler(eventName, () => eventHandlerGetter()?.Invoke());
+        var executor = () => ExecuteEventHandler(eventName, () => eventHandlerGetter()?.Invoke() ?? Task.CompletedTask);
         HubConnection.On(eventName, executor);
     }
 
     protected void Bind<T1>(Expression<Func<ISignalrEvents, Func<T1, Task>>> eventExpression, Func<Func<T1, Task>?> eventHandlerGetter)
     {
         string eventName = eventExpression.GetEventName();
-        var executor = (T1 arg1) => ExecuteEventHandler(eventName, () => eventHandlerGetter()?.Invoke(arg1));
+        var executor = (T1 arg1) => ExecuteEventHandler(eventName, () => eventHandlerGetter()?.Invoke(arg1) ?? Task.CompletedTask);
         HubConnection.On(eventName, executor);
     }
 
     protected void Bind<T1, T2>(Expression<Func<ISignalrEvents, Func<T1, T2, Task>>> eventExpression, Func<Func<T1, T2, Task>?> eventHandlerGetter)
     {
         string eventName = eventExpression.GetEventName();
-        var executor = (T1 arg1, T2 arg2) => ExecuteEventHandler(eventName, () => eventHandlerGetter()?.Invoke(arg1, arg2));
+        var executor = (T1 arg1, T2 arg2) => ExecuteEventHandler(eventName, () => eventHandlerGetter()?.Invoke(arg1, arg2) ?? Task.CompletedTask);
         HubConnection.On(eventName, executor);
     }
 
-    private async Task ExecuteEventHandler(string eventName, Func<Task?> eventFunc)
+    private async Task ExecuteEventHandler(string eventName, Func<Task> eventFunc)
     {
         try
         {
-            var task = eventFunc();
-            if (task is not null)
-                await task;
+            await eventFunc();
         }
         catch (Exception e)
         {

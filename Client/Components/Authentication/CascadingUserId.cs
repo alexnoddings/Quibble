@@ -8,7 +8,7 @@ namespace Quibble.Client.Components.Authentication;
 public sealed class CascadingUserId : ComponentBase, IDisposable
 {
     [Inject]
-    private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
+    private AuthenticationStateProvider AuthenticationStateProvider { get; init; } = default!;
 
     [Parameter]
     public RenderFragment? ChildContent { get; set; }

@@ -84,7 +84,6 @@ public class QuizController : ControllerBase
              select quiz)
             .ProjectTo<QuizDto>(QuizDtoMapping);
 
-
         var participatedQuizzesQueryable =
             (from quiz in DbContext.Quizzes
              join participant in DbContext.Participants
@@ -117,7 +116,7 @@ public class QuizController : ControllerBase
         var openQuizzesWithParticipants =
             from quiz in DbContext.Quizzes
             where quiz.State == QuizState.Open
-            where quiz.Participants.Any()
+            where quiz.Participants.Count > 0
             select quiz;
 
         var quizCount = await openQuizzesWithParticipants.CountAsync();

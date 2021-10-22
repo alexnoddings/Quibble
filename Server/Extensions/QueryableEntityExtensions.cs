@@ -10,8 +10,8 @@ public static class QueryableEntityExtensions
     ///     <c><see langword="default" />(<typeparamref name="TEntity"/>)</c> if it does not exist;
     ///     this method throws an exception if more than one element is found with the <paramref name="id"/>.
     /// </summary>
-    /// <typeparam name="TEntity"> The type of the elements of <paramref name="source" />.</typeparam>
     /// <typeparam name="TId"> The type of Id which <typeparamref name="TEntity"/>s have.</typeparam>
+    /// <typeparam name="TEntity"> The type of the elements of <paramref name="source" />.</typeparam>
     /// <param name="source"> An <see cref="IQueryable{T}" /> to find the entity in.</param>
     /// <param name="id"> The id to search for.</param>
     /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>

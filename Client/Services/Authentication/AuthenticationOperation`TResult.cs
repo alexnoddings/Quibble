@@ -1,6 +1,6 @@
 ﻿namespace Quibble.Client.Services.Authentication;
 
-public class AuthenticationOperation<TResult> : AuthenticationOperation
+public sealed class AuthenticationOperation<TResult> : AuthenticationOperation
 {
     public TResult? Result { get; set; }
 

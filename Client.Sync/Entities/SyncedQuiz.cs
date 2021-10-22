@@ -13,7 +13,7 @@ internal sealed class SyncedQuiz : SyncedEntity, ISyncedQuiz
     public string Title { get; private set; }
     public QuizState State { get; private set; }
 
-    public DateTime CreatedAt { get; private set; }
+    public DateTime CreatedAt { get; }
     public DateTime? OpenedAt { get; private set; }
 
     public bool IsDeleted { get; private set; }

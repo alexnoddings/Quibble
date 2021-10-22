@@ -59,7 +59,7 @@ public partial class QuibbleHub : Hub<ISignalrEvents>
                 return;
             }
 
-            DbParticipant? dbParticipant = dbQuiz.Participants.FirstOrDefault(participant => participant.UserId == userId);
+            DbParticipant? dbParticipant = dbQuiz.Participants.Find(participant => participant.UserId == userId);
             if (dbParticipant is null)
             {
                 var dbUser = (await DbContext.Users.FindAsync(userId))!;

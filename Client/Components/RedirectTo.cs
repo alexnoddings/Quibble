@@ -11,7 +11,7 @@ public class RedirectTo : ComponentBase, IDisposable
     public TimeSpan After { get; set; } = TimeSpan.Zero;
 
     [Inject]
-    private NavigationManager NavigationManager { get; set; } = default!;
+    private NavigationManager NavigationManager { get; init; } = default!;
 
     protected bool IsDisposed { get; private set; }
 

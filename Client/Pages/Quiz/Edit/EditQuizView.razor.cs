@@ -26,8 +26,7 @@ public sealed partial class EditQuizView : IDisposable
 
     private async Task OnDeleteClickedAsync(MouseEventArgs args)
     {
-        if (!Quiz.Rounds.Any()
-            || await ConfirmDeleteModal.ShowAsync(false))
+        if (!Quiz.Rounds.Any() || await ConfirmDeleteModal.ShowAsync(false))
         {
             await Quiz.DeleteAsync();
         }

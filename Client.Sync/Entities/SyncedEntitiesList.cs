@@ -24,7 +24,7 @@ internal class SyncedEntitiesList<TEntity>
     public TEntity this[int i] => Entities[i];
 
     internal TEntity? TryGet(Guid id) =>
-        Entities.FirstOrDefault(entity => entity.Id == id);
+        Entities.Find(entity => entity.Id == id);
 
     internal Task RemoveAsync(TEntity entity)
     {
