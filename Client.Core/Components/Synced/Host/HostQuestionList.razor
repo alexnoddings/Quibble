@@ -1,0 +1,82 @@
+﻿@inherits SyncedEntityComponent
+
+<Card Background="Background.Light">
+    <CardHeader Class="bg-transparent" Padding="Padding.Is3.OnX.Is2.OnY">
+        <Heading Size="HeadingSize.Is5" Margin="Margin.Is0">
+            Questions
+        </Heading>
+    </CardHeader>
+    <CardBody Padding="Padding.Is0">
+        @{
+            var roundIndex = 0;
+            foreach (var round in Quiz.Rounds)
+            {
+                var roundNumber = roundIndex;
+                var isHighlightedRound = roundNumber == HighlightedRoundNumber;
+
+                <Button Class="text-reset" Padding="Padding.Is2.OnX" Block="true" Color="Color.None" Margin="Margin.Is2.FromTop" Clicked="() => HighlightedRoundNumber = roundNumber">
+                    <Addons Class="flex-nowrap">
+                        <Addon AddonType="AddonType.Start">
+                            <Text Margin="Margin.Is1.FromRight" Color="Selection.RoundNumber == roundNumber ? TextColor.Primary : TextColor.None">
+                                @($"{roundNumber + 1}.")
+                            </Text>
+                        </Addon>
+                        <Addon AddonType="AddonType.Body">
+                            <Text Alignment="TextAlignment.Left" Class="text-clip">
+                                @round.Title
+                            </Text>
+                        </Addon>
+                        @if (round.State == RoundState.Hidden)
+                        {
+                            <Addon AddonType="AddonType.End" Display="Display.Block" Margin="Margin.IsAuto.FromLeft">
+                                <Text Color="TextColor.Muted">
+                                    <Icon Name="IconName.EyeSlash"/>
+                                </Text>
+                            </Addon>
+                        }
+                    </Addons>
+                </Button>
+
+                @if (isHighlightedRound)
+                {
+                    var questionIndex = 0;
+                    foreach (var question in round.Questions)
+                    {
+                        var questionNumber = questionIndex;
+                        <Button Class="text-reset" Padding="Padding.Is3.FromLeft.Is2.FromRight" Block="true" Margin="Margin.Is1.OnY" Clicked="() => Selection.UpdateSelectionAsync(roundNumber, questionNumber)">
+                            <Addons Class="flex-nowrap">
+                                <Addon AddonType="AddonType.Start">
+                                    <Text Margin="Margin.Is1.FromRight" Color="Selection.RoundNumber == roundNumber && Selection.QuestionNumber == questionNumber ? TextColor.Primary : TextColor.None">
+                                        @($"{questionNumber + 1}.")
+                                    </Text>
+                                </Addon>
+                                <Addon AddonType="AddonType.Body">
+                                    <Text Alignment="TextAlignment.Left" Class="text-clip">
+                                        @question.Text
+                                    </Text>
+                                </Addon>
+                                <Addon AddonType="AddonType.End" Display="Display.Block" Margin="Margin.IsAuto.FromLeft">
+                                    @{
+                                        IconName? iconName = question.State switch
+                                        {
+                                            QuestionState.Hidden => IconName.EyeSlash,
+                                            QuestionState.Open => IconName.Pen,
+                                            QuestionState.Locked => IconName.Lock,
+                                            QuestionState.AnswerRevealed => IconName.Check,
+                                            _ => null
+                                            };
+                                        <Blazorise.Text Color="TextColor.Muted">
+                                            <Icon Name="iconName" Padding="Padding.Is1.FromLeft"/>
+                                        </Blazorise.Text>
+                                    }
+                                </Addon>
+                            </Addons>
+                        </Button>
+                        questionIndex++;
+                    }
+                }
+                roundIndex++;
+            }
+        }
+    </CardBody>
+</Card>

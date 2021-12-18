@@ -1,0 +1,129 @@
+﻿html, body {
+    width: 100vw;
+    height: 100vh;
+    max-width: 100%;
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+}
+
+html {
+    scrollbar-color: var(--b-theme-secondary, #28232D) var(--b-theme-white, #FBFBFB);
+    scrollbar-width: 12px;
+}
+
+body::-webkit-scrollbar {
+    width: 12px;
+}
+
+body::-webkit-scrollbar-track {
+    background: var(--b-theme-secondary, #28232D);
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: var(--b-theme-white, #FBFBFB);
+    border-radius: 60px;
+    border: 4px solid var(--b-theme-secondary, #28232D);
+}
+
+h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
+    font-family: 'Open Sans', sans-serif;
+}
+
+label.input-required::after {
+    content: '*';
+    color: var(--b-theme-text-danger, #CC4433);
+}
+
+.quicon {
+    stroke: currentColor;
+    fill: currentColor;
+}
+
+.alert .close-alerts-center {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.text-clip {
+    overflow: hidden;
+    text-overflow: clip;
+    white-space: nowrap;
+}
+
+.text-break {
+    word-break: break-word;
+}
+
+/* Margin flush - drops margin back by 1 pixel into the parent */
+.m-f {
+    margin: -1px;
+}
+
+.dropdown-item.active.inactive,
+.dropdown-item.inactive:active {
+    background-color: unset !important;
+    color: unset !important;
+}
+
+#blazor-error-ui {
+    background: var(--b-theme-white, #28232D);
+    color: var(--b-theme-text-dark, #FBFBFB);
+    border-top: 1px solid var(--b-theme-text-danger, #CC4433);
+    bottom: 0;
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+    }
+
+#app-loading-screen {
+    width: 100vw;
+    height: 100vh;
+    max-width: 100%;
+    background: #FBFBFB;
+    color: #252a2f;
+}
+
+    #app-loading-screen.dark {
+        background: #252A2F;
+        color: #FBFBFB;
+    }
+
+    #app-loading-screen svg .circle-light {
+        stroke: #FBFBFB;
+    }
+
+    #app-loading-screen svg .circle-dark {
+        stroke: #252A2F;
+    }
+
+    #app-loading-screen.dark svg .circle-light {
+        stroke: #252A2F;
+    }
+
+    #app-loading-screen.dark svg .circle-dark {
+        stroke: #FBFBFB;
+    }
+
+.app-loading-header {
+    height: 68.75px;
+    background: #28232D;
+}
+
+.app-loading-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 42px;
+}

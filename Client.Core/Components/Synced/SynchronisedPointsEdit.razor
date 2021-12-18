@@ -1,0 +1,24 @@
+﻿<Addons>
+    <Addon AddonType="AddonType.Body">
+        <NumericEdit TValue="decimal"
+                     Value="LocalPoints"
+                     ValueChanged="UpdatePointsAsync"
+                     Step="0.25m"
+                     Min="0.25m"
+                     Max="10m"
+                     Class="text-center" />
+    </Addon>
+    <Addon AddonType="AddonType.End">
+        <Dropdown>
+            <DropdownToggle Style="border-top-left-radius: 0; border-bottom-left-radius: 0;"
+                            Color="Color.Dark"
+                            Outline="true" />
+            <DropdownMenu>
+                <DropdownItem Clicked="() => SaveFunction(0.25m)">&#188;pts</DropdownItem>
+                <DropdownItem Clicked="() => SaveFunction(0.5m)">&#189;pts</DropdownItem>
+                <DropdownItem Clicked="() => SaveFunction(1m)">1pts</DropdownItem>
+                <DropdownItem Clicked="() => SaveFunction(2m)">2pts</DropdownItem>
+            </DropdownMenu>
+        </Dropdown>
+    </Addon>
+</Addons>

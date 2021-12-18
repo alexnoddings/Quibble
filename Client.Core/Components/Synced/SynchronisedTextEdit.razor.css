@@ -1,0 +1,55 @@
+﻿/* Save icon */
+.q-synced-text-field::after {
+    font-weight: 900;
+    font-family: "Font Awesome 5 Free";
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--b-theme-info);
+    opacity: 0;
+    border: 1px solid var(--b-theme-info);
+    background: var(--b-theme-white);
+    padding: 0px 4px;
+    border-radius: 4px;
+    pointer-events: none;
+}
+
+/* Text fade effect next to the icon */
+.q-synced-text-field::before {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 80%;
+    width: 42px;
+    background: linear-gradient( 90deg, transparent, var(--b-theme-white) 20px);
+    pointer-events: none;
+}
+
+.q-synced-text-field-saved::after {
+    content: "\f0c7";
+    animation: 1s synced-text-field-saved;
+    animation-iteration-count: 1;
+}
+
+.q-synced-text-field-saved::before {
+    content: '';
+    animation: 1s synced-text-field-saved;
+    animation-iteration-count: 1;
+}
+
+@keyframes synced-text-field-saved {
+    0% {
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}

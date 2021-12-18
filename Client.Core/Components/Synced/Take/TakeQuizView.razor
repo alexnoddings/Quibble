@@ -1,0 +1,34 @@
+﻿@inherits SyncedEntityComponent
+
+<Row Margin="Margin.Is1.FromBottom">
+    <Column ColumnSize="ColumnSize.Is8.Is10.OnDesktop">
+        <Heading Size="HeadingSize.Is3" Padding="Padding.Is5.FromLeft" Class="text-break">
+            @Quiz.Title
+        </Heading>
+    </Column>
+    <Column ColumnSize="ColumnSize.Is4.Is2.OnDesktop">
+        <Heading Size="HeadingSize.Is4" Padding="Padding.Is5.FromRight" Display="Display.Flex" Class="justify-content-end">
+            <TakeQuizScoreView Quiz="Quiz" />
+        </Heading>
+    </Column>
+</Row>
+
+@if (Quiz.Rounds.Any(round => round.State == RoundState.Open))
+{
+    foreach (var round in Quiz.Rounds.OrderBy(round => round.Order))
+    {
+        <Row Margin="Margin.Is3.OnY">
+            <Column ColumnSize="ColumnSize.Is12">
+                <TakeRoundView @key="round.Id" Round="round" />
+            </Column>
+        </Row>
+    }
+}
+else
+{
+    <Row Margin="Margin.Is5.FromTop">
+        <Column ColumnSize="ColumnSize.Is4.Is4.WithOffset.OnMobile.Is2.OnFullHD.Is5.WithOffset.OnFullHD">
+            <TakeParticipantList Quiz="Quiz" />
+        </Column>
+    </Row>
+}
