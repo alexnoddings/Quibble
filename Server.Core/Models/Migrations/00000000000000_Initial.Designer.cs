@@ -4,10 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Quibble.Server.Core;
 
 namespace Quibble.Server.Data.Migrations;
 
-    [DbContext(typeof(AppDbContext))]
+[DbContext(typeof(AppDbContext))]
     [Migration("00000000000000_Initial")]
     partial class Initial
     {

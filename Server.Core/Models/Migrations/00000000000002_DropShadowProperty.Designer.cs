@@ -3,28 +3,34 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Quibble.Server.Data;
+using Quibble.Server.Core;
 
-namespace Quibble.Server.Data.Migrations;
+#nullable disable
 
+namespace Quibble.Server.Data.Migrations
+{
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("00000000000002_DropShadowProperty")]
+    partial class DropShadowProperty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "6.0.0-preview.4.21253.1")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "6.0.0")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -39,15 +45,16 @@ namespace Quibble.Server.Data.Migrations;
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims");
+                    b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -62,7 +69,7 @@ namespace Quibble.Server.Data.Migrations;
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims");
+                    b.ToTable("AspNetUserClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
@@ -83,7 +90,7 @@ namespace Quibble.Server.Data.Migrations;
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins");
+                    b.ToTable("AspNetUserLogins", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
@@ -98,7 +105,7 @@ namespace Quibble.Server.Data.Migrations;
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles");
+                    b.ToTable("AspNetUserRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
@@ -117,10 +124,97 @@ namespace Quibble.Server.Data.Migrations;
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens");
+                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Quibble.Server.Data.AppRole", b =>
+            modelBuilder.Entity("Quibble.Server.Core.Models.DbParticipant", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("QuizId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuizId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Participants", (string)null);
+                });
+
+            modelBuilder.Entity("Quibble.Server.Core.Models.DbQuestion", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Answer")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Points")
+                        .HasPrecision(4, 2)
+                        .HasColumnType("decimal(4,2)");
+
+                    b.Property<Guid>("RoundId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("State")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoundId");
+
+                    b.ToTable("Questions", (string)null);
+                });
+
+            modelBuilder.Entity("Quibble.Server.Core.Models.DbQuiz", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("OpenedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("State")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("Quizzes", (string)null);
+                });
+
+            modelBuilder.Entity("Quibble.Server.Core.Models.DbRole", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -145,10 +239,69 @@ namespace Quibble.Server.Data.Migrations;
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("AspNetRoles");
+                    b.ToTable("AspNetRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Quibble.Server.Data.AppUser", b =>
+            modelBuilder.Entity("Quibble.Server.Core.Models.DbRound", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("QuizId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("State")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuizId");
+
+                    b.ToTable("Rounds", (string)null);
+                });
+
+            modelBuilder.Entity("Quibble.Server.Core.Models.DbSubmittedAnswer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("AssignedPoints")
+                        .ValueGeneratedOnAdd()
+                        .HasPrecision(4, 2)
+                        .HasColumnType("decimal(4,2)")
+                        .HasDefaultValue(-1m);
+
+                    b.Property<Guid>("ParticipantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("QuestionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParticipantId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("SubmittedAnswers", (string)null);
+                });
+
+            modelBuilder.Entity("Quibble.Server.Core.Models.DbUser", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -211,7 +364,7 @@ namespace Quibble.Server.Data.Migrations;
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("AspNetUsers");
+                    b.ToTable("AspNetUsers", (string)null);
 
                     b.HasData(
                         new
@@ -234,160 +387,9 @@ namespace Quibble.Server.Data.Migrations;
                         });
                 });
 
-            modelBuilder.Entity("Quibble.Server.Data.Models.DbParticipant", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("QuizId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuizId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Participants");
-                });
-
-            modelBuilder.Entity("Quibble.Server.Data.Models.DbQuestion", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Answer")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Points")
-                        .HasPrecision(4, 2)
-                        .HasColumnType("decimal(4,2)");
-
-                    b.Property<Guid>("RoundId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("State")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoundId");
-
-                    b.ToTable("Questions");
-                });
-
-            modelBuilder.Entity("Quibble.Server.Data.Models.DbQuiz", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("OpenedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("OwnerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("State")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OwnerId");
-
-                    b.ToTable("Quizzes");
-                });
-
-            modelBuilder.Entity("Quibble.Server.Data.Models.DbRound", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("QuizId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("State")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuizId");
-
-                    b.ToTable("Rounds");
-                });
-
-            modelBuilder.Entity("Quibble.Server.Data.Models.DbSubmittedAnswer", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("AppUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("AssignedPoints")
-                        .ValueGeneratedOnAdd()
-                        .HasPrecision(4, 2)
-                        .HasColumnType("decimal(4,2)")
-                        .HasDefaultValue(-1m);
-
-                    b.Property<Guid>("ParticipantId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("QuestionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
-
-                    b.HasIndex("ParticipantId");
-
-                    b.HasIndex("QuestionId");
-
-                    b.ToTable("SubmittedAnswers");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Quibble.Server.Data.AppRole", null)
+                    b.HasOne("Quibble.Server.Core.Models.DbRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -396,7 +398,7 @@ namespace Quibble.Server.Data.Migrations;
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Quibble.Server.Data.AppUser", null)
+                    b.HasOne("Quibble.Server.Core.Models.DbUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -405,7 +407,7 @@ namespace Quibble.Server.Data.Migrations;
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.HasOne("Quibble.Server.Data.AppUser", null)
+                    b.HasOne("Quibble.Server.Core.Models.DbUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -414,13 +416,13 @@ namespace Quibble.Server.Data.Migrations;
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.HasOne("Quibble.Server.Data.AppRole", null)
+                    b.HasOne("Quibble.Server.Core.Models.DbRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Quibble.Server.Data.AppUser", null)
+                    b.HasOne("Quibble.Server.Core.Models.DbUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -429,22 +431,22 @@ namespace Quibble.Server.Data.Migrations;
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.HasOne("Quibble.Server.Data.AppUser", null)
+                    b.HasOne("Quibble.Server.Core.Models.DbUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Quibble.Server.Data.Models.DbParticipant", b =>
+            modelBuilder.Entity("Quibble.Server.Core.Models.DbParticipant", b =>
                 {
-                    b.HasOne("Quibble.Server.Data.Models.DbQuiz", "Quiz")
+                    b.HasOne("Quibble.Server.Core.Models.DbQuiz", "Quiz")
                         .WithMany("Participants")
                         .HasForeignKey("QuizId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Quibble.Server.Data.AppUser", "User")
+                    b.HasOne("Quibble.Server.Core.Models.DbUser", "User")
                         .WithMany("Participations")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -455,9 +457,9 @@ namespace Quibble.Server.Data.Migrations;
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Quibble.Server.Data.Models.DbQuestion", b =>
+            modelBuilder.Entity("Quibble.Server.Core.Models.DbQuestion", b =>
                 {
-                    b.HasOne("Quibble.Server.Data.Models.DbRound", "Round")
+                    b.HasOne("Quibble.Server.Core.Models.DbRound", "Round")
                         .WithMany("Questions")
                         .HasForeignKey("RoundId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -466,9 +468,9 @@ namespace Quibble.Server.Data.Migrations;
                     b.Navigation("Round");
                 });
 
-            modelBuilder.Entity("Quibble.Server.Data.Models.DbQuiz", b =>
+            modelBuilder.Entity("Quibble.Server.Core.Models.DbQuiz", b =>
                 {
-                    b.HasOne("Quibble.Server.Data.AppUser", "Owner")
+                    b.HasOne("Quibble.Server.Core.Models.DbUser", "Owner")
                         .WithMany("Quizzes")
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -477,9 +479,9 @@ namespace Quibble.Server.Data.Migrations;
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("Quibble.Server.Data.Models.DbRound", b =>
+            modelBuilder.Entity("Quibble.Server.Core.Models.DbRound", b =>
                 {
-                    b.HasOne("Quibble.Server.Data.Models.DbQuiz", "Quiz")
+                    b.HasOne("Quibble.Server.Core.Models.DbQuiz", "Quiz")
                         .WithMany("Rounds")
                         .HasForeignKey("QuizId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -488,19 +490,15 @@ namespace Quibble.Server.Data.Migrations;
                     b.Navigation("Quiz");
                 });
 
-            modelBuilder.Entity("Quibble.Server.Data.Models.DbSubmittedAnswer", b =>
+            modelBuilder.Entity("Quibble.Server.Core.Models.DbSubmittedAnswer", b =>
                 {
-                    b.HasOne("Quibble.Server.Data.AppUser", null)
-                        .WithMany("SubmittedAnswers")
-                        .HasForeignKey("AppUserId");
-
-                    b.HasOne("Quibble.Server.Data.Models.DbParticipant", "Participant")
+                    b.HasOne("Quibble.Server.Core.Models.DbParticipant", "Participant")
                         .WithMany("SubmittedAnswers")
                         .HasForeignKey("ParticipantId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Quibble.Server.Data.Models.DbQuestion", "Question")
+                    b.HasOne("Quibble.Server.Core.Models.DbQuestion", "Question")
                         .WithMany("SubmittedAnswers")
                         .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -511,36 +509,35 @@ namespace Quibble.Server.Data.Migrations;
                     b.Navigation("Question");
                 });
 
-            modelBuilder.Entity("Quibble.Server.Data.AppUser", b =>
-                {
-                    b.Navigation("Participations");
-
-                    b.Navigation("Quizzes");
-
-                    b.Navigation("SubmittedAnswers");
-                });
-
-            modelBuilder.Entity("Quibble.Server.Data.Models.DbParticipant", b =>
+            modelBuilder.Entity("Quibble.Server.Core.Models.DbParticipant", b =>
                 {
                     b.Navigation("SubmittedAnswers");
                 });
 
-            modelBuilder.Entity("Quibble.Server.Data.Models.DbQuestion", b =>
+            modelBuilder.Entity("Quibble.Server.Core.Models.DbQuestion", b =>
                 {
                     b.Navigation("SubmittedAnswers");
                 });
 
-            modelBuilder.Entity("Quibble.Server.Data.Models.DbQuiz", b =>
+            modelBuilder.Entity("Quibble.Server.Core.Models.DbQuiz", b =>
                 {
                     b.Navigation("Participants");
 
                     b.Navigation("Rounds");
                 });
 
-            modelBuilder.Entity("Quibble.Server.Data.Models.DbRound", b =>
+            modelBuilder.Entity("Quibble.Server.Core.Models.DbRound", b =>
                 {
                     b.Navigation("Questions");
+                });
+
+            modelBuilder.Entity("Quibble.Server.Core.Models.DbUser", b =>
+                {
+                    b.Navigation("Participations");
+
+                    b.Navigation("Quizzes");
                 });
 #pragma warning restore 612, 618
         }
     }
+}

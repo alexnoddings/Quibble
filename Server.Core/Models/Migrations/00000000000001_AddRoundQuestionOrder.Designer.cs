@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Quibble.Server.Data;
+using Quibble.Server.Core;
 
 namespace Quibble.Server.Data.Migrations;
 
-    [DbContext(typeof(AppDbContext))]
+[DbContext(typeof(AppDbContext))]
     [Migration("00000000000001_AddRoundQuestionOrder")]
     partial class AddRoundQuestionOrder
     {

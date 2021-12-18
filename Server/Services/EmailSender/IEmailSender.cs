@@ -2,5 +2,5 @@
 
 public interface IEmailSender
 {
-    public Task SendAsync(string address, string content);
+	public Task SendAsync(string address, string content);
 }
