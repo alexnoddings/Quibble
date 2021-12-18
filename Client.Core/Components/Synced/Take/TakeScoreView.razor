@@ -1,0 +1,11 @@
+﻿@inherits SyncedEntityComponent
+
+@if (IsVisible) 
+{
+    var points = CalculatePoints();
+    <Tooltip Text="@($"{points.Percent:G4}%")" Placement="TooltipPlacement.Bottom">
+        <Heading Size="HeadingSize.Is5">
+            @($"{points.Scored:G4}/{points.Total:G4}")
+        </Heading>
+    </Tooltip>
+}

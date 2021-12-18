@@ -1,131 +1,126 @@
-using System.Net.Mime;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
-using Quibble.Server.Data;
-using Quibble.Server.Data.Models;
-using Quibble.Server.Hub;
+using Quibble.Common.Dtos;
+using Quibble.Server.Core;
+using Quibble.Server.Core.Models;
 using Quibble.Server.Services.EmailSender;
-using Quibble.Shared.Models.Dtos;
+using Quibble.Sync.SignalR.Server;
+using System.Net.Mime;
 
 namespace Quibble.Server;
 
 public class Startup
 {
-    private readonly IConfiguration _configuration;
+	private IConfiguration Configuration { get; }
 
-    public Startup(IConfiguration configuration)
-    {
-        _configuration = configuration;
-    }
+	public Startup(IConfiguration configuration)
+	{
+		Configuration = configuration;
+	}
 
-    public void ConfigureServices(IServiceCollection services)
-    {
-        services.AddResponseCompression(opts =>
-            opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[] { MediaTypeNames.Application.Octet }));
+	public void ConfigureServices(IServiceCollection services)
+	{
+		services.AddResponseCompression(opts =>
+			opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[] { MediaTypeNames.Application.Octet }));
 
-        services
-            .AddControllers()
-            .ConfigureApiBehaviorOptions(options =>
-                options.InvalidModelStateResponseFactory = context =>
-                    new BadRequestObjectResult(
-                        context.ModelState
-                            .Where(kv => kv.Value is not null)
-                            .SelectMany(kv => kv.Value!.Errors)
-                            .Select(modelError => modelError.ErrorMessage)
-                            .ToList()
-                    ));
+		services
+			.AddControllers()
+			.ConfigureApiBehaviorOptions(options =>
+				options.InvalidModelStateResponseFactory = context =>
+					new BadRequestObjectResult(
+						context.ModelState
+							.Where(kv => kv.Value is not null)
+							.SelectMany(kv => kv.Value!.Errors)
+							.Select(modelError => modelError.ErrorMessage)
+							.ToList()
+					));
 
-        services.AddDbContext<AppDbContext>(options =>
-        {
-            options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"), sqlOptions =>
-            {
-                sqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-            });
-        });
+		var dbConnectionString = Configuration.GetConnectionString("DefaultConnection");
+		if (string.IsNullOrWhiteSpace(dbConnectionString))
+			throw new InvalidOperationException("Invalid connection string DefaultConnection: cannot be null or whitespace.");
 
-        services.AddIdentity<AppUser, AppRole>()
-            .AddEntityFrameworkStores<AppDbContext>()
-            .AddDefaultTokenProviders();
+		services.AddDbContext<AppDbContext>(options =>
+		{
+			options.UseSqlServer(dbConnectionString, sqlOptions =>
+			{
+				sqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+			});
+		});
 
-        services.AddScoped<IEmailSender, DebugToLogEmailSender>();
+		services.AddIdentity<DbUser, DbRole>()
+			.AddEntityFrameworkStores<AppDbContext>()
+			.AddDefaultTokenProviders();
 
-        services.Configure<IdentityOptions>(options =>
-        {
-            options.Password.RequireDigit = true;
-            options.Password.RequiredLength = 10;
-            options.Password.RequireNonAlphanumeric = false;
-            options.Password.RequireUppercase = false;
-            options.Password.RequireLowercase = false;
+		services.AddScoped<IEmailSender, DebugToLogEmailSender>();
 
-            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
-            options.Lockout.MaxFailedAccessAttempts = 6;
-            options.Lockout.AllowedForNewUsers = true;
+		services.Configure<IdentityOptions>(options =>
+		{
+			options.Password.RequireDigit = true;
+			options.Password.RequiredLength = 10;
+			options.Password.RequireNonAlphanumeric = false;
+			options.Password.RequireUppercase = false;
+			options.Password.RequireLowercase = false;
 
-            options.User.RequireUniqueEmail = true;
-        });
+			options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+			options.Lockout.MaxFailedAccessAttempts = 6;
+			options.Lockout.AllowedForNewUsers = true;
 
-        services.ConfigureApplicationCookie(options =>
-        {
-            options.Cookie.Name = "_User";
-            options.Cookie.HttpOnly = true;
-            options.Cookie.SameSite = SameSiteMode.Strict;
-            options.Events.OnRedirectToLogin = context =>
-            {
-                // Login should be handled by the api
-                context.Response.StatusCode = 401;
-                return Task.CompletedTask;
-            };
-        });
+			options.User.RequireUniqueEmail = true;
+		});
 
-        services.AddSignalR();
-        services.AddAutoMapper(config =>
-        {
-            config.CreateMap<DbQuiz, QuizDto>();
-            config.CreateMap<DbParticipant, ParticipantDto>()
-                .ForMember(dto => dto.UserName,
-                    options => options.MapFrom(dbParticipant => dbParticipant.User.UserName));
-            config.CreateMap<DbRound, RoundDto>();
-            config.CreateMap<DbQuestion, QuestionDto>();
-            config.CreateMap<DbSubmittedAnswer, SubmittedAnswerDto>();
-        });
-    }
+		services.ConfigureApplicationCookie(options =>
+		{
+			options.Cookie.Name = "_User";
+			options.Cookie.HttpOnly = true;
+			options.Cookie.SameSite = SameSiteMode.Strict;
+			options.Events.OnRedirectToLogin = context =>
+			{
+				// Login should be handled by the api
+				context.Response.StatusCode = 401;
+				return Task.CompletedTask;
+			};
+		});
 
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-    {
-        app.UseResponseCompression();
+		services.AddServerSync().AddSignalr();
+	}
 
-        if (env.IsDevelopment())
-        {
-            app.UseDeveloperExceptionPage();
-            app.UseWebAssemblyDebugging();
-        }
-        else
-        {
-            app.UseHsts();
-        }
+	public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+	{
+		app.UseResponseCompression();
 
-        app.UseHttpsRedirection();
-        app.UseBlazorFrameworkFiles();
-        app.UseStaticFiles();
+		if (env.IsDevelopment())
+		{
+			app.UseDeveloperExceptionPage();
+			app.UseWebAssemblyDebugging();
+		}
+		else
+		{
+			app.UseHsts();
+		}
 
-        app.UseRouting();
-        app.UseAuthentication();
-        app.UseAuthorization();
+		app.UseHttpsRedirection();
+		app.UseBlazorFrameworkFiles();
+		app.UseStaticFiles();
 
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers();
-            endpoints.MapHub<QuibbleHub>("Api/Quibble/{QuizId:guid}");
+		app.UseRouting();
+		app.UseAuthentication();
+		app.UseAuthorization();
 
-            // Will prevent calls to APIs which don't exist to return a 404 rather than fall through to index.html.
-            endpoints.Map("Api/{**CatchAll}", context =>
-        {
-            context.Response.StatusCode = 404;
-            return Task.CompletedTask;
-        });
-            endpoints.MapFallbackToFile("index.html");
-        });
-    }
+		app.UseEndpoints(endpoints =>
+		{
+			endpoints.MapControllers();
+			endpoints.MapSignalrSync();
+
+			// Will prevent calls to APIs which don't exist to return a 404 rather than fall through to index.html.
+			endpoints.Map("Api/{**CatchAll}", context =>
+			{
+				context.Response.StatusCode = 404;
+				return Task.CompletedTask;
+			});
+
+			endpoints.MapFallbackToFile("index.html");
+		});
+	}
 }

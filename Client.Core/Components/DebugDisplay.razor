@@ -1,0 +1,59 @@
+﻿@using Blazorise.Icons.FontAwesome
+@using Microsoft.AspNetCore.Components.WebAssembly.Hosting
+@using Microsoft.Extensions.Configuration
+@using System.Security.Claims
+
+@if (!HostEnvironment.IsProduction())
+{
+    <BarItem Margin="Margin.Is2.FromLeft">
+        <BarDropdown>
+            <BarDropdownToggle>
+                <Text Color="TextColor.Primary" Display="Display.Inline">
+                    <samp>
+                        @HostEnvironment.Environment
+                    </samp>
+                </Text>
+            </BarDropdownToggle>
+            <BarDropdownMenu RightAligned="true">
+                <BarDropdownItem>
+                    <Text Weight="TextWeight.Bold">
+                        Environment:
+                    </Text>
+                    <samp>
+                        @HostEnvironment.Environment
+                    </samp>
+                </BarDropdownItem>
+                <BarDropdownItem>
+                    <Text Weight="TextWeight.Bold">
+                        Host:
+                    </Text>
+                    <samp>
+                        @HostEnvironment.BaseAddress
+                    </samp>
+                </BarDropdownItem>
+                <BarDropdownItem>
+                    <Text Weight="TextWeight.Bold">
+                        Device Breakpoint:
+                    </Text>
+                    <samp>
+                        <Text Display="Display.Inline.None.OnTablet">
+                            Mobile
+                        </Text>
+                        <Text Display="Display.None.Inline.OnTablet.None.OnDesktop">
+                            Tablet
+                        </Text>
+                        <Text Display="Display.None.Inline.OnDesktop.None.OnWidescreen">
+                            Desktop
+                        </Text>
+                        <Text Display="Display.None.Inline.OnWidescreen.None.OnFullHD">
+                            Widescreen
+                        </Text>
+                        <Text Display="Display.None.Inline.OnFullHD">
+                            FullHD
+                        </Text>
+                    </samp>
+                </BarDropdownItem>
+            </BarDropdownMenu>
+        </BarDropdown>
+    </BarItem>
+}

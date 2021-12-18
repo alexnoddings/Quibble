@@ -1,0 +1,33 @@
+﻿@using Quibble.Client.Core.Components
+@inherits LayoutComponentBase
+
+<Layout>
+    <LayoutHeader>
+        <Bar Breakpoint="Breakpoint.Desktop" Background="Background.Secondary" ThemeContrast="ThemeContrast.Dark">
+            <Container>
+                <BarBrand>
+                    <BarItem>
+                        <BarLink To="/" Padding="Padding.Is2.FromLeft">
+                            <Text Color="TextColor.White">
+                                <QuibbleIcon Size="32"/>
+                            </Text>
+                        </BarLink>
+                    </BarItem>
+                </BarBrand>
+                <BarEnd>
+                    <DebugDisplay/>
+                    <ThemeDisplay/>
+                    <LoginDisplay/>
+                </BarEnd>
+            </Container>
+        </Bar>
+    </LayoutHeader>
+    <LayoutContent Padding="Padding.Is5.OnY">
+        <Container>
+            @Body
+        </Container>
+    </LayoutContent>
+    <LayoutFooter>
+    </LayoutFooter>
+</Layout>
+
