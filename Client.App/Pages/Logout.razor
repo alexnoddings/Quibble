@@ -1,0 +1,12 @@
+﻿@page "/logout"
+
+<FullPageTitle Value="Log out" />
+
+<AuthorizeView>
+    <Authorized>
+        Logging out...
+    </Authorized>
+    <NotAuthorized>
+        <RedirectTo Url="/" />
+    </NotAuthorized>
+</AuthorizeView>

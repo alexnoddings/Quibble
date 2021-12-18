@@ -1,0 +1,39 @@
+﻿@page "/login"
+@layout AuthLayout
+
+<FullPageTitle Value="Log in" />
+
+<AuthorizeView>
+    <Authorized>
+        <RedirectTo Url="@ReturnUrl" />
+    </Authorized>
+</AuthorizeView>
+
+<AuthForm Errors="Errors" Model="Model" OnSubmit="LoginAsync" SubmitText="Log in">
+    <Title>
+        Log in to Quibble
+    </Title>
+    <Form>
+        <Field>
+            <FieldLabel For="username">
+                Username
+            </FieldLabel>
+            <TextEdit id="username" @bind-Text="Model.UserName" autocomplete="username" />
+            <ValidationMessage For="() => Model.UserName" />
+        </Field>
+        <Field Class="auth-field-with-extra-label">
+            <FieldLabel For="password">
+                Password
+            </FieldLabel>
+            <TextEdit id="password" @bind-Text="Model.Password" Role="TextRole.Password" autocomplete="current-password" />
+            <a class="auth-extra-label" href="/forgot_password">Forgot your password?</a>
+            <ValidationMessage For="() => Model.Password" />
+        </Field>
+    </Form>
+    <Footer>
+        <Text Alignment="TextAlignment.Center">
+            New here?
+            <a href="/register?returnUrl=@Uri.EscapeDataString(ReturnUrl)">Create an account</a>.
+        </Text>
+    </Footer>
+</AuthForm>

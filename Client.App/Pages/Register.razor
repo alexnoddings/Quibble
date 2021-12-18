@@ -1,0 +1,50 @@
+﻿@page "/register"
+@layout AuthLayout
+
+<FullPageTitle Value="Create an account" />
+
+<AuthorizeView>
+    <Authorized>
+        <RedirectTo Url="@ReturnUrl" />
+    </Authorized>
+</AuthorizeView>
+
+<AuthForm Errors="Errors" Model="Model" OnSubmit="RegisterAsync" SubmitText="Create account">
+    <Title>Create your account</Title>
+    <Form>
+        <Field>
+            <FieldLabel Class="input-required" For="email">
+                Email
+            </FieldLabel>
+            <TextEdit id="email" @bind-Text="@Model.Email" Role="TextRole.Email" autocomplete="email" />
+            <ValidationMessage For="() => Model.Email" />
+        </Field>
+        <Field>
+            <FieldLabel Class="input-required" For="username">
+                Username
+            </FieldLabel>
+            <TextEdit id="username" @bind-Text="@Model.UserName" autocomplete="username" />
+            <ValidationMessage For="() => Model.UserName" />
+        </Field>
+        <Field>
+            <FieldLabel Class="input-required" For="password">
+                Password
+            </FieldLabel>
+            <TextEdit id="password" @bind-Text="@Model.Password" Role="TextRole.Password" autocomplete="new-password" />
+            <ValidationMessage For="() => Model.Password" />
+        </Field>
+        <Field>
+            <FieldLabel Class="input-required" For="confirmPassword">
+                Confirm your Password
+            </FieldLabel>
+            <TextEdit id="confirmPassword" @bind-Text="@Model.ConfirmPassword" Role="TextRole.Password" autocomplete="new-password" />
+            <ValidationMessage For="() => Model.Password" />
+        </Field>
+    </Form>
+    <Footer>
+        <Text Alignment="TextAlignment.Center">
+            Already have an account?
+            <a href="/login?returnUrl=@Uri.EscapeDataString(ReturnUrl)">Log in</a>.
+        </Text>
+    </Footer>
+</AuthForm>

@@ -1,0 +1,45 @@
+﻿<AuthorizeView>
+    <Authorized>
+        <BarItem Margin="Margin.Is2.FromLeft">
+            <BarDropdown>
+                <BarDropdownToggle>
+                    <Text Color="TextColor.White" Display="Display.Inline">
+                        @(context.User?.Identity?.Name ?? "Profile")
+                    </Text>
+                </BarDropdownToggle>
+                <BarDropdownMenu RightAligned="true">
+                    <BarDropdownItem Padding="Padding.Is2.OnY">
+                        <Text Padding="Padding.Is0">
+                            Logged in as
+                        </Text>
+                        <Text Weight="TextWeight.Bold" Padding="Padding.Is0">
+                            @context.User?.Identity?.Name
+                        </Text>
+                    </BarDropdownItem>
+                    <BarDropdownItem To="/settings/user" Padding="Padding.Is2.OnY">
+                        Settings
+                    </BarDropdownItem>
+                    <BarDropdownItem To="/logout" Padding="Padding.Is2.OnY">
+                        Log out
+                    </BarDropdownItem>
+                </BarDropdownMenu>
+            </BarDropdown>
+        </BarItem>
+    </Authorized>
+    <NotAuthorized>
+        <BarItem Margin="Margin.Is2.FromLeft">
+            <Text Color="TextColor.White">
+                <a class="nav-link text-reset" href="/login" @onclick="RedirectToLogin" @onclick:preventDefault>
+                    Log in
+                </a>
+            </Text>
+        </BarItem>
+        <BarItem Margin="Margin.Is2.FromLeft">
+            <Text Color="TextColor.White">
+                <a class="nav-link text-reset" href="/register" @onclick="RedirectToRegister" @onclick:preventDefault>
+                    Register
+                </a>
+            </Text>
+        </BarItem>
+    </NotAuthorized>
+</AuthorizeView>
