@@ -16,9 +16,6 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Conventions">
-    <!-- Default target framework. -->
-    <DefaultTargetFramework>net6.0</DefaultTargetFramework>
-
     <!-- Surface code style issues at build time. -->
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 
