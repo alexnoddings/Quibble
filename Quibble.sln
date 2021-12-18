@@ -32,6 +32,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sync", "Sync", "{C4DF7036-F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server.Core", "Server.Core\Server.Core.csproj", "{808D5E11-3D4A-4C80-9FE1-6AB91A24EDF0}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sync.InMemory", "Sync.InMemory\Sync.InMemory.csproj", "{8EF55C0F-798C-413A-879E-7B2104998A80}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -70,6 +72,10 @@ Global
 		{808D5E11-3D4A-4C80-9FE1-6AB91A24EDF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{808D5E11-3D4A-4C80-9FE1-6AB91A24EDF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{808D5E11-3D4A-4C80-9FE1-6AB91A24EDF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EF55C0F-798C-413A-879E-7B2104998A80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EF55C0F-798C-413A-879E-7B2104998A80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EF55C0F-798C-413A-879E-7B2104998A80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EF55C0F-798C-413A-879E-7B2104998A80}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -80,6 +86,7 @@ Global
 		{C90002B0-4385-4942-979D-CAA0BEFC63D7} = {C4DF7036-F18C-49C3-82EB-0C5D07C94273}
 		{83168B9A-33CE-4AED-8422-93F50E945D5C} = {C4DF7036-F18C-49C3-82EB-0C5D07C94273}
 		{51B82550-FF20-4D17-B08F-F3F671049C13} = {C4DF7036-F18C-49C3-82EB-0C5D07C94273}
+		{8EF55C0F-798C-413A-879E-7B2104998A80} = {C4DF7036-F18C-49C3-82EB-0C5D07C94273}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4DEEED4C-5A78-41D2-94A0-8526D23DF12C}
