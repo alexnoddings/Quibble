@@ -1,0 +1,31 @@
+@using Quibble.Client.Core.Components.Modals
+@using Quibble.Client.Demo.Layouts
+
+<FullPageTitle />
+<ThemeProvider Theme="@ThemeService.Theme">
+	<OptionsModalHost>
+		<Router AppAssembly="@typeof(Program).Assembly">
+			<Found Context="routeData">
+				<RouteView RouteData="@routeData" DefaultLayout="@typeof(DemoLayout)" />
+			</Found>
+			<NotFound>
+                <FullPageTitle Value="Page not found"/>
+                <LayoutView Layout="@typeof(DemoLayout)">
+					<Container Class="container-lg" Margin="Margin.Is5.FromTop">
+						<Heading Size="HeadingSize.Is2" Alignment="TextAlignment.Center" TextColor="TextColor.Primary" Margin="Margin.Is0.OnY">
+							404
+						</Heading>
+						<DisplayHeading Size="DisplayHeadingSize.Is3" Alignment="TextAlignment.Center" Margin="Margin.Is0.OnY">
+							Page not found
+						</DisplayHeading>
+						<Heading Size="HeadingSize.Is3" Alignment="TextAlignment.Center" Margin="Margin.Is2.FromTop">
+							<Link To="/" Alignment="TextAlignment.Center">
+								Back Home
+							</Link>
+						</Heading>
+					</Container>
+                </LayoutView>
+			</NotFound>
+		</Router>
+	</OptionsModalHost>
+</ThemeProvider>

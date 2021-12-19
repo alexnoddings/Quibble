@@ -1,0 +1,31 @@
+﻿@using Blazorise.Icons.FontAwesome
+
+<BarItem Margin="Margin.Is2.FromLeft">
+    <BarDropdown>
+        <BarDropdownToggle TextColor="TextColor.White">
+            Utilities
+        </BarDropdownToggle>
+        <BarDropdownMenu RightAligned="true">
+            <BarDropdownItem Clicked="ToggleGuttersAsync">
+                @{
+                    var icon = GutterFlag.UseGutters
+                            ? FontAwesomeIcons.Expand
+                            : FontAwesomeIcons.Compress;
+                    <Blazorise.Icons.FontAwesome.Icon Name="icon" Margin="Margin.Is2.FromRight" />
+                }
+                @(GutterFlag.UseGutters ? "Disable Gutters" : "Enable Gutters")
+            </BarDropdownItem>
+            <BarDropdownDivider/>
+            <BarDropdownItem>
+                <Link To="/_colours">
+                    Colours Page
+                </Link>
+            </BarDropdownItem>
+            <BarDropdownItem>
+                <Link To="/_icons">
+                    Icons Page
+                </Link>
+            </BarDropdownItem>
+        </BarDropdownMenu>
+    </BarDropdown>
+</BarItem>

@@ -1,0 +1,30 @@
+﻿@page "/_icons"
+@using Blazorise.Icons.FontAwesome
+
+<FullPageTitle Value="Icons" />
+
+<Container Class="container-lg" Margin="Margin.Is5.FromTop">
+    <DisplayHeading Size="DisplayHeadingSize.Is3" Alignment="TextAlignment.Center" Margin="Margin.Is4.FromBottom">
+        Icons
+    </DisplayHeading>
+</Container>
+
+<Row Flex="Flex.JustifyContent.Center" Margin="Margin.Is2.OnY">
+    <Column Margin="Margin.Is2.OnY" ColumnSize="ColumnSize.Is8" Display="Display.Flex.Row" Flex="Flex.JustifyContent.Center.Wrap">
+        @foreach (var size in Enum.GetValues<IconSize>())
+        {
+            <Button Color="Color.Primary" Margin="Margin.Is2.OnX" Clicked="() => Size = size">@size</Button>
+        }
+    </Column>
+</Row>
+
+<Row Flex="Flex.JustifyContent.Center" Margin="Margin.Is2.OnY">
+    <Column Margin="Margin.Is2.OnY" ColumnSize="ColumnSize.Is12" Display="Display.Flex.Row" Flex="Flex.JustifyContent.Center.Wrap">
+        @foreach (var icon in Enum.GetValues<IconName>())
+        {
+            <Tooltip Margin="Margin.Is1" Padding="Padding.Is2" Text="@icon.ToString()">
+                <Blazorise.Icon Name="icon" IconSize="Size" />
+            </Tooltip>
+        }
+    </Column>
+</Row>

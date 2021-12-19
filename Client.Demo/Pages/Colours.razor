@@ -1,0 +1,69 @@
+﻿@page "/_colours"
+@using Blazorise.Icons.FontAwesome
+
+<FullPageTitle Value="Colours" />
+
+<Container Class="container-lg" Margin="Margin.Is5.FromTop">
+    <DisplayHeading Size="DisplayHeadingSize.Is3" Alignment="TextAlignment.Center" Margin="Margin.Is4.FromBottom">
+        Colours
+    </DisplayHeading>
+</Container>
+
+<Row Flex="Flex.JustifyContent.Center" Margin="Margin.Is2.OnY">
+    <Column Margin="Margin.Is2.OnY" ColumnSize="ColumnSize.Is12" Display="Display.Flex.Row" Flex="Flex.JustifyContent.Center">
+        <Button Outline="!ShowButtons" Color="ShowButtons ? Color.Primary : Color.Secondary" Clicked="() => ShowButtons = !ShowButtons" Margin="Margin.Is2.OnX">
+            Buttons
+        </Button>
+        <Button Outline="!ShowText" Color="ShowText ? Color.Primary : Color.Secondary" Clicked="() => ShowText = !ShowText" Margin="Margin.Is2.OnX">
+            Text
+        </Button>
+    </Column>
+</Row>
+
+
+<Row Flex="Flex.JustifyContent.Center" Margin="Margin.Is2.OnY">
+    @foreach (var background in Enum.GetValues<Background>())
+    {
+        <Column Margin="Margin.Is2.OnY" ColumnSize="ColumnSize.Is6.Is6.OnTablet.Is3.OnWidescreen.Is2.OnFullHD">
+            <Card Background="Background.Light">
+                <CardHeader Padding="Padding.Is2.OnX.Is1.OnY" Display="Display.Flex">
+                    <Heading Size="HeadingSize.Is5" Margin="Margin.Is0">
+                        @background.Humanize()
+                    </Heading>
+                </CardHeader>
+                <CardBody Padding="Padding.Is3.OnX.Is2.OnY" Background="background">
+                    @if (ShowText)
+                    {
+                        foreach (var textColor in Enum.GetValues<TextColor>())
+                        {
+                            <Addons Margin="Margin.Is1.OnY" Flex="Flex.NoWrap.AlignItems.Center" TextColor="textColor">
+                                <Addon AddonType="AddonType.Body">
+                                    @textColor.Humanize()
+                                </Addon>
+                                <Addon AddonType="AddonType.End" Margin="Margin.IsAuto.FromLeft" Flex="Flex.Shrink.Is0" TextColor="TextColor.Muted">
+                                    (@textColor.Humanize())
+                                </Addon>
+                            </Addons>
+                        }
+                    }
+                    @if (ShowButtons)
+                    {
+                        @foreach (var color in Enum.GetValues<Color>())
+                        {
+                            <Addons Margin="Margin.Is1.OnY" Flex="Flex.NoWrap.AlignItems.Center">
+                                <Addon AddonType="AddonType.Body">
+                                    <Button Color="color">
+                                        @color.Humanize()
+                                    </Button>
+                                </Addon>
+                                <Addon AddonType="AddonType.End" Margin="Margin.IsAuto.FromLeft" Flex="Flex.Shrink.Is0" TextColor="TextColor.Muted">
+                                    (@color.Humanize())
+                                </Addon>
+                            </Addons>
+                        }
+                    }
+                </CardBody>
+            </Card>
+        </Column>
+    }
+</Row>

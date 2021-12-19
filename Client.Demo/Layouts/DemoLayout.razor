@@ -1,0 +1,40 @@
+﻿@using Quibble.Client.Demo.Components
+@inherits LayoutComponentBase
+
+<Layout>
+    <LayoutHeader>
+        <Bar Breakpoint="Breakpoint.Desktop" Background="Background.Primary" ThemeContrast="ThemeContrast.Dark" Padding="Padding.Is1">
+            <Container Display="Display.Flex.Column" Flex="Flex.JustifyContent.Center">
+                <BarBrand Margin="Margin.Is0" Padding="Padding.Is0">
+                    <BarItem>
+                        <Text Color="TextColor.White">
+                            Quibble Demo
+                        </Text>
+                    </BarItem>
+                </BarBrand>
+            </Container>
+        </Bar>
+        <Bar Breakpoint="Breakpoint.Desktop" Background="Background.Secondary" ThemeContrast="ThemeContrast.Dark">
+            <Container>
+                <BarBrand>
+                    <BarItem>
+                        <BarLink To="/" Padding="Padding.Is2.FromLeft" TextColor="TextColor.White">
+                            <QuibbleIcon Size="32"/>
+                        </BarLink>
+                    </BarItem>
+                </BarBrand>
+                <BarEnd>
+                    <DebugDisplay/>
+                    <ThemeDisplay/>
+                    <UtilitiesDisplay/>
+                </BarEnd>
+            </Container>
+        </Bar>
+    </LayoutHeader>
+    <LayoutContent Padding="Padding.Is0.OnY">
+        <Container Fluid="!GutterFlag.UseGutters">
+            @Body
+        </Container>
+    </LayoutContent>
+</Layout>
+
