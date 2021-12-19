@@ -116,9 +116,9 @@
                                 Show Answer
                                 @if (isQuestionLocked && !areAllAnswersMarked)
                                 {
-                                    <Blazorise.Text Display="Display.Inline" Color="TextColor.Warning">
-                                        <Icon Name="IconName.Lock" />
-                                    </Blazorise.Text>
+                                    <Tooltip Display="Display.Inline" Text="Every answer must be marked first">
+                                        <Icon TextColor="TextColor.Warning" Name="IconName.Lock" />
+                                    </Tooltip>
                                 }
                             </Button>
                             <DropdownToggle Split="true" Color="canShowOtherAnswers ? Color.Primary : Color.Dark" Outline="true" />
