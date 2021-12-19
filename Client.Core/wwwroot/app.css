@@ -56,11 +56,6 @@ label.input-required::after {
     word-break: break-word;
 }
 
-/* Margin flush - drops margin back by 1 pixel into the parent */
-.m-f {
-    margin: -1px;
-}
-
 .dropdown-item.active.inactive,
 .dropdown-item.inactive:active {
     background-color: unset !important;
