@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Quibble.Client.Core;
 using Quibble.Client.Core.Entities;
 
 namespace Quibble.Client.Core.Components.Synced.Host;
@@ -9,9 +8,14 @@ public sealed partial class HostParticipantList : IDisposable
 	[Parameter]
 	public ISyncedQuiz Quiz { get; set; } = default!;
 
+	private decimal TotalQuestionPoints { get; set; }
+
 	protected override void OnInitialized()
 	{
 		base.OnInitialized();
+
+		// This won't change for the quiz lifetime
+		TotalQuestionPoints = Quiz.Rounds.SelectMany(r => r.Questions).Sum(q => q.Points);
 
 		Quiz.Participants.Added += OnParticipantJoinedAsync;
 

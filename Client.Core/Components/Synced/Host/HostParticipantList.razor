@@ -1,10 +1,13 @@
 ﻿@inherits SyncedEntityComponent
 
 <Card Background="Background.Light">
-    <CardHeader Background="Background.Transparent" Padding="Padding.Is3.OnX.Is2.OnY">
+    <CardHeader Display="Display.Flex" Flex="Flex.Row" Background="Background.Transparent" Padding="Padding.Is3.OnX.Is2.OnY">
         <Heading Size="HeadingSize.Is5" Margin="Margin.Is0">
-            Participants
+            @Quiz.Participants.Count Participants
         </Heading>
+        <Blazorise.Text Class="text-clip" Margin="Margin.IsAuto.FromLeft">
+            @TotalQuestionPoints
+        </Blazorise.Text>
     </CardHeader>
     <CardBody Padding="Padding.Is3.OnX.Is2.OnY">
         @if (Quiz.Participants.Count == 0)
@@ -31,7 +34,7 @@
                         <Text Class="text-clip" Display="Display.Flex" Flex="Flex.Column">
                             @foreach (var participant in participants)
                             {
-                                <Blazorise.Text Alignment="TextAlignment.Left" Class="text-clip">
+                                <Blazorise.Text Class="text-clip" Alignment="TextAlignment.Left">
                                     <span class="participant-name">
                                         @participant.UserName
                                     </span>
