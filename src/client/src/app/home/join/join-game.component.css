@@ -1,0 +1,56 @@
+@reference "../../../styles.css";
+
+.join-game {
+  @apply mx-auto;
+  max-width: 256px;
+
+  .title {
+    @apply text-light text-3xl font-bold;
+    @apply ms-3 mb-1;
+  }
+
+  &:hover form .game-code {
+    box-shadow: 0 0 60px rgba(124, 111, 247, 0.3), 0 0 120px rgba(124, 111, 247, 0.15);
+    @apply border-accent;
+  }
+
+  form {
+    .game-code {
+      @apply bg-surface border-border;
+      @apply flex flex-col;
+      @apply rounded-full;
+      box-shadow: 0 0 40px rgba(124, 111, 247, 0.3), 0 0 80px rgba(124, 111, 247, 0.1);
+      transition: box-shadow 0.3s, border-color 0.3s;
+      @apply flex flex-row;
+
+      label {
+        @apply sr-only;
+      }
+
+      input {
+        @apply rounded-s-full;
+        @apply border-e-1;
+
+        text-transform: uppercase;
+        min-width: 100px;
+
+        &.errored {
+          @apply border-error;
+        }
+      }
+
+      button {
+        @apply border-border border-2;
+        @apply border-s-1;
+        @apply rounded-e-full;
+        @apply ps-3 pe-4 py-1;
+        @apply font-bold text-lg;
+      }
+    }
+
+    .error {
+      @apply text-error;
+      @apply px-2;
+    }
+  }
+}

@@ -1,0 +1,21 @@
+@reference "../../styles.css";
+
+.alert {
+  border-left: 5px solid transparent;
+  padding: 14px 28px;
+  margin-bottom: 12px;
+}
+
+.alert-error {
+  @apply text-error;
+  border-left-color: #b42d2d;
+  background-color: #f4dfdf;
+}
+
+.alert .title {
+  font-weight: bold;
+}
+
+.alert .detail {
+  margin-top: 4px;
+}

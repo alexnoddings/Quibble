@@ -1,0 +1,16 @@
+<div class="round__header" tabindex="-1">
+    <span class="round__number" aria-hidden="true">
+      {{ round().order() }}
+    </span>
+  <h3 class="round__title">
+    <span class="sr-only">Round {{ round().order() }}:</span>
+    {{ round().title() }}
+  </h3>
+</div>
+<div class="round__questions">
+  @for (question of round().questions(); track question.id) {
+    @if (question.state() != QuestionStates.Hidden) {
+      <quibble-participant-play-question [question]="question"/>
+    }
+  }
+</div>

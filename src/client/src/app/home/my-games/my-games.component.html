@@ -1,0 +1,59 @@
+<div>
+  <div class="px-2 flex flex-row items-center mb-1">
+    <h2 class="text-light text-2xl font-bold flex-1">Your games</h2>
+    <a class="me-2 text-accent" routerLink="/create-game">
+      New game
+    </a>
+  </div>
+  <div class="bg-surface border border-border rounded-md w-full px-3 py-2">
+    @if (games$ | async; as games) {
+      @if (games.length == 0) {
+        <p>
+          You haven't created any games yet
+        </p>
+      } @else {
+        @let grouped = group(games);
+        @if (grouped.active.length > 0) {
+          <h3 class="font-semibold">Active</h3>
+          <ul class="ms-2">
+            @for (game of grouped.active; track game.id) {
+              <li>
+                <a class="block text-accent" [routerLink]='("/games/" + game.id)'>
+                  {{ game.title }}
+                </a>
+              </li>
+            }
+          </ul>
+        }
+        @if (grouped.drafts.length > 0) {
+          <h3 class="font-semibold">Drafts</h3>
+          <ul class="ms-2">
+            @for (game of grouped.drafts; track game.id) {
+              <li>
+                <a class="block text-accent" [routerLink]='("/games/" + game.id)'>
+                  {{ game.title }}
+                </a>
+              </li>
+            }
+          </ul>
+        }
+        @if (grouped.done.length > 0) {
+          <h3 class="font-semibold">Done</h3>
+          <ul class="ms-2">
+            @for (game of grouped.done; track game.id) {
+              <li>
+                <a class="block text-accent" [routerLink]='("/games/" + game.id)'>
+                  {{ game.title }}
+                </a>
+              </li>
+            }
+          </ul>
+        }
+      }
+    } @else {
+      <p>
+        Loading games...
+      </p>
+    }
+  </div>
+</div>

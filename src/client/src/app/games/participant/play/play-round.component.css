@@ -1,0 +1,25 @@
+@reference "../../../../styles.css";
+
+:host {
+  @apply block bg-surface rounded-lg border border-border;
+}
+
+.round__header {
+  @apply p-2 rounded-t-lg;
+  @apply flex gap-2 items-center;
+  @apply bg-surface-alt border-b border-b-border;
+
+  .round__number {
+    @apply text-xl font-semibold ms-1;
+    @apply text-light;
+    min-width: 21px;
+  }
+
+  .round__title {
+    @apply text-light text-xl;
+  }
+}
+
+
+.round__questions {
+}

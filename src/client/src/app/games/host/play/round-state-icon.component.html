@@ -1,0 +1,15 @@
+@let round = this.round();
+@let state = round.state();
+
+@if (state == RoundStates.Hidden) {
+  <octicon-eye-closed class="text-body"/>
+  <span class="sr-only">Round hidden</span>
+} @else if (state == RoundStates.Visible) {
+  @if (hasCompletedRound) {
+    <octicon-check class="text-body-muted"/>
+    <span class="sr-only">Round finished</span>
+  } @else {
+    <octicon-eye class="text-light"/>
+    <span class="sr-only">Round in progress</span>
+  }
+}

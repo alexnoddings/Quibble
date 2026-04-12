@@ -1,0 +1,74 @@
+@let answer = this.answer();
+@let points = answer.points();
+@let worth = answer.question.points();
+@let questionState = answer.question.state();
+
+<div class="answer__header {{ getAnswerVariant(points, worth) }}">
+  <div class="participant">
+    {{ answer.participant.userName }}
+  </div>
+  @if (questionState == QuestionStates.Marking || questionState == QuestionStates.Revealed) {
+    <button class="score-button score-button--correct" (click)="setPoints(worth)">
+      @if (points == worth) {
+        <octicon-check-circle-filled/>
+      } @else {
+        <octicon-check-circle/>
+      }
+    </button>
+    @let extra = points != undefined && points > worth;
+    <button #openPointsDialogButton class="score-button"
+            [class.score-button--partial]="!extra"
+            [class.score-button--extra]="extra"
+            (click)="openPointsDialog()">
+      @if (extra) {
+        <octicon-sparkles/>
+        <span>
+          {{ prettyPrint.points(points) }}
+        </span>
+      } @else if (points != undefined && points > 0 && points < worth) {
+        <octicon-skip-fill/>
+        <span>
+          {{ prettyPrint.points(points) }}
+        </span>
+      } @else {
+        <octicon-skip/>
+      }
+    </button>
+    <button class="score-button score-button--incorrect" (click)="setPoints(0)">
+      @if (points == 0) {
+        <octicon-x-circle-filled/>
+      } @else {
+        <octicon-x-circle/>
+      }
+    </button>
+  }
+</div>
+<div class="answer__body">
+  @let text = answer.answer();
+  @let isEmpty = text.length == 0;
+  <div class="answer__text" [class.answer__text--empty]="isEmpty">
+    @if (isEmpty) {
+      @if (questionState == QuestionStates.Hidden) {
+        &nbsp;
+      } @else if (questionState == QuestionStates.InProgress) {
+        thinking
+      } @else {
+        no answer
+      }
+    } @else {
+      {{ text }}
+    }
+  </div>
+</div>
+
+<dialog #pointsDialog popover [id]="IdGenerator.answerPointsDialog(answer.question.id, answer.participant.id)">
+  <div class="flex flex-col justify-center">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" class="text-border mx-auto" viewBox="0 8.5 24 7" height="7">
+      <path
+        d="m12.354 8.854 5.792 5.792a.5.5 0 0 1-.353.854H6.207a.5.5 0 0 1-.353-.854l5.792-5.792a.5.5 0 0 1 .708 0Z"></path>
+    </svg>
+    <div class="border border-border bg-surface rounded-md p-1">
+      <quibble-synced-input-number class="custom-points" (saved)="setPoints($event)"/>
+    </div>
+  </div>
+</dialog>

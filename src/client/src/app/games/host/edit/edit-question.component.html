@@ -1,0 +1,38 @@
+<div class="question" tabindex="-1">
+  <div class="question__margin">
+    <h3 class="question__number">
+      <span class="sr-only">Question number</span>
+      {{ number() }}
+    </h3>
+    <span class="flex-1"></span>
+    <button class="button button--delete button--slim question__delete" (click)="delete()">
+      <span class="sr-only">Delete question</span>
+      <octicon-bin/>
+    </button>
+  </div>
+  <div class="question__content">
+    <label [attr.for]="IdGenerator.questionBody(question())">Question</label>
+    <quibble-synced-input-text [attr.id]="IdGenerator.questionBody(question())"
+                               placeholder="Question"
+                               [value]="question().body.text()"
+                               [maxLength]="400"
+                               (saved)="updateBody($event)"/>
+
+    <label [attr.for]="IdGenerator.questionAnswer(question())">Answer</label>
+    <quibble-synced-input-text [attr.id]="IdGenerator.questionAnswer(question())"
+                               placeholder="Answer"
+                               [value]="question().answer.answer()"
+                               [maxLength]="200"
+                               (saved)="updateAnswer($event)"/>
+
+    <label [attr.for]="IdGenerator.questionPoints(question())">Worth</label>
+    <div class="question__row">
+      <quibble-synced-input-number [attr.id]="IdGenerator.questionPoints(question())"
+                                   [value]="question().points()"
+                                   (saved)="updatePoints($event)"
+                                   style="max-width: 95px;"/>
+      <span class="ms-2" style="min-width: 45px;">{{ question().points() == 1 ? "point" : "points" }}</span>
+      <span class="flex-1"></span>
+    </div>
+  </div>
+</div>

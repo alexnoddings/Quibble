@@ -1,0 +1,39 @@
+@reference "../../../../styles.css";
+
+.question {
+  @apply flex flex-row;
+  @apply border-b border-border;
+}
+
+.question__margin {
+  @apply flex flex-col;
+  @apply py-1;
+  @apply border-e border-border;
+  min-width: 38px;
+  text-align: center;
+}
+
+.question__number {
+  @apply text-lg text-light font-medium;
+  @apply px-2 mt-1;
+}
+
+.question__delete {
+  @apply mx-auto mb-3 ;
+}
+
+.question__content {
+  @apply grid gap-1 flex-auto items-center;
+  @apply px-2 py-1;
+  grid-template-columns: auto 1fr;
+}
+
+.question__row {
+  @apply flex items-center;
+}
+
+.question__points {
+  @apply me-2;
+  width: 80px;
+  max-width: 80px;
+}

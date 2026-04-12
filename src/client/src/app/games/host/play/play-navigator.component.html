@@ -1,0 +1,35 @@
+@let question = this.question();
+@let round = question.round;
+
+<div class="selector selector--round">
+  <button class="button-base selector__previous"
+          (click)="moveToPreviousRound()"
+          [disabled]="!canMoveToPreviousRound()">
+    <octicon-arrow-left/>
+  </button>
+  <div class="selector__content">
+    {{ round.title() }}
+    <quibble-round-state-icon [round]="round"/>
+  </div>
+  <button class="button-base selector__next"
+          (click)="moveToNextRound()"
+          [disabled]="!canMoveToNextRound()">
+    <octicon-arrow-right/>
+  </button>
+</div>
+<div class="selector selector--question">
+  <button class="button-base selector__previous"
+          (click)="moveToPreviousQuestion()"
+          [disabled]="!canMoveToPreviousQuestion()">
+    <octicon-arrow-left/>
+  </button>
+  <div class="selector__content">
+    Question {{ round.questions().indexOf(question) + 1 }}
+    <quibble-question-state-icon [question]="question"/>
+  </div>
+  <button class="button-base selector__next"
+          (click)="moveToNextQuestion()"
+          [disabled]="!canMoveToNextQuestion()">
+    <octicon-arrow-right/>
+  </button>
+</div>

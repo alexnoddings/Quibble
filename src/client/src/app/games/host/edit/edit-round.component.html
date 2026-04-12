@@ -1,0 +1,30 @@
+<div class="round">
+  <div class="round__header" tabindex="-1">
+    <h2 class="round__number">
+      <span class="sr-only">Round number</span>
+      {{ number() }}
+    </h2>
+    <label class="sr-only" [attr.for]="IdGenerator.roundTitle(round())">
+      Round title
+    </label>
+    <quibble-synced-input-text [attr.id]="IdGenerator.roundTitle(round())"
+                               placeholder="Round title"
+                               [value]="round().title()"
+                               [maxLength]="50"
+                               (saved)="updateTitle($event)"/>
+    <button class="button button--delete" (click)="delete()">
+      <span class="sr-only">Delete question</span>
+      <octicon-bin/>
+    </button>
+  </div>
+  <div class="round__questions">
+    @for (question of round().questions(); track question.id) {
+      <quibble-host-edit-question [question]="question" [number]="$index + 1"/>
+    }
+  </div>
+  <div class="flex justify-center">
+    <button class="button-base border-0 rounded-b-md bg-surface-alt py-1 text-light w-full" (click)="addQuestion()">
+      + Add question
+    </button>
+  </div>
+</div>

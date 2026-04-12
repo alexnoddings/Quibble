@@ -1,0 +1,12 @@
+@let game = this.game();
+@if (game.state() == GameStates.Draft) {
+<!--  <quibble-participant-edit-game [game]="game"/>-->
+} @else if (game.state() == GameStates.Open) {
+  <quibble-participant-game-lobby [game]="game"/>
+} @else if (game.state() == GameStates.InProgress) {
+  <quibble-participant-play-game [game]="game"/>
+} @else if (game.state() == GameStates.Completed) {
+<!--  <quibble-participant-completed-game [game]="game"/>-->
+} @else {
+  <p>???</p>
+}

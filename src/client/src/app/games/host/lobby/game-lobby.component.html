@@ -1,0 +1,75 @@
+<div class="quiz-container">
+  <div class="quiz-container__sidebar">
+    <div class="bg-surface border border-border rounded-md">
+      <div class="font-medium text-lg text-light text-center py-1 border-b border-border">
+        Players
+      </div>
+      <div class="px-2 py-1">
+        @for (participant of game().participants(); track participant.id) {
+          <p class="participant">
+            {{ participant.userName }}
+          </p>
+        } @empty {
+          <p class="italic">
+            *tumbleweed*
+          </p>
+        }
+      </div>
+    </div>
+  </div>
+  <div class="quiz-container__main">
+    <div class="bg-surface border border-border rounded-md text-xl text-light px-3 py-1 font-medium flex items-center">
+      <h1>{{ game().title() }}</h1>
+    </div>
+
+    <div class="px-2 mt-4">
+      <h2 class="text-xl font-medium text-light mb-1">1. Invite your friends</h2>
+      <p class="mb-1">
+        Invite them to play by sending them the link to join directly, or the game code.
+      </p>
+      <div class="flex flex-row gap-3">
+        <div>
+          <h3 class="text-light ms-2">
+            Game link
+          </h3>
+          <div class="flex">
+          <span #gameUrl class="bg-surface border border-border rounded-s-md px-2 py-1" (click)="select(gameUrl)">
+            {{ getSlugUrl() }}
+          </span>
+            <button class="button button--accent" style="border-top-left-radius: 0; border-bottom-left-radius: 0;"
+                    (click)="copyToClipboard(gameUrl)">
+              Copy
+            </button>
+          </div>
+        </div>
+        <div>
+          <h3 class="text-light ms-2">
+            Game code
+          </h3>
+          <div class="flex">
+          <span #gameSlug class="bg-surface border border-border rounded-s-md px-2 py-1" (click)="select(gameSlug)">
+            {{ game().slug }}
+          </span>
+            <button class="button button--accent" style="border-top-left-radius: 0; border-bottom-left-radius: 0;"
+                    (click)="copyToClipboard(gameSlug)">
+              Copy
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="px-2 mt-4">
+      <h2 class="text-xl font-medium text-light mb-2">2. Start the game</h2>
+      <p>Make sure everybody is in before you start!</p>
+      <p class="font-semibold">New players can't join once the game has started.</p>
+      <button class="button button--accent mt-2"
+              [class.button--solid]="game().participants().length > 0"
+              (click)="publishGame()">
+        Start game
+      </button>
+      @if (!!error) {
+        <p class="text-error">{{error}}</p>
+      }
+    </div>
+  </div>
+</div>

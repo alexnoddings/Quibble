@@ -1,0 +1,52 @@
+<div class="bg-surface border border-border rounded-md overview">
+  <div class="font-medium text-lg text-light text-center py-1 border-b border-border">
+    Game overview
+  </div>
+  <div class="overview__content">
+    @for (round of game().rounds(); track round.id; let $r = $index) {
+      <div class="border-b border-border">
+        <div class="flex gap-2 px-2 py-1">
+          <span class="rounded-md bg-border text-light shrink-0 text-center w-[24px] h-[24px]">
+            {{ $r + 1 }}
+          </span>
+          <span class="overflow-x-hidden overflow-ellipsis text-nowrap">
+            {{ round.title() }}
+          </span>
+        </div>
+        <div class="px-2 flex flex-col gap-y-1 mb-1">
+          @for (question of round.questions(); track question.id; let $q = $index) {
+            <div class="flex gap-2 ms-2">
+              <span class="rounded-md bg-border shrink-0 text-center w-[24px] h-[24px]">
+                {{ $q + 1 }}
+              </span>
+                <span class="overflow-x-hidden overflow-ellipsis text-nowrap">
+                {{ question.body.text() }}
+              </span>
+            </div>
+          } @empty {
+            <div class="text-body-muted italic">
+              No questions yet
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+  <button class="button-base border-0 bg-surface-alt py-1 text-light"
+          [class.button--solid]="game().rounds().length == 0"
+          (click)="addRound()">
+    + Add round
+  </button>
+  <div class="flex gap-x-2 gap-y-1 flex-wrap justify-center border-t border-border rounded-b-lg py-1 px-2">
+    <span>
+      {{ getRoundCountLabel() }}
+    </span>
+    <span class="text-body-muted">
+      •
+    </span>
+    <span>
+      {{ getQuestionCountLabel() }}
+    </span>
+  </div>
+</div>
+

@@ -1,0 +1,33 @@
+<div class="bg-surface border border-border rounded-md overview">
+  <div class="font-medium text-lg text-light text-center py-1 border-b border-border bg-surface-alt rounded-t-md">
+    Game overview
+  </div>
+  <div class="overview__content">
+    @for (round of game().rounds(); track round.id; let $r = $index) {
+      <div class="border-b border-border last:border-b-0">
+        <div class="round" [class.round--active]="viewState.activeQuestion()?.round == round">
+          <span class="rounded-md bg-border text-light shrink-0 text-center w-[24px] h-[24px]">
+            {{ $r + 1 }}
+          </span>
+          <span class="overflow-x-hidden overflow-ellipsis text-nowrap flex-1">
+            {{ round.title() }}
+          </span>
+          <quibble-round-state-icon [round]="round"/>
+        </div>
+        <div class="px-2 flex flex-col gap-y-1 mb-1">
+          @for (question of round.questions(); track question.id; let $q = $index) {
+            <div class="question" [class.question--active]="viewState.activeQuestion() == question" (click)="viewState.focusQuestion(question)">
+              <span class="rounded-md bg-border shrink-0 text-center w-[24px] h-[24px]">
+                {{ $q + 1 }}
+              </span>
+              <span class="overflow-x-hidden overflow-ellipsis text-nowrap flex-1">
+                {{ question.body.text() }}
+              </span>
+              <quibble-question-state-icon [question]="question"/>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>

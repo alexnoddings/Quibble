@@ -1,58 +1,32 @@
 <Project>
 
-  <PropertyGroup Label="Project Info">
+  <PropertyGroup>
+    <RepoRoot>$(MSBuildThisFileDirectory)</RepoRoot>
+    <Src>$(MSBuildThisFileDirectory)\src</Src>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <Product>Quibble</Product>
     <Authors>Alex Noddings</Authors>
-    <Company>Alex Noddings</Company>
-    <StrongNameKeyId>AlexNoddingsQuibble</StrongNameKeyId>
   </PropertyGroup>
 
-  <PropertyGroup Label="Repository Info">
-    <RepoRoot>$(MSBuildThisFileDirectory)</RepoRoot>
-    <RepositoryUrl>https://github.com/alexnoddings/Quibble</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <!-- The SPDX name for the source license. See https://spdx.org/licenses/. -->
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-  </PropertyGroup>
-
-  <PropertyGroup Label="Conventions">
-    <!-- Surface code style issues at build time. -->
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-
-    <!-- Strict mode prevents impossible scenarios (e.g. 5 is string). -->
-    <Features>strict</Features>
-
-    <!-- Use the preview language version by default. -->
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
     <LangVersion>preview</LangVersion>
-
-    <!-- Always use nullable context where possible. -->
+    <Features>$(Features);strict</Features>
     <Nullable>enable</Nullable>
-    
-    <!-- Enable implicit usings. -->
-    <ImplicitUsings>true</ImplicitUsings>
-    
-    <!-- Mark unit test projects. -->
-    <IsUnitTestProject Condition=" '$(IsUnitTestProject)' == '' ">false</IsUnitTestProject>
-    <IsUnitTestProject Condition=" $(MSBuildProjectName.EndsWith('.Tests')) ">true</IsUnitTestProject>
-    <IsPackable Condition=" '$(IsUnitTestProject)' == 'true' ">false</IsPackable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+    <ArtifactsPath>$(RepoRoot)\artifacts</ArtifactsPath>
   </PropertyGroup>
 
-  <PropertyGroup Label="Warnings and Errors">
-    <!-- Treat all warnings as errors. -->
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-
-    <!-- Warnings to ignore and not surface. -->
-    <NoWarn>
-      $(NoWarn);
-    </NoWarn>
-
-    <!-- Warnings to not treat as errors but still surface. -->
-    <WarningsNotAsErrors>
-      $(WarningsNotAsErrors);
-      <!-- Don't make marking a method as async without performing an await an error. -->
-      CS1998;
-      CS0067;
-    </WarningsNotAsErrors>
+  <PropertyGroup Label=".NET analysers">
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>10.0</AnalysisLevel>
+    <AnalysisMode>Recommended</AnalysisMode>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <!-- Enables IDE0005: https://github.com/dotnet/roslyn/issues/41640 -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
 </Project>

@@ -1,0 +1,16 @@
+<div class="quiz-container__sidebar">
+  <quibble-host-play-game-participants [game]="game()"/>
+  <quibble-host-play-game-overview [game]="game()"/>
+</div>
+<div class="quiz-container__main">
+  <div class="bg-surface border border-border rounded-md text-xl text-light px-3 py-1 font-medium flex items-center">
+    <h1>{{ game().title() }}</h1>
+  </div>
+
+  @let activeQuestion = viewState.activeQuestion();
+  @if (activeQuestion != undefined) {
+    <quibble-host-play-navigator [question]="activeQuestion"/>
+    <quibble-host-play-active-question [question]="activeQuestion"/>
+    <quibble-host-play-participant-answers [question]="activeQuestion"/>
+  }
+</div>

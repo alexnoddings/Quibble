@@ -1,0 +1,22 @@
+<div class="bg-surface border border-border rounded-md px-3 py-1 flex flex-row gap-2 items-end justify-center mb-4">
+  <h1 class="text-xl text-light font-medium">{{ game().title() }}</h1>
+  <p>by {{ game().ownerName }}</p>
+</div>
+
+<div class="flex flex-col justify-center">
+  <p class="text-xl text-light mb-4 mx-auto">
+    Waiting for the host to start the game
+  </p>
+  <div class="mx-auto bg-surface border border-border rounded-md" style="min-width: 150px;">
+    <p class="px-2 py-1 border-b border-border bg-surface-alt rounded-t-md text-light">
+      Lobby
+    </p>
+    <ul class="px-4 py-1">
+      @for (participant of game().participants(); track participant.id) {
+        <li class="my-1">
+          {{ participant.userName }}
+        </li>
+      }
+    </ul>
+  </div>
+</div>

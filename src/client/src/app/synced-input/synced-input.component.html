@@ -1,0 +1,14 @@
+﻿<input
+  [attr.id]="id()"
+  [attr.placeholder]="placeholder()"
+  [type]="inputType"
+  [attr.inputmode]="inputMode"
+  [value]="currentValue()"
+  [maxLength]="maxLength()"
+  (input)="onInput($event)"
+  (keydown.enter)="onEnter($event)"
+  (cut)="onClipboard($event)"
+  (paste)="onClipboard($event)"
+  (blur)="onBlur()"
+/>
+<octicon-check class="saved-icon" [attr.data-visible]="saveIconVisible() ? true : null"/>

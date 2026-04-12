@@ -1,0 +1,11 @@
+@let error = this.error();
+<div class="alert alert-error" role="alert">
+  <p class="title">
+    {{error.title}}
+  </p>
+  @if (!!error.detail) {
+    <p class="detail">
+      {{error.detail}}
+    </p>
+  }
+</div>

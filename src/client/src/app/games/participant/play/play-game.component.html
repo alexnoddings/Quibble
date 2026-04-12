@@ -1,0 +1,12 @@
+<div class="game__header">
+  <h1 class="game__title">{{ game().title() }}</h1>
+  <span class="game__author">by {{ game().ownerName }}</span>
+</div>
+
+<div class="game__rounds">
+  @for (round of game().rounds(); track round.id) {
+    @if (round.state() == RoundStates.Visible) {
+      <quibble-participant-play-round [round]="round" />
+    }
+  }
+</div>

@@ -1,0 +1,11 @@
+<header>
+  <a class="brand" routerLink="/">
+    Quibble!
+  </a>
+  @if (authService.instance.getActiveAccount(); as account) {
+    <p class="user-info">
+      Logged in as
+      <span class="user-name">{{ account.name }}</span>
+    </p>
+  }
+</header>

@@ -1,0 +1,22 @@
+@reference "../../../../styles.css";
+
+:host {
+  display: grid;
+  grid-template-columns: [sidebar]210px [main]1fr;
+  gap: 24px;
+  @apply mb-48 -mt-6;
+}
+
+.quiz-container__sidebar {
+  grid-area: sidebar;
+}
+
+.quiz-container__main {
+  grid-area: main;
+}
+
+.rounds {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}

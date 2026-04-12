@@ -1,0 +1,13 @@
+@let result = gameResult$ | async;
+@if (!result) {
+  <p>Loading...</p>
+} @else if (!result.isOk) {
+  <quibble-error [error]="result.error"/>
+} @else {
+  @let game = result.value;
+  @if (game.perspective == 'Host') {
+    <quibble-game-host-view [game]="game"/>
+  } @else if (game.perspective == 'Participant') {
+    <quibble-game-participant-view [game]="game"/>
+  }
+}

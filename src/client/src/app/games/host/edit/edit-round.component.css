@@ -1,0 +1,20 @@
+@reference "../../../../styles.css";
+
+.round {
+  @apply bg-surface rounded-lg border border-border;
+}
+
+.round__header {
+  @apply p-2 rounded-t-lg;
+  @apply flex gap-2 items-center;
+  @apply border-b border-b-border;
+}
+
+.round__number {
+  @apply text-lg font-semibold ms-1;
+  @apply text-light;
+  min-width: 21px;
+}
+
+.round__questions {
+}

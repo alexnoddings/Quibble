@@ -1,0 +1,31 @@
+@reference "../../../../styles.css";
+
+.participants {
+  @apply flex flex-col mb-4;
+  max-height: 33vh;
+  position: sticky;
+  top: 24px;
+}
+
+.participants__list {
+  overflow-y: auto;
+}
+
+.participants__list .participant__score {
+  @apply rounded-md bg-border text-light shrink-0 text-center;
+  @apply min-w-[24px] h-[24px] px-1;
+}
+
+.trophy {
+  @apply mt-1;
+
+  &.trophy-gold {
+    color: #ffd700;
+  }
+  &.trophy-silver {
+    color: #c0c0c0;
+  }
+  &.trophy-bronze {
+    color: #cd7f32;
+  }
+}

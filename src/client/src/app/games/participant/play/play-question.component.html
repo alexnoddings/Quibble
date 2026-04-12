@@ -1,0 +1,83 @@
+@let question = this.question();
+@let state = question.state();
+
+<div class="question__margin">
+  <span class="question__number" aria-hidden="true">
+    {{ question.order() }}
+  </span>
+</div>
+<div class="question__main">
+  <div class="question__header">
+    <div class="question__body">
+      <h3 class="question__text">
+        <span class="sr-only">
+          Question {{ question.order() }}
+        </span>
+        {{ question.body.text() }}
+      </h3>
+      @if (state == QuestionStates.Revealed) {
+        <p class="question__answer ">
+          {{ question.answer.answer() }}
+        </p>
+      }
+    </div>
+    @let points = question.points();
+    @if (state == QuestionStates.InProgress || state == QuestionStates.Marking) {
+      <div class="question__points">
+        {{ points }} {{ points == 1 ? 'point' : 'points' }}
+      </div>
+    } @else if (state == QuestionStates.Revealed) {
+      @let score = question.answer.submittedAnswer.points();
+      @if (score != undefined) {
+        @if (score == 0) {
+          <div class="question__points question__points--none">
+            <octicon-x-circle class="points-icon" aria-hidden="true"/>
+            0 points
+          </div>
+        } @else if (score < points) {
+          <div class="question__points question__points--partial">
+            <octicon-dot-circle class="points-icon" aria-hidden="true"/>
+            {{ prettyPrint.points(score) }}/{{ prettyPrint.points(points) }} points
+          </div>
+        } @else if (score == points) {
+          <div class="question__points question__points--full">
+            <octicon-check-circle class="points-icon" aria-hidden="true"/>
+            {{ prettyPrint.points(score) }} {{ points <= 1 ? 'point' : 'points' }}
+          </div>
+        } @else {
+          <div class="question__points question__points--extra">
+            <octicon-sparkles class="points-icon" aria-hidden="true"/>
+            {{ prettyPrint.points(score) }}/{{ prettyPrint.points(points) }} points
+          </div>
+        }
+      }
+    }
+  </div>
+  <div class="question__submitted-answer">
+    <label class="sr-only" [attr.for]="IdGenerator.questionAnswer(question)">Your answer</label>
+    @if (state == QuestionStates.InProgress) {
+      <quibble-synced-input-text [attr.id]="IdGenerator.questionAnswer(question)"
+                                 [value]="question.answer.submittedAnswer.answer()"
+                                 [maxLength]="200"
+                                 (saved)="updateAnswer($event)"
+                                 (preview)="previewAnswer($event)"
+                                 class="mt-2"/>
+    } @else {
+      <div class="flex gap-1">
+        @if (state != QuestionStates.InProgress) {
+          <octicon-lock class="question__locked"/>
+        }
+        @let submitted = question.answer.submittedAnswer.answer();
+        @if (!submitted || submitted.length == 0) {
+          <p class="italic">
+            No answer submitted
+          </p>
+        } @else {
+          <p>
+            {{ submitted }}
+          </p>
+        }
+      </div>
+    }
+  </div>
+</div>

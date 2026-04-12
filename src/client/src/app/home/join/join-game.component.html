@@ -1,0 +1,20 @@
+<div class="enter-game-code join-game">
+  <h2 class="title">Join a game</h2>
+
+  <form [formGroup]="form" (ngSubmit)="tryLoadGame()">
+    <div class="game-code">
+      <label for="slug">Game code</label>
+      <input id="slug"
+             type="text"
+             placeholder="Game code"
+             formControlName="slug"
+             [maxlength]="maxLength"
+             [class.errored]="error != undefined"/>
+      <button class="button button--regular" type="submit" [disabled]="!form.valid">Join</button>
+    </div>
+      <p class="error">
+        {{ error ?? '&nbsp;' }}
+      </p>
+  </form>
+
+</div>

@@ -1,0 +1,50 @@
+<Project>
+
+  <!--
+    The $(Configuration) variable isn't available in Directory.Build.props,
+    since it's only set by Microsoft.Common.Props after importing DB.p.
+    Since some analysis/warnings are tied to Configuration, they're set
+    here (in targets) instead since this is imported late by MSBuild.
+  -->
+
+  <PropertyGroup Label="Warnings and errors">
+    <!--
+      Forces the compiler to treat any warnings as errors.
+      This stops potential issues from building up, and keeps the code clean.
+    -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- IDE0290: Use primary constructor. -->
+    <NoWarn>$(NoWarn);IDE0290</NoWarn>
+    <!-- IDE0130: Namespace does not match folder structure. -->
+    <NoWarn>$(NoWarn);IDE0130</NoWarn>
+    <!-- CA1716: Identifiers should not match keywords. -->
+    <NoWarn>$(NoWarn);CA1716</NoWarn>
+    <!-- CA2007: Consider calling ConfigureAwait on the awaited task. -->
+    <NoWarn>$(NoWarn);CA2007</NoWarn>
+    <!-- CS1591: Missing XML comment for publicly visible type or member. -->
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <!-- CA1848: Use the LoggerMessage delegates. -->
+    <NoWarn>$(NoWarn);CA1848</NoWarn>
+  </PropertyGroup>
+
+  <!-- Useful errors, but downgraded during development to just warnings to make prototyping quicker/easier -->
+  <PropertyGroup Label="Dev-time error relaxations" Condition=" '$(Configuration)' == 'Debug' ">
+    <!-- CS0162: Unreachable code detected. -->
+    <WarningsNotAsErrors>$(WarningsNotAsErrors);CS0162</WarningsNotAsErrors>
+    <!-- CS1998: This async method lacks 'await' operators and will run synchronously. -->
+    <WarningsNotAsErrors>$(WarningsNotAsErrors);CS1998</WarningsNotAsErrors>
+    <!-- CS8321: Local function is declared but never used. -->
+    <WarningsNotAsErrors>$(WarningsNotAsErrors);CS8321</WarningsNotAsErrors>
+    <!-- IDE0005: Remove unnecessary using directives. -->
+    <WarningsNotAsErrors>$(WarningsNotAsErrors);IDE0005</WarningsNotAsErrors>
+    <!-- IDE0051: Remove unused private member. -->
+    <WarningsNotAsErrors>$(WarningsNotAsErrors);IDE0051</WarningsNotAsErrors>
+    <!-- IDE0059: Remove unnecessary value assignment. -->
+    <WarningsNotAsErrors>$(WarningsNotAsErrors);IDE0059</WarningsNotAsErrors>
+    <!-- IDE0060 : Remove unused parameter. -->
+    <WarningsNotAsErrors>$(WarningsNotAsErrors);IDE0060</WarningsNotAsErrors>
+    <!-- IDE2000: Avoid multiple blank lines. -->
+    <WarningsNotAsErrors>$(WarningsNotAsErrors);IDE2000</WarningsNotAsErrors>
+  </PropertyGroup>
+
+</Project>

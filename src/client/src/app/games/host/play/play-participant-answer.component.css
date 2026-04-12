@@ -1,0 +1,64 @@
+@reference "../../../../styles.css";
+
+:host {
+  @apply bg-surface rounded-md border border-border;
+  display: flex;
+  flex-direction: column;
+}
+
+.answer__header {
+  display: flex;
+  flex-direction: row;
+  @apply border-b border-border;
+  @apply bg-surface-alt rounded-t-md;
+  @apply py-1 ps-2 pe-1;
+
+  .participant {
+    @apply flex-1;
+  }
+
+  .score-button {
+    @apply px-1;
+    @apply cursor-pointer;
+    @apply fill-body;
+    @apply flex flex-row items-center gap-0.5;
+
+    &.score-button--incorrect {
+      @apply text-error;
+    }
+    &.score-button--partial {
+      @apply text-warning;
+    }
+    &.score-button--correct {
+      @apply text-success;
+    }
+    &.score-button--extra {
+      @apply text-accent;
+    }
+  }
+}
+
+.answer__body {
+  @apply py-1 px-2;
+
+  .answer__text {
+    overflow-wrap: break-word;
+
+    &.answer__text--empty {
+      @apply text-body-muted italic;
+    }
+  }
+}
+
+dialog {
+  background: none;
+  transform: translateX(-50%) translateY(24px);
+
+  &::backdrop {
+    @apply bg-background/25;
+  }
+
+  .custom-points {
+    width: 110px;
+  }
+}

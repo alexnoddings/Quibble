@@ -1,0 +1,14 @@
+<div class="flex">
+  <form [formGroup]="form"
+        (ngSubmit)="tryCreateGame()"
+        class="flex flex-col mx-auto bg-surface border border-border rounded-md px-2 pt-1 pb-3">
+    <label for="title" class="text-light">Game title</label>
+    <input id="title" class="mb-1" type="text" formControlName="title" maxlength="100"/>
+    @if (error) {
+      <p class="text-error">
+        {{ error }}
+      </p>
+    }
+    <button type="submit" [disabled]="!form.valid" class="button button--accent mt-1">Create</button>
+  </form>
+</div>

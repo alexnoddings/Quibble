@@ -1,0 +1,52 @@
+@let question = this.question();
+@let state = question.state();
+
+<div class="question__main">
+  <div class="question__body">
+    <p [class.text-body-muted]="question.round.state() == RoundStates.Hidden || question.state() == QuestionStates.Hidden">
+      {{ question.body.text() }}
+    </p>
+    <p [class.text-body-muted]="question.state() != QuestionStates.Revealed">
+      {{ question.answer.answer() }}
+    </p>
+  </div>
+
+  <div class="question__actions">
+    @if (question.round.state() == RoundStates.Hidden) {
+      <button class="action" (click)="question.round.updateState(RoundStates.Visible)">
+        Show round
+      </button>
+    } @else {
+      @if (state == QuestionStates.Hidden) {
+        <button class="button-base action" (click)="question.updateState(QuestionStates.InProgress)">
+          Show question
+        </button>
+      } @else if (state == QuestionStates.InProgress) {
+        <button class="button-base action" (click)="question.updateState(QuestionStates.Marking)">
+          Lock answers
+        </button>
+      } @else if (state == QuestionStates.Marking) {
+        @let tbd = unmarkedAnswerCount();
+        @if (tbd == 0) {
+          <button class="button-base action" (click)="question.updateState(QuestionStates.Revealed)">
+            Reveal answer
+          </button>
+        } @else {
+          <button class="button-base action action--disabled" disabled>
+            {{ tbd }} answers left to mark
+          </button>
+        }
+      } @else if (state == QuestionStates.Revealed) {
+        <span class="action--done">
+            Answer revealed
+          </span>
+      }
+    }
+  </div>
+</div>
+
+<div class="question__end">
+  <div>Worth</div>
+  <div class="">{{ prettyPrint.points(question.points()) }}</div>
+  <div>{{ question.points() <= 1 ? 'point' : 'points' }}</div>
+</div>

@@ -1,0 +1,25 @@
+@reference "../../styles.css";
+
+header {
+  @apply container mt-4 mx-auto px-6 py-2 flex flex-col items-center;
+
+  .brand {
+    @apply mx-auto px-6 py-3;
+    @apply bg-surface border-2 border-border rounded-full;
+    @apply text-5xl text-accent font-semibold;
+
+    transition: transform 0.15s ease-in-out;
+
+    &:hover {
+      transform: translateY(-2px) rotate(1deg) scale(1.02);
+    }
+  }
+
+  .user-info {
+    @apply mt-2;
+
+    .user-name {
+      @apply text-light;
+    }
+  }
+}

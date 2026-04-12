@@ -1,0 +1,22 @@
+<div>
+  <div class="px-2 flex flex-row mb-1">
+    <h2 class="text-light text-2xl font-bold flex-1">Games you've joined</h2>
+  </div>
+  <div class="bg-surface border border-border rounded-md w-full px-3 py-2">
+    @if (games$ | async; as games) {
+      @for (game of games; track game.id) {
+        <a class="block text-accent" [routerLink]='("/games/" + game.id)'>
+          {{ game.title }} by {{ game.ownerName }}
+        </a>
+      } @empty {
+        <p>
+          You haven't joined any games yet
+        </p>
+      }
+    } @else {
+      <p>
+        Loading games...
+      </p>
+    }
+  </div>
+</div>

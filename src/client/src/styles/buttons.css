@@ -1,0 +1,88 @@
+.button-base,
+.button {
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.1s linear;
+
+  &[disabled] {
+    cursor: not-allowed;
+  }
+
+  &:focus {
+    @apply outline-2 outline-focus;
+  }
+}
+
+.button {
+  @apply bg-background rounded-md;
+  @apply px-2 py-1;
+
+  &.button--slim {
+    @apply p-1;
+  }
+
+  &:focus {
+    @apply outline-2;
+  }
+
+  &.button--regular {
+    @apply text-light;
+    @apply border border-border;
+
+    &:hover {
+      @apply outline-1 outline-border;
+    }
+    &:hover, &:focus {
+      @apply bg-surface-alt;
+    }
+    &:focus {
+      @apply outline-border;
+    }
+  }
+
+  &.button--accent {
+    @apply text-accent;
+    @apply border border-accent;
+
+    &:hover {
+      @apply outline-1 outline-accent;
+    }
+    &:hover, &:focus {
+      @apply bg-accent/5;
+    }
+    &:focus {
+      @apply outline-accent;
+    }
+  }
+
+  &.button--error {
+    @apply text-error;
+    @apply border border-error;
+
+    &:hover {
+      @apply outline-1 outline-error;
+    }
+    &:hover, &:focus {
+      @apply bg-error/5;
+    }
+    &:focus {
+      @apply outline-error;
+    }
+  }
+
+  &.button--delete {
+    @apply bg-transparent;
+    @apply text-error;
+
+    &:hover {
+      @apply bg-error/10;
+      @apply outline-1 outline-error;
+    }
+    &:hover, &:focus {
+      @apply bg-error/10;
+    }
+    &:focus {
+      @apply outline-error;
+    }
+  }
+}

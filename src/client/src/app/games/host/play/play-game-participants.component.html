@@ -1,0 +1,31 @@
+<div class="bg-surface border border-border rounded-md participants">
+  <div class="font-medium text-lg text-light text-center py-1 border-b border-border bg-surface-alt rounded-t-md">
+    Players
+  </div>
+  <div class="participants__list py-1">
+    @for (participantScoreGroup of orderedGroupedParticipants(); track $index) {
+      <div class="flex flex-col participant-group">
+        <div class="flex px-2 py-1 gap-2">
+            <span class="participant__score">
+              {{ humanise.points(participantScoreGroup.score) }}
+            </span>
+          <span class="overflow-x-hidden overflow-ellipsis text-nowrap flex flex-col flex-1">
+              @for (participant of participantScoreGroup.participants; track participant.id) {
+                <span class="block">
+                  {{ participant.userName }}
+                </span>
+              }
+            </span>
+          @let tier = participantScoreGroup.tier;
+          @if (tier == 'First') {
+            <octicon-trophy class="trophy trophy-gold"/>
+          } @else if (tier == 'Second') {
+            <octicon-trophy class="trophy trophy-silver"/>
+          } @else if (tier == 'Third') {
+            <octicon-trophy class="trophy trophy-bronze"/>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>

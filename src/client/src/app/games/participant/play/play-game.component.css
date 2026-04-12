@@ -1,0 +1,24 @@
+@reference "../../../../styles.css";
+
+:host {
+  @apply block;
+  margin-bottom: 25vh;
+}
+
+.game__header {
+  @apply flex flex-row gap-2 items-end justify-center;
+  @apply bg-surface border border-border rounded-md;
+  @apply px-3 py-1 mb-4;
+
+  .game__title {
+    @apply text-2xl text-light font-medium;
+  }
+
+  .game__author {
+    @apply mb-0.5;
+  }
+}
+
+.game__rounds {
+  @apply flex flex-col gap-4;
+}

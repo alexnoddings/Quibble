@@ -1,0 +1,79 @@
+@import "tailwindcss";
+@import "./styles/buttons.css";
+@import "./styles/inputs.css";
+
+@theme {
+  --font-*: initial;
+  --font-body: "Atkinson Hyperlegible Next", -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  --default-font-family: var(--font-body);
+
+  --color-*: initial;
+
+  --color-background: #09090F;
+  --color-border: #1e1e2e;
+  --color-surface: #12121A;
+  --color-surface-alt: #0e0e16;
+
+  --color-light: #e0e0e8;
+  --color-body: #b6aaca;
+  --color-body-muted: #94899c;
+
+  --color-accent: #cf81e5;
+  --color-success: #50e3a4;
+  --color-warning: #f7c96c;
+  --color-error: #f76c6c;
+  --color-focus: #cf81e5;
+}
+
+:root {
+  @apply text-body;
+}
+
+body {
+  @apply bg-background text-body;
+
+  padding-left: 12px;
+  padding-right: 12px;
+
+  &::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(#cf81e5 1px, transparent 1px),
+      linear-gradient(90deg, #cf81e5 1px, transparent 1px);
+    opacity: 0.066;
+    background-size: 96px 96px;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  &::before {
+    position: fixed;
+    content: "";
+    z-index: -1;
+    opacity: 0.075;
+    filter: blur(250px) saturate(150%);
+    inset: 0;
+    background-image:
+      radial-gradient(at 50% 15%, #e65ce6 0px, transparent 50%)
+      ,radial-gradient(at 80% 20%, #A07EE5 0px, transparent 50%)
+      ,radial-gradient(at 85% 50%, #5BAEE5 0px, transparent 50%)
+      ,radial-gradient(at 80% 80%, #5BE5AC 0px, transparent 50%)
+      ,radial-gradient(at 50% 85%, #82E55B 0px, transparent 50%)
+      ,radial-gradient(at 20% 80%, #E5D75B 0px, transparent 50%)
+      ,radial-gradient(at 15% 50%, #E68401 0px, transparent 50%)
+      ,radial-gradient(at 20% 20%, #E56E5B 0px, transparent 50%)
+    ;
+  }
+}
+
+.container {
+  width: 100%;
+  max-width: 800px;
+  @apply mx-auto;
+}
+
+svg {
+  fill: currentColor;
+}

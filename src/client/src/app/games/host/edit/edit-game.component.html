@@ -1,0 +1,14 @@
+<div class="quiz-container__sidebar">
+  <quibble-host-edit-game-overview [game]="game()"/>
+</div>
+<div class="quiz-container__main">
+  <div class="mb-4 flex gap-2 items-center">
+    <quibble-synced-input-text [value]="game().title()" (saved)="updateTitle($event)" [maxLength]="100"/>
+    <quibble-host-publish-game [game]="game()"/>
+  </div>
+  <div class="rounds">
+    @for (round of game().rounds(); track round.id) {
+      <quibble-host-edit-round [round]="round" [number]="$index + 1"/>
+    }
+  </div>
+</div>

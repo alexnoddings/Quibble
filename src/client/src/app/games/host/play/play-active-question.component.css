@@ -1,0 +1,40 @@
+@reference "../../../../styles.css";
+
+:host {
+  @apply bg-surface-alt border border-border rounded-md;
+  @apply flex flex-row mt-4;
+}
+
+.question__main {
+  @apply flex-1;
+
+  .question__body {
+    @apply flex flex-col flex-1;
+    @apply bg-surface border-e border-b border-border rounded-ss-md rounded-ee-md;
+    @apply px-3 py-1;
+  }
+
+  .question__actions {
+    @apply flex flex-row px-2 py-1;
+
+    .action {
+      @apply text-accent font-medium;
+
+      &.action--disabled {
+        @apply text-body;
+      }
+
+      &.action--done {
+        @apply text-body italic;
+      }
+    }
+  }
+}
+
+.question__end {
+  @apply text-center px-2 py-1;
+
+  .question__points {
+    @apply text-light text-xl font-semibold;
+  }
+}

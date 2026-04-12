@@ -1,0 +1,89 @@
+@reference "../../../../styles.css";
+
+:host {
+  @apply flex flex-row;
+  &:not(:last-child) {
+    @apply border-b border-border;
+  }
+}
+
+.question__margin {
+  @apply flex flex-col;
+  @apply py-1;
+  @apply border-e border-border;
+  min-width: 38px;
+  text-align: center;
+
+  .question__number {
+    @apply text-lg text-light font-medium;
+    @apply px-2;
+  }
+
+  .question__locked {
+    @apply mx-auto mt-2;
+  }
+}
+
+.question__main {
+  @apply flex-1;
+
+  .question__header {
+    @apply flex flex-row gap-1;
+
+    .question__body {
+      @apply px-2 py-2;
+      @apply leading-tight;
+
+      .question__text {
+        @apply text-light;
+      }
+
+      .question__answer {
+        @apply text-success;
+      }
+    }
+
+    .question__points {
+      @apply flex flex-row gap-1 items-center;
+      @apply ms-auto px-2 py-1 h-fit;
+      @apply bg-surface-alt border-s border-b border-border rounded-es-md;
+
+      &.question__points--none {
+        @apply bg-error/20;
+        .points-icon {
+          @apply text-error;
+        }
+      }
+      &.question__points--partial {
+        @apply bg-warning/20;
+        .points-icon {
+          @apply text-warning;
+        }
+      }
+      &.question__points--full {
+        @apply bg-success/10;
+        .points-icon {
+          @apply text-success;
+        }
+      }
+      &.question__points--extra {
+        @apply bg-accent/15;
+        .points-icon {
+          @apply text-accent;
+        }
+      }
+    }
+  }
+
+  .question__submitted-answer {
+    @apply px-2 pb-2;
+
+    quibble-synced-input-text {
+      @apply w-full;
+    }
+
+    .question__locked {
+      @apply mt-1;
+    }
+  }
+}

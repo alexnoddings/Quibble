@@ -1,0 +1,54 @@
+@reference "../../../../styles.css";
+
+:host {
+  @apply block bg-surface border border-border rounded-md my-4;
+}
+
+.selector {
+  display: grid;
+  grid-template-columns: [previous]32px [content]1fr [next]32px;
+
+  .selector__previous {
+    grid-area: previous;
+    @apply border-e border-border;
+  }
+
+  .selector__content {
+    grid-area: content;
+    @apply px-2 py-1;
+    @apply flex flex-row justify-center items-center gap-2;
+  }
+
+  .selector__next {
+    grid-area: next;
+    @apply border-s border-border;
+  }
+
+  .selector__previous,
+  .selector__next {
+    @apply bg-surface-alt text-light fill-light;
+    @apply flex items-center justify-center;
+  }
+
+  &.selector--round {
+   @apply border-b border-border;
+
+    .selector__previous {
+      @apply rounded-ss-md;
+    }
+
+    .selector__next {
+      @apply rounded-se-md;
+    }
+  }
+
+  &.selector--question {
+    .selector__previous {
+      @apply rounded-es-md;
+    }
+
+    .selector__next {
+      @apply rounded-ee-md;
+    }
+  }
+}

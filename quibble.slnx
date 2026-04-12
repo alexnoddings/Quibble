@@ -1,0 +1,10 @@
+﻿<Solution>
+  <Folder Name="/eng/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="global.json" />
+  </Folder>
+  <Project Path="src\host\AppHost.csproj" />
+  <Project Path="src\api\Api.csproj" />
+</Solution>

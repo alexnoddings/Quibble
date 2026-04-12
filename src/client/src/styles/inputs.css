@@ -1,0 +1,22 @@
+input[type="text"],
+input[type="number"] {
+  padding: 5px 13px;
+  min-height: 40px;
+
+  flex: 1 1 auto;
+
+  border-radius: .25rem;
+
+  @apply border-2 border-solid border-border;
+  @apply bg-surface-alt text-body;
+
+  &::placeholder {
+    color: var(--color-body-muted);
+    text-transform: none;
+  }
+
+  &:focus {
+    @apply outline-accent outline-4;
+    z-index: 1;
+  }
+}

@@ -1,0 +1,21 @@
+@let question = this.question();
+@let state = question.state();
+
+@if (state == QuestionStates.Hidden) {
+  <octicon-eye-closed class="text-body"/>
+  <span class="sr-only">Question hidden</span>
+} @else if (state == QuestionStates.InProgress) {
+  <octicon-comment-discussion class="text-light"/>
+  <span class="sr-only">Question in progress</span>
+} @else if (state == QuestionStates.Marking) {
+  @if (hasMarkedEveryAnswer) {
+    <octicon-search-check class="text-success"/>
+    <span class="sr-only">Question marked</span>
+  } @else {
+    <octicon-search class="text-warning"/>
+    <span class="sr-only">Question being marked</span>
+  }
+} @else if (state == QuestionStates.Revealed) {
+  <octicon-check class="text-body-muted"/>
+  <span class="sr-only">Question answer revealed</span>
+}
