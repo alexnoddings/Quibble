@@ -47,9 +47,6 @@ export class FullSubmittedAnswerInteractiveImpl extends InteractiveBase implemen
     this.points = signal(data.points);
     this.answer = signal(data.answer);
 
-    console.log("participant", this.participant);
-    console.log("question", this.question);
-
     this.subscribe(events.answerTextChanged$, event => this.onAnswerTextChanged(event));
     this.subscribe(events.answerTextPreviewed$, event => this.onAnswerTextPreviewed(event));
     this.subscribe(events.answerPointsChanged$, event => this.onPointsChanged(event));
