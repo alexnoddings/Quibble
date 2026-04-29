@@ -4,9 +4,13 @@ import {ApiService} from '$/services/api/api.service';
 import {GameEventBus} from '$/services/events/bus/event-bus';
 import {PartialQuestionInteractive, PartialQuestionInteractiveImpl} from '$/services/interactive/partial/question';
 import {PartialSubmittedAnswerData} from '$/services/api/participants/types/submitted-answer-data';
-import {QuestionPointsChangedEvent} from '$/services/events/question.events';
 import {Observable} from 'rxjs';
-import {AnswerEvent, AnswerTextChangedEvent, forParticipantAnswer} from '$/services/events/answer.events';
+import {
+  AnswerEvent,
+  AnswerPointsChangedEvent,
+  AnswerTextChangedEvent,
+  forParticipantAnswer
+} from '$/services/events/answer.events';
 import {
   PreviewQuestionSubmittedAnswerTextRequest,
   UpdateQuestionSubmittedAnswerTextRequest
@@ -67,7 +71,7 @@ export class PartialSubmittedAnswerInteractiveImpl extends InteractiveBase imple
     this.answer.set(event.answer);
   }
 
-  private onPointsChanged(event: QuestionPointsChangedEvent): void {
+  private onPointsChanged(event: AnswerPointsChangedEvent): void {
     this.points.set(event.points);
   }
 }
