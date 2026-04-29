@@ -99,7 +99,6 @@ export class SignalrGameEventBus implements GameEventBus {
     this.hubConnection = hubConnection;
 
     this.on('gameStateChanged', this.gameStateChanged);
-    this.on('gameStateChanged', this.gameStateChanged);
     this.on('gameTitleChanged', this.gameTitleChanged);
 
     this.on('participantAdded', this.participantAdded);
